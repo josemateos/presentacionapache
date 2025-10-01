@@ -110,7 +110,7 @@ const Registro = () => {
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
             >
               <FcGoogle className="w-5 h-5" />
-              Continuar con Google
+              Crear Cuenta con Google
             </Button>
             
             <Button
@@ -120,7 +120,7 @@ const Registro = () => {
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
             >
               <FaApple className="w-5 h-5" />
-              Continuar con Apple
+              Crear Cuenta con Apple
             </Button>
             
             <Button
@@ -130,7 +130,7 @@ const Registro = () => {
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
             >
               <FaFacebook className="w-5 h-5 text-blue-600" />
-              Continuar con Facebook
+              Crear Cuenta con Facebook
             </Button>
           </div>
 
@@ -184,7 +184,7 @@ const Registro = () => {
               disabled={isLoading}
             >
               <Mail className="w-5 h-5" />
-              {isLoading ? "Enviando..." : "Continuar con Correo"}
+              {isLoading ? "Creando cuenta..." : "Crear Cuenta con Correo"}
             </Button>
           </form>
 

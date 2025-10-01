@@ -27,7 +27,7 @@ const Index = () => {
       id: 1,
       icon: Feather,
       title: "Sistema Apache",
-      subtitle: "5 pasos que cambiarán tu forma de hablar inglés",
+      subtitle: "5 pasos que cambiarán tu forma de aprender a comunicarte en Inglés",
       steps: [
         { 
           number: "1", 
@@ -333,12 +333,13 @@ const Index = () => {
       </main>
 
       {/* Footer with Action Button */}
-      <footer className={`${currentScreen === 0 ? '' : 'sticky bottom-0'} bg-background/80 backdrop-blur-md border-t border-border p-4`}>
+      <footer className={`${currentScreen === 0 ? 'p-4' : currentScreen === 2 ? 'p-4' : 'sticky bottom-0 bg-background/80 backdrop-blur-md border-t border-border p-4'}`}>
         <div className="container mx-auto max-w-md">
           {currentScreen < screens.length - 1 ? (
             <Button
               onClick={handleNext}
-              className="w-full bg-primary hover:bg-primary/90 py-6 text-base font-semibold"
+              variant={currentScreen === 0 ? "outline" : "default"}
+              className={`w-full py-6 text-base font-semibold ${currentScreen === 0 ? 'border-2 border-white text-white hover:bg-white hover:text-primary' : 'bg-primary hover:bg-primary/90'}`}
             >
               {currentScreenData.buttonText}
             </Button>
@@ -354,7 +355,7 @@ const Index = () => {
               <Button
                 onClick={() => navigate("/login")}
                 variant="outline"
-                className="w-full py-6 text-base"
+                className="w-full py-6 text-base border-2 border-white text-white hover:bg-white hover:text-primary"
               >
                 Iniciar Sesión
               </Button>

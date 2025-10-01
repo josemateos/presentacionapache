@@ -43,6 +43,10 @@ const Dashboard = () => {
     reviewPendingCount: 3,
   });
 
+  // Fecha de registro simulada (7 días atrás)
+  const registrationDate = new Date();
+  registrationDate.setDate(registrationDate.getDate() - 7);
+
   // Estado de días completados (simulado)
   const [completedDays] = useState<Record<number, boolean>>({});
 
@@ -131,7 +135,7 @@ const Dashboard = () => {
           userName="Carlos"
           currentDay={userProgress.currentDay}
           totalDays={totalDays}
-          currentStage="Etapa 1: Fundamentos del Método Apache"
+          registrationDate={registrationDate}
         />
 
         <DailyActionButton

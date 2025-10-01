@@ -189,6 +189,25 @@ All colors MUST be HSL.
     50% { opacity: 0.8; }
   }
 
+  .gradient-animated {
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%), hsl(45 93% 58%), hsl(217 91% 60%));
+    background-size: 300% 300%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .gradient-text-primary {
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .animate-scale-in {
     animation: scaleIn 0.3s ease-out forwards;
   }

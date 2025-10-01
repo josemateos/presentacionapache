@@ -25,7 +25,7 @@ export const DailyActionButton = ({
         className={`w-full py-6 text-base md:text-lg font-semibold rounded-xl shadow-lg transition-all ${
           isCompleted
             ? "gradient-success opacity-70 cursor-not-allowed"
-            : "gradient-primary hover:scale-[1.02] active:scale-[0.98]"
+            : "gradient-animated hover:scale-[1.02] active:scale-[0.98]"
         }`}
       >
         {isCompleted ? (

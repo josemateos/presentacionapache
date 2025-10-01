@@ -4,15 +4,28 @@ interface WelcomeSectionProps {
   userName: string;
   currentDay: number;
   totalDays: number;
-  currentStage: string;
+  registrationDate: Date;
 }
 
 export const WelcomeSection = ({
   userName,
   currentDay,
   totalDays,
-  currentStage,
+  registrationDate,
 }: WelcomeSectionProps) => {
+  const today = new Date();
+  const diffTime = Math.abs(today.getTime() - registrationDate.getTime());
+  const daysSinceRegistration = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('es-ES', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
@@ -30,8 +43,9 @@ export const WelcomeSection = ({
         </span>{" "}
         de {totalDays}
       </p>
-      <p className="text-sm md:text-base text-muted-foreground">
-        {currentStage}
+      <p className="text-sm md:text-base text-muted-foreground capitalize">
+        {formatDate(today)} - Han transcurrido{" "}
+        <span className="text-accent font-semibold">{daysSinceRegistration} días</span> desde tu registro
       </p>
     </motion.section>
   );

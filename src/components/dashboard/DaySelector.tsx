@@ -72,7 +72,7 @@ export const DaySelector = ({
             className="overflow-hidden"
           >
             <div className="bg-card border border-border rounded-xl p-4 space-y-3 max-h-[60vh] overflow-y-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: daysToShow }, (_, i) => i + 1).map((day) => {
                   const status = getDayStatus(day);
                   return (

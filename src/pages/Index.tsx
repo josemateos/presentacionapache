@@ -1,12 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles, Feather } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentScreen, setCurrentScreen] = useState(0);
+
+  useEffect(() => {
+    if (location.state?.screen !== undefined) {
+      setCurrentScreen(location.state.screen);
+    }
+  }, [location.state]);
   const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
 
   const screens = [

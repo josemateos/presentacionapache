@@ -7,7 +7,7 @@ import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles } 
 const Index = () => {
   const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState(0);
-  const [expandedStep, setExpandedStep] = useState<number | null>(null);
+  const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
 
   const screens = [
     {
@@ -223,13 +223,19 @@ const Index = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setExpandedStep(expandedStep === index ? null : index)}
+                      onClick={() => {
+                        if (expandedSteps.includes(index)) {
+                          setExpandedSteps(expandedSteps.filter(i => i !== index));
+                        } else {
+                          setExpandedSteps([...expandedSteps, index]);
+                        }
+                      }}
                       className="text-xs"
                     >
-                      {expandedStep === index ? "Ocultar" : "Ver"}
+                      {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
                     </Button>
                     
-                    {expandedStep === index && step.example && (
+                    {expandedSteps.includes(index) && step.example && (
                       <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
                         {step.example.words && (
                           <div className="space-y-1">

@@ -276,7 +276,7 @@ const Index = () => {
               </div>
               
               <Card className="relative overflow-hidden border-2 border-accent p-5">
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
                 <p className="relative text-base font-bold text-center text-card-foreground">
                   {currentScreenData.promise}
                 </p>

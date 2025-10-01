@@ -35,11 +35,11 @@ const Index = () => {
           content: "Las palabras esenciales que necesitas",
           example: {
             words: [
-              { spanish: "Yo", english: "I" },
-              { spanish: "Gustar", english: "Like" },
               { spanish: "Aprender", english: "Learn" },
+              { spanish: "Rápidamente", english: "Quickly" },
+              { spanish: "Yo", english: "I" },
               { spanish: "Inglés", english: "English" },
-              { spanish: "Rápidamente", english: "Quickly" }
+              { spanish: "Gustar", english: "Like" }
             ]
           }
         },
@@ -56,13 +56,12 @@ const Index = () => {
           label: "Orden Apache", 
           content: "El secreto: reorganizar en el orden del inglés",
           example: {
-            phrase: "Yo gustar aprender inglés rápidamente",
-            explanation: "Sujeto + Verbo + Complemento"
+            phrase: "Yo gustar aprender inglés rápidamente"
           }
         },
         { 
           number: "4", 
-          label: "Traducción Directa", 
+          label: "Ingles entendible", 
           content: "Palabra por palabra al inglés",
           example: {
             phrase: "I like learn English quickly"
@@ -70,8 +69,8 @@ const Index = () => {
         },
         { 
           number: "5", 
-          label: "Auxiliar Mágico", 
-          content: "El toque final que lo hace perfecto",
+          label: "Ingles Perfecto", 
+          content: "Agrega los Auxiliares Clave",
           example: {
             phrase: "I would like to learn English quickly",
             highlights: ["would", "to"]
@@ -214,8 +213,8 @@ const Index = () => {
               <div className="space-y-3 flex-1 overflow-y-auto mb-6">
                 {currentScreenData.steps?.map((step, index) => (
                   <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden">
-                    <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center">
-                      <span className="text-lg font-bold text-primary">{step.number}</span>
+                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/20 border border-primary flex items-center justify-center">
+                      <span className="text-base font-bold text-primary">{step.number}</span>
                     </div>
                     <div className="pr-12 mb-2">
                       <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
@@ -262,9 +261,6 @@ const Index = () => {
                               );
                             })}
                           </p>
-                        )}
-                        {step.example.explanation && (
-                          <p className="text-xs text-primary italic">{step.example.explanation}</p>
                         )}
                       </div>
                     )}

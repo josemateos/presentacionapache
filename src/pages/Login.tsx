@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { ArrowLeft, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { FcGoogle } from "react-icons/fc";
+import { FaApple, FaFacebook } from "react-icons/fa";
 
 const loginSchema = z.object({
   email: z.string()
@@ -100,6 +102,49 @@ const Login = () => {
             <p className="text-muted-foreground text-sm">
               Continúa tu aprendizaje de inglés
             </p>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 bg-background hover:bg-muted border-2"
+              disabled={isLoading}
+            >
+              <FcGoogle className="w-5 h-5 mr-2" />
+              Continuar con Google
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 bg-background hover:bg-muted border-2"
+              disabled={isLoading}
+            >
+              <FaApple className="w-5 h-5 mr-2" />
+              Continuar con Apple
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 bg-background hover:bg-muted border-2"
+              disabled={isLoading}
+            >
+              <FaFacebook className="w-5 h-5 mr-2 text-[#1877F2]" />
+              Continuar con Facebook
+            </Button>
+          </div>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">
+                O continúa con email
+              </span>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

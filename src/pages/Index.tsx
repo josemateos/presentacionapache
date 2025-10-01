@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles } from "lucide-react";
+import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles, Feather } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -25,8 +25,8 @@ const Index = () => {
     },
     {
       id: 1,
-      icon: Zap,
-      title: "El Método Apache",
+      icon: Feather,
+      title: "Sistema Apache",
       subtitle: "5 pasos que cambiarán tu forma de hablar inglés",
       steps: [
         { 
@@ -204,9 +204,9 @@ const Index = () => {
           {/* Screen 1: El Método */}
           {currentScreen === 1 && (
             <div className="flex-1 flex flex-col animate-fade-in py-4">
-              <div className="text-center mb-6">
+            <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary mb-4 animate-float">
-                  <Zap className="w-10 h-10 text-primary" />
+                  <Feather className="w-10 h-10 text-primary" />
                 </div>
                 <h1 className="text-2xl font-bold mb-2 text-white">{currentScreenData.title}</h1>
                 <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
@@ -215,8 +215,8 @@ const Index = () => {
               <div className="space-y-3 flex-1 overflow-y-auto mb-6">
                 {currentScreenData.steps?.map((step, index) => (
                   <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden">
-                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400 border border-yellow-500 flex items-center justify-center">
-                      <span className="text-base font-bold text-yellow-900">{step.number}</span>
+                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400/40 border border-yellow-500/50 flex items-center justify-center">
+                      <span className="text-base font-bold text-blue-600">{step.number}</span>
                     </div>
                     <div className="pr-12 mb-2">
                       <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
@@ -333,7 +333,7 @@ const Index = () => {
       </main>
 
       {/* Footer with Action Button */}
-      <footer className="sticky bottom-0 bg-background/80 backdrop-blur-md border-t border-border p-4">
+      <footer className={`${currentScreen === 0 ? '' : 'sticky bottom-0'} bg-background/80 backdrop-blur-md border-t border-border p-4`}>
         <div className="container mx-auto max-w-md">
           {currentScreen < screens.length - 1 ? (
             <Button

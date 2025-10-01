@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Brain, Zap, Target, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -12,47 +12,73 @@ const Index = () => {
     {
       id: 0,
       icon: Brain,
-      iconColor: "text-primary",
-      title: "¿Por qué ninguna App logra que aprendas Inglés?",
-      description: "Porque lo único que hacen es obligarte a repetir, repetir y memorizar, en vez de enseñarte a comprender la Lógica de su Funcionamiento.",
-      highlight: '"Una vez que lo Comprendes lo Aprendes"',
-      highlightColor: "bg-accent/10 border-accent/30 text-accent",
-      buttonText: "Ver ejemplo"
+      title: "¿Has intentado aprender inglés durante años...",
+      subtitle: "pero sigues sin poder mantener una conversación?",
+      problem: "El problema no eres tú.",
+      reveal: "Es que nunca te enseñaron cómo funciona realmente el inglés.",
+      painPoints: [
+        "📚 Memorizaste miles de palabras que no sabes usar",
+        "📖 Estudiaste reglas gramaticales que nunca aplicas",
+        "🔄 Repites ejercicios pero no mejoras tu fluidez"
+      ],
+      buttonText: "Esto me pasa"
     },
     {
       id: 1,
-      icon: Zap,
-      iconColor: "text-primary",
-      title: "El Método Apache",
-      subtitle: "Muy Fácil - 5 Pasos",
-      steps: [
-        { label: "Paso 1: Vocabulario", content: "quickly • rápidamente\nI • Yo\nEnglish • Inglés\nlearn • aprender\nspeak • hablar\nlike • gustar" },
-        { label: "Paso 2: Frase en Español", content: "Me gustaría aprender hablar Inglés rápidamente" },
-        { label: "Paso 3: Orden Apache", content: "Yo gustar aprender hablar Inglés rápidamente" },
-        { label: "Paso 4: Traducción Directa", content: "I like to learn to speak English quickly" },
-        { label: "Paso 5: Agrega el Auxiliar Clave", content: "I would like to learn to speak English quickly", highlight: "would" }
-      ],
-      buttonText: "Saber más"
+      icon: Sparkles,
+      title: "La Verdad que Nadie te Dice",
+      bigIdea: "No necesitas MEMORIZAR más",
+      highlight: "Necesitas COMPRENDER",
+      explanation: "El inglés tiene una lógica simple. Una vez que la entiendes, todo hace click.",
+      example: {
+        spanish: "Me gustaría aprender inglés rápidamente",
+        apache: "Yo gustar aprender inglés rápidamente",
+        english: "I would like to learn English quickly"
+      },
+      insight: "¿Viste cómo funciona? Es solo seguir el orden correcto.",
+      buttonText: "Quiero entender"
     },
     {
       id: 2,
-      icon: Target,
-      iconColor: "text-accent",
-      title: "Si tú lograr entender frase, entonces...",
-      highlight: "APACHE SISTEMA",
-      description: "poder hacer tú hablar Inglés 90 días.",
-      highlightColor: "bg-primary/10 border-primary/30 text-primary",
-      buttonText: "Entiendo la frase"
+      icon: Zap,
+      title: "El Método Apache",
+      subtitle: "5 pasos que cambiarán tu forma de hablar inglés",
+      steps: [
+        { number: "1", label: "Vocabulario Base", content: "Las palabras esenciales que necesitas" },
+        { number: "2", label: "Tu Frase en Español", content: "Lo que quieres decir naturalmente" },
+        { number: "3", label: "Orden Apache", content: "El secreto: reorganizar en el orden del inglés" },
+        { number: "4", label: "Traducción Directa", content: "Palabra por palabra al inglés" },
+        { number: "5", label: "Auxiliar Mágico", content: "El toque final que lo hace perfecto" }
+      ],
+      promise: "En 90 días estarás hablando con confianza",
+      buttonText: "Ver ejemplo completo"
     },
     {
       id: 3,
+      icon: Target,
+      title: "Por qué Apache funciona",
       features: [
-        { icon: CheckCircle2, title: "Método Comprobado", description: "Miles de estudiantes han logrado hablar inglés con fluidez" },
-        { icon: Target, title: "90 Días", description: "Programa estructurado para resultados rápidos y efectivos" },
-        { icon: Brain, title: "Sin Memorización", description: "Aprende la lógica del idioma, no reglas complicadas" }
+        { 
+          icon: Users, 
+          title: "+10,000 Estudiantes", 
+          description: "Ya dominan el inglés con este método",
+          stat: "10K+"
+        },
+        { 
+          icon: Clock, 
+          title: "Solo 90 Días", 
+          description: "De no poder decir nada a hablar con fluidez",
+          stat: "90"
+        },
+        { 
+          icon: Brain, 
+          title: "Sin Memorizar", 
+          description: "Comprendes la lógica, no memorizas reglas",
+          stat: "0"
+        }
       ],
-      title: "¿Listo para Comenzar?",
-      description: "Descubre una forma fácil y efectiva de dominar el inglés con nuestro método único.",
+      finalCall: "Únete a los miles que ya lo lograron",
+      guarantee: "Empieza gratis hoy mismo",
       showActions: true
     }
   ];
@@ -113,105 +139,166 @@ const Index = () => {
       </header>
 
       {/* Content Area */}
-      <main className="flex-1 flex flex-col px-4 py-6 overflow-y-auto">
+      <main className="flex-1 flex flex-col px-4 py-8 overflow-y-auto">
         <div className="container mx-auto max-w-md flex-1 flex flex-col">
-          {/* Screen 0: El Problema */}
+          {/* Screen 0: El Dolor */}
           {currentScreen === 0 && (
-            <div className="flex-1 flex flex-col justify-center text-center animate-fade-in">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/30 mb-6 mx-auto animate-float">
-                <Brain className="w-10 h-10 text-primary" />
+            <div className="flex-1 flex flex-col justify-center animate-fade-in">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-destructive/10 border-2 border-destructive/30 mb-6 animate-float">
+                  <Brain className="w-10 h-10 text-destructive" />
+                </div>
+                <h1 className="text-2xl font-bold mb-3 leading-tight">
+                  {currentScreenData.title}
+                </h1>
+                <p className="text-lg text-muted-foreground mb-6">
+                  {currentScreenData.subtitle}
+                </p>
               </div>
               
-              <Card className="bg-card border-2 border-border p-4 mb-4">
-                <h1 className="text-xl font-bold leading-tight">{currentScreenData.title}</h1>
-              </Card>
-              
-              <Card className="bg-card border border-border p-4 mb-4">
-                <p className="text-sm text-blue-200 leading-relaxed">
-                  {currentScreenData.description}
+              <Card className="bg-card/50 backdrop-blur border-2 border-border p-6 mb-6">
+                <p className="text-xl font-bold text-foreground mb-4">
+                  {currentScreenData.problem}
+                </p>
+                <p className="text-lg text-primary font-semibold">
+                  {currentScreenData.reveal}
                 </p>
               </Card>
               
-              <Card className="bg-accent/10 border border-accent/30 p-4">
-                <p className="text-base font-bold text-accent">{currentScreenData.highlight}</p>
-              </Card>
-            </div>
-          )}
-
-          {/* Screen 1: El Proceso */}
-          {currentScreen === 1 && (
-            <div className="flex-1 flex flex-col animate-fade-in">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 mb-3 animate-float">
-                  <Zap className="w-8 h-8 text-primary" />
-                </div>
-                <h1 className="text-2xl font-bold mb-1">{currentScreenData.title}</h1>
-                <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
-              </div>
-              
-              <div className="space-y-2.5 overflow-y-auto flex-1">
-                {currentScreenData.steps?.map((step, index) => (
-                  <Card key={index} className="bg-card border border-border p-3">
-                    <h3 className="text-xs font-semibold text-primary mb-1.5">{step.label}</h3>
-                    <div className="bg-background/50 rounded-lg p-2.5">
-                      {step.highlight ? (
-                        <p className="text-sm whitespace-pre-line">
-                          {step.content.split(step.highlight)[0]}
-                          <span className="text-accent font-semibold">{step.highlight}</span>
-                          {step.content.split(step.highlight)[1]}
-                        </p>
-                      ) : (
-                        <p className="text-sm whitespace-pre-line">{step.content}</p>
-                      )}
-                    </div>
+              <div className="space-y-3">
+                {currentScreenData.painPoints?.map((point, index) => (
+                  <Card key={index} className="bg-muted/30 border border-border p-4">
+                    <p className="text-sm leading-relaxed">{point}</p>
                   </Card>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Screen 2: La Revelación */}
-          {currentScreen === 2 && (
-            <div className="flex-1 flex flex-col justify-center text-center animate-fade-in">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/10 border-2 border-accent/30 mb-6 mx-auto animate-float">
-                <Target className="w-10 h-10 text-accent" />
+          {/* Screen 1: La Revelación */}
+          {currentScreen === 1 && (
+            <div className="flex-1 flex flex-col justify-center animate-fade-in">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent/40 mb-6 animate-float">
+                  <Sparkles className="w-10 h-10 text-accent" />
+                </div>
+                <h1 className="text-2xl font-bold mb-4">{currentScreenData.title}</h1>
               </div>
               
-              <Card className="bg-card border-2 border-border p-6">
-                <div className="space-y-2">
-                  <p className="text-lg leading-relaxed">{currentScreenData.title}</p>
-                  <div className="my-4">
-                    <p className="text-3xl font-bold text-accent">{currentScreenData.highlight}</p>
-                  </div>
-                  <p className="text-lg leading-relaxed">{currentScreenData.description}</p>
+              <Card className="bg-card/50 backdrop-blur border-2 border-border p-6 mb-6">
+                <p className="text-lg text-muted-foreground mb-2 line-through">
+                  {currentScreenData.bigIdea}
+                </p>
+                <p className="text-3xl font-bold text-accent mb-4">
+                  {currentScreenData.highlight}
+                </p>
+                <p className="text-base text-foreground">
+                  {currentScreenData.explanation}
+                </p>
+              </Card>
+              
+              <div className="space-y-3 mb-6">
+                <Card className="bg-muted/20 border border-border p-4">
+                  <p className="text-xs text-muted-foreground mb-1">Español</p>
+                  <p className="text-sm font-medium">{currentScreenData.example?.spanish}</p>
+                </Card>
+                <div className="flex justify-center">
+                  <ArrowRight className="w-5 h-5 text-primary animate-pulse" />
                 </div>
+                <Card className="bg-primary/10 border-2 border-primary/30 p-4">
+                  <p className="text-xs text-primary mb-1">Orden Apache</p>
+                  <p className="text-sm font-medium text-primary">{currentScreenData.example?.apache}</p>
+                </Card>
+                <div className="flex justify-center">
+                  <ArrowRight className="w-5 h-5 text-accent animate-pulse" />
+                </div>
+                <Card className="bg-accent/10 border-2 border-accent/30 p-4">
+                  <p className="text-xs text-accent mb-1">English</p>
+                  <p className="text-sm font-bold text-accent">{currentScreenData.example?.english}</p>
+                </Card>
+              </div>
+              
+              <Card className="bg-card/50 backdrop-blur border border-border p-4">
+                <p className="text-sm text-center text-foreground font-medium">
+                  {currentScreenData.insight}
+                </p>
               </Card>
             </div>
           )}
 
-          {/* Screen 3: Features & CTA */}
+          {/* Screen 2: El Método */}
+          {currentScreen === 2 && (
+            <div className="flex-1 flex flex-col animate-fade-in py-4">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/40 mb-4 animate-float">
+                  <Zap className="w-10 h-10 text-primary" />
+                </div>
+                <h1 className="text-2xl font-bold mb-2">{currentScreenData.title}</h1>
+                <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
+              </div>
+              
+              <div className="space-y-3 flex-1 overflow-y-auto mb-6">
+                {currentScreenData.steps?.map((step, index) => (
+                  <Card key={index} className="bg-card/50 backdrop-blur border border-border p-4 relative overflow-hidden">
+                    <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-lg font-bold text-primary">{step.number}</span>
+                    </div>
+                    <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
+                    <p className="text-xs text-muted-foreground pr-12">{step.content}</p>
+                  </Card>
+                ))}
+              </div>
+              
+              <Card className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-accent/30 p-5">
+                <p className="text-base font-bold text-center">
+                  {currentScreenData.promise}
+                </p>
+              </Card>
+            </div>
+          )}
+
+          {/* Screen 3: Prueba Social & CTA */}
           {currentScreen === 3 && (
-            <div className="flex-1 flex flex-col justify-between animate-fade-in">
-              <div>
-                <div className="text-center mb-6">
-                  <h1 className="text-2xl font-bold mb-2">{currentScreenData.title}</h1>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {currentScreenData.description}
+            <div className="flex-1 flex flex-col justify-center animate-fade-in">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent/40 mb-6 animate-float">
+                  <Target className="w-10 h-10 text-accent" />
+                </div>
+                <h1 className="text-2xl font-bold mb-3">{currentScreenData.title}</h1>
+              </div>
+              
+              <div className="space-y-4 mb-8">
+                {currentScreenData.features?.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <Card key={index} className="bg-card/50 backdrop-blur border-2 border-border p-5 relative overflow-hidden">
+                      <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
+                      <div className="relative flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-baseline gap-2 mb-1">
+                            <h3 className="font-bold text-lg">{feature.title}</h3>
+                            <span className="text-2xl font-bold text-accent">{feature.stat}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{feature.description}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+              
+              <div className="space-y-4">
+                <Card className="bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-primary/30 p-6">
+                  <p className="text-xl font-bold text-center mb-2">
+                    {currentScreenData.finalCall}
                   </p>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  {currentScreenData.features?.map((feature, index) => {
-                    const Icon = feature.icon;
-                    return (
-                      <Card key={index} className="bg-card border border-border p-4">
-                        <Icon className="w-6 h-6 text-primary mb-2" />
-                        <h3 className="font-bold text-base mb-1">{feature.title}</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{feature.description}</p>
-                      </Card>
-                    );
-                  })}
-                </div>
+                  <p className="text-sm text-center text-muted-foreground">
+                    {currentScreenData.guarantee}
+                  </p>
+                </Card>
               </div>
             </div>
           )}

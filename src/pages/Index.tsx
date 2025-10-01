@@ -7,6 +7,7 @@ import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles } 
 const Index = () => {
   const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState(0);
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   const screens = [
     {
@@ -24,41 +25,64 @@ const Index = () => {
     },
     {
       id: 1,
-      icon: Sparkles,
-      title: "La Verdad que Nadie te Dice",
-      bigIdea: "No necesitas MEMORIZAR más",
-      highlight: "Necesitas COMPRENDER",
-      explanation: "El inglés tiene una lógica simple. Una vez que la entiendes, todo hace click.",
-      example: {
-        step1: "Por ejemplo, si quieres decir:",
-        phrase1: "Me gustaría aprender inglés rápidamente",
-        step2: "Debes decir",
-        phrase2: "Yo gustar aprender inglés rápidamente",
-        step3: "En Inglés",
-        phrase3: "I like learn English quickly",
-        step4: "Agregas auxiliares clave",
-        phrase4: "I would like to learn English quickly"
-      },
-      insight: "¿Viste cómo funciona? Es solo seguir el orden correcto.",
-      buttonText: "Quiero entender"
-    },
-    {
-      id: 2,
       icon: Zap,
       title: "El Método Apache",
       subtitle: "5 pasos que cambiarán tu forma de hablar inglés",
       steps: [
-        { number: "1", label: "Vocabulario Base", content: "Las palabras esenciales que necesitas" },
-        { number: "2", label: "Tu Frase en Español", content: "Lo que quieres decir naturalmente" },
-        { number: "3", label: "Orden Apache", content: "El secreto: reorganizar en el orden del inglés" },
-        { number: "4", label: "Traducción Directa", content: "Palabra por palabra al inglés" },
-        { number: "5", label: "Auxiliar Mágico", content: "El toque final que lo hace perfecto" }
+        { 
+          number: "1", 
+          label: "Vocabulario Base", 
+          content: "Las palabras esenciales que necesitas",
+          example: {
+            words: [
+              { spanish: "Yo", english: "I" },
+              { spanish: "Gustar", english: "Like" },
+              { spanish: "Aprender", english: "Learn" },
+              { spanish: "Inglés", english: "English" },
+              { spanish: "Rápidamente", english: "Quickly" }
+            ]
+          }
+        },
+        { 
+          number: "2", 
+          label: "Tu Frase en Español", 
+          content: "Lo que quieres decir naturalmente",
+          example: {
+            phrase: "Me gustaría aprender inglés rápidamente"
+          }
+        },
+        { 
+          number: "3", 
+          label: "Orden Apache", 
+          content: "El secreto: reorganizar en el orden del inglés",
+          example: {
+            phrase: "Yo gustar aprender inglés rápidamente",
+            explanation: "Sujeto + Verbo + Complemento"
+          }
+        },
+        { 
+          number: "4", 
+          label: "Traducción Directa", 
+          content: "Palabra por palabra al inglés",
+          example: {
+            phrase: "I like learn English quickly"
+          }
+        },
+        { 
+          number: "5", 
+          label: "Auxiliar Mágico", 
+          content: "El toque final que lo hace perfecto",
+          example: {
+            phrase: "I would like to learn English quickly",
+            highlights: ["would", "to"]
+          }
+        }
       ],
       promise: "En 90 días estarás hablando con confianza",
-      buttonText: "Ver ejemplo completo"
+      buttonText: "Continuar"
     },
     {
-      id: 3,
+      id: 2,
       icon: Target,
       title: "Por qué Apache funciona",
       features: [
@@ -176,68 +200,8 @@ const Index = () => {
             </div>
           )}
 
-          {/* Screen 1: La Revelación */}
+          {/* Screen 1: El Método */}
           {currentScreen === 1 && (
-            <div className="flex-1 flex flex-col justify-center animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
-                  <Sparkles className="w-10 h-10 text-accent" />
-                </div>
-                <h1 className="text-2xl font-bold mb-4 text-white">{currentScreenData.title}</h1>
-              </div>
-              
-              <Card className="bg-card border-2 border-primary/30 p-6 mb-6">
-                <p className="text-lg text-muted-foreground mb-2 line-through">
-                  {currentScreenData.bigIdea}
-                </p>
-                <p className="text-3xl font-bold text-accent mb-4">
-                  {currentScreenData.highlight}
-                </p>
-                <p className="text-base text-card-foreground">
-                  {currentScreenData.explanation}
-                </p>
-              </Card>
-              
-              <div className="space-y-3 mb-6">
-                <Card className="bg-card border-2 border-border p-4">
-                  <p className="text-xs text-muted-foreground mb-2">{currentScreenData.example?.step1}</p>
-                  <p className="text-sm font-medium text-card-foreground">{currentScreenData.example?.phrase1}</p>
-                </Card>
-                <div className="flex justify-center">
-                  <ArrowRight className="w-5 h-5 text-primary animate-pulse" />
-                </div>
-                <Card className="bg-card border-2 border-primary p-4">
-                  <p className="text-xs text-primary mb-2 font-semibold">{currentScreenData.example?.step2}</p>
-                  <p className="text-sm font-medium text-card-foreground">{currentScreenData.example?.phrase2}</p>
-                </Card>
-                <div className="flex justify-center">
-                  <ArrowRight className="w-5 h-5 text-accent animate-pulse" />
-                </div>
-                <Card className="bg-card border-2 border-accent p-4">
-                  <p className="text-xs text-accent mb-2 font-semibold">{currentScreenData.example?.step3}</p>
-                  <p className="text-sm font-bold text-card-foreground">{currentScreenData.example?.phrase3}</p>
-                </Card>
-                <div className="flex justify-center">
-                  <ArrowRight className="w-5 h-5 text-accent animate-pulse" />
-                </div>
-                <Card className="bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent p-4">
-                  <p className="text-xs text-accent mb-2 font-semibold">{currentScreenData.example?.step4}</p>
-                  <p className="text-sm font-bold text-card-foreground">
-                    I <span className="text-accent">would</span> like <span className="text-accent">to</span> learn English quickly
-                  </p>
-                </Card>
-              </div>
-              
-              <Card className="bg-card border-2 border-primary/30 p-4">
-                <p className="text-sm text-center text-card-foreground font-medium">
-                  {currentScreenData.insight}
-                </p>
-              </Card>
-            </div>
-          )}
-
-          {/* Screen 2: El Método */}
-          {currentScreen === 2 && (
             <div className="flex-1 flex flex-col animate-fade-in py-4">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary mb-4 animate-float">
@@ -253,8 +217,57 @@ const Index = () => {
                     <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center">
                       <span className="text-lg font-bold text-primary">{step.number}</span>
                     </div>
-                    <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
-                    <p className="text-xs text-card-foreground pr-12">{step.content}</p>
+                    <div className="pr-12 mb-2">
+                      <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
+                      <p className="text-xs text-card-foreground">{step.content}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setExpandedStep(expandedStep === index ? null : index)}
+                      className="text-xs"
+                    >
+                      {expandedStep === index ? "Ocultar" : "Ver"}
+                    </Button>
+                    
+                    {expandedStep === index && step.example && (
+                      <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
+                        {step.example.words && (
+                          <div className="space-y-1">
+                            {step.example.words.map((word: any, i: number) => (
+                              <div key={i} className="flex justify-between text-xs">
+                                <span className="text-muted-foreground">{word.spanish}</span>
+                                <span className="text-card-foreground font-medium">{word.english}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {step.example.phrase && !step.example.highlights && (
+                          <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
+                            {step.example.phrase}
+                          </p>
+                        )}
+                        {step.example.phrase && step.example.highlights && (
+                          <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
+                            {step.example.phrase.split(' ').map((word: string, i: number) => {
+                              const cleanWord = word.replace(/[.,!?]/, '');
+                              const isHighlight = step.example.highlights.includes(cleanWord);
+                              return (
+                                <span key={i}>
+                                  <span className={isHighlight ? "text-accent font-bold" : ""}>
+                                    {word}
+                                  </span>
+                                  {i < step.example.phrase.split(' ').length - 1 ? ' ' : ''}
+                                </span>
+                              );
+                            })}
+                          </p>
+                        )}
+                        {step.example.explanation && (
+                          <p className="text-xs text-primary italic">{step.example.explanation}</p>
+                        )}
+                      </div>
+                    )}
                   </Card>
                 ))}
               </div>
@@ -267,8 +280,8 @@ const Index = () => {
             </div>
           )}
 
-          {/* Screen 3: Prueba Social & CTA */}
-          {currentScreen === 3 && (
+          {/* Screen 2: Prueba Social & CTA */}
+          {currentScreen === 2 && (
             <div className="flex-1 flex flex-col justify-center animate-fade-in">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">

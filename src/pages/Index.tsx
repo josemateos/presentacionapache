@@ -323,7 +323,7 @@ const Index = () => {
                   <p className="relative text-xl font-bold text-center mb-2 text-card-foreground">
                     {currentScreenData.finalCall}
                   </p>
-                  <p className="relative text-sm text-center text-muted-foreground">
+                  <p className="relative text-lg font-bold text-center text-white">
                     {currentScreenData.guarantee}
                   </p>
                 </Card>
@@ -354,7 +354,7 @@ const Index = () => {
               </Button>
               <Button
                 onClick={() => navigate("/login")}
-                className="w-full py-6 text-base bg-yellow-600 hover:bg-yellow-700 text-white font-semibold border-2 border-yellow-500"
+                className="w-full py-6 text-base bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold border-2 border-yellow-300"
               >
                 Iniciar Sesión
               </Button>

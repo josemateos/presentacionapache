@@ -53,7 +53,7 @@ const Login = () => {
         description: "Has iniciado sesión correctamente.",
       });
       
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Partial<Record<keyof LoginForm, string>> = {};

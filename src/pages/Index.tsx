@@ -338,8 +338,7 @@ const Index = () => {
           {currentScreen < screens.length - 1 ? (
             <Button
               onClick={handleNext}
-              variant={currentScreen === 0 ? "outline" : "default"}
-              className={`w-full py-6 text-base font-semibold ${currentScreen === 0 ? 'border-2 border-white text-white hover:bg-white hover:text-primary' : 'bg-primary hover:bg-primary/90'}`}
+              className="w-full bg-primary hover:bg-primary/90 py-6 text-base font-semibold"
             >
               {currentScreenData.buttonText}
             </Button>

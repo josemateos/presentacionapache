@@ -318,11 +318,12 @@ const Index = () => {
               </div>
               
               <div className="space-y-4">
-                <Card className="bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-accent p-6">
-                  <p className="text-xl font-bold text-center mb-2 text-card-foreground">
+                <Card className="relative overflow-hidden border-2 border-accent p-6">
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
+                  <p className="relative text-xl font-bold text-center mb-2 text-card-foreground">
                     {currentScreenData.finalCall}
                   </p>
-                  <p className="text-sm text-center text-muted-foreground">
+                  <p className="relative text-sm text-center text-muted-foreground">
                     {currentScreenData.guarantee}
                   </p>
                 </Card>
@@ -353,8 +354,7 @@ const Index = () => {
               </Button>
               <Button
                 onClick={() => navigate("/login")}
-                variant="outline"
-                className="w-full py-6 text-base border-2 border-white text-white hover:bg-white hover:text-primary"
+                className="w-full py-6 text-base bg-yellow-600 hover:bg-yellow-700 text-white font-semibold border-2 border-yellow-500"
               >
                 Iniciar Sesión
               </Button>

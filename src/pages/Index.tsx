@@ -31,9 +31,14 @@ const Index = () => {
       highlight: "Necesitas COMPRENDER",
       explanation: "El inglés tiene una lógica simple. Una vez que la entiendes, todo hace click.",
       example: {
-        spanish: "Me gustaría aprender inglés rápidamente",
-        apache: "Yo gustar aprender inglés rápidamente",
-        english: "I would like to learn English quickly"
+        step1: "Por ejemplo, si quieres decir:",
+        phrase1: "Me gustaría aprender inglés rápidamente",
+        step2: "Debes decir",
+        phrase2: "Yo gustar aprender inglés rápidamente",
+        step3: "En Inglés",
+        phrase3: "I like learn English quickly",
+        step4: "Agregas auxiliares clave",
+        phrase4: "I would like to learn English quickly"
       },
       insight: "¿Viste cómo funciona? Es solo seguir el orden correcto.",
       buttonText: "Quiero entender"
@@ -145,10 +150,10 @@ const Index = () => {
           {currentScreen === 0 && (
             <div className="flex-1 flex flex-col justify-center animate-fade-in">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-destructive/10 border-2 border-destructive/30 mb-6 animate-float">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-destructive/20 border-2 border-destructive mb-6 animate-float">
                   <Brain className="w-10 h-10 text-destructive" />
                 </div>
-                <h1 className="text-2xl font-bold mb-3 leading-tight">
+                <h1 className="text-2xl font-bold mb-3 leading-tight text-foreground">
                   {currentScreenData.title}
                 </h1>
                 <p className="text-lg text-muted-foreground mb-6">
@@ -156,8 +161,8 @@ const Index = () => {
                 </p>
               </div>
               
-              <Card className="bg-card/50 backdrop-blur border-2 border-border p-6 mb-6">
-                <p className="text-xl font-bold text-foreground mb-4">
+              <Card className="bg-card border-2 border-destructive/40 p-6 mb-6">
+                <p className="text-xl font-bold text-card-foreground mb-4">
                   {currentScreenData.problem}
                 </p>
                 <p className="text-lg text-primary font-semibold">
@@ -167,8 +172,8 @@ const Index = () => {
               
               <div className="space-y-3">
                 {currentScreenData.painPoints?.map((point, index) => (
-                  <Card key={index} className="bg-muted/30 border border-border p-4">
-                    <p className="text-sm leading-relaxed">{point}</p>
+                  <Card key={index} className="bg-card border-2 border-border p-4">
+                    <p className="text-sm leading-relaxed text-card-foreground">{point}</p>
                   </Card>
                 ))}
               </div>
@@ -179,47 +184,56 @@ const Index = () => {
           {currentScreen === 1 && (
             <div className="flex-1 flex flex-col justify-center animate-fade-in">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent/40 mb-6 animate-float">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
                   <Sparkles className="w-10 h-10 text-accent" />
                 </div>
-                <h1 className="text-2xl font-bold mb-4">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-foreground">{currentScreenData.title}</h1>
               </div>
               
-              <Card className="bg-card/50 backdrop-blur border-2 border-border p-6 mb-6">
+              <Card className="bg-card border-2 border-primary/30 p-6 mb-6">
                 <p className="text-lg text-muted-foreground mb-2 line-through">
                   {currentScreenData.bigIdea}
                 </p>
                 <p className="text-3xl font-bold text-accent mb-4">
                   {currentScreenData.highlight}
                 </p>
-                <p className="text-base text-foreground">
+                <p className="text-base text-card-foreground">
                   {currentScreenData.explanation}
                 </p>
               </Card>
               
               <div className="space-y-3 mb-6">
-                <Card className="bg-muted/20 border border-border p-4">
-                  <p className="text-xs text-muted-foreground mb-1">Español</p>
-                  <p className="text-sm font-medium">{currentScreenData.example?.spanish}</p>
+                <Card className="bg-card border-2 border-border p-4">
+                  <p className="text-xs text-muted-foreground mb-2">{currentScreenData.example?.step1}</p>
+                  <p className="text-sm font-medium text-card-foreground">{currentScreenData.example?.phrase1}</p>
                 </Card>
                 <div className="flex justify-center">
                   <ArrowRight className="w-5 h-5 text-primary animate-pulse" />
                 </div>
-                <Card className="bg-primary/10 border-2 border-primary/30 p-4">
-                  <p className="text-xs text-primary mb-1">Orden Apache</p>
-                  <p className="text-sm font-medium text-primary">{currentScreenData.example?.apache}</p>
+                <Card className="bg-card border-2 border-primary p-4">
+                  <p className="text-xs text-primary mb-2 font-semibold">{currentScreenData.example?.step2}</p>
+                  <p className="text-sm font-medium text-card-foreground">{currentScreenData.example?.phrase2}</p>
                 </Card>
                 <div className="flex justify-center">
                   <ArrowRight className="w-5 h-5 text-accent animate-pulse" />
                 </div>
-                <Card className="bg-accent/10 border-2 border-accent/30 p-4">
-                  <p className="text-xs text-accent mb-1">English</p>
-                  <p className="text-sm font-bold text-accent">{currentScreenData.example?.english}</p>
+                <Card className="bg-card border-2 border-accent p-4">
+                  <p className="text-xs text-accent mb-2 font-semibold">{currentScreenData.example?.step3}</p>
+                  <p className="text-sm font-bold text-card-foreground">{currentScreenData.example?.phrase3}</p>
+                </Card>
+                <div className="flex justify-center">
+                  <ArrowRight className="w-5 h-5 text-accent animate-pulse" />
+                </div>
+                <Card className="bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent p-4">
+                  <p className="text-xs text-accent mb-2 font-semibold">{currentScreenData.example?.step4}</p>
+                  <p className="text-sm font-bold text-card-foreground">
+                    I <span className="text-accent">would</span> like <span className="text-accent">to</span> learn English quickly
+                  </p>
                 </Card>
               </div>
               
-              <Card className="bg-card/50 backdrop-blur border border-border p-4">
-                <p className="text-sm text-center text-foreground font-medium">
+              <Card className="bg-card border-2 border-primary/30 p-4">
+                <p className="text-sm text-center text-card-foreground font-medium">
                   {currentScreenData.insight}
                 </p>
               </Card>
@@ -230,27 +244,27 @@ const Index = () => {
           {currentScreen === 2 && (
             <div className="flex-1 flex flex-col animate-fade-in py-4">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/40 mb-4 animate-float">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary mb-4 animate-float">
                   <Zap className="w-10 h-10 text-primary" />
                 </div>
-                <h1 className="text-2xl font-bold mb-2">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-2 text-foreground">{currentScreenData.title}</h1>
                 <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
               </div>
               
               <div className="space-y-3 flex-1 overflow-y-auto mb-6">
                 {currentScreenData.steps?.map((step, index) => (
-                  <Card key={index} className="bg-card/50 backdrop-blur border border-border p-4 relative overflow-hidden">
-                    <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden">
+                    <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center">
                       <span className="text-lg font-bold text-primary">{step.number}</span>
                     </div>
                     <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
-                    <p className="text-xs text-muted-foreground pr-12">{step.content}</p>
+                    <p className="text-xs text-card-foreground pr-12">{step.content}</p>
                   </Card>
                 ))}
               </div>
               
-              <Card className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-accent/30 p-5">
-                <p className="text-base font-bold text-center">
+              <Card className="bg-gradient-to-r from-accent/20 to-primary/20 border-2 border-accent p-5">
+                <p className="text-base font-bold text-center text-card-foreground">
                   {currentScreenData.promise}
                 </p>
               </Card>
@@ -261,25 +275,25 @@ const Index = () => {
           {currentScreen === 3 && (
             <div className="flex-1 flex flex-col justify-center animate-fade-in">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent/40 mb-6 animate-float">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
                   <Target className="w-10 h-10 text-accent" />
                 </div>
-                <h1 className="text-2xl font-bold mb-3">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-3 text-foreground">{currentScreenData.title}</h1>
               </div>
               
               <div className="space-y-4 mb-8">
                 {currentScreenData.features?.map((feature, index) => {
                   const Icon = feature.icon;
                   return (
-                    <Card key={index} className="bg-card/50 backdrop-blur border-2 border-border p-5 relative overflow-hidden">
-                      <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
+                    <Card key={index} className="bg-card border-2 border-primary/30 p-5 relative overflow-hidden">
+                      <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
                       <div className="relative flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
                           <Icon className="w-6 h-6 text-primary" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-baseline gap-2 mb-1">
-                            <h3 className="font-bold text-lg">{feature.title}</h3>
+                            <h3 className="font-bold text-lg text-card-foreground">{feature.title}</h3>
                             <span className="text-2xl font-bold text-accent">{feature.stat}</span>
                           </div>
                           <p className="text-sm text-muted-foreground">{feature.description}</p>
@@ -291,8 +305,8 @@ const Index = () => {
               </div>
               
               <div className="space-y-4">
-                <Card className="bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-primary/30 p-6">
-                  <p className="text-xl font-bold text-center mb-2">
+                <Card className="bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-accent p-6">
+                  <p className="text-xl font-bold text-center mb-2 text-card-foreground">
                     {currentScreenData.finalCall}
                   </p>
                   <p className="text-sm text-center text-muted-foreground">

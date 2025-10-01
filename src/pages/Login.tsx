@@ -15,9 +15,6 @@ const loginSchema = z.object({
     .trim()
     .email({ message: "Por favor ingresa un email válido" })
     .max(255, { message: "El email no puede exceder 255 caracteres" }),
-  password: z.string()
-    .min(1, { message: "Por favor ingresa tu contraseña" })
-    .max(100, { message: "La contraseña no puede exceder 100 caracteres" }),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -28,7 +25,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
-    password: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof LoginForm, string>>>({});
 
@@ -70,7 +66,7 @@ const Login = () => {
       } else {
         toast({
           title: "Error",
-          description: "Email o contraseña incorrectos. Por favor intenta nuevamente.",
+          description: "No se pudo iniciar sesión. Por favor intenta nuevamente.",
           variant: "destructive",
         });
       }
@@ -166,40 +162,16 @@ const Login = () => {
               )}
             </div>
 
-            <div>
-              <Label htmlFor="password">Contraseña</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.password ? "border-destructive" : ""}`}
-                disabled={isLoading}
-                autoComplete="current-password"
-              />
-              {errors.password && (
-                <p className="text-xs text-destructive mt-1">{errors.password}</p>
-              )}
-            </div>
-
             <Button
               type="submit"
               className="w-full bg-primary hover:bg-primary/90 py-6 text-base"
               disabled={isLoading}
             >
-              {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              {isLoading ? "Iniciando sesión..." : "Continuar con Email"}
             </Button>
           </form>
 
           <div className="mt-6 text-center space-y-3">
-            <button
-              className="text-sm text-primary hover:underline block w-full"
-              disabled={isLoading}
-            >
-              ¿Olvidaste tu contraseña?
-            </button>
             <p className="text-sm text-muted-foreground">
               ¿No tienes cuenta?{" "}
               <button

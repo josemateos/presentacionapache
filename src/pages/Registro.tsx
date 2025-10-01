@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, UserPlus } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
@@ -17,13 +19,6 @@ const registroSchema = z.object({
     .trim()
     .email({ message: "Por favor ingresa un email válido" })
     .max(255, { message: "El email no puede exceder 255 caracteres" }),
-  password: z.string()
-    .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
-    .max(100, { message: "La contraseña no puede exceder 100 caracteres" }),
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmPassword"],
 });
 
 type RegistroForm = z.infer<typeof registroSchema>;
@@ -35,8 +30,6 @@ const Registro = () => {
   const [formData, setFormData] = useState<RegistroForm>({
     nombre: "",
     email: "",
-    password: "",
-    confirmPassword: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof RegistroForm, string>>>({});
 
@@ -104,12 +97,50 @@ const Registro = () => {
           </div>
 
           <div className="mb-6 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 mb-4">
-              <UserPlus className="w-8 h-8 text-primary" />
-            </div>
             <p className="text-muted-foreground text-sm">
               Comienza tu viaje para dominar el inglés
             </p>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 text-base flex items-center justify-center gap-3"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
+            >
+              <FcGoogle className="w-5 h-5" />
+              Continuar con Google
+            </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 text-base flex items-center justify-center gap-3"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
+            >
+              <FaApple className="w-5 h-5" />
+              Continuar con Apple
+            </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 text-base flex items-center justify-center gap-3"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
+            >
+              <FaFacebook className="w-5 h-5 text-blue-600" />
+              Continuar con Facebook
+            </Button>
+          </div>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">O</span>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,46 +178,13 @@ const Registro = () => {
               )}
             </div>
 
-            <div>
-              <Label htmlFor="password">Contraseña</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.password ? "border-destructive" : ""}`}
-                disabled={isLoading}
-              />
-              {errors.password && (
-                <p className="text-xs text-destructive mt-1">{errors.password}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.confirmPassword ? "border-destructive" : ""}`}
-                disabled={isLoading}
-              />
-              {errors.confirmPassword && (
-                <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
-              )}
-            </div>
-
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 py-6 text-base"
+              className="w-full bg-primary hover:bg-primary/90 py-6 text-base flex items-center justify-center gap-3"
               disabled={isLoading}
             >
-              {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
+              <Mail className="w-5 h-5" />
+              {isLoading ? "Enviando..." : "Continuar con Correo"}
             </Button>
           </form>
 

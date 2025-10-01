@@ -15,8 +15,8 @@ export const ProgressChart = ({ currentDay, totalDays }: ProgressChartProps) => 
       transition={{ duration: 0.5, delay: 0.5 }}
       className="bg-card border border-border rounded-2xl p-6 shadow-md"
     >
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg md:text-xl font-semibold">
+      <div className="text-center mb-4">
+        <h3 className="text-lg md:text-xl font-semibold mb-2">
           Progreso del Plan (90 Días)
         </h3>
         <motion.div
@@ -30,7 +30,7 @@ export const ProgressChart = ({ currentDay, totalDays }: ProgressChartProps) => 
       </div>
 
       {/* Progress bar container */}
-      <div className="relative h-8 bg-secondary rounded-full overflow-hidden shadow-inner">
+      <div className="relative h-4 bg-secondary rounded-full overflow-hidden shadow-inner">
         {/* Animated progress bar */}
         <motion.div
           initial={{ width: 0 }}

@@ -14,7 +14,7 @@ const Index = () => {
       id: 0,
       icon: Brain,
       title: "¿Has intentado aprender inglés de muchas maneras...",
-      subtitle: "pero sigues sin ver buenos resultados?",
+      subtitle: "pero sigues sin ver los resultados que deseas?",
       problem: "El problema es que nunca te han enseñado a comprender el funcionamiento lógico del inglés.",
       painPoints: [
         "📚 Memorizaste miles de palabras que no sabes usar",
@@ -183,19 +183,19 @@ const Index = () => {
                 </p>
               </div>
               
-              <Card className="bg-card border-2 border-destructive/40 p-6 mb-6">
-                <p className="text-lg font-bold text-card-foreground text-center">
-                  {currentScreenData.problem}
-                </p>
-              </Card>
-              
-              <div className="space-y-3">
+              <div className="space-y-3 mb-6">
                 {currentScreenData.painPoints?.map((point, index) => (
                   <Card key={index} className="bg-card border-2 border-border p-4">
                     <p className="text-sm leading-relaxed text-card-foreground">{point}</p>
                   </Card>
                 ))}
               </div>
+              
+              <Card className="bg-card border-2 border-destructive/40 p-6">
+                <p className="text-lg font-bold text-card-foreground text-center">
+                  {currentScreenData.problem}
+                </p>
+              </Card>
             </div>
           )}
 

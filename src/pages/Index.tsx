@@ -21,7 +21,7 @@ const Index = () => {
         "📖 Estudiaste reglas gramaticales que nunca aplicas",
         "🔄 Repites ejercicios pero no mejoras tu fluidez"
       ],
-      buttonText: "Esto me pasa"
+      buttonText: "Conocer la solución"
     },
     {
       id: 1,
@@ -113,6 +113,8 @@ const Index = () => {
   const handleNext = () => {
     if (currentScreen < screens.length - 1) {
       setCurrentScreen(currentScreen + 1);
+      setExpandedSteps([]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -213,8 +215,8 @@ const Index = () => {
               <div className="space-y-3 flex-1 overflow-y-auto mb-6">
                 {currentScreenData.steps?.map((step, index) => (
                   <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden">
-                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/20 border border-primary flex items-center justify-center">
-                      <span className="text-base font-bold text-primary">{step.number}</span>
+                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400 border border-yellow-500 flex items-center justify-center">
+                      <span className="text-base font-bold text-yellow-900">{step.number}</span>
                     </div>
                     <div className="pr-12 mb-2">
                       <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>

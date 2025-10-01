@@ -12,10 +12,9 @@ const Index = () => {
     {
       id: 0,
       icon: Brain,
-      title: "¿Has intentado aprender inglés durante años...",
-      subtitle: "pero sigues sin poder mantener una conversación?",
-      problem: "El problema no eres tú.",
-      reveal: "Es que nunca te enseñaron cómo funciona realmente el inglés.",
+      title: "¿Has intentado aprender inglés de muchas maneras...",
+      subtitle: "pero sigues sin ver buenos resultados?",
+      problem: "El problema es que nunca te han enseñado a comprender el funcionamiento lógico del inglés.",
       painPoints: [
         "📚 Memorizaste miles de palabras que no sabes usar",
         "📖 Estudiaste reglas gramaticales que nunca aplicas",
@@ -153,7 +152,7 @@ const Index = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-destructive/20 border-2 border-destructive mb-6 animate-float">
                   <Brain className="w-10 h-10 text-destructive" />
                 </div>
-                <h1 className="text-2xl font-bold mb-3 leading-tight text-foreground">
+                <h1 className="text-2xl font-bold mb-3 leading-tight text-white">
                   {currentScreenData.title}
                 </h1>
                 <p className="text-lg text-muted-foreground mb-6">
@@ -162,11 +161,8 @@ const Index = () => {
               </div>
               
               <Card className="bg-card border-2 border-destructive/40 p-6 mb-6">
-                <p className="text-xl font-bold text-card-foreground mb-4">
+                <p className="text-lg font-bold text-card-foreground text-center">
                   {currentScreenData.problem}
-                </p>
-                <p className="text-lg text-primary font-semibold">
-                  {currentScreenData.reveal}
                 </p>
               </Card>
               
@@ -187,7 +183,7 @@ const Index = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
                   <Sparkles className="w-10 h-10 text-accent" />
                 </div>
-                <h1 className="text-2xl font-bold mb-4 text-foreground">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-white">{currentScreenData.title}</h1>
               </div>
               
               <Card className="bg-card border-2 border-primary/30 p-6 mb-6">
@@ -247,7 +243,7 @@ const Index = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary mb-4 animate-float">
                   <Zap className="w-10 h-10 text-primary" />
                 </div>
-                <h1 className="text-2xl font-bold mb-2 text-foreground">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-2 text-white">{currentScreenData.title}</h1>
                 <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
               </div>
               
@@ -278,7 +274,7 @@ const Index = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
                   <Target className="w-10 h-10 text-accent" />
                 </div>
-                <h1 className="text-2xl font-bold mb-3 text-foreground">{currentScreenData.title}</h1>
+                <h1 className="text-2xl font-bold mb-3 text-white">{currentScreenData.title}</h1>
               </div>
               
               <div className="space-y-4 mb-8">

@@ -323,7 +323,7 @@ const Index = () => {
                   <p className="relative text-xl font-bold text-center mb-2 text-card-foreground">
                     {currentScreenData.finalCall}
                   </p>
-                  <p className="relative text-lg font-bold text-center text-white">
+                  <p className="relative text-lg font-bold text-center text-gray-900">
                     {currentScreenData.guarantee}
                   </p>
                 </Card>

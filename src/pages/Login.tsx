@@ -108,7 +108,7 @@ const Login = () => {
               disabled={isLoading}
             >
               <FcGoogle className="w-5 h-5 mr-2" />
-              Continuar con Google
+              Ingresar con Google
             </Button>
 
             <Button
@@ -118,7 +118,7 @@ const Login = () => {
               disabled={isLoading}
             >
               <FaApple className="w-5 h-5 mr-2" />
-              Continuar con Apple
+              Ingresar con Apple
             </Button>
 
             <Button
@@ -128,7 +128,7 @@ const Login = () => {
               disabled={isLoading}
             >
               <FaFacebook className="w-5 h-5 mr-2 text-[#1877F2]" />
-              Continuar con Facebook
+              Ingresar con Facebook
             </Button>
           </div>
 
@@ -138,7 +138,7 @@ const Login = () => {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-muted-foreground">
-                O continúa con email
+                O ingresa con email
               </span>
             </div>
           </div>
@@ -167,7 +167,7 @@ const Login = () => {
               className="w-full bg-primary hover:bg-primary/90 py-6 text-base"
               disabled={isLoading}
             >
-              {isLoading ? "Iniciando sesión..." : "Continuar con Email"}
+              {isLoading ? "Ingresando..." : "Ingresar con Email"}
             </Button>
           </form>
 

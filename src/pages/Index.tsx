@@ -223,7 +223,6 @@ const Index = () => {
                       <p className="text-xs text-card-foreground">{step.content}</p>
                     </div>
                     <Button
-                      variant="outline"
                       size="sm"
                       onClick={() => {
                         if (expandedSteps.includes(index)) {
@@ -232,7 +231,7 @@ const Index = () => {
                           setExpandedSteps([...expandedSteps, index]);
                         }
                       }}
-                      className="text-xs"
+                      className="text-xs bg-primary hover:bg-primary/90 text-white"
                     >
                       {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
                     </Button>
@@ -276,8 +275,9 @@ const Index = () => {
                 ))}
               </div>
               
-              <Card className="bg-gradient-to-r from-accent/20 to-primary/20 border-2 border-accent p-5">
-                <p className="text-base font-bold text-center text-card-foreground">
+              <Card className="relative overflow-hidden border-2 border-accent p-5">
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
+                <p className="relative text-base font-bold text-center text-card-foreground">
                   {currentScreenData.promise}
                 </p>
               </Card>
@@ -333,7 +333,7 @@ const Index = () => {
       </main>
 
       {/* Footer with Action Button */}
-      <footer className={`${currentScreen === 0 ? 'p-4' : currentScreen === 2 ? 'p-4' : 'sticky bottom-0 bg-background/80 backdrop-blur-md border-t border-border p-4'}`}>
+      <footer className="p-4">
         <div className="container mx-auto max-w-md">
           {currentScreen < screens.length - 1 ? (
             <Button

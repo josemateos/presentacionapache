@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, Mail, Moon, Sun } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { useTheme } from "next-themes";
 
 const registroSchema = z.object({
   nombre: z.string()
@@ -26,6 +27,7 @@ type RegistroForm = z.infer<typeof registroSchema>;
 const Registro = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<RegistroForm>({
     nombre: "",
@@ -82,6 +84,18 @@ const Registro = () => {
 
   return (
     <div className="min-h-screen gradient-hero flex items-center justify-center p-4">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        className="fixed top-4 right-4 z-50"
+      >
+        {theme === "dark" ? (
+          <Sun className="h-5 w-5" />
+        ) : (
+          <Moon className="h-5 w-5" />
+        )}
+      </Button>
       <div className="w-full max-w-md">
         <Card className="bg-card border-2 border-border p-6 md:p-8">
           <div className="flex items-center gap-4 mb-6">

@@ -220,7 +220,7 @@ const Index = () => {
                         <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
                         <p className="text-xs text-card-foreground">{step.content}</p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 justify-between items-center">
                         <Button
                           size="sm"
                           onClick={() => {
@@ -230,7 +230,7 @@ const Index = () => {
                               setExpandedSteps([...expandedSteps, index]);
                             }
                           }}
-                          className="text-xs bg-primary hover:bg-primary/90 text-white"
+                          className="text-xs bg-primary hover:bg-primary/90 text-white w-24"
                         >
                           {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
                         </Button>
@@ -238,7 +238,7 @@ const Index = () => {
                           <Button
                             size="sm"
                             onClick={() => handleStepOk(index)}
-                            className="text-xs bg-accent hover:bg-accent/90 text-white font-semibold"
+                            className="text-xs bg-accent hover:bg-accent/90 text-white font-semibold w-24"
                           >
                             Ok
                           </Button>

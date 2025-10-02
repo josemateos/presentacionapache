@@ -147,7 +147,7 @@ const Index = () => {
   return (
     <div className="min-h-screen gradient-hero text-white flex flex-col">
       {/* Theme Toggle Button */}
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-8 right-8 z-50">
         <Button
           variant="outline"
           size="icon"

@@ -69,11 +69,7 @@ const Dashboard = () => {
 
   const handleDailyAction = () => {
     if (!completedDays[userProgress.currentDay]) {
-      toast({
-        title: "Iniciando Vocabulario",
-        description: `Comenzando vocabulario del día ${userProgress.currentDay}`,
-      });
-      // Aquí navegarías a la pantalla de vocabulario
+      navigate("/vocabulario-dia-1");
     }
   };
 

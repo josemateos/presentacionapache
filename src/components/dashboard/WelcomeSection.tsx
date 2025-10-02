@@ -18,12 +18,13 @@ export const WelcomeSection = ({
   const daysSinceRegistration = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('es-ES', { 
+    const formatted = date.toLocaleDateString('es-ES', { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   };
 
   return (

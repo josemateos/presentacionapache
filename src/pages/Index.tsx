@@ -214,7 +214,7 @@ const Index = () => {
                   return (
                     <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden animate-fade-in">
                       <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400/40 border border-yellow-500/50 flex items-center justify-center">
-                        <span className="text-base font-bold text-blue-600">{step.number}</span>
+                        <span className="text-base font-bold text-white">{step.number}</span>
                       </div>
                       <div className="pr-12 mb-2">
                         <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>

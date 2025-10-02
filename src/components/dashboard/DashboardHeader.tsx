@@ -7,10 +7,17 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader = ({ onProfileClick, opacity = 1 }: DashboardHeaderProps) => {
+  const translateY = (1 - opacity) * -20;
+  
   return (
     <header
       className="sticky top-0 z-50 bg-card border-b border-border shadow-md"
-      style={{ opacity, transition: "opacity 0.3s ease-out", willChange: "opacity" }}
+      style={{ 
+        opacity, 
+        transform: `translateY(${translateY}px)`,
+        transition: "opacity 0.3s ease-out, transform 0.3s ease-out", 
+        willChange: "opacity, transform" 
+      }}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">

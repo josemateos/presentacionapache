@@ -220,19 +220,30 @@ const Index = () => {
                         <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
                         <p className="text-xs text-card-foreground">{step.content}</p>
                       </div>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          if (expandedSteps.includes(index)) {
-                            setExpandedSteps(expandedSteps.filter(i => i !== index));
-                          } else {
-                            setExpandedSteps([...expandedSteps, index]);
-                          }
-                        }}
-                        className="text-xs bg-primary hover:bg-primary/90 text-white"
-                      >
-                        {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            if (expandedSteps.includes(index)) {
+                              setExpandedSteps(expandedSteps.filter(i => i !== index));
+                            } else {
+                              setExpandedSteps([...expandedSteps, index]);
+                            }
+                          }}
+                          className="text-xs bg-primary hover:bg-primary/90 text-white"
+                        >
+                          {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
+                        </Button>
+                        {expandedSteps.includes(index) && index < currentScreenData.steps!.length - 1 && !visibleSteps.includes(index) && (
+                          <Button
+                            size="sm"
+                            onClick={() => handleStepOk(index)}
+                            className="text-xs bg-accent hover:bg-accent/90 text-white font-semibold"
+                          >
+                            Ok
+                          </Button>
+                        )}
+                      </div>
                       
                       {expandedSteps.includes(index) && step.example && (
                         <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
@@ -267,16 +278,6 @@ const Index = () => {
                               })}
                             </p>
                           )}
-                          
-                          {index < currentScreenData.steps!.length - 1 && !visibleSteps.includes(index) && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleStepOk(index)}
-                              className="w-full mt-3 bg-accent hover:bg-accent/90 text-white font-semibold"
-                            >
-                              Ok
-                            </Button>
-                          )}
                         </div>
                       )}
                     </Card>
@@ -284,12 +285,14 @@ const Index = () => {
                 })}
               </div>
               
-              <Card className="relative overflow-hidden border-2 border-accent p-5">
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
-                <p className="relative text-base font-bold text-center text-card-foreground">
-                  {currentScreenData.promise}
-                </p>
-              </Card>
+              {expandedSteps.includes(4) && (
+                <Card className="relative overflow-hidden border-2 border-accent p-5 animate-fade-in">
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
+                  <p className="relative text-base font-bold text-center text-card-foreground">
+                    {currentScreenData.promise}
+                  </p>
+                </Card>
+              )}
             </div>
           )}
 

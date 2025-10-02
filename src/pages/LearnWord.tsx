@@ -47,6 +47,8 @@ const LearnWord = () => {
     });
   };
 
+  const [hasRecording, setHasRecording] = useState(false);
+
   const handleStartRecording = () => {
     setIsRecording(true);
     toast({
@@ -56,11 +58,19 @@ const LearnWord = () => {
     // Simular fin de grabación después de 5 segundos
     setTimeout(() => {
       setIsRecording(false);
+      setHasRecording(true);
       toast({
         title: "Grabación finalizada",
         description: "¡Excelente pronunciación!",
       });
     }, 5000);
+  };
+
+  const handlePlayRecording = () => {
+    toast({
+      title: "Reproduciendo grabación",
+      description: "Escuchando tu pronunciación",
+    });
   };
 
   const getInputValidationColor = () => {
@@ -181,17 +191,28 @@ const LearnWord = () => {
                 </Button>
 
                 <div className="flex flex-col items-center gap-2">
-                  <Button
-                    size="lg"
-                    variant={isRecording ? "destructive" : "outline"}
-                    className="w-20 h-20 rounded-full hover:bg-primary/10"
-                    onClick={handleStartRecording}
-                    disabled={isRecording}
-                  >
-                    <Mic className={`w-8 h-8 ${isRecording ? "text-white" : "text-primary"}`} />
-                  </Button>
+                  {!hasRecording ? (
+                    <Button
+                      size="lg"
+                      variant={isRecording ? "destructive" : "outline"}
+                      className="w-20 h-20 rounded-full hover:bg-primary/10"
+                      onClick={handleStartRecording}
+                      disabled={isRecording}
+                    >
+                      <Mic className={`w-8 h-8 ${isRecording ? "text-white" : "text-primary"}`} />
+                    </Button>
+                  ) : (
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-20 h-20 rounded-full hover:bg-primary/10"
+                      onClick={handlePlayRecording}
+                    >
+                      <Volume2 className="w-8 h-8 text-primary" />
+                    </Button>
+                  )}
                   <p className="text-xs text-muted-foreground max-w-[120px] text-center">
-                    Pronuncia la palabra tres veces seguidas
+                    {!hasRecording ? "Pronuncia la palabra tres veces seguidas" : "Escuchar grabación"}
                   </p>
                 </div>
               </div>
@@ -222,7 +243,7 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Escribe ({spanish.charAt(0).toUpperCase() + spanish.slice(1)}) en Inglés
+                Escribe "{spanish.charAt(0).toUpperCase() + spanish.slice(1)}" en Inglés
               </h3>
               
               <div className="space-y-4">
@@ -263,9 +284,17 @@ const LearnWord = () => {
               
               <div className="space-y-6">
                 <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-8 rounded-xl">
-                  <p className="text-3xl font-bold text-foreground">
-                    {spanish.charAt(0).toUpperCase() + spanish.slice(1)} = {english.charAt(0).toUpperCase() + english.slice(1)}
-                  </p>
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-3xl font-bold text-foreground">
+                      {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
+                    </p>
+                    <p className="text-3xl font-bold text-primary">
+                      =
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {english.charAt(0).toUpperCase() + english.slice(1)}
+                    </p>
+                  </div>
                 </div>
                 
                 {note && (
@@ -297,8 +326,8 @@ const LearnWord = () => {
                     }
                   }
                   toast({
-                    title: "¡Palabra aprendida! 🎉",
-                    description: "Has completado todos los módulos",
+                    title: "Palabra aprendida",
+                    description: `${english.charAt(0).toUpperCase() + english.slice(1)} se ha agregado a tu vocabulario`,
                   });
                   setTimeout(() => navigate("/vocabulario-dia-1"), 1000);
                 }}

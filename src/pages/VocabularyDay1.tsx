@@ -23,7 +23,7 @@ const VocabularyDay1 = () => {
 
   // Palabras del día 1: 6 de la frase "Strumming my pain with his fingers" + 4 adicionales
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "rasguear", english: "strumming", note: "Rasgueando", learned: false },
+    { id: 1, spanish: "rasgueando", english: "strumming", note: "Rasgueando", learned: false },
     { id: 2, spanish: "mi", english: "my", learned: false },
     { id: 3, spanish: "dolor", english: "pain", learned: false },
     { id: 4, spanish: "con", english: "with", learned: false },

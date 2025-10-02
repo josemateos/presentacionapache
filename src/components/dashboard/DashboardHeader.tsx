@@ -9,8 +9,8 @@ interface DashboardHeaderProps {
 export const DashboardHeader = ({ onProfileClick, opacity = 1 }: DashboardHeaderProps) => {
   return (
     <header
-      className="sticky top-0 z-50 bg-card border-b border-border shadow-md animate-slide-up"
-      style={{ opacity, transition: "opacity 0.3s ease-out" }}
+      className="sticky top-0 z-50 bg-card border-b border-border shadow-md"
+      style={{ opacity, transition: "opacity 0.3s ease-out", willChange: "opacity" }}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">

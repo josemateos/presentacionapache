@@ -21,9 +21,11 @@ const LearnWord = () => {
   const { toast } = useToast();
   
   const wordId = searchParams.get("id");
-  const spanish = searchParams.get("spanish") || "";
+  const rawSpanish = searchParams.get("spanish") || "";
   const english = searchParams.get("english") || "";
+  const spanish = english.toLowerCase().trim() === "strumming" ? "rasgueando" : rawSpanish;
   const note = searchParams.get("note") || "";
+  const displayNote = english.toLowerCase().trim() === "strumming" ? "Rasgueando" : note;
 
   const [currentModule, setCurrentModule] = useState(0);
   const [userInput, setUserInput] = useState("");
@@ -41,6 +43,14 @@ const LearnWord = () => {
   const progress = (moduleProgress.filter(m => m.completed).length / modules.length) * 100;
 
   const handlePlayAudio = () => {
+    try {
+      const utterance = new SpeechSynthesisUtterance(english);
+      utterance.lang = "en-US";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      // Ignorar si el navegador no soporta SpeechSynthesis
+    }
     toast({
       title: "Reproduciendo audio",
       description: `Pronunciación de "${english}"`,
@@ -148,9 +158,9 @@ const LearnWord = () => {
               <p className="text-xl text-muted-foreground mb-4">
                 {english.charAt(0).toUpperCase() + english.slice(1)}
               </p>
-              {note && (
+              {displayNote && (
                 <p className="text-sm text-primary/80 italic mt-3 bg-primary/5 p-3 rounded-lg">
-                  {note}
+                  {displayNote}
                 </p>
               )}
             </div>
@@ -297,10 +307,10 @@ const LearnWord = () => {
                   </div>
                 </div>
                 
-                {note && (
+                {displayNote && (
                   <div className="bg-primary/5 p-4 rounded-lg">
                     <p className="text-sm font-medium text-primary">
-                      📝 {note}
+                      📝 {displayNote}
                     </p>
                   </div>
                 )}

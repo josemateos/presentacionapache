@@ -40,12 +40,19 @@ const VocabularyDay1 = () => {
   const progress = (learnedCount / words.length) * 100;
 
   useEffect(() => {
-    // Cargar progreso guardado del localStorage
+    // Cargar progreso guardado del localStorage y migrar datos si es necesario
     const saved = localStorage.getItem("vocabulary_day1_progress");
     if (saved) {
       try {
-        const savedWords = JSON.parse(saved);
-        setWords(savedWords);
+        const savedWords: Word[] = JSON.parse(saved);
+        const migrated = savedWords.map((w) => {
+          if (w.id === 1 || w.english?.toLowerCase() === "strumming") {
+            return { ...w, spanish: "rasgueando", note: "Rasgueando" };
+          }
+          return w;
+        });
+        setWords(migrated);
+        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(migrated));
       } catch (error) {
         console.error("Error loading saved progress:", error);
       }

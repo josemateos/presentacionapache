@@ -29,7 +29,7 @@ const VocabularyDay1 = () => {
     { id: 4, spanish: "con", english: "with", learned: false },
     { id: 5, spanish: "su/sus", english: "his", note: "posesivo masculino", learned: false },
     { id: 6, spanish: "dedos", english: "fingers", learned: false },
-    { id: 7, spanish: "cantar", english: "singing", note: "verbo en gerundio", learned: false },
+    { id: 7, spanish: "cantar", english: "singing", note: "ando/endo = lo que se está haciendo", learned: false },
     { id: 8, spanish: "canción", english: "song", learned: false },
     { id: 9, spanish: "palabras", english: "words", learned: false },
     { id: 10, spanish: "vida", english: "life", learned: false },
@@ -179,19 +179,9 @@ const VocabularyDay1 = () => {
                 >
                   {/* Word Info */}
                   <div className="text-center mb-4">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <h3 className="text-xl md:text-2xl font-bold text-foreground">
-                        {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 hover:bg-primary/10"
-                        onClick={(e) => handlePlayAudio(word, e)}
-                      >
-                        <Volume2 className="w-4 h-4 text-primary" />
-                      </Button>
-                    </div>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+                      {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
+                    </h3>
                     
                     <p className="text-base md:text-lg text-muted-foreground mb-1">
                       {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
@@ -245,23 +235,6 @@ const VocabularyDay1 = () => {
           </AnimatePresence>
         </div>
 
-        {/* Frase del día */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-8 gradient-card rounded-xl p-6 border border-primary/20"
-        >
-          <h3 className="text-lg font-semibold mb-3 text-center gradient-text-primary">
-            Frase del Día 1
-          </h3>
-          <p className="text-center text-lg md:text-xl font-medium text-foreground mb-2">
-            "Strumming my pain with his fingers"
-          </p>
-          <p className="text-center text-base text-muted-foreground">
-            "Rasguear mi dolor con sus dedos"
-          </p>
-        </motion.div>
       </main>
     </div>
   );

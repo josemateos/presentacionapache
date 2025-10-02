@@ -1,4 +1,4 @@
-import { Calendar, BookOpen, Book, Mic, LayoutList } from "lucide-react";
+import { Calendar, BookOpen, Book, Mic, LayoutList, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
@@ -12,6 +12,7 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
     { id: "today", label: "Hoy", icon: Calendar, locked: false },
     { id: "plan", label: "Plan", icon: LayoutList, locked: false },
     { id: "vocabulary", label: "Vocabulario", icon: Book, locked: false },
+    { id: "ai", label: "IA", icon: Bot, locked: false },
     { id: "auxiliaries", label: "Auxiliares", icon: BookOpen, locked: !isPremium },
     { id: "practice", label: "Práctica", icon: Mic, locked: true },
   ];

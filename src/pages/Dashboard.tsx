@@ -10,6 +10,7 @@ import { ProgressDetails } from "@/components/dashboard/ProgressDetails";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { BottomNav } from "@/components/dashboard/BottomNav";
 import { AlertModal } from "@/components/dashboard/AlertModal";
+import { AIChat } from "@/components/ai/AIChat";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserProgress {
@@ -122,6 +123,12 @@ const Dashboard = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    
+    if (tab === "ai") {
+      // No mostrar toast para AI ya que es funcional
+      return;
+    }
+    
     const tabNames: Record<string, string> = {
       today: "Hoy",
       plan: "Plan de 90 Días",
@@ -143,56 +150,62 @@ const Dashboard = () => {
         opacity={Math.max(0, 1 - scrollY / 200)}
       />
 
-      <main className="flex-grow px-4 py-6 pb-24 space-y-6 md:space-y-8 container mx-auto max-w-4xl">
-        <WelcomeSection
-          userName="Carlos"
-          currentDay={userProgress.currentDay}
-          totalDays={totalDays}
-          registrationDate={registrationDate}
-        />
+      {activeTab === "ai" ? (
+        <div className="flex-grow pb-24">
+          <AIChat />
+        </div>
+      ) : (
+        <main className="flex-grow px-4 py-6 pb-24 space-y-6 md:space-y-8 container mx-auto max-w-4xl">
+          <WelcomeSection
+            userName="Carlos"
+            currentDay={userProgress.currentDay}
+            totalDays={totalDays}
+            registrationDate={registrationDate}
+          />
 
-        <DailyActionButton
-          currentDay={userProgress.currentDay}
-          isCompleted={completedDays[userProgress.currentDay] || false}
-          onClick={handleDailyAction}
-        />
+          <DailyActionButton
+            currentDay={userProgress.currentDay}
+            isCompleted={completedDays[userProgress.currentDay] || false}
+            onClick={handleDailyAction}
+          />
 
-        <DaySelector
-          currentDay={userProgress.currentDay}
-          totalDays={totalDays}
-          completedDays={completedDays}
-          onSelectDay={handleSelectDay}
-        />
+          <DaySelector
+            currentDay={userProgress.currentDay}
+            totalDays={totalDays}
+            completedDays={completedDays}
+            onSelectDay={handleSelectDay}
+          />
 
-        <QuickAccessButtons
-          reviewPendingCount={userProgress.reviewPendingCount}
-          onReviewClick={handleReviewClick}
-          onAuxiliariesClick={handleAuxiliariesClick}
-        />
+          <QuickAccessButtons
+            reviewPendingCount={userProgress.reviewPendingCount}
+            onReviewClick={handleReviewClick}
+            onAuxiliariesClick={handleAuxiliariesClick}
+          />
 
-        <ProgressChart
-          currentDay={userProgress.currentDay}
-          totalDays={totalDays}
-        />
+          <ProgressChart
+            currentDay={userProgress.currentDay}
+            totalDays={totalDays}
+          />
 
-        <ProgressDetails
-          currentDay={userProgress.currentDay}
-          totalDays={totalDays}
-          phrasesCompleted={userProgress.phrasesCompleted}
-          totalPhrases={totalPhrases}
-          wordsMastered={userProgress.wordsMastered}
-          totalWords={totalWords}
-          auxLearned={userProgress.auxLearned}
-          totalAux={totalAux}
-        />
+          <ProgressDetails
+            currentDay={userProgress.currentDay}
+            totalDays={totalDays}
+            phrasesCompleted={userProgress.phrasesCompleted}
+            totalPhrases={totalPhrases}
+            wordsMastered={userProgress.wordsMastered}
+            totalWords={totalWords}
+            auxLearned={userProgress.auxLearned}
+            totalAux={totalAux}
+          />
 
-        <QuickStats
-          phrasesToday={userProgress.phrasesToday}
-          totalPhrasesToday={totalPhrasesToday}
-          newWordsToday={userProgress.newWordsToday}
-          streakDays={userProgress.streakDays}
-        />
-      </main>
+          <QuickStats
+            phrasesToday={userProgress.phrasesToday}
+            totalPhrasesToday={totalPhrasesToday}
+            newWordsToday={userProgress.newWordsToday}
+            streakDays={userProgress.streakDays}
+          />
+        </main>
+      )}
 
       <BottomNav
         activeTab={activeTab}

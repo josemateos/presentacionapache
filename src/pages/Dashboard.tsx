@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { WelcomeSection } from "@/components/dashboard/WelcomeSection";
@@ -29,6 +29,16 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("today");
   const [alertModal, setAlertModal] = useState({ isOpen: false, message: "" });
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Estado simulado del usuario
   const [userProgress] = useState<UserProgress>({
@@ -128,7 +138,14 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">
-      <DashboardHeader onProfileClick={handleProfileClick} />
+      <div 
+        style={{ 
+          opacity: Math.max(0, 1 - scrollY / 200),
+          transition: 'opacity 0.3s ease-out'
+        }}
+      >
+        <DashboardHeader onProfileClick={handleProfileClick} />
+      </div>
 
       <main className="flex-grow px-4 py-6 pb-24 space-y-6 md:space-y-8 container mx-auto max-w-4xl">
         <WelcomeSection

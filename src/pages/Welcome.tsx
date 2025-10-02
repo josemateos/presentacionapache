@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, User } from "lucide-react";
 
 interface WelcomeProps {
   userName?: string;
@@ -50,12 +50,29 @@ const Welcome = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1f3a] via-[#2d1b4e] to-[#1a1f3a] flex flex-col p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1f3a] via-[#2d1b4e] to-[#1a1f3a] flex flex-col">
+      {/* Header with Logo and User Icon */}
+      <header className="flex justify-between items-center px-6 py-4">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-xl">A</span>
+          </div>
+          <span className="text-white font-semibold text-lg">Apache</span>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/10"
+        >
+          <User className="w-6 h-6" />
+        </Button>
+      </header>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex-1 flex flex-col max-w-md mx-auto w-full"
+        className="flex-1 flex flex-col max-w-md mx-auto w-full px-6"
       >
         {/* Welcome Header */}
         <div className="text-white space-y-2 mb-8 mt-4">

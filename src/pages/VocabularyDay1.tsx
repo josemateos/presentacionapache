@@ -23,11 +23,11 @@ const VocabularyDay1 = () => {
 
   // Palabras del día 1: 6 de la frase "Strumming my pain with his fingers" + 4 adicionales
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "rasguear", english: "strumming", learned: false },
-    { id: 2, spanish: "mi", english: "my", note: "posesivo", learned: false },
+    { id: 1, spanish: "rasguear", english: "strumming", note: "Rasgueando", learned: false },
+    { id: 2, spanish: "mi", english: "my", learned: false },
     { id: 3, spanish: "dolor", english: "pain", learned: false },
     { id: 4, spanish: "con", english: "with", learned: false },
-    { id: 5, spanish: "su/sus", english: "his", note: "posesivo masculino", learned: false },
+    { id: 5, spanish: "su/sus", english: "his", learned: false },
     { id: 6, spanish: "dedos", english: "fingers", learned: false },
     { id: 7, spanish: "cantar", english: "singing", note: "ando/endo = lo que se está haciendo", learned: false },
     { id: 8, spanish: "canción", english: "song", learned: false },
@@ -172,12 +172,6 @@ const VocabularyDay1 = () => {
                     <p className="text-base md:text-lg text-muted-foreground mb-1">
                       {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
                     </p>
-                    
-                    {word.note && (
-                      <p className="text-sm text-primary/80 italic mt-2">
-                        {word.note}
-                      </p>
-                    )}
                   </div>
 
                   {/* Action Buttons */}

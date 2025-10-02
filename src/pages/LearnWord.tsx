@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -27,15 +27,14 @@ const LearnWord = () => {
 
   const [currentModule, setCurrentModule] = useState(0);
   const [userInput, setUserInput] = useState("");
-  const [showAnswer, setShowAnswer] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [attempts, setAttempts] = useState(0);
 
   const modules: LearningModule[] = [
     { id: 0, title: "Introducción", completed: false },
-    { id: 1, title: "Escuchar", completed: false },
+    { id: 1, title: "Escucha y pronuncia", completed: false },
     { id: 2, title: "Escribir", completed: false },
-    { id: 3, title: "Pronunciar", completed: false },
-    { id: 4, title: "Significado", completed: false },
+    { id: 3, title: "Recuerda", completed: false },
   ];
 
   const [moduleProgress, setModuleProgress] = useState(modules);
@@ -46,6 +45,38 @@ const LearnWord = () => {
       title: "Reproduciendo audio",
       description: `Pronunciación de "${english}"`,
     });
+  };
+
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    toast({
+      title: "Grabando",
+      description: "Pronuncia la palabra tres veces seguidas",
+    });
+    // Simular fin de grabación después de 5 segundos
+    setTimeout(() => {
+      setIsRecording(false);
+      toast({
+        title: "Grabación finalizada",
+        description: "¡Excelente pronunciación!",
+      });
+    }, 5000);
+  };
+
+  const getInputValidationColor = () => {
+    if (!userInput) return "";
+    
+    const correctWord = english.toLowerCase().trim();
+    const currentInput = userInput.toLowerCase().trim();
+    
+    // Verificar si las letras escritas son correctas hasta el momento
+    const isCorrectSoFar = correctWord.startsWith(currentInput);
+    
+    if (isCorrectSoFar) {
+      return "bg-green-500/20 border-green-500/50 text-green-700 dark:text-green-300";
+    } else {
+      return "bg-red-500/20 border-red-500/50 text-red-700 dark:text-red-300";
+    }
   };
 
   const handleCheckAnswer = () => {
@@ -65,7 +96,6 @@ const LearnWord = () => {
         if (currentModule < modules.length - 1) {
           setCurrentModule(currentModule + 1);
           setUserInput("");
-          setShowAnswer(false);
           setAttempts(0);
         }
       }, 1500);
@@ -87,14 +117,7 @@ const LearnWord = () => {
     if (currentModule < modules.length - 1) {
       setCurrentModule(currentModule + 1);
       setUserInput("");
-      setShowAnswer(false);
       setAttempts(0);
-    } else {
-      toast({
-        title: "¡Palabra aprendida! 🎉",
-        description: "Has completado todos los módulos",
-      });
-      setTimeout(() => navigate("/vocabulario-dia-1"), 1500);
     }
   };
 
@@ -132,7 +155,7 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 1: // Escuchar
+      case 1: // Escucha y pronuncia
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -141,20 +164,37 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Escucha la pronunciación
+                Escucha y pronuncia
               </h3>
               <p className="text-muted-foreground mb-6">
-                Presiona el botón para escuchar cómo se pronuncia la palabra
+                Escucha y repite la pronunciación
               </p>
               
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-32 h-32 rounded-full mb-6 hover:bg-primary/10"
-                onClick={handlePlayAudio}
-              >
-                <Volume2 className="w-12 h-12 text-primary" />
-              </Button>
+              <div className="flex justify-center items-center gap-8 mb-6">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-20 h-20 rounded-full hover:bg-primary/10"
+                  onClick={handlePlayAudio}
+                >
+                  <Volume2 className="w-8 h-8 text-primary" />
+                </Button>
+
+                <div className="flex flex-col items-center gap-2">
+                  <Button
+                    size="lg"
+                    variant={isRecording ? "destructive" : "outline"}
+                    className="w-20 h-20 rounded-full hover:bg-primary/10"
+                    onClick={handleStartRecording}
+                    disabled={isRecording}
+                  >
+                    <Mic className={`w-8 h-8 ${isRecording ? "text-white" : "text-primary"}`} />
+                  </Button>
+                  <p className="text-xs text-muted-foreground max-w-[120px] text-center">
+                    Pronuncia la palabra tres veces seguidas
+                  </p>
+                </div>
+              </div>
               
               <div className="bg-card/60 p-4 rounded-lg">
                 <p className="text-xl font-medium text-foreground">
@@ -182,31 +222,19 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Escribe la palabra en inglés
+                Escribe ({spanish.charAt(0).toUpperCase() + spanish.slice(1)}) en Inglés
               </h3>
-              <p className="text-muted-foreground mb-6">
-                Traduce: <span className="font-bold text-foreground">{spanish}</span>
-              </p>
               
               <div className="space-y-4">
                 <Input
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Escribe aquí..."
-                  className="text-center text-xl h-14"
+                  className={`text-center text-xl h-14 ${getInputValidationColor()}`}
                   onKeyDown={(e) => e.key === "Enter" && handleCheckAnswer()}
                 />
                 
                 <div className="flex gap-3 justify-center">
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowAnswer(!showAnswer)}
-                    className="min-w-[120px]"
-                  >
-                    {showAnswer ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                    {showAnswer ? "Ocultar" : "Ver respuesta"}
-                  </Button>
-                  
                   <Button
                     onClick={handleCheckAnswer}
                     className="gradient-animated min-w-[120px]"
@@ -216,27 +244,12 @@ const LearnWord = () => {
                     Verificar
                   </Button>
                 </div>
-                
-                <AnimatePresence>
-                  {showAnswer && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="bg-primary/5 p-4 rounded-lg"
-                    >
-                      <p className="text-lg font-medium text-primary">
-                        {english}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </Card>
           </motion.div>
         );
 
-      case 3: // Pronunciar
+      case 3: // Recuerda
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -245,76 +258,14 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Practica la pronunciación
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Escucha y repite en voz alta
-              </p>
-              
-              <div className="space-y-6">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-32 h-32 rounded-full hover:bg-primary/10"
-                  onClick={handlePlayAudio}
-                >
-                  <Volume2 className="w-12 h-12 text-primary" />
-                </Button>
-                
-                <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 rounded-xl">
-                  <p className="text-3xl font-bold text-foreground mb-2">
-                    {english.charAt(0).toUpperCase() + english.slice(1)}
-                  </p>
-                  <p className="text-lg text-muted-foreground">
-                    {spanish}
-                  </p>
-                </div>
-                
-                <div className="bg-card/60 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">
-                    💡 Consejo: Repite la palabra varias veces en voz alta
-                  </p>
-                </div>
-              </div>
-            </Card>
-            
-            <Button
-              size="lg"
-              className="gradient-animated w-full max-w-xs"
-              onClick={handleNextModule}
-            >
-              Siguiente
-            </Button>
-          </motion.div>
-        );
-
-      case 4: // Significado
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6"
-          >
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Asocia el significado
+                Recuerda
               </h3>
               
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="gradient-card p-6 rounded-xl border border-primary/20">
-                    <p className="text-sm text-muted-foreground mb-2">Español</p>
-                    <p className="text-2xl font-bold text-foreground">
-                      {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
-                    </p>
-                  </div>
-                  
-                  <div className="gradient-card p-6 rounded-xl border border-primary/20">
-                    <p className="text-sm text-muted-foreground mb-2">English</p>
-                    <p className="text-2xl font-bold text-foreground">
-                      {english.charAt(0).toUpperCase() + english.slice(1)}
-                    </p>
-                  </div>
+                <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-8 rounded-xl">
+                  <p className="text-3xl font-bold text-foreground">
+                    {spanish.charAt(0).toUpperCase() + spanish.slice(1)} = {english.charAt(0).toUpperCase() + english.slice(1)}
+                  </p>
                 </div>
                 
                 {note && (
@@ -324,27 +275,53 @@ const LearnWord = () => {
                     </p>
                   </div>
                 )}
-                
-                <div className="gradient-card p-6 rounded-xl border border-border">
-                  <Sparkles className="w-8 h-8 mx-auto mb-3 text-primary animate-pulse-subtle" />
-                  <p className="text-lg font-semibold mb-2 gradient-text-primary">
-                    ¡Excelente trabajo!
-                  </p>
-                  <p className="text-muted-foreground">
-                    Has completado el aprendizaje de esta palabra
-                  </p>
-                </div>
               </div>
             </Card>
             
-            <Button
-              size="lg"
-              className="gradient-animated w-full max-w-xs"
-              onClick={handleNextModule}
-            >
-              <Check className="w-5 h-5 mr-2" />
-              Finalizar
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Button
+                size="lg"
+                className="gradient-animated w-full max-w-xs mx-auto"
+                onClick={() => {
+                  // Marcar como aprendida en localStorage
+                  const saved = localStorage.getItem("vocabulary_day1_progress");
+                  if (saved) {
+                    try {
+                      const savedWords = JSON.parse(saved);
+                      const updatedWords = savedWords.map((w: any) => 
+                        w.id === parseInt(wordId || "0") ? { ...w, learned: true } : w
+                      );
+                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+                    } catch (error) {
+                      console.error("Error updating progress:", error);
+                    }
+                  }
+                  toast({
+                    title: "¡Palabra aprendida! 🎉",
+                    description: "Has completado todos los módulos",
+                  });
+                  setTimeout(() => navigate("/vocabulario-dia-1"), 1000);
+                }}
+              >
+                <Check className="w-5 h-5 mr-2" />
+                Marcar como aprendida
+              </Button>
+              
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full max-w-xs mx-auto"
+                onClick={() => {
+                  setCurrentModule(0);
+                  setUserInput("");
+                  setAttempts(0);
+                  setModuleProgress(modules.map(m => ({ ...m, completed: false })));
+                }}
+              >
+                <RotateCcw className="w-5 h-5 mr-2" />
+                Repasar palabra
+              </Button>
+            </div>
           </motion.div>
         );
 
@@ -378,7 +355,6 @@ const LearnWord = () => {
             className="hover:bg-primary/10"
             onClick={() => {
               setUserInput("");
-              setShowAnswer(false);
               setAttempts(0);
             }}
           >

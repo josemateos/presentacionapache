@@ -2,18 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles, Feather } from "lucide-react";
+import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles, Feather, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   const [currentScreen, setCurrentScreen] = useState(0);
+  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
 
   useEffect(() => {
     if (location.state?.screen !== undefined) {
       setCurrentScreen(location.state.screen);
     }
   }, [location.state]);
+  
   const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
 
   const screens = [
@@ -34,7 +38,7 @@ const Index = () => {
       id: 1,
       icon: Feather,
       title: "Sistema Apache",
-      subtitle: "5 pasos que cambiarán tu forma de aprender a comunicarte en Inglés",
+      subtitle: "5 pasos que definitivamente te enseñaran a comunicarte en Inglés",
       steps: [
         { 
           number: "1", 
@@ -95,13 +99,13 @@ const Index = () => {
         { 
           icon: Users, 
           title: "+10,000 Estudiantes", 
-          description: "Ya dominan el inglés con este método",
+          description: "Obteniendo resultados con nuestro sistema",
           stat: "10K+"
         },
         { 
           icon: Clock, 
           title: "Solo 90 Días", 
-          description: "De no poder decir nada a hablar con fluidez",
+          description: "De no poder decir nada, a comunicarse con fluidez",
           stat: "90"
         },
         { 
@@ -111,7 +115,7 @@ const Index = () => {
           stat: "0"
         }
       ],
-      finalCall: "Únete a los miles que ya lo lograron",
+      finalCall: "Únete a los miles que lo están logrando",
       guarantee: "Empieza gratis hoy mismo",
       showActions: true
     }
@@ -121,7 +125,14 @@ const Index = () => {
     if (currentScreen < screens.length - 1) {
       setCurrentScreen(currentScreen + 1);
       setExpandedSteps([]);
+      setVisibleSteps([]);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+  
+  const handleStepOk = (currentIndex: number) => {
+    if (!visibleSteps.includes(currentIndex)) {
+      setVisibleSteps([...visibleSteps, currentIndex]);
     }
   };
 
@@ -135,6 +146,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen gradient-hero text-white flex flex-col">
+      {/* Theme Toggle Button */}
+      <div className="absolute top-4 right-4 z-50">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm border-border hover:bg-background"
+        >
+          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </div>
+      
       {/* Content Area */}
       <main className="flex-1 flex flex-col px-4 py-8 overflow-y-auto">
         <div className="container mx-auto max-w-md flex-1 flex flex-col">
@@ -181,66 +206,82 @@ const Index = () => {
               </div>
               
               <div className="space-y-3 flex-1 overflow-y-auto mb-6">
-                {currentScreenData.steps?.map((step, index) => (
-                  <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden">
-                    <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400/40 border border-yellow-500/50 flex items-center justify-center">
-                      <span className="text-base font-bold text-blue-600">{step.number}</span>
-                    </div>
-                    <div className="pr-12 mb-2">
-                      <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
-                      <p className="text-xs text-card-foreground">{step.content}</p>
-                    </div>
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        if (expandedSteps.includes(index)) {
-                          setExpandedSteps(expandedSteps.filter(i => i !== index));
-                        } else {
-                          setExpandedSteps([...expandedSteps, index]);
-                        }
-                      }}
-                      className="text-xs bg-primary hover:bg-primary/90 text-white"
-                    >
-                      {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
-                    </Button>
-                    
-                    {expandedSteps.includes(index) && step.example && (
-                      <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
-                        {step.example.words && (
-                          <div className="space-y-1">
-                            {step.example.words.map((word: any, i: number) => (
-                              <div key={i} className="flex justify-between text-xs">
-                                <span className="text-muted-foreground">{word.spanish}</span>
-                                <span className="text-card-foreground font-medium">{word.english}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        {step.example.phrase && !step.example.highlights && (
-                          <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
-                            {step.example.phrase}
-                          </p>
-                        )}
-                        {step.example.phrase && step.example.highlights && (
-                          <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
-                            {step.example.phrase.split(' ').map((word: string, i: number) => {
-                              const cleanWord = word.replace(/[.,!?]/, '');
-                              const isHighlight = step.example.highlights.includes(cleanWord);
-                              return (
-                                <span key={i}>
-                                  <span className={isHighlight ? "text-accent font-bold" : ""}>
-                                    {word}
-                                  </span>
-                                  {i < step.example.phrase.split(' ').length - 1 ? ' ' : ''}
-                                </span>
-                              );
-                            })}
-                          </p>
-                        )}
+                {currentScreenData.steps?.map((step, index) => {
+                  const isVisible = index === 0 || visibleSteps.includes(index - 1);
+                  
+                  if (!isVisible) return null;
+                  
+                  return (
+                    <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden animate-fade-in">
+                      <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400/40 border border-yellow-500/50 flex items-center justify-center">
+                        <span className="text-base font-bold text-blue-600">{step.number}</span>
                       </div>
-                    )}
-                  </Card>
-                ))}
+                      <div className="pr-12 mb-2">
+                        <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
+                        <p className="text-xs text-card-foreground">{step.content}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          if (expandedSteps.includes(index)) {
+                            setExpandedSteps(expandedSteps.filter(i => i !== index));
+                          } else {
+                            setExpandedSteps([...expandedSteps, index]);
+                          }
+                        }}
+                        className="text-xs bg-primary hover:bg-primary/90 text-white"
+                      >
+                        {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
+                      </Button>
+                      
+                      {expandedSteps.includes(index) && step.example && (
+                        <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
+                          {step.example.words && (
+                            <div className="space-y-1">
+                              {step.example.words.map((word: any, i: number) => (
+                                <div key={i} className="flex justify-between text-xs">
+                                  <span className="text-muted-foreground">{word.spanish}</span>
+                                  <span className="text-card-foreground font-medium">{word.english}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {step.example.phrase && !step.example.highlights && (
+                            <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
+                              {step.example.phrase}
+                            </p>
+                          )}
+                          {step.example.phrase && step.example.highlights && (
+                            <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
+                              {step.example.phrase.split(' ').map((word: string, i: number) => {
+                                const cleanWord = word.replace(/[.,!?]/, '');
+                                const isHighlight = step.example.highlights.includes(cleanWord);
+                                return (
+                                  <span key={i}>
+                                    <span className={isHighlight ? "text-accent font-bold" : ""}>
+                                      {word}
+                                    </span>
+                                    {i < step.example.phrase.split(' ').length - 1 ? ' ' : ''}
+                                  </span>
+                                );
+                              })}
+                            </p>
+                          )}
+                          
+                          {index < currentScreenData.steps!.length - 1 && !visibleSteps.includes(index) && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleStepOk(index)}
+                              className="w-full mt-3 bg-accent hover:bg-accent/90 text-white font-semibold"
+                            >
+                              Ok
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
               </div>
               
               <Card className="relative overflow-hidden border-2 border-accent p-5">
@@ -292,7 +333,7 @@ const Index = () => {
                     {currentScreenData.finalCall}
                   </p>
                   <p className="relative text-lg font-bold text-center text-gray-900">
-                    {currentScreenData.guarantee}
+                    Empieza <span className="text-accent underline decoration-2">gratis</span> hoy mismo
                   </p>
                 </Card>
               </div>

@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import VocabularyDay1 from "./pages/VocabularyDay1";
+import LearnWord from "./pages/LearnWord";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/bienvenida" element={<Welcome />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/vocabulario-dia-1" element={<VocabularyDay1 />} />
+            <Route path="/learn-word" element={<LearnWord />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

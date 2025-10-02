@@ -23,7 +23,7 @@ const VocabularyDay1 = () => {
 
   // Palabras del día 1: 6 de la frase "Strumming my pain with his fingers" + 4 adicionales
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "rasguear", english: "strumming", note: "tocar la guitarra con los dedos", learned: false },
+    { id: 1, spanish: "rasguear", english: "strumming", learned: false },
     { id: 2, spanish: "mi", english: "my", note: "posesivo", learned: false },
     { id: 3, spanish: "dolor", english: "pain", learned: false },
     { id: 4, spanish: "con", english: "with", learned: false },
@@ -59,25 +59,11 @@ const VocabularyDay1 = () => {
 
   const handleLearnWord = (word: Word) => {
     if (word.learned) {
-      // Modo repaso - mostrar detalles
-      setSelectedWord(word);
+      // Modo repaso - ir a pantalla de aprendizaje
+      navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english)}&note=${encodeURIComponent(word.note || '')}`);
     } else {
-      // Modo aprendizaje - simular navegación a pantalla de aprendizaje
-      toast({
-        title: "Aprendiendo palabra",
-        description: `"${word.spanish}" - ${word.english}`,
-      });
-      
-      // Marcar como aprendida después de un momento
-      setTimeout(() => {
-        setWords(prev => prev.map(w => 
-          w.id === word.id ? { ...w, learned: true } : w
-        ));
-        toast({
-          title: "¡Palabra aprendida! 🎉",
-          description: `"${word.spanish}" ha sido agregada a tu vocabulario`,
-        });
-      }, 1500);
+      // Modo aprendizaje - navegar a pantalla de aprendizaje
+      navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english)}&note=${encodeURIComponent(word.note || '')}`);
     }
   };
 
@@ -143,7 +129,7 @@ const VocabularyDay1 = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="gradient-card rounded-xl p-6 mb-6 border border-border shadow-lg"
+          className="gradient-card rounded-xl p-5 mb-6 border border-border shadow-lg"
         >
           <h2 className="text-lg font-semibold mb-3 text-center gradient-text-primary flex items-center justify-center gap-2">
             <Sparkles className="w-5 h-5" />

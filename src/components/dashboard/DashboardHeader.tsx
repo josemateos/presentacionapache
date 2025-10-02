@@ -3,11 +3,15 @@ import { Button } from "@/components/ui/button";
 
 interface DashboardHeaderProps {
   onProfileClick: () => void;
+  opacity?: number;
 }
 
-export const DashboardHeader = ({ onProfileClick }: DashboardHeaderProps) => {
+export const DashboardHeader = ({ onProfileClick, opacity = 1 }: DashboardHeaderProps) => {
   return (
-    <header className="sticky top-0 z-50 bg-card border-b border-border shadow-md animate-slide-up">
+    <header
+      className="sticky top-0 z-50 bg-card border-b border-border shadow-md animate-slide-up"
+      style={{ opacity, transition: "opacity 0.3s ease-out" }}
+    >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg">

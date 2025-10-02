@@ -138,12 +138,10 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">
-      <div style={{ 
-        opacity: Math.max(0, 1 - scrollY / 200),
-        transition: 'opacity 0.3s ease-out'
-      }}>
-        <DashboardHeader onProfileClick={handleProfileClick} />
-      </div>
+      <DashboardHeader
+        onProfileClick={handleProfileClick}
+        opacity={Math.max(0, 1 - scrollY / 200)}
+      />
 
       <main className="flex-grow px-4 py-6 pb-24 space-y-6 md:space-y-8 container mx-auto max-w-4xl">
         <WelcomeSection

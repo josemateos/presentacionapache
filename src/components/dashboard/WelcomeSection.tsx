@@ -43,8 +43,11 @@ export const WelcomeSection = ({
         </span>{" "}
         de {totalDays}
       </p>
-      <p className="text-sm md:text-base text-muted-foreground capitalize">
-        {formatDate(today)} - Han transcurrido{" "}
+      <p className="text-sm md:text-base text-muted-foreground">
+        {formatDate(today)}
+      </p>
+      <p className="text-sm md:text-base text-muted-foreground">
+        han transcurrido{" "}
         <span className="text-accent font-semibold">{daysSinceRegistration} días</span> desde tu registro
       </p>
     </motion.section>

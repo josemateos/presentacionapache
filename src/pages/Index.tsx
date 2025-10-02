@@ -135,45 +135,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen gradient-hero text-white flex flex-col">
-      {/* Header with Navigation */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handlePrev}
-            disabled={currentScreen === 0}
-            className="text-muted-foreground hover:text-foreground disabled:opacity-30 h-8 w-8"
-          >
-            ←
-          </Button>
-          
-          <div className="flex items-center gap-1.5">
-            {screens.map((_, index) => (
-              <div
-                key={index}
-                onClick={() => setCurrentScreen(index)}
-                className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                  index === currentScreen 
-                    ? "w-6 bg-primary" 
-                    : "w-1.5 bg-muted hover:bg-muted-foreground"
-                }`}
-              />
-            ))}
-          </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleNext}
-            disabled={currentScreen === screens.length - 1}
-            className="text-muted-foreground hover:text-foreground disabled:opacity-30 h-8 w-8"
-          >
-            →
-          </Button>
-        </div>
-      </header>
-
       {/* Content Area */}
       <main className="flex-1 flex flex-col px-4 py-8 overflow-y-auto">
         <div className="container mx-auto max-w-md flex-1 flex flex-col">

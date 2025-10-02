@@ -60,7 +60,7 @@ const Registro = () => {
         description: "Tu cuenta ha sido creada correctamente.",
       });
       
-      navigate("/dashboard");
+      navigate("/bienvenida");
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Partial<Record<keyof RegistroForm, string>> = {};

@@ -16,18 +16,21 @@ interface Phrase {
 
 const phrasesData: Record<number, Phrase[]> = {
   1: [
-    { id: 1, english: "Strumming my pain with his fingers", spanish: "Rasgueando mi dolor con sus dedos", learned: false },
-    { id: 2, english: "I go to school, I come back at 3", spanish: "Voy a la escuela, regreso a las 3", learned: false },
-    { id: 3, english: "I fall asleep to the sound of tears of the clown", spanish: "Me duermo con el sonido de las lágrimas del payaso", learned: false },
-    { id: 4, english: "Excuse me, I don't understand you", spanish: "Disculpa, no te entiendo", learned: false },
-    { id: 5, english: "In a country where they turn back time", spanish: "En un país donde retroceden el tiempo", learned: false },
+    { id: 1, english: "I want buy fresh fruits in the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
+    { id: 2, english: "Strumming my pain with his fingers", spanish: "Rasgueando mi dolor con sus dedos", learned: false },
+    { id: 3, english: "I go to school, I come back at 3", spanish: "Voy a la escuela, regreso a las 3", learned: false },
+    { id: 4, english: "I fall asleep to the sound of tears of the clown", spanish: "Me duermo con el sonido de las lágrimas del payaso", learned: false },
+    { id: 5, english: "Excuse me, I don't understand you", spanish: "Disculpa, no te entiendo", learned: false },
   ],
   2: [
-    { id: 6, english: "Let's go buy something to eat", spanish: "Vamos a comprar algo de comer", learned: false },
-    { id: 7, english: "Hello darkness, my old friend", spanish: "Hola oscuridad, mi vieja amiga", learned: false },
-    { id: 8, english: "Buy apples and lettuce for the salad", spanish: "Compra manzanas y lechuga para la ensalada", learned: false },
-    { id: 9, english: "Our love is alive, and so we begin", spanish: "Nuestro amor está vivo, y así comenzamos", learned: false },
-    { id: 10, english: "I don't want to talk", spanish: "No quiero hablar", learned: false },
+    { id: 6, english: "In a country where they turn back time", spanish: "En un país donde retroceden el tiempo", learned: false },
+    { id: 7, english: "Let's go buy something to eat", spanish: "Vamos a comprar algo de comer", learned: false },
+    { id: 8, english: "Hello darkness, my old friend", spanish: "Hola oscuridad, mi vieja amiga", learned: false },
+    { id: 9, english: "Buy apples and lettuce for the salad", spanish: "Compra manzanas y lechuga para la ensalada", learned: false },
+    { id: 10, english: "Our love is alive, and so we begin", spanish: "Nuestro amor está vivo, y así comenzamos", learned: false },
+  ],
+  3: [
+    { id: 11, english: "I don't want to talk", spanish: "No quiero hablar", learned: false },
   ],
 };
 
@@ -100,7 +103,7 @@ const PhrasesDay = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background dark">
       <header className="sticky top-0 z-10 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
         <div className="container max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

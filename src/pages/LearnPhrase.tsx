@@ -30,7 +30,7 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado", "querer", "fresca", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
     apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
-    finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruits", "in", "the", "market"],
+    finalEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
     auxiliary: "to",
   },
   2: {
@@ -101,10 +101,6 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("¡Correcto! Has ordenado la frase en Español Apache");
       setIsStepComplete(true);
-      toast({
-        title: "¡Excelente!",
-        description: "Paso 2 completado",
-      });
     } else {
       setFeedback("Intenta de nuevo. Revisa el orden de las palabras");
       toast({
@@ -144,10 +140,6 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("¡Perfecto! Has traducido correctamente al Inglés Apache");
       setIsStepComplete(true);
-      toast({
-        title: "¡Excelente!",
-        description: "Paso 3 completado",
-      });
     } else {
       setFeedback("Algunas palabras no son correctas. Revisa tu traducción");
       toast({
@@ -159,16 +151,12 @@ const LearnPhrase = () => {
   };
 
   const checkAuxiliary = () => {
-    const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary;
+    const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary.toLowerCase();
     
     if (isCorrect) {
       setFeedback("¡Excelente! Has completado la frase en Inglés perfecto");
       setIsStepComplete(true);
-      
-      toast({
-        title: "¡Paso 4 completado!",
-        description: "Continúa al último paso",
-      });
+      setTimeout(() => setCurrentStep(5), 500);
     } else {
       setFeedback("El auxiliar no es correcto. Intenta de nuevo");
       toast({
@@ -197,11 +185,6 @@ const LearnPhrase = () => {
         );
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
-      
-      toast({
-        title: "¡Frase completada!",
-        description: "Has dominado esta frase",
-      });
     } else {
       setFeedback("No es correcto. Revisa tu respuesta o repasa los ejercicios");
       toast({
@@ -441,7 +424,7 @@ const LearnPhrase = () => {
                     <Input
                       key={index}
                       value={userAuxiliary}
-                      onChange={(e) => setUserAuxiliary(e.target.value.toUpperCase())}
+                      onChange={(e) => setUserAuxiliary(e.target.value)}
                       disabled={isStepComplete}
                       className={`w-20 text-center transition-colors ${getAuxiliaryColorClass()}`}
                       placeholder="?"
@@ -466,7 +449,7 @@ const LearnPhrase = () => {
                   Auxiliares clave
                 </Button>
                 <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
-                  Verificar Auxiliar
+                  Verificar
                 </Button>
               </div>
             ) : (
@@ -500,7 +483,7 @@ const LearnPhrase = () => {
                 <span className="text-primary font-bold">5</span>
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Escribe en Ingles tu frase</h2>
+                <h2 className="text-lg font-semibold text-foreground">Comprueba que sabes comunicar</h2>
                 <p className="text-sm text-muted-foreground">Escribe la frase completa en inglés</p>
               </div>
             </div>

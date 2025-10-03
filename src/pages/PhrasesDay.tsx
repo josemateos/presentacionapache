@@ -48,7 +48,14 @@ const PhrasesDay = () => {
     
     if (saved) {
       try {
-        setPhrases(JSON.parse(saved));
+        const savedArr: Phrase[] = JSON.parse(saved);
+        const base = phrasesData[day] || [];
+        // Merge saved learned flags with latest base content to fix outdated phrases
+        const merged = base.map((b) => {
+          const existing = savedArr.find((s) => s.id === b.id);
+          return existing ? { ...b, learned: !!existing.learned } : b;
+        });
+        setPhrases(merged);
       } catch (error) {
         setPhrases(phrasesData[day] || []);
       }

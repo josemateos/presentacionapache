@@ -30,8 +30,8 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado", "querer", "fresca", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
     apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
-    finalEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
-    auxiliary: "",
+    finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruits", "in", "the", "market"],
+    auxiliary: "to",
   },
   2: {
     spanishWords: ["Rasgueando", "mi", "dolor", "con", "sus", "dedos"],
@@ -230,7 +230,13 @@ const LearnPhrase = () => {
         if (nextRef?.current) {
           nextRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 50);
+        // Fallback attempt after render settles
+        setTimeout(() => {
+          if (nextRef?.current) {
+            nextRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 200);
+      }, 120);
     } else {
       navigate(`/phrases-day?day=${day}`);
     }
@@ -268,7 +274,7 @@ const LearnPhrase = () => {
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Paso 1: Frase en Español */}
-        {currentStep >= 1 && (
+        {currentStep >= 1 && currentStep < 5 && (
         <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -301,7 +307,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 2: Español Apache */}
-        {currentStep >= 2 && (
+        {currentStep >= 2 && currentStep < 5 && (
           <Card ref={step2Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -368,7 +374,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 3: Inglés Apache */}
-        {currentStep >= 3 && (
+        {currentStep >= 3 && currentStep < 5 && (
           <Card ref={step3Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -416,7 +422,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 4: Inglés Perfecto */}
-        {currentStep >= 4 && (
+        {currentStep >= 4 && currentStep < 5 && (
           <Card ref={step4Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -457,7 +463,7 @@ const LearnPhrase = () => {
                   className="opacity-50 cursor-not-allowed"
                 >
                   <Lock className="w-4 h-4 mr-2" />
-                  Auxiliares
+                  Auxiliares clave
                 </Button>
                 <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
                   Verificar Auxiliar

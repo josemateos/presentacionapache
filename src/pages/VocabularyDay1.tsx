@@ -30,9 +30,9 @@ const VocabularyDay1 = () => {
     { id: 5, spanish: "yo", english: "I", learned: false },
     { id: 6, spanish: "comprar", english: "buy", learned: false },
     { id: 7, spanish: "fresca", english: "fresh", note: "Singular", learned: false },
-    { id: 8, spanish: "en", english: "at", learned: false },
+    { id: 8, spanish: "en", english: "at", note: "Lugar de la acción", learned: false },
     { id: 9, spanish: "el/la", english: "the", learned: false },
-    { id: 10, spanish: "frutas", english: "fruits", note: "Plural", learned: false },
+    { id: 10, spanish: "frutas", english: "fruit", note: "Plural", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -180,6 +180,12 @@ const VocabularyDay1 = () => {
                     <p className="text-base md:text-lg text-muted-foreground mb-1">
                       {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
                     </p>
+                    
+                    {word.note && (
+                      <p className="text-sm text-primary/80 italic mt-2">
+                        {word.note}
+                      </p>
+                    )}
                   </div>
 
 

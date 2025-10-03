@@ -159,7 +159,7 @@ const PhrasesDay = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogAction onClick={() => navigate("/dashboard")}>
-                Volver al inicio
+                Entendido
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

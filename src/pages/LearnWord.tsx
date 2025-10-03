@@ -116,7 +116,10 @@ const LearnWord = () => {
   };
 
   const handleCheckAnswer = () => {
-    const isCorrect = userInput.toLowerCase().trim() === english.toLowerCase().trim();
+    // Para "I" (Yo), debe ser mayúscula exacta
+    const isCorrect = english.trim() === "I" 
+      ? userInput.trim() === "I"
+      : userInput.toLowerCase().trim() === english.toLowerCase().trim();
     
     if (isCorrect) {
       setModuleProgress(prev => prev.map(m => 

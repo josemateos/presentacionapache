@@ -88,10 +88,10 @@ const VocabularyDay1 = () => {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="text-center py-6 px-4 gradient-card rounded-xl border border-primary/20"
+      className="text-center py-6 px-4 bg-card border border-border rounded-2xl"
     >
       <Sparkles className="w-12 h-12 mx-auto mb-3 text-primary animate-pulse-subtle" />
-      <h3 className="text-xl font-bold mb-2 gradient-text-primary">
+      <h3 className="text-xl font-bold mb-2 text-primary">
         ¡Felicitaciones!
       </h3>
       <p className="text-muted-foreground">
@@ -137,9 +137,9 @@ const VocabularyDay1 = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="gradient-card rounded-xl p-5 mb-6 border border-border shadow-lg"
+          className="bg-card border border-border rounded-2xl p-6 shadow-md"
         >
-          <h2 className="text-lg font-semibold mb-3 text-center gradient-text-primary flex items-center justify-center gap-2">
+          <h2 className="text-lg font-semibold mb-3 text-center text-primary flex items-center justify-center gap-2">
             <Sparkles className="w-5 h-5" />
             Progreso General
           </h2>
@@ -164,10 +164,10 @@ const VocabularyDay1 = () => {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card
-                  className={`p-5 transition-all duration-200 cursor-pointer hover:shadow-xl border-border ${
+                  className={`p-5 transition-all duration-200 cursor-pointer hover:shadow-xl bg-card border-border ${
                     !word.learned 
-                      ? "hover:border-primary/50 hover:bg-card/80" 
-                      : "bg-card/60"
+                      ? "hover:border-primary/50" 
+                      : "opacity-90"
                   }`}
                   onClick={() => handleLearnWord(word)}
                 >
@@ -196,7 +196,7 @@ const VocabularyDay1 = () => {
                       className={`min-w-[110px] py-2 justify-center text-sm font-medium ${
                         word.learned 
                           ? "bg-primary text-primary-foreground" 
-                          : "bg-secondary text-secondary-foreground"
+                          : "bg-secondary text-secondary-foreground border border-border"
                       }`}
                     >
                       {word.learned ? (

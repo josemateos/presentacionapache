@@ -63,12 +63,14 @@ const LearnPhrase = () => {
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
 
-  const playAudio = (text: string, lang: string) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang === "es" ? "es-ES" : "en-US";
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
-  };
+  useEffect(() => {
+    if (currentStep === 1) {
+      const utterance = new SpeechSynthesisUtterance(spanishPhrase);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [currentStep, spanishPhrase]);
 
   const handleWordClick = (word: string) => {
     if (!isStepComplete) {
@@ -179,6 +181,11 @@ const LearnPhrase = () => {
       if (currentStep === 2) {
         setUserAttemptEnglish(new Array(exerciseData.apacheEnglishSolution.length).fill(""));
       }
+      
+      // Scroll to center the next step
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     } else {
       navigate(`/phrases-day?day=${day}`);
     }
@@ -211,9 +218,9 @@ const LearnPhrase = () => {
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
               <span className="text-primary font-bold">1</span>
             </div>
-            <div>
+          <div>
               <h2 className="text-lg font-semibold text-foreground">Tu Frase en Español</h2>
-              <p className="text-sm text-muted-foreground">Esta es la idea que quieres comunicar</p>
+              <p className="text-sm text-muted-foreground">Lo que quieres comunicar</p>
             </div>
           </div>
           
@@ -228,14 +235,6 @@ const LearnPhrase = () => {
           </div>
 
           <div className="flex justify-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => playAudio(spanishPhrase, "es")}
-            >
-              <Volume2 className="w-4 h-4 mr-2" />
-              Escuchar
-            </Button>
             {currentStep === 1 && (
               <Button onClick={goToNextStep}>
                 Entendido
@@ -427,8 +426,9 @@ const LearnPhrase = () => {
             <DialogDescription className="text-muted-foreground">
               <ul className="list-disc list-inside space-y-2 mt-4">
                 <li>El orden correcto es: Persona, Verbo, Objeto</li>
-                <li>Usa la forma infinitiva del verbo (ej: "querer" en vez de "quiero")</li>
-                <li>El adjetivo va ANTES del sustantivo (ej: "fresca frutas")</li>
+                <li>En Ingles no existe "quiero, juego, aprendo" siempre se utiliza "querer, jugar, aprender"</li>
+                <li>Frutas frescas, suéter rojo, mesa grande siempre se invierte por "Frescas frutas, rojo sueter, grande mesa"</li>
+                <li>En Ingles nunca se utiliza fresca<span className="text-yellow-500">s</span>, rojo<span className="text-yellow-500">s</span>, grande<span className="text-yellow-500">s</span> solo se dice "fresca, rojo, grande"</li>
               </ul>
             </DialogDescription>
           </DialogHeader>

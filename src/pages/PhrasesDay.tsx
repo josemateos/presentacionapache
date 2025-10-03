@@ -162,16 +162,35 @@ const PhrasesDay = () => {
                     </div>
                   </div>
 
-                  {!phrase.learned && (
-                    <div className="flex justify-end pt-2">
+                  <div className="flex justify-end pt-2">
+                    {phrase.learned ? (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                          disabled
+                        >
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          Aprendida
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-blue-400 hover:bg-blue-500"
+                          onClick={() => handleLearnPhrase(phrase)}
+                        >
+                          Repasar
+                        </Button>
+                      </div>
+                    ) : (
                       <Button
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700"
                         onClick={() => handleLearnPhrase(phrase)}
-                        variant="default"
                       >
                         Aprender
                       </Button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </Card>
             </motion.div>

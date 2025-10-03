@@ -101,7 +101,7 @@ const VocabularyDay1 = () => {
   ) : null;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background dark flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center max-w-4xl">

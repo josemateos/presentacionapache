@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Volume2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -64,21 +64,6 @@ const PhrasesDay = () => {
   const learnedCount = phrases.filter(p => p.learned).length;
   const progress = (learnedCount / phrases.length) * 100;
 
-  const handlePlayAudio = (text: string) => {
-    try {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US";
-      utterance.rate = 0.85;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      toast({
-        title: "Audio no disponible",
-        description: "Tu navegador no soporta la síntesis de voz",
-        variant: "destructive",
-      });
-    }
-  };
 
   const toggleLearned = (id: number) => {
     setPhrases(phrases.map(p => 
@@ -135,13 +120,10 @@ const PhrasesDay = () => {
       </header>
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
-        <Card className="p-6 gradient-primary text-white">
+        <Card className="p-6 bg-gradient-to-r from-primary to-primary/80 text-white">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="w-8 h-8" />
-            <div>
-              <h2 className="text-2xl font-bold">Día {day}</h2>
-              <p className="text-white/90">5 frases para aprender hoy</p>
-            </div>
+            <h2 className="text-2xl font-bold">Día {day}</h2>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-white/90">
@@ -162,7 +144,7 @@ const PhrasesDay = () => {
             >
               <Card className={`p-5 transition-all ${phrase.learned ? 'border-primary/50 bg-primary/5' : ''}`}>
                 <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-semibold text-primary">
@@ -175,32 +157,18 @@ const PhrasesDay = () => {
                       <p className="text-lg font-medium mb-2">{phrase.english}</p>
                       <p className="text-muted-foreground">{phrase.spanish}</p>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handlePlayAudio(phrase.english)}
-                      className="shrink-0"
-                    >
-                      <Volume2 className="w-4 h-4" />
-                    </Button>
                   </div>
 
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      onClick={() => handleLearnPhrase(phrase)}
-                      className="flex-1"
-                      variant={phrase.learned ? "outline" : "default"}
-                    >
-                      {phrase.learned ? "Repasar" : "Aprender"}
-                    </Button>
-                    <Button
-                      onClick={() => toggleLearned(phrase.id)}
-                      variant={phrase.learned ? "default" : "outline"}
-                      className="flex-1"
-                    >
-                      {phrase.learned ? "Aprendida ✓" : "Marcar como aprendida"}
-                    </Button>
-                  </div>
+                  {!phrase.learned && (
+                    <div className="flex justify-end pt-2">
+                      <Button
+                        onClick={() => handleLearnPhrase(phrase)}
+                        variant="default"
+                      >
+                        Aprender
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </Card>
             </motion.div>
@@ -208,11 +176,12 @@ const PhrasesDay = () => {
         </div>
 
         <Button
-          onClick={handleFinish}
+          onClick={() => navigate("/dashboard")}
           className="w-full py-6 text-lg font-semibold"
           size="lg"
+          variant="outline"
         >
-          {learnedCount === phrases.length ? "Finalizar Día" : "Continuar más tarde"}
+          Continuar más tarde
         </Button>
       </main>
     </div>

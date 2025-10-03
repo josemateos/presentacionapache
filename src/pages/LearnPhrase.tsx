@@ -363,7 +363,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && (
+            {isStepComplete && currentStep === 2 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
                 Continuar
               </Button>

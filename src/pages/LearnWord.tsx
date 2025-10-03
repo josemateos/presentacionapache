@@ -31,6 +31,8 @@ const LearnWord = () => {
   const [userInput, setUserInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const modules: LearningModule[] = [
     { id: 0, title: "Introducción", completed: false },
@@ -49,38 +51,52 @@ const LearnWord = () => {
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
     } catch (e) {
-      // Ignorar si el navegador no soporta SpeechSynthesis
+      console.error("Error playing audio:", e);
     }
-    toast({
-      title: "Reproduciendo audio",
-      description: `Pronunciación de "${english}"`,
-    });
   };
 
-  const [hasRecording, setHasRecording] = useState(false);
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks: BlobPart[] = [];
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    toast({
-      title: "Grabando",
-      description: "Pronuncia la palabra tres veces seguidas",
-    });
-    // Simular fin de grabación después de 5 segundos
-    setTimeout(() => {
-      setIsRecording(false);
-      setHasRecording(true);
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        setRecordedAudio(audioBlob);
+        setIsRecording(false);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error starting recording:", error);
       toast({
-        title: "Grabación finalizada",
-        description: "¡Excelente pronunciación!",
+        title: "Error",
+        description: "No se pudo acceder al micrófono",
+        variant: "destructive",
       });
-    }, 5000);
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
   };
 
   const handlePlayRecording = () => {
-    toast({
-      title: "Reproduciendo grabación",
-      description: "Escuchando tu pronunciación",
-    });
+    if (recordedAudio) {
+      const audioUrl = URL.createObjectURL(recordedAudio);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
   };
 
   const getInputValidationColor = () => {
@@ -103,11 +119,6 @@ const LearnWord = () => {
     const isCorrect = userInput.toLowerCase().trim() === english.toLowerCase().trim();
     
     if (isCorrect) {
-      toast({
-        title: "¡Correcto! 🎉",
-        description: "Has escrito la palabra correctamente",
-      });
-      
       setModuleProgress(prev => prev.map(m => 
         m.id === currentModule ? { ...m, completed: true } : m
       ));
@@ -118,7 +129,7 @@ const LearnWord = () => {
           setUserInput("");
           setAttempts(0);
         }
-      }, 1500);
+      }, 500);
     } else {
       setAttempts(attempts + 1);
       toast({
@@ -190,41 +201,44 @@ const LearnWord = () => {
                 Escucha y repite la pronunciación
               </p>
               
-              <div className="flex justify-center items-center gap-8 mb-6">
+              <div className="flex justify-center items-center gap-6 mb-6">
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="w-20 h-20 rounded-full hover:bg-primary/10"
+                  variant="ghost"
+                  className="w-16 h-16 rounded-full hover:bg-primary/10"
                   onClick={handlePlayAudio}
                 >
-                  <Volume2 className="w-8 h-8 text-primary" />
+                  <div className="w-0 h-0 border-l-[20px] border-l-primary border-y-[14px] border-y-transparent" />
                 </Button>
 
-                <div className="flex flex-col items-center gap-2">
-                  {!hasRecording ? (
-                    <Button
-                      size="lg"
-                      variant={isRecording ? "destructive" : "outline"}
-                      className="w-20 h-20 rounded-full hover:bg-primary/10"
-                      onClick={handleStartRecording}
-                      disabled={isRecording}
-                    >
-                      <Mic className={`w-8 h-8 ${isRecording ? "text-white" : "text-primary"}`} />
-                    </Button>
-                  ) : (
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-20 h-20 rounded-full hover:bg-primary/10"
-                      onClick={handlePlayRecording}
-                    >
-                      <Volume2 className="w-8 h-8 text-primary" />
-                    </Button>
-                  )}
-                  <p className="text-xs text-muted-foreground max-w-[120px] text-center">
-                    {!hasRecording ? "Pronuncia la palabra tres veces seguidas" : "Escuchar grabación"}
-                  </p>
-                </div>
+                {isRecording ? (
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="w-16 h-16 rounded-full bg-red-500/20 hover:bg-red-500/30"
+                    onClick={handleStopRecording}
+                  >
+                    <div className="w-5 h-5 bg-red-500 rounded-sm" />
+                  </Button>
+                ) : recordedAudio ? (
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="w-16 h-16 rounded-full hover:bg-primary/10"
+                    onClick={handlePlayRecording}
+                  >
+                    <div className="w-0 h-0 border-l-[20px] border-l-green-500 border-y-[14px] border-y-transparent" />
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="w-16 h-16 rounded-full hover:bg-primary/10"
+                    onClick={handleStartRecording}
+                  >
+                    <Mic className="w-7 h-7 text-primary" />
+                  </Button>
+                )}
               </div>
               
               <div className="bg-card/60 p-4 rounded-lg">
@@ -259,7 +273,14 @@ const LearnWord = () => {
               <div className="space-y-4">
                 <Input
                   value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
+                  onChange={(e) => {
+                    let value = e.target.value;
+                    // Forzar mayúscula para "I"
+                    if (value.toLowerCase() === 'i' || (value.length === 1 && value.toLowerCase() === 'i')) {
+                      value = 'I';
+                    }
+                    setUserInput(value);
+                  }}
                   placeholder="Escribe aquí..."
                   className={`text-center text-xl h-14 ${getInputValidationColor()}`}
                   onKeyDown={(e) => e.key === "Enter" && handleCheckAnswer()}
@@ -335,11 +356,21 @@ const LearnWord = () => {
                       console.error("Error updating progress:", error);
                     }
                   }
-                  toast({
-                    title: "Palabra aprendida",
-                    description: `${english.charAt(0).toUpperCase() + english.slice(1)} se ha agregado a tu vocabulario`,
-                  });
-                  setTimeout(() => navigate("/vocabulario-dia-1"), 1000);
+                  // Crear un toast personalizado centrado
+                  const toastDiv = document.createElement('div');
+                  toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
+                  toastDiv.innerHTML = `
+                    <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
+                      <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
+                      <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
+                      <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                    </div>
+                  `;
+                  document.body.appendChild(toastDiv);
+                  setTimeout(() => {
+                    document.body.removeChild(toastDiv);
+                    navigate("/vocabulario-dia-1");
+                  }, 2000);
                 }}
               >
                 <Check className="w-5 h-5 mr-2" />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Settings, Volume2, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, Settings, Volume2, Check, Sparkles, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -23,16 +23,16 @@ const VocabularyDay1 = () => {
 
   // Palabras del día 1: Frase "I want to buy fresh fruit at the market"
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "yo", english: "I", learned: false },
-    { id: 2, spanish: "querer", english: "want", learned: false },
-    { id: 3, spanish: "para/a", english: "to", note: "Partícula infinitiva", learned: false },
-    { id: 4, spanish: "comprar", english: "buy", learned: false },
-    { id: 5, spanish: "fresca", english: "fresh", note: "Singular", learned: false },
-    { id: 6, spanish: "fruta", english: "fruit", learned: false },
-    { id: 7, spanish: "frutas", english: "fruits", note: "Plural", learned: false },
+    { id: 1, spanish: "fruta", english: "fruit", learned: false },
+    { id: 2, spanish: "mercado", english: "market", learned: false },
+    { id: 3, spanish: "querer", english: "want", learned: false },
+    { id: 4, spanish: "verduras", english: "vegetables", learned: false },
+    { id: 5, spanish: "yo", english: "I", learned: false },
+    { id: 6, spanish: "comprar", english: "buy", learned: false },
+    { id: 7, spanish: "fresca", english: "fresh", note: "Singular", learned: false },
     { id: 8, spanish: "en", english: "at", learned: false },
     { id: 9, spanish: "el/la", english: "the", learned: false },
-    { id: 10, spanish: "mercado", english: "market", learned: false },
+    { id: 10, spanish: "frutas", english: "fruits", note: "Plural", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -67,13 +67,69 @@ const VocabularyDay1 = () => {
     }
   };
 
+  const [recordingWordId, setRecordingWordId] = useState<number | null>(null);
+  const [recordedAudios, setRecordedAudios] = useState<{ [key: number]: Blob }>({});
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+
   const handlePlayAudio = (word: Word, e: React.MouseEvent) => {
     e.stopPropagation();
-    toast({
-      title: "Reproduciendo audio",
-      description: `Pronunciación de "${word.english}"`,
-    });
-    // Aquí iría la lógica real de reproducción de audio
+    try {
+      const utterance = new SpeechSynthesisUtterance(word.english);
+      utterance.lang = "en-US";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error("Error playing audio:", error);
+    }
+  };
+
+  const handleStartRecording = async (wordId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks: BlobPart[] = [];
+
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        setRecordedAudios(prev => ({ ...prev, [wordId]: audioBlob }));
+        setRecordingWordId(null);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setRecordingWordId(wordId);
+    } catch (error) {
+      console.error("Error starting recording:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo acceder al micrófono",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStopRecording = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+  };
+
+  const handlePlayRecording = (wordId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const audioBlob = recordedAudios[wordId];
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
   };
 
   const completionMessage = learnedCount === words.length ? (
@@ -172,6 +228,47 @@ const VocabularyDay1 = () => {
                     <p className="text-base md:text-lg text-muted-foreground mb-1">
                       {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
                     </p>
+                  </div>
+
+                  {/* Audio Controls */}
+                  <div className="flex gap-2 items-center justify-center mb-3">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-10 h-10 p-0"
+                      onClick={(e) => handlePlayAudio(word, e)}
+                    >
+                      <div className="w-0 h-0 border-l-[12px] border-l-primary border-y-[8px] border-y-transparent" />
+                    </Button>
+
+                    {recordingWordId === word.id ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-10 h-10 p-0 bg-red-500/20"
+                        onClick={handleStopRecording}
+                      >
+                        <div className="w-3 h-3 bg-red-500 rounded-sm" />
+                      </Button>
+                    ) : recordedAudios[word.id] ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-10 h-10 p-0"
+                        onClick={(e) => handlePlayRecording(word.id, e)}
+                      >
+                        <div className="w-0 h-0 border-l-[12px] border-l-green-500 border-y-[8px] border-y-transparent" />
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-10 h-10 p-0"
+                        onClick={(e) => handleStartRecording(word.id, e)}
+                      >
+                        <Mic className="w-5 h-5 text-primary" />
+                      </Button>
+                    )}
                   </div>
 
                   {/* Action Buttons */}

@@ -80,6 +80,14 @@ const LearnPhrase = () => {
     }
   }, [currentStep, spanishPhrase]);
 
+  // Asegurar que el ejercicio 5 esté editable al llegar
+  useEffect(() => {
+    if (currentStep === 5) {
+      setIsStepComplete(false);
+      setFeedback("");
+    }
+  }, [currentStep]);
+
   const handleWordClick = (word: string) => {
     if (!isStepComplete) {
       setUserAttemptSpanish([...userAttemptSpanish, word]);
@@ -521,7 +529,7 @@ const LearnPhrase = () => {
               value={finalPhrase}
               onChange={(e) => setFinalPhrase(e.target.value)}
               disabled={isStepComplete}
-              className="w-full min-h-24 text-center"
+              className="w-full min-h-24 text-center text-foreground"
               placeholder="Escribe la frase en inglés aquí..."
             />
 

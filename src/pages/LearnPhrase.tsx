@@ -171,11 +171,6 @@ const LearnPhrase = () => {
       setTimeout(() => setCurrentStep(5), 500);
     } else {
       setFeedback("El auxiliar no es correcto. Intenta de nuevo");
-      toast({
-        title: "Auxiliar incorrecto",
-        description: "Intenta nuevamente",
-        variant: "destructive",
-      });
     }
   };
 
@@ -511,7 +506,6 @@ const LearnPhrase = () => {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Comprueba que sabes comunicar</h2>
-                <p className="text-sm text-muted-foreground">Escribe la frase completa en inglés</p>
               </div>
             </div>
 
@@ -547,7 +541,11 @@ const LearnPhrase = () => {
             )}
 
             {isStepComplete && currentStep === 5 && (
-              <Button onClick={goToNextStep} className="w-full mt-4 bg-green-600 hover:bg-green-700">
+              <Button 
+                onClick={goToNextStep} 
+                className="w-full mt-4 bg-green-600 hover:bg-green-700"
+                disabled={!finalPhrase.trim()}
+              >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
                 Ir a siguiente frase
               </Button>

@@ -273,14 +273,7 @@ const LearnWord = () => {
               <div className="space-y-4">
                 <Input
                   value={userInput}
-                  onChange={(e) => {
-                    let value = e.target.value;
-                    // Forzar mayúscula para "I"
-                    if (value.toLowerCase() === 'i' || (value.length === 1 && value.toLowerCase() === 'i')) {
-                      value = 'I';
-                    }
-                    setUserInput(value);
-                  }}
+                  onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Escribe aquí..."
                   className={`text-center text-xl h-14 ${getInputValidationColor()}`}
                   onKeyDown={(e) => e.key === "Enter" && handleCheckAnswer()}

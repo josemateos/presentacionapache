@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 interface Phrase {
   id: number;
@@ -41,23 +42,21 @@ const PhrasesDay = () => {
   const day = parseInt(searchParams.get("day") || "1");
 
   const [phrases, setPhrases] = useState<Phrase[]>([]);
+  const [blocked, setBlocked] = useState(false);
 
-  // Guard: require all vocabulary day 1 words learned before accessing phrases
+  // Guard: mostrar modal centrado si faltan palabras del vocabulario
   useEffect(() => {
     try {
       const saved = localStorage.getItem("vocabulary_day1_progress");
       const list: Array<{ learned: boolean }> = saved ? JSON.parse(saved) : [];
       const allLearned = list.length > 0 && list.every((w) => w.learned);
       if (!allLearned) {
-        toast({
-          title: "Completa el vocabulario primero",
-          description: "Debes aprender todas las palabras del Día 1 antes de pasar a las frases.",
-          variant: "destructive",
-        });
-        navigate("/vocabulario-dia-1");
+        setBlocked(true);
+      } else {
+        setBlocked(false);
       }
     } catch {
-      navigate("/vocabulario-dia-1");
+      setBlocked(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -148,6 +147,24 @@ const PhrasesDay = () => {
           </div>
         </div>
       </header>
+
+      {blocked && (
+        <AlertDialog open>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Completa tu vocabulario</AlertDialogTitle>
+              <AlertDialogDescription>
+                Para acceder a tus frases del día {day}, primero debes completar tu vocabulario del día {day}.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => navigate("/dashboard")}>
+                Volver al inicio
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
         <Card className="p-6 bg-card border-border">

@@ -120,17 +120,17 @@ const PhrasesDay = () => {
       </header>
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
-        <Card className="p-6 bg-gradient-to-r from-primary to-primary/80 text-white">
+        <Card className="p-6 bg-card border-border">
           <div className="flex items-center gap-3 mb-4">
-            <BookOpen className="w-8 h-8" />
-            <h2 className="text-2xl font-bold">Día {day}</h2>
+            <BookOpen className="w-8 h-8 text-primary" />
+            <h2 className="text-2xl font-bold text-foreground">Día {day}</h2>
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between text-sm text-white/90">
+            <div className="flex justify-between text-sm text-muted-foreground">
               <span>Progreso</span>
               <span>{learnedCount} de {phrases.length}</span>
             </div>
-            <Progress value={progress} className="h-3 bg-white/20" />
+            <Progress value={progress} className="h-3 bg-muted [&>div]:bg-accent" />
           </div>
         </Card>
 
@@ -142,7 +142,7 @@ const PhrasesDay = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className={`p-5 transition-all ${phrase.learned ? 'border-primary/50 bg-primary/5' : ''}`}>
+              <Card className={`p-5 transition-all ${phrase.learned ? 'border-primary bg-card/50' : 'bg-card border-border'}`}>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="flex-1">

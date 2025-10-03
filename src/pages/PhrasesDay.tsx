@@ -42,6 +42,26 @@ const PhrasesDay = () => {
 
   const [phrases, setPhrases] = useState<Phrase[]>([]);
 
+  // Guard: require all vocabulary day 1 words learned before accessing phrases
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("vocabulary_day1_progress");
+      const list: Array<{ learned: boolean }> = saved ? JSON.parse(saved) : [];
+      const allLearned = list.length > 0 && list.every((w) => w.learned);
+      if (!allLearned) {
+        toast({
+          title: "Completa el vocabulario primero",
+          description: "Debes aprender todas las palabras del Día 1 antes de pasar a las frases.",
+          variant: "destructive",
+        });
+        navigate("/vocabulario-dia-1");
+      }
+    } catch {
+      navigate("/vocabulario-dia-1");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const savedKey = `phrases_day${day}_progress`;
     const saved = localStorage.getItem(savedKey);
@@ -172,28 +192,16 @@ const PhrasesDay = () => {
                   <div className="flex justify-end pt-2">
                     {phrase.learned ? (
                       <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          className="bg-yellow-500 hover:bg-yellow-600 text-black"
-                          disabled
-                        >
+                        <Button size="sm" variant="secondary" disabled>
                           <CheckCircle2 className="w-3 h-3 mr-1" />
                           Aprendida
                         </Button>
-                        <Button
-                          size="sm"
-                          className="bg-blue-400 hover:bg-blue-500"
-                          onClick={() => handleLearnPhrase(phrase)}
-                        >
+                        <Button size="sm" onClick={() => handleLearnPhrase(phrase)}>
                           Repasar
                         </Button>
                       </div>
                     ) : (
-                      <Button
-                        size="sm"
-                        className="bg-blue-600 hover:bg-blue-700"
-                        onClick={() => handleLearnPhrase(phrase)}
-                      >
+                      <Button size="sm" className="gradient-animated" onClick={() => handleLearnPhrase(phrase)}>
                         Aprender
                       </Button>
                     )}

@@ -435,9 +435,25 @@ const LearnPhrase = () => {
             <div className="bg-background/50 rounded-lg p-4 mb-4">
               <div className="flex flex-wrap gap-2 justify-center items-center">
                 {exerciseData.apacheEnglishSolution.map((word, index) => {
-                  // Encontrar el índice del auxiliar en finalEnglishSolution
+                  // Calcular dónde va el auxiliar. Si no está en finalEnglishSolution (p.ej. 'to'), usar heurística.
+                  const aux = exerciseData.auxiliary?.toLowerCase();
                   const finalIndex = exerciseData.finalEnglishSolution.indexOf(exerciseData.auxiliary);
-                  const isAuxiliaryPosition = index === finalIndex - 1; // El auxiliar va después de la primera palabra
+                  let insertAfterIndex = finalIndex > 0 ? finalIndex - 1 : -1;
+
+                  if (insertAfterIndex === -1) {
+                    if (aux === "to") {
+                      const wantIdx = exerciseData.apacheEnglishSolution.indexOf("want");
+                      const buyIdx = exerciseData.apacheEnglishSolution.indexOf("buy");
+                      if (wantIdx !== -1 && buyIdx === wantIdx + 1) {
+                        insertAfterIndex = wantIdx; // Insertar 'to' después de 'want'
+                      }
+                    } else if (aux === "is") {
+                      const heIdx = exerciseData.apacheEnglishSolution.indexOf("he");
+                      if (heIdx !== -1) insertAfterIndex = heIdx; // 'is' después de 'he'
+                    }
+                  }
+
+                  const isAuxiliaryPosition = index === insertAfterIndex;
                   
                   return (
                     <span key={index} className="flex gap-2 items-center">

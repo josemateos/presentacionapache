@@ -74,12 +74,7 @@ const Dashboard = () => {
   };
 
   const handleSelectDay = (day: number) => {
-    if (!completedDays[day] && day <= userProgress.currentDay) {
-      setAlertModal({
-        isOpen: true,
-        message: `Para acceder a tus frases del Día ${day}, primero completa tu vocabulario.`,
-      });
-    } else if (day > userProgress.currentDay) {
+    if (day > userProgress.currentDay) {
       setAlertModal({
         isOpen: true,
         message: `Aún no has llegado al Día ${day}. ¡Sigue adelante!`,

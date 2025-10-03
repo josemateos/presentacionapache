@@ -21,18 +21,18 @@ const VocabularyDay1 = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Palabras del día 1: 6 de la frase "Strumming my pain with his fingers" + 4 adicionales
+  // Palabras del día 1: Frase "I want to buy fresh fruit at the market"
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "rasgueando", english: "strumming", note: "Rasgueando", learned: false },
-    { id: 2, spanish: "mi", english: "my", learned: false },
-    { id: 3, spanish: "dolor", english: "pain", learned: false },
-    { id: 4, spanish: "con", english: "with", learned: false },
-    { id: 5, spanish: "su/sus", english: "his", learned: false },
-    { id: 6, spanish: "dedos", english: "fingers", learned: false },
-    { id: 7, spanish: "cantar", english: "singing", note: "ando/endo = lo que se está haciendo", learned: false },
-    { id: 8, spanish: "canción", english: "song", learned: false },
-    { id: 9, spanish: "palabras", english: "words", learned: false },
-    { id: 10, spanish: "vida", english: "life", learned: false },
+    { id: 1, spanish: "yo", english: "I", learned: false },
+    { id: 2, spanish: "querer", english: "want", learned: false },
+    { id: 3, spanish: "para/a", english: "to", note: "Partícula infinitiva", learned: false },
+    { id: 4, spanish: "comprar", english: "buy", learned: false },
+    { id: 5, spanish: "fresca", english: "fresh", note: "Singular", learned: false },
+    { id: 6, spanish: "fruta", english: "fruit", learned: false },
+    { id: 7, spanish: "frutas", english: "fruits", note: "Plural", learned: false },
+    { id: 8, spanish: "en", english: "at", learned: false },
+    { id: 9, spanish: "el/la", english: "the", learned: false },
+    { id: 10, spanish: "mercado", english: "market", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -40,19 +40,12 @@ const VocabularyDay1 = () => {
   const progress = (learnedCount / words.length) * 100;
 
   useEffect(() => {
-    // Cargar progreso guardado del localStorage y migrar datos si es necesario
+    // Cargar progreso guardado del localStorage
     const saved = localStorage.getItem("vocabulary_day1_progress");
     if (saved) {
       try {
         const savedWords: Word[] = JSON.parse(saved);
-        const migrated = savedWords.map((w) => {
-          if (w.id === 1 || w.english?.toLowerCase() === "strumming") {
-            return { ...w, spanish: "rasgueando", note: "Rasgueando" };
-          }
-          return w;
-        });
-        setWords(migrated);
-        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(migrated));
+        setWords(savedWords);
       } catch (error) {
         console.error("Error loading saved progress:", error);
       }

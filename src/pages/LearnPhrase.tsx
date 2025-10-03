@@ -30,8 +30,8 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado", "querer", "fresca", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
     apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
-    finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruits", "in", "the", "market"],
-    auxiliary: "to",
+    finalEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "in", "the", "market"],
+    auxiliary: "",
   },
   2: {
     spanishWords: ["Rasgueando", "mi", "dolor", "con", "sus", "dedos"],
@@ -268,7 +268,7 @@ const LearnPhrase = () => {
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Paso 1: Frase en Español */}
-        {currentStep >= 1 && currentStep < 5 && (
+        {currentStep >= 1 && (
         <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -301,7 +301,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 2: Español Apache */}
-        {currentStep >= 2 && currentStep < 5 && (
+        {currentStep >= 2 && (
           <Card ref={step2Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -368,7 +368,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 3: Inglés Apache */}
-        {currentStep >= 3 && currentStep < 5 && (
+        {currentStep >= 3 && (
           <Card ref={step3Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -416,7 +416,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 4: Inglés Perfecto */}
-        {currentStep >= 4 && currentStep < 5 && (
+        {currentStep >= 4 && (
           <Card ref={step4Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -431,7 +431,7 @@ const LearnPhrase = () => {
             <div className="bg-background/50 rounded-lg p-4 mb-4">
               <div className="flex flex-wrap gap-2 justify-center items-center">
                 {exerciseData.finalEnglishSolution.map((word, index) => (
-                  word === exerciseData.auxiliary ? (
+                  word === exerciseData.auxiliary && exerciseData.auxiliary !== "" ? (
                     <Input
                       key={index}
                       value={userAuxiliary}
@@ -449,20 +449,28 @@ const LearnPhrase = () => {
               </div>
             </div>
 
-            <div className="flex gap-2 mb-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowPremiumModal(true)}
-                disabled
-                className="opacity-50 cursor-not-allowed"
-              >
-                <Lock className="w-4 h-4 mr-2" />
-                Auxiliares
-              </Button>
-              <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
-                Verificar Auxiliar
-              </Button>
-            </div>
+            {exerciseData.auxiliary !== "" ? (
+              <div className="flex gap-2 mb-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowPremiumModal(true)}
+                  className="opacity-50 cursor-not-allowed"
+                >
+                  <Lock className="w-4 h-4 mr-2" />
+                  Auxiliares
+                </Button>
+                <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
+                  Verificar Auxiliar
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center mb-4">
+                <p className="text-sm text-muted-foreground mb-4">Esta frase no requiere auxiliar</p>
+                <Button onClick={goToNextStep} className="w-full">
+                  Continuar
+                </Button>
+              </div>
+            )}
 
             {feedback && (
               <p className={`text-sm text-center ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>

@@ -85,11 +85,7 @@ const Dashboard = () => {
         message: `Aún no has llegado al Día ${day}. ¡Sigue adelante!`,
       });
     } else {
-      toast({
-        title: `Día ${day}`,
-        description: "Accediendo a las frases del día",
-      });
-      // Aquí navegarías a las frases del día
+      navigate(`/phrases-day?day=${day}`);
     }
   };
 

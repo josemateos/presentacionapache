@@ -11,6 +11,8 @@ import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import VocabularyDay1 from "./pages/VocabularyDay1";
 import LearnWord from "./pages/LearnWord";
+import PhrasesDay from "./pages/PhrasesDay";
+import LearnPhrase from "./pages/LearnPhrase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/vocabulario-dia-1" element={<VocabularyDay1 />} />
             <Route path="/learn-word" element={<LearnWord />} />
+            <Route path="/phrases-day" element={<PhrasesDay />} />
+            <Route path="/learn-phrase" element={<LearnPhrase />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

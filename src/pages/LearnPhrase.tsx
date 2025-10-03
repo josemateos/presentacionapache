@@ -101,6 +101,12 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("¡Correcto! Has ordenado la frase en Español Apache");
       setIsStepComplete(true);
+      // Scroll para mostrar el botón de continuar
+      setTimeout(() => {
+        if (step2Ref.current) {
+          step2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 100);
     } else {
       setFeedback("Intenta de nuevo. Revisa el orden de las palabras");
       toast({
@@ -140,6 +146,12 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("¡Perfecto! Has traducido correctamente al Inglés Apache");
       setIsStepComplete(true);
+      // Scroll para mostrar el botón de continuar
+      setTimeout(() => {
+        if (step3Ref.current) {
+          step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 100);
     } else {
       setFeedback("Algunas palabras no son correctas. Revisa tu traducción");
       toast({
@@ -168,10 +180,13 @@ const LearnPhrase = () => {
   };
 
   const checkFinalPhrase = () => {
-    const userLower = finalPhrase.toLowerCase().trim();
-    const correctPhrase = exerciseData.finalEnglishSolution.join(" ").toLowerCase();
+    const userTrimmed = finalPhrase.trim();
+    // Crear la frase correcta con "I" mayúscula
+    const correctPhraseArray = [...exerciseData.finalEnglishSolution];
+    correctPhraseArray[0] = correctPhraseArray[0] === "i" ? "I" : correctPhraseArray[0];
+    const correctPhrase = correctPhraseArray.join(" ");
     
-    if (userLower === correctPhrase) {
+    if (userTrimmed === correctPhrase) {
       setFeedback("¡Perfecto! Has dominado esta frase completamente");
       setIsStepComplete(true);
       
@@ -330,14 +345,14 @@ const LearnPhrase = () => {
             </div>
 
             <div className="flex gap-2 mb-4">
-              <Button variant="outline" onClick={removeLastWord} disabled={isStepComplete}>
+              <Button variant="outline" onClick={removeLastWord} disabled={isStepComplete || currentStep > 2}>
                 Borrar
               </Button>
               <Button variant="outline" onClick={() => setShowTipsModal(true)}>
                 <Lightbulb className="w-4 h-4 mr-2" />
                 Tips
               </Button>
-              <Button onClick={checkSpanishSolution} disabled={isStepComplete}>
+              <Button onClick={checkSpanishSolution} disabled={isStepComplete || currentStep > 2}>
                 Verificar
               </Button>
             </div>
@@ -386,7 +401,7 @@ const LearnPhrase = () => {
               </div>
             </div>
 
-            <Button onClick={checkEnglishSolution} disabled={isStepComplete} className="w-full mb-4">
+            <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="w-full mb-4">
               Verificar Frase
             </Button>
 
@@ -396,7 +411,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && (
+            {isStepComplete && currentStep === 3 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
                 Continuar
               </Button>
@@ -419,47 +434,43 @@ const LearnPhrase = () => {
 
             <div className="bg-background/50 rounded-lg p-4 mb-4">
               <div className="flex flex-wrap gap-2 justify-center items-center">
-                {exerciseData.finalEnglishSolution.map((word, index) => (
-                  word === exerciseData.auxiliary && exerciseData.auxiliary !== "" ? (
-                    <Input
-                      key={index}
-                      value={userAuxiliary}
-                      onChange={(e) => setUserAuxiliary(e.target.value)}
-                      disabled={isStepComplete}
-                      className={`w-20 text-center transition-colors ${getAuxiliaryColorClass()}`}
-                      placeholder="?"
-                    />
-                  ) : (
-                    <span key={index} className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
-                      {word === "i" ? "I" : word}
+                {exerciseData.apacheEnglishSolution.map((word, index) => {
+                  // Encontrar el índice del auxiliar en finalEnglishSolution
+                  const finalIndex = exerciseData.finalEnglishSolution.indexOf(exerciseData.auxiliary);
+                  const isAuxiliaryPosition = index === finalIndex - 1; // El auxiliar va después de la primera palabra
+                  
+                  return (
+                    <span key={index} className="flex gap-2 items-center">
+                      <span className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
+                        {word === "i" ? "I" : word}
+                      </span>
+                      {isAuxiliaryPosition && exerciseData.auxiliary !== "" && (
+                        <Input
+                          value={userAuxiliary}
+                          onChange={(e) => setUserAuxiliary(e.target.value)}
+                          disabled={isStepComplete || currentStep > 4}
+                          className={`w-20 text-center transition-colors ${getAuxiliaryColorClass()}`}
+                          placeholder="?"
+                        />
+                      )}
                     </span>
-                  )
-                ))}
+                  );
+                })}
               </div>
             </div>
 
-            {exerciseData.auxiliary !== "" ? (
-              <div className="flex gap-2 mb-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowPremiumModal(true)}
-                  className="opacity-50 cursor-not-allowed"
-                >
-                  <Lock className="w-4 h-4 mr-2" />
-                  Auxiliares clave
-                </Button>
-                <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
-                  Verificar
-                </Button>
-              </div>
-            ) : (
-              <div className="text-center mb-4">
-                <p className="text-sm text-muted-foreground mb-4">Esta frase no requiere auxiliar</p>
-                <Button onClick={goToNextStep} className="w-full">
-                  Continuar
-                </Button>
-              </div>
-            )}
+            <div className="flex gap-2 mb-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowPremiumModal(true)}
+              >
+                <Lock className="w-4 h-4 mr-2" />
+                Auxiliares clave
+              </Button>
+              <Button onClick={checkAuxiliary} disabled={isStepComplete || currentStep > 4} className="flex-1">
+                Verificar
+              </Button>
+            </div>
 
             {feedback && (
               <p className={`text-sm text-center ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
@@ -467,7 +478,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && (
+            {isStepComplete && currentStep === 4 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
                 Continuar
               </Button>
@@ -519,7 +530,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && (
+            {isStepComplete && currentStep === 5 && (
               <Button onClick={goToNextStep} className="w-full mt-4 bg-green-600 hover:bg-green-700">
                 <CheckCircle2 className="w-4 h-4 mr-2" />
                 Ir a siguiente frase

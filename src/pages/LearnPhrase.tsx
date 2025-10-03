@@ -230,7 +230,7 @@ const LearnPhrase = () => {
         if (nextRef?.current) {
           nextRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 100);
+      }, 50);
     } else {
       navigate(`/phrases-day?day=${day}`);
     }
@@ -268,7 +268,7 @@ const LearnPhrase = () => {
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Paso 1: Frase en Español */}
-        {currentStep === 1 && (
+        {currentStep >= 1 && currentStep < 5 && (
         <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -301,7 +301,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 2: Español Apache */}
-        {currentStep === 2 && (
+        {currentStep >= 2 && currentStep < 5 && (
           <Card ref={step2Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -368,7 +368,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 3: Inglés Apache */}
-        {currentStep === 3 && (
+        {currentStep >= 3 && currentStep < 5 && (
           <Card ref={step3Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -416,7 +416,7 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 4: Inglés Perfecto */}
-        {currentStep === 4 && (
+        {currentStep >= 4 && currentStep < 5 && (
           <Card ref={step4Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -492,7 +492,7 @@ const LearnPhrase = () => {
             </div>
 
             <div className="bg-background/50 rounded-lg p-4 mb-4">
-              <p className="text-center text-foreground font-medium mb-2">"{spanishPhrase}"</p>
+              <p className="text-center text-foreground font-medium mb-2">"{exerciseData.spanishWords.join(" ")}"</p>
             </div>
 
             <Textarea

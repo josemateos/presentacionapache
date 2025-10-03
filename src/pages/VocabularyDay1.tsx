@@ -29,10 +29,10 @@ const VocabularyDay1 = () => {
     { id: 4, spanish: "verduras", english: "vegetables", learned: false },
     { id: 5, spanish: "yo", english: "I", learned: false },
     { id: 6, spanish: "comprar", english: "buy", learned: false },
-    { id: 7, spanish: "fresca", english: "fresh", note: "Singular", learned: false },
+    { id: 7, spanish: "fresca", english: "fresh", learned: false },
     { id: 8, spanish: "en", english: "at", note: "Lugar de la acción", learned: false },
     { id: 9, spanish: "el/la", english: "the", learned: false },
-    { id: 10, spanish: "frutas", english: "fruit", note: "Plural", learned: false },
+    { id: 10, spanish: "frutas", english: "fruits", note: "Plural", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);

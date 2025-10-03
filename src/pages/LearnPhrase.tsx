@@ -168,7 +168,11 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("¡Excelente! Has completado la frase en Inglés perfecto");
       setIsStepComplete(true);
-      setTimeout(() => setCurrentStep(5), 500);
+      setTimeout(() => {
+        setCurrentStep(5);
+        setIsStepComplete(false);
+        setFeedback("");
+      }, 500);
     } else {
       setFeedback("El auxiliar no es correcto. Intenta de nuevo");
     }
@@ -254,7 +258,7 @@ const LearnPhrase = () => {
               variant="ghost"
               size="sm"
               onClick={() => navigate(`/phrases-day?day=${day}`)}
-              className="gap-2"
+              className="gap-2 text-white hover:text-white/80"
             >
               <ArrowLeft className="w-4 h-4" />
               Volver

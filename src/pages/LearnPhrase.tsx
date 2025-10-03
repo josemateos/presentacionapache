@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -56,10 +57,17 @@ const LearnPhrase = () => {
   const [userAttemptSpanish, setUserAttemptSpanish] = useState<string[]>([]);
   const [userAttemptEnglish, setUserAttemptEnglish] = useState<string[]>([]);
   const [userAuxiliary, setUserAuxiliary] = useState("");
+  const [finalPhrase, setFinalPhrase] = useState("");
   const [feedback, setFeedback] = useState("");
   const [showTipsModal, setShowTipsModal] = useState(false);
-  const [showAuxModal, setShowAuxModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [isStepComplete, setIsStepComplete] = useState(false);
+  
+  const step1Ref = useRef<HTMLDivElement>(null);
+  const step2Ref = useRef<HTMLDivElement>(null);
+  const step3Ref = useRef<HTMLDivElement>(null);
+  const step4Ref = useRef<HTMLDivElement>(null);
+  const step5Ref = useRef<HTMLDivElement>(null);
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
 
@@ -111,11 +119,22 @@ const LearnPhrase = () => {
     const newAttempt = [...userAttemptEnglish];
     newAttempt[index] = value;
     setUserAttemptEnglish(newAttempt);
-    
-    // Validar en tiempo real
-    if (value.toLowerCase() === exerciseData.apacheEnglishSolution[index]) {
-      // Correcto
-    }
+  };
+
+  const getInputColorClass = (index: number, value: string) => {
+    if (!value) return "";
+    const isCorrect = value.toLowerCase() === exerciseData.apacheEnglishSolution[index];
+    return isCorrect 
+      ? "text-green-500 bg-green-500/20 border-green-500" 
+      : "text-red-500 bg-red-500/20 border-red-500";
+  };
+
+  const getAuxiliaryColorClass = () => {
+    if (!userAuxiliary) return "";
+    const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary;
+    return isCorrect 
+      ? "text-green-500 bg-green-500/20 border-green-500" 
+      : "text-red-500 bg-red-500/20 border-red-500";
   };
 
   const checkEnglishSolution = () => {
@@ -146,6 +165,28 @@ const LearnPhrase = () => {
       setFeedback("¡Excelente! Has completado la frase en Inglés perfecto");
       setIsStepComplete(true);
       
+      toast({
+        title: "¡Paso 4 completado!",
+        description: "Continúa al último paso",
+      });
+    } else {
+      setFeedback("El auxiliar no es correcto. Intenta de nuevo");
+      toast({
+        title: "Auxiliar incorrecto",
+        description: "Intenta nuevamente",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const checkFinalPhrase = () => {
+    const userLower = finalPhrase.toLowerCase().trim();
+    const correctPhrase = exerciseData.finalEnglishSolution.join(" ").toLowerCase();
+    
+    if (userLower === correctPhrase) {
+      setFeedback("¡Perfecto! Has dominado esta frase completamente");
+      setIsStepComplete(true);
+      
       // Marcar como aprendida
       const savedKey = `phrases_day${day}_progress`;
       const saved = localStorage.getItem(savedKey);
@@ -162,17 +203,17 @@ const LearnPhrase = () => {
         description: "Has dominado esta frase",
       });
     } else {
-      setFeedback("El auxiliar no es correcto. Intenta de nuevo");
+      setFeedback("No es correcto. Revisa tu respuesta o repasa los ejercicios");
       toast({
-        title: "Auxiliar incorrecto",
-        description: "Revisa la lista de auxiliares",
+        title: "Respuesta incorrecta",
+        description: "Intenta nuevamente o repasa los pasos anteriores",
         variant: "destructive",
       });
     }
   };
 
   const goToNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       setIsStepComplete(false);
       setFeedback("");
@@ -184,11 +225,25 @@ const LearnPhrase = () => {
       
       // Scroll to center the next step
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref];
+        const nextRef = refs[currentStep + 1];
+        if (nextRef?.current) {
+          nextRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }, 100);
     } else {
       navigate(`/phrases-day?day=${day}`);
     }
+  };
+
+  const goToPreviousSteps = () => {
+    setCurrentStep(1);
+    setIsStepComplete(false);
+    setFeedback("");
+    setUserAttemptSpanish([]);
+    setUserAttemptEnglish([]);
+    setUserAuxiliary("");
+    setFinalPhrase("");
   };
 
   return (
@@ -213,7 +268,8 @@ const LearnPhrase = () => {
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Paso 1: Frase en Español */}
-        <Card className={`p-6 ${currentStep > 1 ? 'opacity-50' : ''}`}>
+        {currentStep === 1 && (
+        <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
               <span className="text-primary font-bold">1</span>
@@ -242,10 +298,11 @@ const LearnPhrase = () => {
             )}
           </div>
         </Card>
+        )}
 
         {/* Paso 2: Español Apache */}
-        {currentStep >= 2 && (
-          <Card className={`p-6 ${currentStep > 2 ? 'opacity-50' : ''}`}>
+        {currentStep === 2 && (
+          <Card ref={step2Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                 <span className="text-primary font-bold">2</span>
@@ -302,7 +359,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && currentStep === 2 && (
+            {isStepComplete && (
               <Button onClick={goToNextStep} className="w-full mt-4">
                 Continuar
               </Button>
@@ -311,8 +368,8 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 3: Inglés Apache */}
-        {currentStep >= 3 && (
-          <Card className={`p-6 ${currentStep > 3 ? 'opacity-50' : ''}`}>
+        {currentStep === 3 && (
+          <Card ref={step3Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                 <span className="text-primary font-bold">3</span>
@@ -332,7 +389,7 @@ const LearnPhrase = () => {
                       value={userAttemptEnglish[index] || ""}
                       onChange={(e) => handleEnglishInputChange(index, e.target.value)}
                       disabled={isStepComplete}
-                      className="w-24 text-center"
+                      className={`w-24 text-center transition-colors ${getInputColorClass(index, userAttemptEnglish[index] || "")}`}
                       placeholder="..."
                     />
                   </div>
@@ -350,7 +407,7 @@ const LearnPhrase = () => {
               </p>
             )}
 
-            {isStepComplete && currentStep === 3 && (
+            {isStepComplete && (
               <Button onClick={goToNextStep} className="w-full mt-4">
                 Continuar
               </Button>
@@ -359,8 +416,8 @@ const LearnPhrase = () => {
         )}
 
         {/* Paso 4: Inglés Perfecto */}
-        {currentStep >= 4 && (
-          <Card className="p-6">
+        {currentStep === 4 && (
+          <Card ref={step4Ref} className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                 <span className="text-primary font-bold">4</span>
@@ -378,14 +435,14 @@ const LearnPhrase = () => {
                     <Input
                       key={index}
                       value={userAuxiliary}
-                      onChange={(e) => setUserAuxiliary(e.target.value)}
+                      onChange={(e) => setUserAuxiliary(e.target.value.toUpperCase())}
                       disabled={isStepComplete}
-                      className="w-20 text-center"
+                      className={`w-20 text-center transition-colors ${getAuxiliaryColorClass()}`}
                       placeholder="?"
                     />
                   ) : (
                     <span key={index} className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
-                      {word}
+                      {word === "i" ? "I" : word}
                     </span>
                   )
                 ))}
@@ -393,8 +450,13 @@ const LearnPhrase = () => {
             </div>
 
             <div className="flex gap-2 mb-4">
-              <Button variant="outline" onClick={() => setShowAuxModal(true)}>
-                <Star className="w-4 h-4 mr-2" />
+              <Button 
+                variant="outline" 
+                onClick={() => setShowPremiumModal(true)}
+                disabled
+                className="opacity-50 cursor-not-allowed"
+              >
+                <Lock className="w-4 h-4 mr-2" />
                 Auxiliares
               </Button>
               <Button onClick={checkAuxiliary} disabled={isStepComplete} className="flex-1">
@@ -404,6 +466,58 @@ const LearnPhrase = () => {
 
             {feedback && (
               <p className={`text-sm text-center ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
+                {feedback}
+              </p>
+            )}
+
+            {isStepComplete && (
+              <Button onClick={goToNextStep} className="w-full mt-4">
+                Continuar
+              </Button>
+            )}
+          </Card>
+        )}
+
+        {/* Paso 5: Escribe la frase completa */}
+        {currentStep === 5 && (
+          <Card ref={step5Ref} className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                <span className="text-primary font-bold">5</span>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Escribe en Ingles tu frase</h2>
+                <p className="text-sm text-muted-foreground">Escribe la frase completa en inglés</p>
+              </div>
+            </div>
+
+            <div className="bg-background/50 rounded-lg p-4 mb-4">
+              <p className="text-center text-foreground font-medium mb-2">"{spanishPhrase}"</p>
+            </div>
+
+            <Textarea
+              value={finalPhrase}
+              onChange={(e) => setFinalPhrase(e.target.value)}
+              disabled={isStepComplete}
+              className="w-full min-h-24 text-center"
+              placeholder="Escribe la frase en inglés aquí..."
+            />
+
+            <div className="flex gap-2 mt-4">
+              <Button 
+                variant="outline" 
+                onClick={goToPreviousSteps}
+                disabled={isStepComplete}
+              >
+                Repasar ejercicios
+              </Button>
+              <Button onClick={checkFinalPhrase} disabled={isStepComplete} className="flex-1">
+                Verificar Frase
+              </Button>
+            </div>
+
+            {feedback && (
+              <p className={`text-sm text-center mt-4 ${feedback.includes("Perfecto") ? "text-green-500" : "text-red-500"}`}>
                 {feedback}
               </p>
             )}
@@ -436,21 +550,32 @@ const LearnPhrase = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Modal de Auxiliares */}
-      <Dialog open={showAuxModal} onOpenChange={setShowAuxModal}>
+      {/* Modal de Premium */}
+      <Dialog open={showPremiumModal} onOpenChange={setShowPremiumModal}>
         <DialogContent className="bg-card text-foreground">
           <DialogHeader>
-            <DialogTitle className="text-accent">Auxiliares Clave</DialogTitle>
+            <DialogTitle className="text-accent">Función Premium</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              <p className="mt-4">Los auxiliares más comunes son:</p>
-              <ul className="list-disc list-inside space-y-2 mt-2">
-                <li><strong>to</strong> - Para infinitivos (want to eat)</li>
-                <li><strong>is/are</strong> - Para presente continuo (is eating)</li>
-                <li><strong>do/does</strong> - Para preguntas y negaciones</li>
-              </ul>
+              <div className="mt-4 space-y-4">
+                <p>La lista de auxiliares está disponible en la versión Premium.</p>
+                <p className="text-sm">Con Premium obtendrás:</p>
+                <ul className="list-disc list-inside space-y-2 mt-2 text-sm">
+                  <li>Acceso a listas de auxiliares</li>
+                  <li>Ejercicios adicionales</li>
+                  <li>Contenido exclusivo</li>
+                  <li>Sin anuncios</li>
+                </ul>
+              </div>
             </DialogDescription>
           </DialogHeader>
-          <Button onClick={() => setShowAuxModal(false)}>Entendido</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowPremiumModal(false)}>
+              Cerrar
+            </Button>
+            <Button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black">
+              Obtener Premium
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

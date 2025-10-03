@@ -40,15 +40,28 @@ const VocabularyDay1 = () => {
   const progress = (learnedCount / words.length) * 100;
 
   useEffect(() => {
-    // Cargar progreso guardado del localStorage
+    // Limpiar localStorage de versiones antiguas y cargar progreso correcto
     const saved = localStorage.getItem("vocabulary_day1_progress");
     if (saved) {
       try {
         const savedWords: Word[] = JSON.parse(saved);
-        setWords(savedWords);
+        // Verificar si las palabras guardadas coinciden con las actuales
+        const currentWordIds = words.map(w => w.english).sort().join(',');
+        const savedWordIds = savedWords.map(w => w.english).sort().join(',');
+        
+        if (currentWordIds === savedWordIds) {
+          // Solo cargar si las palabras coinciden
+          setWords(savedWords);
+        } else {
+          // Si no coinciden, limpiar y usar las nuevas palabras
+          localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+        }
       } catch (error) {
         console.error("Error loading saved progress:", error);
+        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
       }
+    } else {
+      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
     }
   }, []);
 

@@ -50,10 +50,6 @@ const Login = () => {
       // Aquí se integrará con Supabase en el futuro
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast({
-        title: "¡Bienvenido de nuevo!",
-        description: "Has iniciado sesión correctamente.",
-      });
       
       navigate("/bienvenida");
     } catch (error) {

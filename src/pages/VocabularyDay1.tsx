@@ -166,18 +166,6 @@ const VocabularyDay1 = () => {
                     <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                       {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
                     </h3>
-                    
-                    {word.english && (
-                      <p className="text-base md:text-lg text-muted-foreground mb-1">
-                        {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
-                      </p>
-                    )}
-                    
-                    {word.note && (
-                      <p className="text-sm text-primary/80 italic mt-2">
-                        {word.note}
-                      </p>
-                    )}
                   </div>
 
 

@@ -200,6 +200,22 @@ const LearnWord = () => {
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
                 Escucha y pronuncia
               </h3>
+              
+              {/* Mostrar palabra en español, inglés y nota */}
+              <div className="gradient-card rounded-xl p-6 border border-primary/20 mb-6">
+                <h2 className="text-3xl font-bold mb-3 text-foreground">
+                  {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
+                </h2>
+                <p className="text-xl text-muted-foreground mb-2">
+                  {english.charAt(0).toUpperCase() + english.slice(1)}
+                </p>
+                {displayNote && (
+                  <p className="text-sm text-primary/80 italic mt-3 bg-primary/5 p-3 rounded-lg">
+                    {displayNote}
+                  </p>
+                )}
+              </div>
+              
               <p className="text-muted-foreground mb-6">
                 Escucha y repite la pronunciación
               </p>
@@ -242,12 +258,6 @@ const LearnWord = () => {
                     <Mic className="w-7 h-7 text-primary" />
                   </Button>
                 )}
-              </div>
-              
-              <div className="bg-card/60 p-4 rounded-lg">
-                <p className="text-xl font-medium text-foreground">
-                  {english.charAt(0).toUpperCase() + english.slice(1)}
-                </p>
               </div>
             </Card>
             

@@ -26,7 +26,7 @@ const VocabularyDay1 = () => {
   const [words, setWords] = useState<Word[]>([
     { id: 1, spanish: "Frescas", english: "Fresh", note: "adjetivo, plural femenino", learned: false, audioFileName: "frescas.mp3" },
     { id: 2, spanish: "Mercado", english: "Market", note: "sustantivo masculino", learned: false, audioFileName: "mercado.mp3" },
-    { id: 3, spanish: "Quiero", english: "I want", note: "1ª persona singular del verbo querer", learned: false, audioFileName: "quiero.mp3" },
+    { id: 3, spanish: "Querer", english: "want", note: "verbo infinitivo", learned: false, audioFileName: "quiero.mp3" },
     { id: 4, spanish: "Pan", english: "Bread", note: "sustantivo masculino", learned: false, audioFileName: "pan.mp3" },
     { id: 5, spanish: "El", english: "The", note: "artículo masculino singular", learned: false, audioFileName: "el.mp3" },
     { id: 6, spanish: "Frutas", english: "Fruits", note: "sustantivo femenino plural", learned: false, audioFileName: "frutas.mp3" },

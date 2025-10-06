@@ -130,12 +130,12 @@ const VocabularyDay1 = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-card border border-border rounded-2xl p-6 shadow-md"
         >
-          <h2 className="text-lg font-semibold mb-3 text-center text-primary flex items-center justify-center gap-2">
-            <Sparkles className="w-5 h-5" />
+          <h2 className="text-base font-semibold mb-4 text-center text-primary flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4" />
             Progreso General
           </h2>
-          <Progress value={progress} className="h-5 mb-2" />
-          <p className="text-center text-sm text-muted-foreground mt-3">
+          <Progress value={progress} className="h-2 mb-2" />
+          <p className="text-center text-xs text-muted-foreground mt-2">
             {learnedCount} de {words.length} palabras aprendidas
           </p>
         </motion.div>

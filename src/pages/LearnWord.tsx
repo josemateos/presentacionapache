@@ -594,9 +594,7 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 2: // Ortografía (ahora case 2)
-
-      case 3: // Ortografía
+      case 2: // Ortografía
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}

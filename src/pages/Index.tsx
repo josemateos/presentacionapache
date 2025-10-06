@@ -46,13 +46,18 @@ const Index = () => {
           content: "Las palabras esenciales que necesitas",
           example: {
             words: [
-              { spanish: "Necesitar", english: "Need" },
-              { spanish: "Encontrar", english: "Find" },
-              { spanish: "Sistema", english: "System" },
               { spanish: "Eficiente", english: "Efficient" },
-              { spanish: "Aprendizaje", english: "Learning" },
+              { spanish: "Yo", english: "I" },
+              { spanish: "Sistema", english: "System" },
               { spanish: "Rápido", english: "Fast" },
-              { spanish: "Inglés", english: "English" }
+              { spanish: "en", english: "in" },
+              { spanish: "Encontrar", english: "Find" },
+              { spanish: "del", english: "of the" },
+              { spanish: "Necesitar", english: "Need" },
+              { spanish: "Inglés", english: "English" },
+              { spanish: "un", english: "a/an" },
+              { spanish: "Aprendizaje", english: "Learning" },
+              { spanish: "el", english: "the" }
             ]
           }
         },
@@ -137,7 +142,10 @@ const Index = () => {
       setVisibleSteps([...visibleSteps, currentIndex]);
       // Scroll up to show the next step
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+          mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }, 100);
     }
   };

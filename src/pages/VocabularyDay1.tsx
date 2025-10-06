@@ -21,39 +21,14 @@ const VocabularyDay1 = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Vocabulario del día 1 - 31 palabras
+  // Vocabulario del día 1 - Frase 1: "Quiero comprar fruta fresca ahora"
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "Querer", english: "To want", note: "verbo (ej: quiero)", learned: false, audioFileName: "querer.mp3" },
-    { id: 2, spanish: "Comprar", english: "To buy", note: "verbo", learned: false, audioFileName: "comprar.mp3" },
-    { id: 3, spanish: "Fruta", english: "Fruit", note: "sustantivo, fem. (frutas pl.)", learned: false, audioFileName: "fruta.mp3" },
-    { id: 4, spanish: "Fresco", english: "Fresh", note: "adjetivo (fresca fem.)", learned: false, audioFileName: "fresco.mp3" },
-    { id: 5, spanish: "Ahora", english: "Now", learned: false, audioFileName: "ahora.mp3" },
-    { id: 6, spanish: "Gustar", english: "To like", note: "verbo (ej: me gusta)", learned: false, audioFileName: "gustar.mp3" },
-    { id: 7, spanish: "Leer", english: "To read", note: "verbo", learned: false, audioFileName: "leer.mp3" },
-    { id: 8, spanish: "Libro", english: "Book", note: "sustantivo, masc.", learned: false, audioFileName: "libro.mp3" },
-    { id: 9, spanish: "Antes", english: "Before", learned: false, audioFileName: "antes.mp3" },
-    { id: 10, spanish: "Dormir", english: "To sleep", note: "verbo", learned: false, audioFileName: "dormir.mp3" },
-    { id: 11, spanish: "Tener", english: "To have", note: "verbo (ej: tengo)", learned: false, audioFileName: "tener.mp3" },
-    { id: 12, spanish: "Reunión", english: "Meeting", note: "sustantivo, fem.", learned: false, audioFileName: "reunion.mp3" },
-    { id: 13, spanish: "Importante", english: "Important", note: "adjetivo", learned: false, audioFileName: "importante.mp3" },
-    { id: 14, spanish: "Hoy", english: "Today", learned: false, audioFileName: "hoy.mp3" },
-    { id: 15, spanish: "Tarde", english: "Afternoon", note: "sustantivo, fem.", learned: false, audioFileName: "tarde.mp3" },
-    { id: 16, spanish: "Próximo", english: "Next", note: "adjetivo (próxima fem.)", learned: false, audioFileName: "proximo.mp3" },
-    { id: 17, spanish: "Fin", english: "End", note: "sustantivo, masc.", learned: false, audioFileName: "fin.mp3" },
-    { id: 18, spanish: "Semana", english: "Week", note: "sustantivo, fem.", learned: false, audioFileName: "semana.mp3" },
-    { id: 19, spanish: "Visitar", english: "To visit", note: "verbo (ej: visitaré)", learned: false, audioFileName: "visitar.mp3" },
-    { id: 20, spanish: "Familia", english: "Family", note: "sustantivo, fem.", learned: false, audioFileName: "familia.mp3" },
-    { id: 21, spanish: "Necesitar", english: "To need", note: "verbo (ej: necesito)", learned: false, audioFileName: "necesitar.mp3" },
-    { id: 22, spanish: "Practicar", english: "To practice", note: "verbo", learned: false, audioFileName: "practicar.mp3" },
-    { id: 23, spanish: "Inglés", english: "English", learned: false, audioFileName: "ingles.mp3" },
-    { id: 24, spanish: "Cada", english: "Every/Each", learned: false, audioFileName: "cada.mp3" },
-    { id: 25, spanish: "Día", english: "Day", note: "sustantivo, masc.", learned: false, audioFileName: "dia.mp3" },
-    { id: 26, spanish: "Mejorar", english: "To improve", note: "verbo", learned: false, audioFileName: "mejorar.mp3" },
-    { id: 27, spanish: "Agua", english: "Water", note: "sustantivo, fem.", learned: false, audioFileName: "agua.mp3" },
-    { id: 28, spanish: "Trabajo", english: "Work", note: "empleo o tarea", learned: false, audioFileName: "trabajo.mp3" },
-    { id: 29, spanish: "Escuela", english: "School", note: "sustantivo, fem.", learned: false, audioFileName: "escuela.mp3" },
-    { id: 30, spanish: "Casa", english: "House", note: "edificio", learned: false, audioFileName: "casa.mp3" },
-    { id: 31, spanish: "Ser", english: "To be", note: "verbo (esencia)", learned: false, audioFileName: "ser.mp3" },
+    { id: 1, spanish: "Yo", english: "I", note: "pronombre personal", learned: false, audioFileName: "yo.mp3" },
+    { id: 2, spanish: "Querer", english: "To want", note: "verbo (ej: quiero, quieres)", learned: false, audioFileName: "querer.mp3" },
+    { id: 3, spanish: "Comprar", english: "To buy", note: "verbo", learned: false, audioFileName: "comprar.mp3" },
+    { id: 4, spanish: "Fruta", english: "Fruit", note: "sustantivo, fem. (frutas pl.)", learned: false, audioFileName: "fruta.mp3" },
+    { id: 5, spanish: "Fresco", english: "Fresh", note: "adjetivo (fresca fem.)", learned: false, audioFileName: "fresco.mp3" },
+    { id: 6, spanish: "Ahora", english: "Now", note: "adverbio de tiempo", learned: false, audioFileName: "ahora.mp3" },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);

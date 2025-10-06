@@ -232,12 +232,23 @@ const LearnWord = () => {
   const generateImages = async () => {
     setIsLoadingImages(true);
     try {
-      const prompts = [
-        `Illustrated minimalist icon of ${english}, simple clean design, centered composition`,
-        `Illustrated minimalist icon related to ${english} context, simple clean design, centered composition`,
-        `Illustrated minimalist icon showing ${english} concept, simple clean design, centered composition`,
-        `Illustrated minimalist icon depicting ${english} theme, simple clean design, centered composition`,
-      ];
+      // Crear prompts más descriptivos y visuales sin texto
+      const wordPrompts: Record<string, string[]> = {
+        'fresh': [
+          'A pitcher of fresh cold water with ice cubes and lemon slices, illustration style, no text',
+          'A bunch of green vegetables in a basket, illustration style, no text',
+          'Fresh mint leaves with water drops, illustration style, no text',
+          'A cool breeze symbol with fresh air, illustration style, no text'
+        ],
+        'default': [
+          `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text or words`,
+          `Scene depicting ${english} meaning with clear visual metaphor, artistic illustration, no text or words`,
+          `Simple illustration showing ${english} using recognizable objects, vibrant colors, no text or words`,
+          `Symbolic representation of ${english} through everyday items, clean illustration, no text or words`
+        ]
+      };
+
+      const prompts = wordPrompts[english.toLowerCase()] || wordPrompts['default'];
 
       const generatedImages: ImageOption[] = [];
       

@@ -38,7 +38,11 @@ serve(async (req) => {
             content: prompt
           }
         ],
-        modalities: ['image', 'text']
+        modalities: ['image', 'text'],
+        size: '512x512',
+        quality: 'medium',
+        output_format: 'jpeg',
+        output_compression: 75
       })
     });
 

@@ -253,33 +253,109 @@ const LearnWord = () => {
   const generateImages = async () => {
     setIsLoadingImages(true);
     try {
-      // Prompts específicos para cada palabra del vocabulario
-      const wordPrompts: Record<string, string> = {
-        'fresh': 'A pitcher of fresh cold water with ice cubes and lemon slices on a wooden table, colorful illustration, no text',
-        'market': 'A vibrant outdoor farmers market with colorful fruit and vegetable stalls, illustration style, no text',
-        'i want': 'A person pointing at something they desire with excited expression, illustration style, no text',
-        'bread': 'A loaf of artisan bread with crispy golden crust on cutting board, illustration style, no text',
-        'the': 'An arrow pointing to a specific object highlighting selection, illustration style, no text',
-        'fruits': 'A colorful basket full of assorted fresh fruits - apples, oranges, bananas, grapes, illustration style, no text',
-        'vegetables': 'A wooden crate filled with colorful fresh vegetables - carrots, tomatoes, lettuce, peppers, illustration style, no text',
-        'to buy': 'Hands exchanging money for goods at a market, shopping scene, illustration style, no text',
-        'in': 'Objects inside a container or location, spatial relationship concept, illustration style, no text',
-        'at': 'Person or object at a specific location with location marker, illustration style, no text',
-        'meat': 'Fresh cuts of meat on a butcher block, illustration style, no text',
+      // Prompts específicos para cada palabra con imágenes relacionadas temáticamente
+      const wordImageSets: Record<string, { correct: string; related: string[] }> = {
+        'fresh': {
+          correct: 'A pitcher of fresh cold water with ice cubes and lemon slices, colorful illustration, no text',
+          related: [
+            'Fresh lemons on a sunny wooden table, illustration style, no text',
+            'A bright sunny day with clear blue sky and sun rays, illustration style, no text',
+            'A person sweating on a hot day drinking cold water, illustration style, no text'
+          ]
+        },
+        'market': {
+          correct: 'A vibrant outdoor farmers market with colorful fruit and vegetable stalls, illustration style, no text',
+          related: [
+            'People shopping at a market with baskets full of produce, illustration style, no text',
+            'Fresh vegetables displayed at a colorful market stall, illustration style, no text',
+            'A fruit vendor arranging colorful fruits at a stand, illustration style, no text'
+          ]
+        },
+        'i want': {
+          correct: 'A person pointing at something they desire with excited expression, illustration style, no text',
+          related: [
+            'A child reaching for a toy with excitement and desire, illustration style, no text',
+            'A person looking at something with longing desire, illustration style, no text',
+            'Someone expressing a wish with hopeful gesture, illustration style, no text'
+          ]
+        },
+        'bread': {
+          correct: 'A loaf of artisan bread with crispy golden crust on cutting board, illustration style, no text',
+          related: [
+            'A baker pulling fresh bread from a stone oven, illustration style, no text',
+            'Golden wheat stalks swaying in a sunny field, illustration style, no text',
+            'Bread slices with butter on a breakfast table, illustration style, no text'
+          ]
+        },
+        'the': {
+          correct: 'An arrow pointing to a specific object highlighting selection, illustration style, no text',
+          related: [
+            'A pointing finger indicating one specific item, illustration style, no text',
+            'A spotlight highlighting one object among many, illustration style, no text',
+            'A hand gesture showing something specific, illustration style, no text'
+          ]
+        },
+        'fruits': {
+          correct: 'A colorful basket full of assorted fresh fruits - apples, oranges, bananas, grapes, illustration style, no text',
+          related: [
+            'An apple tree with ripe red apples hanging from branches, illustration style, no text',
+            'Tropical fruits growing on palm trees in a sunny plantation, illustration style, no text',
+            'A person picking fresh fruits from a tree with a basket, illustration style, no text'
+          ]
+        },
+        'vegetables': {
+          correct: 'A wooden crate filled with colorful fresh vegetables - carrots, tomatoes, lettuce, peppers, illustration style, no text',
+          related: [
+            'A vegetable garden with growing plants and green leaves, illustration style, no text',
+            'A farmer harvesting vegetables from the garden, illustration style, no text',
+            'Fresh vegetables being washed in clean water, illustration style, no text'
+          ]
+        },
+        'to buy': {
+          correct: 'Hands exchanging money for goods at a market, shopping scene, illustration style, no text',
+          related: [
+            'A shopping cart full of groceries in a store, illustration style, no text',
+            'A person holding money and a shopping list, illustration style, no text',
+            'A cashier scanning items at a register checkout, illustration style, no text'
+          ]
+        },
+        'in': {
+          correct: 'Objects inside a container or location, spatial relationship concept, illustration style, no text',
+          related: [
+            'Items placed within a wicker basket, illustration style, no text',
+            'A person inside a cozy room, illustration style, no text',
+            'Objects arranged inside a wooden cupboard, illustration style, no text'
+          ]
+        },
+        'at': {
+          correct: 'Person or object at a specific location with location marker, illustration style, no text',
+          related: [
+            'Someone waiting at a bus stop with a sign, illustration style, no text',
+            'A person sitting at a wooden table, illustration style, no text',
+            'Someone standing at a street corner intersection, illustration style, no text'
+          ]
+        },
+        'meat': {
+          correct: 'Fresh cuts of meat on a butcher block, illustration style, no text',
+          related: [
+            'A butcher shop with hanging meat cuts, illustration style, no text',
+            'Grilled meat sizzling on a barbecue grill, illustration style, no text',
+            'A chef preparing meat in a professional kitchen, illustration style, no text'
+          ]
+        },
       };
 
-      const correctPrompt = wordPrompts[english.toLowerCase()] || 
-        `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text`;
+      const wordKey = english.toLowerCase();
+      const imageSet = wordImageSets[wordKey] || {
+        correct: `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text`,
+        related: [
+          `Illustration related to ${english} theme, colorful style, no text`,
+          `Illustration showing concept similar to ${english}, artistic style, no text`,
+          `Illustration depicting ${english} related scene, simple style, no text`
+        ]
+      };
 
-      // Prompts distractores (conceptos diferentes)
-      const distractorPrompts = [
-        'A completely different everyday object, colorful illustration, no text',
-        'A random household item unrelated to the word, illustration style, no text',
-        'A different common object in daily life, vibrant illustration, no text',
-      ];
-
-      const prompts = [correctPrompt, ...distractorPrompts];
-
+      const prompts = [imageSet.correct, ...imageSet.related];
       const generatedImages: ImageOption[] = [];
       
       for (let i = 0; i < 4; i++) {

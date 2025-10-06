@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 interface Word {
   id: number;
   spanish: string;
-  english: string;
+  english?: string;
   note?: string;
   learned: boolean;
   audioFileName?: string;
@@ -21,14 +21,18 @@ const VocabularyDay1 = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Vocabulario del día 1 - Frase 1: "Quiero comprar fruta fresca ahora"
+  // Vocabulario del día 1 - Frase 1: "Quiero comprar frutas frescas en el mercado"
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "Yo", english: "I", note: "pronombre personal", learned: false, audioFileName: "yo.mp3" },
-    { id: 2, spanish: "Querer", english: "To want", note: "verbo (ej: quiero, quieres)", learned: false, audioFileName: "querer.mp3" },
-    { id: 3, spanish: "Comprar", english: "To buy", note: "verbo", learned: false, audioFileName: "comprar.mp3" },
-    { id: 4, spanish: "Fruta", english: "Fruit", note: "sustantivo, fem. (frutas pl.)", learned: false, audioFileName: "fruta.mp3" },
-    { id: 5, spanish: "Fresco", english: "Fresh", note: "adjetivo (fresca fem.)", learned: false, audioFileName: "fresco.mp3" },
-    { id: 6, spanish: "Ahora", english: "Now", note: "adverbio de tiempo", learned: false, audioFileName: "ahora.mp3" },
+    { id: 1, spanish: "Quiero", learned: false, audioFileName: "quiero.mp3" },
+    { id: 2, spanish: "Comprar", learned: false, audioFileName: "comprar.mp3" },
+    { id: 3, spanish: "Frutas", learned: false, audioFileName: "frutas.mp3" },
+    { id: 4, spanish: "Frescas", learned: false, audioFileName: "frescas.mp3" },
+    { id: 5, spanish: "En", learned: false, audioFileName: "en.mp3" },
+    { id: 6, spanish: "El", learned: false, audioFileName: "el.mp3" },
+    { id: 7, spanish: "Mercado", learned: false, audioFileName: "mercado.mp3" },
+    { id: 8, spanish: "Verduras", learned: false, audioFileName: "verduras.mp3" },
+    { id: 9, spanish: "Carne", learned: false, audioFileName: "carne.mp3" },
+    { id: 10, spanish: "Pan", learned: false, audioFileName: "pan.mp3" },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -41,9 +45,9 @@ const VocabularyDay1 = () => {
     if (saved) {
       try {
         const savedWords: Word[] = JSON.parse(saved);
-        // Fusionar por "english": mantener estado aprendido del guardado y textos actuales
+        // Fusionar por "spanish": mantener estado aprendido del guardado y textos actuales
         const merged = words.map(current => {
-          const match = savedWords.find(w => w.english === current.english);
+          const match = savedWords.find(w => w.spanish === current.spanish);
           return match ? { ...current, learned: match.learned } : current;
         });
         setWords(merged);
@@ -63,13 +67,7 @@ const VocabularyDay1 = () => {
   }, [words]);
 
   const handleLearnWord = (word: Word) => {
-    if (word.learned) {
-      // Modo repaso - ir a pantalla de aprendizaje
-      navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english)}&note=${encodeURIComponent(word.note || '')}`);
-    } else {
-      // Modo aprendizaje - navegar a pantalla de aprendizaje
-      navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english)}&note=${encodeURIComponent(word.note || '')}`);
-    }
+    navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english || '')}&note=${encodeURIComponent(word.note || '')}`);
   };
 
 
@@ -168,16 +166,6 @@ const VocabularyDay1 = () => {
                     <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                       {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
                     </h3>
-                    
-                    <p className="text-base md:text-lg text-muted-foreground mb-1">
-                      {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
-                    </p>
-                    
-                    {word.note && (
-                      <p className="text-sm text-primary/80 italic mt-2">
-                        {word.note}
-                      </p>
-                    )}
                   </div>
 
 

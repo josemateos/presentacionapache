@@ -17,12 +17,12 @@ interface Phrase {
 
 const phrasesData: Record<number, Phrase[]> = {
   1: [
-    { id: 1, english: "I want to buy fresh fruit now", spanish: "Quiero comprar fruta fresca ahora", learned: false },
+    { id: 1, english: "I want to buy fresh fruits at the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
     { id: 2, english: "I like to read a book before sleeping", spanish: "Me gusta leer un libro antes de dormir", learned: false },
-    { id: 3, english: "I have an important meeting this afternoon", spanish: "Tengo una reunión importante hoy en la tarde", learned: false },
+    { id: 3, english: "This afternoon I have an important work meeting", spanish: "Esta tarde tengo una importante Reunión de trabajo", learned: false },
     { id: 4, english: "Next weekend I will visit my family", spanish: "El próximo fin de semana visitaré a mi familia", learned: false },
-    { id: 5, english: "I need to practice English every day to improve", spanish: "Necesito practicar inglés cada día para mejorar", learned: false },
-    { id: 6, english: "I drink water every morning at work", spanish: "Tomo agua cada mañana en el trabajo", learned: false },
+    { id: 5, english: "I need to practice English every day", spanish: "Necesito practicar Ingles todos los días", learned: false },
+    { id: 6, english: "Every morning I drink coffee at work", spanish: "Todas las mañanas tomo café en el trabajo", learned: false },
     { id: 7, english: "My house is near the school", spanish: "Mi casa está cerca de la escuela", learned: false },
     { id: 8, english: "I am a student and I work on weekends", spanish: "Soy estudiante y trabajo los fines de semana", learned: false },
   ],

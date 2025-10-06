@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LearningModule {
   id: number;
@@ -43,6 +44,9 @@ const LearnWord = () => {
   const [imageOptions, setImageOptions] = useState<ImageOption[]>([]);
   const [selectedImageId, setSelectedImageId] = useState<number | null>(null);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const modules: LearningModule[] = [
     { id: 0, title: "Significado", completed: false },
@@ -84,6 +88,104 @@ const LearnWord = () => {
     }
   };
 
+  // Funciones de grabación
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks: BlobPart[] = [];
+
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        setRecordedAudio(audioBlob);
+        setIsRecording(false);
+        stream.getTracks().forEach(track => track.stop());
+        // Verificar pronunciación automáticamente
+        verifyPronunciation();
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error starting recording:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo acceder al micrófono",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+  };
+
+  const verifyPronunciation = async () => {
+    // Usar Web Speech API para reconocimiento de voz
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      toast({
+        title: "No soportado",
+        description: "Tu navegador no soporta reconocimiento de voz",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript.toLowerCase().trim();
+      const targetWord = english.toLowerCase().trim();
+      
+      console.log('Transcript:', transcript, 'Target:', targetWord);
+      
+      if (transcript === targetWord || transcript.includes(targetWord)) {
+        playSuccessSound();
+        toast({
+          title: "¡Excelente pronunciación!",
+          description: "Has pronunciado correctamente",
+        });
+        
+        setTimeout(() => {
+          setModuleProgress(prev => prev.map(m => 
+            m.id === currentModule ? { ...m, completed: true } : m
+          ));
+          setCurrentModule(currentModule + 1);
+          setRecordedAudio(null);
+        }, 1000);
+      } else {
+        toast({
+          title: "Intentar nuevamente",
+          description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
+          variant: "destructive",
+        });
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      toast({
+        title: "Error",
+        description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+        variant: "destructive",
+      });
+    };
+
+    recognition.start();
+  };
+
   // Generar opciones de significado
   const getMeaningOptions = () => {
     const distractors = ["always", "can", "get", "want", "yesterday", "all", "seem", "must", "time"];
@@ -112,7 +214,6 @@ const LearnWord = () => {
   const generateImages = async () => {
     setIsLoadingImages(true);
     try {
-      // Generar 4 prompts relacionados
       const prompts = [
         `Illustrated minimalist icon of ${english}, simple clean design, centered composition`,
         `Illustrated minimalist icon related to ${english} context, simple clean design, centered composition`,
@@ -123,36 +224,28 @@ const LearnWord = () => {
       const generatedImages: ImageOption[] = [];
       
       for (let i = 0; i < 4; i++) {
-        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'google/gemini-2.5-flash-image-preview',
-            messages: [
-              {
-                role: 'user',
-                content: prompts[i]
-              }
-            ],
-            modalities: ['image', 'text']
-          })
+        const { data, error } = await supabase.functions.invoke('generate-image', {
+          body: { prompt: prompts[i] }
         });
 
-        const data = await response.json();
-        const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+        if (error) {
+          console.error('Error generating image:', error);
+          continue;
+        }
         
-        if (imageUrl) {
+        if (data?.imageUrl) {
           generatedImages.push({
             id: i,
-            url: imageUrl,
-            isCorrect: i === 0 // La primera imagen es la correcta
+            url: data.imageUrl,
+            isCorrect: i === 0
           });
         }
       }
 
-      // Mezclar las imágenes
+      if (generatedImages.length === 0) {
+        throw new Error('No se pudieron generar las imágenes');
+      }
+
       setImageOptions(generatedImages.sort(() => Math.random() - 0.5));
     } catch (error) {
       console.error('Error generating images:', error);
@@ -230,20 +323,13 @@ const LearnWord = () => {
     }
   };
 
-  // Manejar pronunciación (simulada)
-  const handlePronunciationDone = () => {
-    playSuccessSound();
-    toast({
-      title: "¡Bien hecho!",
-      description: "Has practicado la pronunciación",
-    });
-    
-    setTimeout(() => {
-      setModuleProgress(prev => prev.map(m => 
-        m.id === currentModule ? { ...m, completed: true } : m
-      ));
-      setCurrentModule(currentModule + 1);
-    }, 1000);
+  // Iniciar verificación de pronunciación
+  const handleStartPronunciationPractice = () => {
+    if (isRecording) {
+      handleStopRecording();
+    } else {
+      handleStartRecording();
+    }
   };
 
   // Manejar ortografía
@@ -424,12 +510,16 @@ const LearnWord = () => {
                 </Button>
               </div>
               
+              <p className="text-center text-muted-foreground mb-6">
+                Escucha la palabra y practica tu pronunciación
+              </p>
+              
               <Button
-                onClick={handlePronunciationDone}
-                className="w-full h-12 gradient-animated"
+                onClick={handleStartPronunciationPractice}
+                className={`w-full h-12 ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'gradient-animated'}`}
               >
                 <Mic className="w-5 h-5 mr-2" />
-                He practicado la pronunciación
+                {isRecording ? 'Detener grabación' : 'Practica tu pronunciación'}
               </Button>
             </Card>
           </motion.div>

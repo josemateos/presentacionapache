@@ -136,12 +136,11 @@ const LearnWord = () => {
               title: "Intentar nuevamente",
               description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
               variant: "destructive",
-              duration: 2000,
+              duration: 1500,
             });
-            setTimeout(() => {
-              setRecordedAudio(null);
-              setIsVerifying(false);
-            }, 1000);
+            // Permitir repetir la grabación sin avanzar
+            setRecordedAudio(null);
+            setIsVerifying(false);
           }
         };
 
@@ -150,11 +149,11 @@ const LearnWord = () => {
             title: "Error",
             description: "No se pudo verificar la pronunciación. Intenta de nuevo",
             variant: "destructive",
+            duration: 1500,
           });
-          setTimeout(() => {
-            setRecordedAudio(null);
-            setIsVerifying(false);
-          }, 1000);
+          // Permitir repetir la grabación
+          setRecordedAudio(null);
+          setIsVerifying(false);
         };
 
         recognitionRef.current = recognition;
@@ -561,7 +560,7 @@ const LearnWord = () => {
               </div>
               
               <p className="text-center text-muted-foreground mb-6">
-                {recordedAudio 
+                {isVerifying
                   ? "Verificando tu pronunciación..."
                   : "Escucha la palabra y practica tu pronunciación"}
               </p>
@@ -572,16 +571,12 @@ const LearnWord = () => {
                 className={`w-full h-12 ${
                   isRecording 
                     ? 'bg-red-500 hover:bg-red-600' 
-                    : recordedAudio 
-                    ? 'bg-green-500 hover:bg-green-600' 
                     : 'gradient-animated'
                 }`}
               >
                 <Mic className="w-5 h-5 mr-2" />
                 {isRecording 
                   ? 'Detener grabación' 
-                  : recordedAudio 
-                  ? 'Reproducir grabación' 
                   : 'Practica tu pronunciación'}
               </Button>
             </Card>

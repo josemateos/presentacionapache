@@ -46,10 +46,10 @@ const VocabularyDay1 = () => {
     if (saved) {
       try {
         const savedWords: Word[] = JSON.parse(saved);
-        // Fusionar por "spanish": mantener estado aprendido del guardado y textos actuales
+        // Fusionar por "spanish": mantener estado aprendido e inProgress del guardado y textos actuales
         const merged = words.map(current => {
           const match = savedWords.find(w => w.spanish === current.spanish);
-          return match ? { ...current, learned: match.learned } : current;
+          return match ? { ...current, learned: match.learned, inProgress: match.inProgress } : current;
         });
         setWords(merged);
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(merged));

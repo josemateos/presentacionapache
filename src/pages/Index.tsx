@@ -62,7 +62,7 @@ const Index = () => {
           label: "Tu Frase en Español", 
           content: "Lo que quieres comunicar",
           example: {
-            phrase: "Necesito encontrar un sistema eficiente en el \"aprendizaje rápido\" del Ingles."
+            phrase: "Necesito encontrar un sistema eficiente en el rápido aprendizaje del Ingles."
           }
         },
         { 

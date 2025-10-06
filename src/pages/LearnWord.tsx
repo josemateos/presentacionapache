@@ -10,6 +10,48 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+// Importar imágenes fijas
+import frescas1 from '@/assets/words/frescas-1.jpg';
+import frescas2 from '@/assets/words/frescas-2.jpg';
+import frescas3 from '@/assets/words/frescas-3.jpg';
+import frescas4 from '@/assets/words/frescas-4.jpg';
+import mercado1 from '@/assets/words/mercado-1.jpg';
+import mercado2 from '@/assets/words/mercado-2.jpg';
+import mercado3 from '@/assets/words/mercado-3.jpg';
+import mercado4 from '@/assets/words/mercado-4.jpg';
+import quiero1 from '@/assets/words/quiero-1.jpg';
+import quiero2 from '@/assets/words/quiero-2.jpg';
+import quiero3 from '@/assets/words/quiero-3.jpg';
+import quiero4 from '@/assets/words/quiero-4.jpg';
+import pan1 from '@/assets/words/pan-1.jpg';
+import pan2 from '@/assets/words/pan-2.jpg';
+import pan3 from '@/assets/words/pan-3.jpg';
+import pan4 from '@/assets/words/pan-4.jpg';
+import el1 from '@/assets/words/el-1.jpg';
+import el2 from '@/assets/words/el-2.jpg';
+import el3 from '@/assets/words/el-3.jpg';
+import el4 from '@/assets/words/el-4.jpg';
+import frutas1 from '@/assets/words/frutas-1.jpg';
+import frutas2 from '@/assets/words/frutas-2.jpg';
+import frutas3 from '@/assets/words/frutas-3.jpg';
+import frutas4 from '@/assets/words/frutas-4.jpg';
+import verduras1 from '@/assets/words/verduras-1.jpg';
+import verduras2 from '@/assets/words/verduras-2.jpg';
+import verduras3 from '@/assets/words/verduras-3.jpg';
+import verduras4 from '@/assets/words/verduras-4.jpg';
+import comprar1 from '@/assets/words/comprar-1.jpg';
+import comprar2 from '@/assets/words/comprar-2.jpg';
+import comprar3 from '@/assets/words/comprar-3.jpg';
+import comprar4 from '@/assets/words/comprar-4.jpg';
+import en1 from '@/assets/words/en-1.jpg';
+import en2 from '@/assets/words/en-2.jpg';
+import en3 from '@/assets/words/en-3.jpg';
+import en4 from '@/assets/words/en-4.jpg';
+import carne1 from '@/assets/words/carne-1.jpg';
+import carne2 from '@/assets/words/carne-2.jpg';
+import carne3 from '@/assets/words/carne-3.jpg';
+import carne4 from '@/assets/words/carne-4.jpg';
+
 interface LearningModule {
   id: number;
   title: string;
@@ -250,144 +292,39 @@ const LearnWord = () => {
     return [...letters, ...distractors].sort(() => Math.random() - 0.5);
   };
 
-  // Generar imágenes con IA
-  const generateImages = async () => {
+  // Cargar imágenes fijas
+  const loadFixedImages = () => {
     setIsLoadingImages(true);
     try {
-      // Prompts específicos para cada palabra con imágenes relacionadas temáticamente
-      const wordImageSets: Record<string, { correct: string; related: string[] }> = {
-        'fresh': {
-          correct: 'A pitcher of fresh cold water with ice cubes and lemon slices, colorful illustration, no text',
-          related: [
-            'Fresh lemons on a sunny wooden table, illustration style, no text',
-            'A bright sunny day with clear blue sky and sun rays, illustration style, no text',
-            'A person wiping sweat from forehead on a hot day, exhausted expression, illustration style, no text'
-          ]
-        },
-        'market': {
-          correct: 'A vibrant outdoor farmers market with colorful fruit and vegetable stalls, illustration style, no text',
-          related: [
-            'People shopping at a market with baskets full of produce, illustration style, no text',
-            'Fresh vegetables displayed at a colorful market stall, illustration style, no text',
-            'A fruit vendor arranging colorful fruits at a stand, illustration style, no text'
-          ]
-        },
-        'i want': {
-          correct: 'A person pointing at something they desire with excited expression, illustration style, no text',
-          related: [
-            'A child reaching for a toy with excitement and desire, illustration style, no text',
-            'A person looking at something with longing desire, illustration style, no text',
-            'Someone expressing a wish with hopeful gesture, illustration style, no text'
-          ]
-        },
-        'bread': {
-          correct: 'A loaf of artisan bread with crispy golden crust on cutting board, illustration style, no text',
-          related: [
-            'A baker pulling fresh bread from a stone oven, illustration style, no text',
-            'Golden wheat stalks swaying in a sunny field, illustration style, no text',
-            'Bread slices with butter on a breakfast table, illustration style, no text'
-          ]
-        },
-        'the': {
-          correct: 'An arrow pointing to a specific object highlighting selection, illustration style, no text',
-          related: [
-            'A pointing finger indicating one specific item, illustration style, no text',
-            'A spotlight highlighting one object among many, illustration style, no text',
-            'A hand gesture showing something specific, illustration style, no text'
-          ]
-        },
-        'fruits': {
-          correct: 'A colorful basket full of assorted fresh fruits - apples, oranges, bananas, grapes, illustration style, no text',
-          related: [
-            'An apple tree with ripe red apples hanging from branches, illustration style, no text',
-            'Tropical fruits growing on palm trees in a sunny plantation, illustration style, no text',
-            'A person picking fresh fruits from a tree with a basket, illustration style, no text'
-          ]
-        },
-        'vegetables': {
-          correct: 'A wooden crate filled with colorful fresh vegetables - carrots, tomatoes, lettuce, peppers, illustration style, no text',
-          related: [
-            'A vegetable garden with growing plants and green leaves, illustration style, no text',
-            'A farmer harvesting vegetables from the garden, illustration style, no text',
-            'Fresh vegetables being washed in clean water, illustration style, no text'
-          ]
-        },
-        'to buy': {
-          correct: 'Hands exchanging money for goods at a market, shopping scene, illustration style, no text',
-          related: [
-            'A shopping cart full of groceries in a store, illustration style, no text',
-            'A person holding money and a shopping list, illustration style, no text',
-            'A cashier scanning items at a register checkout, illustration style, no text'
-          ]
-        },
-        'in': {
-          correct: 'Objects inside a container or location, spatial relationship concept, illustration style, no text',
-          related: [
-            'Items placed within a wicker basket, illustration style, no text',
-            'A person inside a cozy room, illustration style, no text',
-            'Objects arranged inside a wooden cupboard, illustration style, no text'
-          ]
-        },
-        'at': {
-          correct: 'Person or object at a specific location with location marker, illustration style, no text',
-          related: [
-            'Someone waiting at a bus stop with a sign, illustration style, no text',
-            'A person sitting at a wooden table, illustration style, no text',
-            'Someone standing at a street corner intersection, illustration style, no text'
-          ]
-        },
-        'meat': {
-          correct: 'Fresh cuts of meat on a butcher block, illustration style, no text',
-          related: [
-            'A butcher shop with hanging meat cuts, illustration style, no text',
-            'Grilled meat sizzling on a barbecue grill, illustration style, no text',
-            'A chef preparing meat in a professional kitchen, illustration style, no text'
-          ]
-        },
+      const wordImageSets: Record<string, string[]> = {
+        'fresh': [frescas4, frescas1, frescas2, frescas3],
+        'market': [mercado1, mercado2, mercado3, mercado4],
+        'i want': [quiero1, quiero2, quiero3, quiero4],
+        'bread': [pan1, pan2, pan3, pan4],
+        'the': [el1, el2, el3, el4],
+        'fruits': [frutas1, frutas2, frutas3, frutas4],
+        'vegetables': [verduras1, verduras2, verduras3, verduras4],
+        'to buy': [comprar1, comprar2, comprar3, comprar4],
+        'in': [en3, en1, en2, en4],
+        'at': [en2, en1, en3, en4],
+        'meat': [carne1, carne2, carne3, carne4],
       };
 
       const wordKey = english.toLowerCase();
-      const imageSet = wordImageSets[wordKey] || {
-        correct: `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text`,
-        related: [
-          `Illustration related to ${english} theme, colorful style, no text`,
-          `Illustration showing concept similar to ${english}, artistic style, no text`,
-          `Illustration depicting ${english} related scene, simple style, no text`
-        ]
-      };
-
-      const prompts = [imageSet.correct, ...imageSet.related];
-      const generatedImages: ImageOption[] = [];
+      const images = wordImageSets[wordKey] || [frescas1, frescas2, frescas3, frescas4];
       
-      for (let i = 0; i < 4; i++) {
-        const { data, error } = await supabase.functions.invoke('generate-image', {
-          body: { prompt: prompts[i] }
-        });
+      const imageOptions: ImageOption[] = images.map((url, index) => ({
+        id: index,
+        url,
+        isCorrect: index === 0
+      }));
 
-        if (error) {
-          console.error('Error generating image:', error);
-          continue;
-        }
-        
-        if (data?.imageUrl) {
-          generatedImages.push({
-            id: i,
-            url: data.imageUrl,
-            isCorrect: i === 0
-          });
-        }
-      }
-
-      if (generatedImages.length === 0) {
-        throw new Error('No se pudieron generar las imágenes');
-      }
-
-      setImageOptions(generatedImages.sort(() => Math.random() - 0.5));
+      setImageOptions(imageOptions.sort(() => Math.random() - 0.5));
     } catch (error) {
-      console.error('Error generating images:', error);
+      console.error('Error loading images:', error);
       toast({
         title: "Error",
-        description: "No se pudieron generar las imágenes",
+        description: "No se pudieron cargar las imágenes",
         variant: "destructive",
       });
     } finally {
@@ -405,7 +342,7 @@ const LearnWord = () => {
     if (currentModule === 3) {
       setJumbledLetters(generateJumbledLetters(english));
     } else if (currentModule === 4 && imageOptions.length === 0) {
-      generateImages();
+      loadFixedImages();
     }
   }, [currentModule]);
 

@@ -46,20 +46,22 @@ const Index = () => {
           content: "Las palabras esenciales que necesitas",
           example: {
             words: [
-              { spanish: "Aprender", english: "Learn" },
-              { spanish: "Rápidamente", english: "Quickly" },
-              { spanish: "Yo", english: "I" },
-              { spanish: "Inglés", english: "English" },
-              { spanish: "Gustar", english: "Like" }
+              { spanish: "Necesitar", english: "Need" },
+              { spanish: "Encontrar", english: "Find" },
+              { spanish: "Sistema", english: "System" },
+              { spanish: "Eficiente", english: "Efficient" },
+              { spanish: "Aprendizaje", english: "Learning" },
+              { spanish: "Rápido", english: "Fast" },
+              { spanish: "Inglés", english: "English" }
             ]
           }
         },
         { 
           number: "2", 
           label: "Tu Frase en Español", 
-          content: "Lo que quieres decir naturalmente",
+          content: "Lo que quieres comunicar",
           example: {
-            phrase: "Me gustaría aprender inglés rápidamente"
+            phrase: "Necesito encontrar un sistema eficiente en el aprendizaje rápido del Ingles."
           }
         },
         { 
@@ -67,7 +69,7 @@ const Index = () => {
           label: "Orden Apache", 
           content: "El secreto: reorganizar en el orden del inglés",
           example: {
-            phrase: "Yo gustar aprender inglés rápidamente"
+            phrase: "Yo necesitar encontrar un sistema eficiente en aprendizaje rápido de inglés"
           }
         },
         { 
@@ -75,7 +77,7 @@ const Index = () => {
           label: "Ingles entendible", 
           content: "Palabra por palabra al inglés",
           example: {
-            phrase: "I like learn English quickly"
+            phrase: "I need find a system efficient in learning fast of English"
           }
         },
         { 
@@ -83,8 +85,8 @@ const Index = () => {
           label: "Ingles Perfecto", 
           content: "Agrega los Auxiliares Clave",
           example: {
-            phrase: "I would like to learn English quickly",
-            highlights: ["would", "to"]
+            phrase: "I need to find an efficient system for fast English learning",
+            highlights: ["to", "an", "for"]
           }
         }
       ],
@@ -133,6 +135,10 @@ const Index = () => {
   const handleStepOk = (currentIndex: number) => {
     if (!visibleSteps.includes(currentIndex)) {
       setVisibleSteps([...visibleSteps, currentIndex]);
+      // Scroll up to show the next step
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     }
   };
 
@@ -240,7 +246,7 @@ const Index = () => {
                             onClick={() => handleStepOk(index)}
                             className="text-xs bg-accent hover:bg-accent/90 text-white font-semibold w-24"
                           >
-                            Ok
+                            Continuar
                           </Button>
                         )}
                       </div>

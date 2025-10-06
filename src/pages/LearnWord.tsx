@@ -644,6 +644,12 @@ const LearnWord = () => {
               <Button
                 variant="outline"
                 onClick={() => {
+                  // Trackear visitas al módulo 3
+                  const visitKey = `module3_visits_word_${wordId}`;
+                  const visits = parseInt(localStorage.getItem(visitKey) || "0");
+                  const newVisits = visits + 1;
+                  localStorage.setItem(visitKey, newVisits.toString());
+
                   // Marcar módulo como NO completado y guardar estado "en progreso"
                   const saved = localStorage.getItem("vocabulary_day1_progress");
                   if (saved) {
@@ -659,7 +665,13 @@ const LearnWord = () => {
                       console.error("Error updating progress:", error);
                     }
                   }
-                  setCurrentModule(3);
+
+                  // Si es la 2da visita, ir a la lista
+                  if (newVisits >= 2) {
+                    navigate("/vocabulario-dia-1");
+                  } else {
+                    setCurrentModule(3);
+                  }
                 }}
                 className="w-full h-12 mt-4"
               >

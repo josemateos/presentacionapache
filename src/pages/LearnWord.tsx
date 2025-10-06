@@ -49,6 +49,13 @@ const LearnWord = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const verifyTimeoutRef = useRef<number | null>(null);
+  const clearVerifyTimeout = () => {
+    if (verifyTimeoutRef.current) {
+      clearTimeout(verifyTimeoutRef.current);
+      verifyTimeoutRef.current = null;
+    }
+  };
   const modules: LearningModule[] = [
     { id: 0, title: "Significado", completed: false },
     { id: 1, title: "Escritura", completed: false },
@@ -139,6 +146,7 @@ const LearnWord = () => {
               duration: 1500,
             });
             // Permitir repetir la grabación sin avanzar
+            clearVerifyTimeout();
             setRecordedAudio(null);
             setIsVerifying(false);
           }
@@ -152,7 +160,14 @@ const LearnWord = () => {
             duration: 1500,
           });
           // Permitir repetir la grabación
+          clearVerifyTimeout();
           setRecordedAudio(null);
+          setIsVerifying(false);
+        };
+
+        recognition.onend = () => {
+          // Si no llegó resultado, aseguramos reactivar el botón
+          clearVerifyTimeout();
           setIsVerifying(false);
         };
 
@@ -191,6 +206,11 @@ const LearnWord = () => {
       if (recognitionRef.current) {
         try { recognitionRef.current.stop(); } catch {}
       }
+      // Fallback para evitar que el botón quede deshabilitado si no llega resultado
+      clearVerifyTimeout();
+      verifyTimeoutRef.current = window.setTimeout(() => {
+        setIsVerifying(false);
+      }, 3000);
     }
   };
 
@@ -297,6 +317,12 @@ const LearnWord = () => {
       setIsLoadingImages(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      clearVerifyTimeout();
+    };
+  }, []);
 
   useEffect(() => {
     if (currentModule === 3) {

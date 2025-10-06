@@ -104,8 +104,6 @@ const LearnWord = () => {
         setRecordedAudio(audioBlob);
         setIsRecording(false);
         stream.getTracks().forEach(track => track.stop());
-        // Verificar pronunciación automáticamente
-        verifyPronunciation();
       };
 
       recorder.start();
@@ -127,8 +125,16 @@ const LearnWord = () => {
     }
   };
 
+  const handlePlayRecording = () => {
+    if (recordedAudio) {
+      const audioUrl = URL.createObjectURL(recordedAudio);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+  };
+
+  // Verificación automática de pronunciación
   const verifyPronunciation = async () => {
-    // Usar Web Speech API para reconocimiento de voz
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
@@ -139,6 +145,11 @@ const LearnWord = () => {
       });
       return;
     }
+
+    toast({
+      title: "Verificando...",
+      description: "Analizando tu pronunciación",
+    });
 
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
@@ -155,7 +166,7 @@ const LearnWord = () => {
         playSuccessSound();
         toast({
           title: "¡Excelente pronunciación!",
-          description: "Has pronunciado correctamente",
+          description: "Pronunciación correcta. Avanzando...",
         });
         
         setTimeout(() => {
@@ -164,13 +175,15 @@ const LearnWord = () => {
           ));
           setCurrentModule(currentModule + 1);
           setRecordedAudio(null);
-        }, 1000);
+        }, 1500);
       } else {
         toast({
           title: "Intentar nuevamente",
           description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
           variant: "destructive",
         });
+        // Resetear para permitir otra grabación
+        setRecordedAudio(null);
       }
     };
 
@@ -181,10 +194,21 @@ const LearnWord = () => {
         description: "No se pudo verificar la pronunciación. Intenta de nuevo",
         variant: "destructive",
       });
+      setRecordedAudio(null);
     };
 
     recognition.start();
   };
+
+  // Iniciar verificación automáticamente después de grabar
+  useEffect(() => {
+    if (recordedAudio && currentModule === 2) {
+      // Pequeño delay para que el usuario vea que se grabó
+      setTimeout(() => {
+        verifyPronunciation();
+      }, 500);
+    }
+  }, [recordedAudio, currentModule]);
 
   // Generar opciones de significado
   const getMeaningOptions = () => {
@@ -323,10 +347,12 @@ const LearnWord = () => {
     }
   };
 
-  // Iniciar verificación de pronunciación
-  const handleStartPronunciationPractice = () => {
+  // Manejar botón de pronunciación
+  const handlePronunciationButton = () => {
     if (isRecording) {
       handleStopRecording();
+    } else if (recordedAudio) {
+      handlePlayRecording();
     } else {
       handleStartRecording();
     }
@@ -511,15 +537,28 @@ const LearnWord = () => {
               </div>
               
               <p className="text-center text-muted-foreground mb-6">
-                Escucha la palabra y practica tu pronunciación
+                {recordedAudio 
+                  ? "Verificando tu pronunciación..."
+                  : "Escucha la palabra y practica tu pronunciación"}
               </p>
               
               <Button
-                onClick={handleStartPronunciationPractice}
-                className={`w-full h-12 ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'gradient-animated'}`}
+                onClick={handlePronunciationButton}
+                disabled={recordedAudio !== null && !isRecording}
+                className={`w-full h-12 ${
+                  isRecording 
+                    ? 'bg-red-500 hover:bg-red-600' 
+                    : recordedAudio 
+                    ? 'bg-green-500 hover:bg-green-600' 
+                    : 'gradient-animated'
+                }`}
               >
                 <Mic className="w-5 h-5 mr-2" />
-                {isRecording ? 'Detener grabación' : 'Practica tu pronunciación'}
+                {isRecording 
+                  ? 'Detener grabación' 
+                  : recordedAudio 
+                  ? 'Reproducir grabación' 
+                  : 'Practica tu pronunciación'}
               </Button>
             </Card>
           </motion.div>

@@ -15,6 +15,12 @@ interface LearningModule {
   completed: boolean;
 }
 
+interface ImageOption {
+  id: number;
+  url: string;
+  isCorrect: boolean;
+}
+
 const LearnWord = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -29,20 +35,43 @@ const LearnWord = () => {
 
   const [currentModule, setCurrentModule] = useState(0);
   const [userInput, setUserInput] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
   const [attempts, setAttempts] = useState(0);
-  const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [selectedMeaningOption, setSelectedMeaningOption] = useState<string | null>(null);
+  const [spellingAttempt, setSpellingAttempt] = useState("");
+  const [jumbledLetters, setJumbledLetters] = useState<string[]>([]);
+  const [usedLetterIndices, setUsedLetterIndices] = useState<number[]>([]);
+  const [imageOptions, setImageOptions] = useState<ImageOption[]>([]);
+  const [selectedImageId, setSelectedImageId] = useState<number | null>(null);
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
 
   const modules: LearningModule[] = [
-    { id: 0, title: "Introducción", completed: false },
-    { id: 1, title: "Escucha y pronuncia", completed: false },
-    { id: 2, title: "Escribir", completed: false },
-    { id: 3, title: "Recuerda", completed: false },
+    { id: 0, title: "Significado", completed: false },
+    { id: 1, title: "Escritura", completed: false },
+    { id: 2, title: "Pronunciación", completed: false },
+    { id: 3, title: "Ortografía", completed: false },
+    { id: 4, title: "Imagen", completed: false },
   ];
 
   const [moduleProgress, setModuleProgress] = useState(modules);
   const progress = (moduleProgress.filter(m => m.completed).length / modules.length) * 100;
+
+  // Sonido de éxito
+  const playSuccessSound = () => {
+    const context = new AudioContext();
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    
+    oscillator.frequency.value = 523.25; // C5
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.3, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+    
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.5);
+  };
 
   const handlePlayAudio = () => {
     try {
@@ -55,259 +84,468 @@ const LearnWord = () => {
     }
   };
 
-  const handleStartRecording = async () => {
+  // Generar opciones de significado
+  const getMeaningOptions = () => {
+    const distractors = ["always", "can", "get", "want", "yesterday", "all", "seem", "must", "time"];
+    const filtered = distractors.filter(d => d !== english.toLowerCase());
+    const randomDistractors = filtered.sort(() => Math.random() - 0.5).slice(0, 3);
+    return [english, ...randomDistractors].sort(() => Math.random() - 0.5);
+  };
+
+  // Generar letras desordenadas para ortografía
+  const generateJumbledLetters = (word: string) => {
+    const letters = word.toLowerCase().replace(/ /g, '').split('');
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const distractors: string[] = [];
+    
+    while (distractors.length < 3) {
+      const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+      if (!letters.includes(randomLetter)) {
+        distractors.push(randomLetter);
+      }
+    }
+    
+    return [...letters, ...distractors].sort(() => Math.random() - 0.5);
+  };
+
+  // Generar imágenes con IA
+  const generateImages = async () => {
+    setIsLoadingImages(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      const audioChunks: BlobPart[] = [];
+      // Generar 4 prompts relacionados
+      const prompts = [
+        `Illustrated minimalist icon of ${english}, simple clean design, centered composition`,
+        `Illustrated minimalist icon related to ${english} context, simple clean design, centered composition`,
+        `Illustrated minimalist icon showing ${english} concept, simple clean design, centered composition`,
+        `Illustrated minimalist icon depicting ${english} theme, simple clean design, centered composition`,
+      ];
 
-      recorder.ondataavailable = (event) => {
-        audioChunks.push(event.data);
-      };
+      const generatedImages: ImageOption[] = [];
+      
+      for (let i = 0; i < 4; i++) {
+        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'google/gemini-2.5-flash-image-preview',
+            messages: [
+              {
+                role: 'user',
+                content: prompts[i]
+              }
+            ],
+            modalities: ['image', 'text']
+          })
+        });
 
-      recorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        setRecordedAudio(audioBlob);
-        setIsRecording(false);
-        stream.getTracks().forEach(track => track.stop());
-      };
+        const data = await response.json();
+        const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+        
+        if (imageUrl) {
+          generatedImages.push({
+            id: i,
+            url: imageUrl,
+            isCorrect: i === 0 // La primera imagen es la correcta
+          });
+        }
+      }
 
-      recorder.start();
-      setMediaRecorder(recorder);
-      setIsRecording(true);
+      // Mezclar las imágenes
+      setImageOptions(generatedImages.sort(() => Math.random() - 0.5));
     } catch (error) {
-      console.error("Error starting recording:", error);
+      console.error('Error generating images:', error);
       toast({
         title: "Error",
-        description: "No se pudo acceder al micrófono",
+        description: "No se pudieron generar las imágenes",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingImages(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currentModule === 3) {
+      setJumbledLetters(generateJumbledLetters(english));
+    } else if (currentModule === 4 && imageOptions.length === 0) {
+      generateImages();
+    }
+  }, [currentModule]);
+
+  // Manejar selección de significado
+  const handleMeaningSelection = (option: string) => {
+    setSelectedMeaningOption(option);
+    const isCorrect = option.toLowerCase() === english.toLowerCase();
+    
+    if (isCorrect) {
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Excelente trabajo",
+      });
+      
+      setTimeout(() => {
+        setModuleProgress(prev => prev.map(m => 
+          m.id === currentModule ? { ...m, completed: true } : m
+        ));
+        setCurrentModule(currentModule + 1);
+        setSelectedMeaningOption(null);
+      }, 1000);
+    } else {
+      toast({
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
+        variant: "destructive",
+      });
+      setTimeout(() => setSelectedMeaningOption(null), 1000);
+    }
+  };
+
+  // Manejar verificación de escritura
+  const handleCheckWriting = () => {
+    const isCorrect = userInput.toLowerCase().trim() === english.toLowerCase().trim();
+    
+    if (isCorrect) {
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Excelente trabajo",
+      });
+      
+      setTimeout(() => {
+        setModuleProgress(prev => prev.map(m => 
+          m.id === currentModule ? { ...m, completed: true } : m
+        ));
+        setCurrentModule(currentModule + 1);
+        setUserInput("");
+      }, 1000);
+    } else {
+      toast({
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
         variant: "destructive",
       });
     }
   };
 
-  const handleStopRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop();
-    }
-  };
-
-  const handlePlayRecording = () => {
-    if (recordedAudio) {
-      const audioUrl = URL.createObjectURL(recordedAudio);
-      const audio = new Audio(audioUrl);
-      audio.play();
-    }
-  };
-
-  const getInputValidationColor = () => {
-    if (!userInput) return "";
+  // Manejar pronunciación (simulada)
+  const handlePronunciationDone = () => {
+    playSuccessSound();
+    toast({
+      title: "¡Bien hecho!",
+      description: "Has practicado la pronunciación",
+    });
     
-    const correctWord = english.toLowerCase().trim();
-    const currentInput = userInput.toLowerCase().trim();
-    
-    // Verificar si las letras escritas son correctas hasta el momento
-    const isCorrectSoFar = correctWord.startsWith(currentInput);
-    
-    if (isCorrectSoFar) {
-      return "bg-green-500/20 border-green-500/50 text-green-700 dark:text-green-300";
-    } else {
-      return "bg-red-500/20 border-red-500/50 text-red-700 dark:text-red-300";
-    }
-  };
-
-  const handleCheckAnswer = () => {
-    // Para "I" (Yo), debe ser mayúscula exacta
-    const isCorrect = english.trim() === "I" 
-      ? userInput.trim() === "I"
-      : userInput.toLowerCase().trim() === english.toLowerCase().trim();
-    
-    if (isCorrect) {
+    setTimeout(() => {
       setModuleProgress(prev => prev.map(m => 
         m.id === currentModule ? { ...m, completed: true } : m
       ));
+      setCurrentModule(currentModule + 1);
+    }, 1000);
+  };
+
+  // Manejar ortografía
+  const handleLetterClick = (letter: string, index: number) => {
+    if (!usedLetterIndices.includes(index)) {
+      setSpellingAttempt(prev => prev + letter);
+      setUsedLetterIndices(prev => [...prev, index]);
+    }
+  };
+
+  const handleRemoveLastLetter = () => {
+    if (spellingAttempt.length > 0) {
+      setSpellingAttempt(prev => prev.slice(0, -1));
+      setUsedLetterIndices(prev => prev.slice(0, -1));
+    }
+  };
+
+  const handleCheckSpelling = () => {
+    const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase().replace(/ /g, '');
+    
+    if (isCorrect) {
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Excelente trabajo",
+      });
       
       setTimeout(() => {
-        if (currentModule < modules.length - 1) {
-          setCurrentModule(currentModule + 1);
-          setUserInput("");
-          setAttempts(0);
-        }
-      }, 500);
+        setModuleProgress(prev => prev.map(m => 
+          m.id === currentModule ? { ...m, completed: true } : m
+        ));
+        setCurrentModule(currentModule + 1);
+        setSpellingAttempt("");
+        setUsedLetterIndices([]);
+      }, 1000);
     } else {
-      setAttempts(attempts + 1);
       toast({
-        title: "Intenta de nuevo",
-        description: "La respuesta no es correcta",
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
         variant: "destructive",
       });
     }
   };
 
-  const handleNextModule = () => {
-    setModuleProgress(prev => prev.map(m => 
-      m.id === currentModule ? { ...m, completed: true } : m
-    ));
+  // Manejar selección de imagen
+  const handleImageSelection = (imageId: number) => {
+    setSelectedImageId(imageId);
+    const selectedImage = imageOptions.find(img => img.id === imageId);
     
-    if (currentModule < modules.length - 1) {
-      setCurrentModule(currentModule + 1);
-      setUserInput("");
-      setAttempts(0);
+    if (selectedImage?.isCorrect) {
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Has identificado la imagen correcta",
+      });
+      
+      setTimeout(() => {
+        setModuleProgress(prev => prev.map(m => 
+          m.id === currentModule ? { ...m, completed: true } : m
+        ));
+        // Este es el último módulo, ir a resumen
+        setCurrentModule(currentModule + 1);
+      }, 1000);
+    } else {
+      toast({
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
+        variant: "destructive",
+      });
+      setTimeout(() => setSelectedImageId(null), 1000);
     }
   };
 
   const renderModule = () => {
     switch (currentModule) {
-      case 0: // Introducción
+      case 0: // Significado
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6"
+            className="space-y-6"
           >
-            <div className="gradient-card rounded-xl p-8 border border-primary/20">
-              <Sparkles className="w-16 h-16 mx-auto mb-4 text-primary animate-pulse-subtle" />
-              <h2 className="text-3xl font-bold mb-3 gradient-text-primary">
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                ¿Qué significa?
+              </h3>
+              <p className="text-center text-3xl font-bold text-primary mb-8">
                 {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
-              </h2>
-              <p className="text-xl text-muted-foreground mb-4">
-                {english.charAt(0).toUpperCase() + english.slice(1)}
               </p>
+              
               {displayNote && (
-                <p className="text-sm text-primary/80 italic mt-3 bg-primary/5 p-3 rounded-lg">
+                <p className="text-sm text-center text-muted-foreground italic mb-6 bg-primary/5 p-3 rounded-lg">
                   {displayNote}
                 </p>
               )}
-            </div>
-            
-            <Button
-              size="lg"
-              className="gradient-animated w-full max-w-xs"
-              onClick={handleNextModule}
-            >
-              Comenzar aprendizaje
-            </Button>
+              
+              <div className="space-y-3">
+                {getMeaningOptions().map((option, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className={`w-full h-14 text-lg ${
+                      selectedMeaningOption === option
+                        ? option.toLowerCase() === english.toLowerCase()
+                          ? "bg-green-500/20 border-green-500 hover:bg-green-500/30"
+                          : "bg-red-500/20 border-red-500 hover:bg-red-500/30"
+                        : "hover:bg-accent"
+                    }`}
+                    onClick={() => handleMeaningSelection(option)}
+                    disabled={selectedMeaningOption !== null}
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </Card>
           </motion.div>
         );
 
-      case 1: // Escucha y pronuncia
+      case 1: // Escritura
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6"
+            className="space-y-6"
           >
             <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Escucha y pronuncia
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Escribe la palabra en Inglés
               </h3>
-              
-              {/* Mostrar palabra en español, inglés y nota */}
-              <div className="gradient-card rounded-xl p-6 border border-primary/20 mb-6">
-                <h2 className="text-3xl font-bold mb-3 text-foreground">
-                  {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
-                </h2>
-                <p className="text-xl text-muted-foreground mb-2">
-                  {english.charAt(0).toUpperCase() + english.slice(1)}
-                </p>
-                {displayNote && (
-                  <p className="text-sm text-primary/80 italic mt-3 bg-primary/5 p-3 rounded-lg">
-                    {displayNote}
-                  </p>
-                )}
-              </div>
-              
-              <p className="text-muted-foreground mb-6">
-                Escucha y repite la pronunciación
+              <p className="text-center text-lg text-muted-foreground mb-6">
+                ¿Cómo se dice "<span className="text-primary font-semibold">{spanish}</span>" en inglés?
               </p>
               
-              <div className="flex justify-center items-center gap-6 mb-6">
+              <Input
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Escribe aquí..."
+                className="text-center text-xl h-14 mb-4"
+                onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                autoComplete="off"
+              />
+              
+              <Button
+                onClick={handleCheckWriting}
+                className="w-full h-12 gradient-animated"
+                disabled={!userInput.trim()}
+              >
+                Verificar
+              </Button>
+            </Card>
+          </motion.div>
+        );
+
+      case 2: // Pronunciación
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-4 text-center gradient-text-primary">
+                Escucha y Pronuncia
+              </h3>
+              
+              <div className="flex justify-center items-center gap-4 mb-8">
+                <p className="text-3xl font-bold text-primary">
+                  {english.charAt(0).toUpperCase() + english.slice(1)}
+                </p>
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="w-16 h-16 rounded-full hover:bg-primary/10"
+                  className="w-14 h-14 rounded-full hover:bg-primary/10"
                   onClick={handlePlayAudio}
                 >
-                  <div className="w-0 h-0 border-l-[20px] border-l-primary border-y-[14px] border-y-transparent" />
+                  <Volume2 className="w-6 h-6 text-primary" />
                 </Button>
-
-                {isRecording ? (
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="w-16 h-16 rounded-full bg-red-500/20 hover:bg-red-500/30"
-                    onClick={handleStopRecording}
-                  >
-                    <div className="w-5 h-5 bg-red-500 rounded-sm" />
-                  </Button>
-                ) : recordedAudio ? (
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="w-16 h-16 rounded-full hover:bg-primary/10"
-                    onClick={handlePlayRecording}
-                  >
-                    <div className="w-0 h-0 border-l-[20px] border-l-green-500 border-y-[14px] border-y-transparent" />
-                  </Button>
-                ) : (
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="w-16 h-16 rounded-full hover:bg-primary/10"
-                    onClick={handleStartRecording}
-                  >
-                    <Mic className="w-7 h-7 text-primary" />
-                  </Button>
-                )}
               </div>
-            </Card>
-            
-            <Button
-              size="lg"
-              className="gradient-animated w-full max-w-xs"
-              onClick={handleNextModule}
-            >
-              Siguiente
-            </Button>
-          </motion.div>
-        );
-
-      case 2: // Escribir
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6"
-          >
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Escribe "{spanish.charAt(0).toUpperCase() + spanish.slice(1)}" en Inglés
-              </h3>
               
-              <div className="space-y-4">
-                <Input
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  placeholder="Escribe aquí..."
-                  className={`text-center text-xl h-14 ${getInputValidationColor()}`}
-                  onKeyDown={(e) => e.key === "Enter" && handleCheckAnswer()}
-                />
-                
-                <div className="flex gap-3 justify-center">
+              <Button
+                onClick={handlePronunciationDone}
+                className="w-full h-12 gradient-animated"
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                He practicado la pronunciación
+              </Button>
+            </Card>
+          </motion.div>
+        );
+
+      case 3: // Ortografía
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Deletrea la palabra
+              </h3>
+              <p className="text-center text-lg text-muted-foreground mb-6">
+                Forma la palabra: <span className="text-primary font-semibold">{english}</span>
+              </p>
+              
+              {/* Área de respuesta */}
+              <div className="min-h-[80px] bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 mb-6 flex items-center justify-center">
+                <p className="text-2xl font-bold tracking-wider text-primary">
+                  {spellingAttempt || " "}
+                </p>
+              </div>
+              
+              {/* Botones de letras */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {jumbledLetters.map((letter, index) => (
                   <Button
-                    onClick={handleCheckAnswer}
-                    className="gradient-animated min-w-[120px]"
-                    disabled={!userInput.trim()}
+                    key={index}
+                    variant="outline"
+                    className={`w-12 h-12 text-xl font-bold ${
+                      usedLetterIndices.includes(index) ? "opacity-30" : ""
+                    }`}
+                    onClick={() => handleLetterClick(letter, index)}
+                    disabled={usedLetterIndices.includes(index)}
                   >
-                    <Check className="w-4 h-4 mr-2" />
-                    Verificar
+                    {letter.toUpperCase()}
                   </Button>
-                </div>
+                ))}
+              </div>
+              
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={handleRemoveLastLetter}
+                  disabled={spellingAttempt.length === 0}
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Borrar Última
+                </Button>
+                <Button
+                  className="flex-1 gradient-animated"
+                  onClick={handleCheckSpelling}
+                  disabled={spellingAttempt.length === 0}
+                >
+                  Verificar
+                </Button>
               </div>
             </Card>
           </motion.div>
         );
 
-      case 3: // Recuerda
+      case 4: // Selección de imagen
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Selecciona la imagen correcta
+              </h3>
+              <p className="text-center text-lg text-muted-foreground mb-6">
+                ¿Cuál imagen representa: <span className="text-primary font-semibold">{english}</span>?
+              </p>
+              
+              {isLoadingImages ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="aspect-square bg-secondary/30 rounded-lg animate-pulse" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {imageOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleImageSelection(option.id)}
+                      disabled={selectedImageId !== null}
+                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                        selectedImageId === option.id
+                          ? option.isCorrect
+                            ? "border-green-500 ring-4 ring-green-500/20"
+                            : "border-red-500 ring-4 ring-red-500/20"
+                          : "border-border hover:border-primary"
+                      }`}
+                    >
+                      <img
+                        src={option.url}
+                        alt={`Opción ${option.id + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Card>
+          </motion.div>
+        );
+
+      case 5: // Resumen final
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -316,7 +554,7 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-4 gradient-text-primary">
-                Recuerda
+                ¡Palabra Aprendida!
               </h3>
               
               <div className="space-y-6">
@@ -349,7 +587,7 @@ const LearnWord = () => {
                 size="lg"
                 className="gradient-animated w-full max-w-xs mx-auto"
                 onClick={() => {
-                  // Marcar como aprendida en localStorage
+                  playSuccessSound();
                   const saved = localStorage.getItem("vocabulary_day1_progress");
                   if (saved) {
                     try {
@@ -362,7 +600,6 @@ const LearnWord = () => {
                       console.error("Error updating progress:", error);
                     }
                   }
-                  // Crear un toast personalizado centrado
                   const toastDiv = document.createElement('div');
                   toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
                   toastDiv.innerHTML = `
@@ -391,6 +628,10 @@ const LearnWord = () => {
                   setCurrentModule(0);
                   setUserInput("");
                   setAttempts(0);
+                  setSpellingAttempt("");
+                  setUsedLetterIndices([]);
+                  setSelectedImageId(null);
+                  setImageOptions([]);
                   setModuleProgress(modules.map(m => ({ ...m, completed: false })));
                 }}
               >

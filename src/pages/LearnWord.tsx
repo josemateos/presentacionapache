@@ -134,7 +134,7 @@ const LearnWord = () => {
   };
 
   // Verificación automática de pronunciación
-  const verifyPronunciation = async () => {
+  const verifyPronunciation = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
@@ -169,11 +169,13 @@ const LearnWord = () => {
           description: "Pronunciación correcta. Avanzando...",
         });
         
+        // Actualizar progreso y avanzar
+        setModuleProgress(prev => prev.map(m => 
+          m.id === 2 ? { ...m, completed: true } : m
+        ));
+        
         setTimeout(() => {
-          setModuleProgress(prev => prev.map(m => 
-            m.id === currentModule ? { ...m, completed: true } : m
-          ));
-          setCurrentModule(currentModule + 1);
+          setCurrentModule(3);
           setRecordedAudio(null);
         }, 1500);
       } else {
@@ -183,7 +185,9 @@ const LearnWord = () => {
           variant: "destructive",
         });
         // Resetear para permitir otra grabación
-        setRecordedAudio(null);
+        setTimeout(() => {
+          setRecordedAudio(null);
+        }, 1500);
       }
     };
 
@@ -194,7 +198,9 @@ const LearnWord = () => {
         description: "No se pudo verificar la pronunciación. Intenta de nuevo",
         variant: "destructive",
       });
-      setRecordedAudio(null);
+      setTimeout(() => {
+        setRecordedAudio(null);
+      }, 1500);
     };
 
     recognition.start();
@@ -204,9 +210,11 @@ const LearnWord = () => {
   useEffect(() => {
     if (recordedAudio && currentModule === 2) {
       // Pequeño delay para que el usuario vea que se grabó
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         verifyPronunciation();
       }, 500);
+      
+      return () => clearTimeout(timer);
     }
   }, [recordedAudio, currentModule]);
 

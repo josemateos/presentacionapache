@@ -119,6 +119,7 @@ const LearnWord = () => {
             toast({
               title: "¡Excelente pronunciación!",
               description: "Pronunciación correcta. Avanzando...",
+              duration: 1500,
             });
 
             setModuleProgress(prev => prev.map(m =>
@@ -135,6 +136,7 @@ const LearnWord = () => {
               title: "Intentar nuevamente",
               description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
               variant: "destructive",
+              duration: 2000,
             });
             setTimeout(() => {
               setRecordedAudio(null);
@@ -232,23 +234,32 @@ const LearnWord = () => {
   const generateImages = async () => {
     setIsLoadingImages(true);
     try {
-      // Crear prompts más descriptivos y visuales sin texto
-      const wordPrompts: Record<string, string[]> = {
-        'fresh': [
-          'A pitcher of fresh cold water with ice cubes and lemon slices, illustration style, no text',
-          'A bunch of green vegetables in a basket, illustration style, no text',
-          'Fresh mint leaves with water drops, illustration style, no text',
-          'A cool breeze symbol with fresh air, illustration style, no text'
-        ],
-        'default': [
-          `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text or words`,
-          `Scene depicting ${english} meaning with clear visual metaphor, artistic illustration, no text or words`,
-          `Simple illustration showing ${english} using recognizable objects, vibrant colors, no text or words`,
-          `Symbolic representation of ${english} through everyday items, clean illustration, no text or words`
-        ]
+      // Prompts específicos para cada palabra del vocabulario
+      const wordPrompts: Record<string, string> = {
+        'fresh': 'A pitcher of fresh cold water with ice cubes and lemon slices on a wooden table, colorful illustration, no text',
+        'market': 'A vibrant outdoor farmers market with colorful fruit and vegetable stalls, illustration style, no text',
+        'i want': 'A person pointing at something they desire with excited expression, illustration style, no text',
+        'bread': 'A loaf of artisan bread with crispy golden crust on cutting board, illustration style, no text',
+        'the': 'An arrow pointing to a specific object highlighting selection, illustration style, no text',
+        'fruits': 'A colorful basket full of assorted fresh fruits - apples, oranges, bananas, grapes, illustration style, no text',
+        'vegetables': 'A wooden crate filled with colorful fresh vegetables - carrots, tomatoes, lettuce, peppers, illustration style, no text',
+        'to buy': 'Hands exchanging money for goods at a market, shopping scene, illustration style, no text',
+        'in': 'Objects inside a container or location, spatial relationship concept, illustration style, no text',
+        'at': 'Person or object at a specific location with location marker, illustration style, no text',
+        'meat': 'Fresh cuts of meat on a butcher block, illustration style, no text',
       };
 
-      const prompts = wordPrompts[english.toLowerCase()] || wordPrompts['default'];
+      const correctPrompt = wordPrompts[english.toLowerCase()] || 
+        `Visual representation of ${english} concept through objects and symbols, colorful illustration, no text`;
+
+      // Prompts distractores (conceptos diferentes)
+      const distractorPrompts = [
+        'A completely different everyday object, colorful illustration, no text',
+        'A random household item unrelated to the word, illustration style, no text',
+        'A different common object in daily life, vibrant illustration, no text',
+      ];
+
+      const prompts = [correctPrompt, ...distractorPrompts];
 
       const generatedImages: ImageOption[] = [];
       
@@ -306,6 +317,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
+        duration: 1500,
       });
       
       setTimeout(() => {
@@ -320,6 +332,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
+        duration: 1500,
       });
       setTimeout(() => setSelectedMeaningOption(null), 1000);
     }
@@ -334,6 +347,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
+        duration: 1500,
       });
       
       setTimeout(() => {
@@ -348,6 +362,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
+        duration: 1500,
       });
     }
   };
@@ -386,6 +401,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
+        duration: 1500,
       });
       
       setTimeout(() => {
@@ -401,6 +417,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
+        duration: 1500,
       });
     }
   };
@@ -415,6 +432,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Has identificado la imagen correcta",
+        duration: 1500,
       });
       
       setTimeout(() => {
@@ -429,6 +447,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
+        duration: 1500,
       });
       setTimeout(() => setSelectedImageId(null), 1000);
     }

@@ -201,7 +201,7 @@ const VocabularyDay1 = () => {
                         handleLearnWord(word);
                       }}
                     >
-                      {word.learned ? "Repasar" : "Concluir"}
+                      {word.learned ? "Repasar" : "Continuar"}
                     </Button>
                   </div>
                 </Card>

@@ -16,9 +16,9 @@ import frescas2 from '@/assets/words/frescas-2.jpg';
 import frescas3 from '@/assets/words/frescas-3.jpg';
 import frescas4 from '@/assets/words/frescas-4.jpg';
 import mercado1 from '@/assets/words/mercado-1.jpg';
-import mercado2 from '@/assets/words/mercado-2.jpg';
-import mercado3 from '@/assets/words/mercado-3.jpg';
-import mercado4 from '@/assets/words/mercado-4.jpg';
+import mercado2 from '@/assets/words/mercado-2-new.jpg';
+import mercado3 from '@/assets/words/mercado-3-new.jpg';
+import mercado4 from '@/assets/words/mercado-4-new.jpg';
 import quiero1 from '@/assets/words/quiero-1.jpg';
 import quiero2 from '@/assets/words/quiero-2.jpg';
 import quiero3 from '@/assets/words/quiero-3.jpg';
@@ -792,37 +792,52 @@ const LearnWord = () => {
                 size="lg"
                 className="gradient-animated w-full max-w-xs mx-auto"
                 onClick={() => {
-                  playSuccessSound();
-                  const saved = localStorage.getItem("vocabulary_day1_progress");
-                  if (saved) {
-                    try {
-                      const savedWords = JSON.parse(saved);
-                      const updatedWords = savedWords.map((w: any) => 
-                        w.id === parseInt(wordId || "0") ? { ...w, learned: true } : w
-                      );
-                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
-                    } catch (error) {
-                      console.error("Error updating progress:", error);
+                  // Marcar palabra como aprendida solo cuando se completen todos los módulos
+                  if (moduleProgress.every(m => m.completed)) {
+                    playSuccessSound();
+                    const saved = localStorage.getItem("vocabulary_day1_progress");
+                    if (saved) {
+                      try {
+                        const savedWords = JSON.parse(saved);
+                        const updatedWords = savedWords.map((w: any) => 
+                          w.id === parseInt(wordId || "0") ? { ...w, learned: true } : w
+                        );
+                        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+                      } catch (error) {
+                        console.error("Error updating progress:", error);
+                      }
                     }
-                  }
-                  const toastDiv = document.createElement('div');
-                  toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
-                  toastDiv.innerHTML = `
-                    <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
-                      <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
-                      <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
-                      <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
-                    </div>
-                  `;
-                  document.body.appendChild(toastDiv);
-                  setTimeout(() => {
-                    document.body.removeChild(toastDiv);
+                    const toastDiv = document.createElement('div');
+                    toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
+                    toastDiv.innerHTML = `
+                      <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
+                        <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
+                        <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
+                        <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                      </div>
+                    `;
+                    document.body.appendChild(toastDiv);
+                    setTimeout(() => {
+                      document.body.removeChild(toastDiv);
+                      navigate("/vocabulario-dia-1");
+                    }, 2000);
+                  } else {
+                    // Si no se completaron todos los módulos, solo volver
                     navigate("/vocabulario-dia-1");
-                  }, 2000);
+                  }
                 }}
               >
-                <Check className="w-5 h-5 mr-2" />
-                Marcar como aprendida
+                {moduleProgress.every(m => m.completed) ? (
+                  <>
+                    <Check className="w-5 h-5 mr-2" />
+                    Marcar como aprendida
+                  </>
+                ) : (
+                  <>
+                    <ArrowLeft className="w-5 h-5 mr-2" />
+                    Volver a la lista
+                  </>
+                )}
               </Button>
               
               <Button

@@ -77,6 +77,23 @@ const LearnWord = () => {
   const displayNote = english.toLowerCase().trim() === "strumming" ? "Rasgueando" : note;
 
   const [currentModule, setCurrentModule] = useState(0);
+
+  // Detectar el primer módulo no completado al cargar
+  useEffect(() => {
+    const saved = localStorage.getItem("vocabulary_day1_progress");
+    if (saved && wordId) {
+      try {
+        const savedWords = JSON.parse(saved);
+        const currentWord = savedWords.find((w: any) => w.id === parseInt(wordId));
+        if (currentWord?.inProgress) {
+          // Si está en progreso, ir al módulo 3 (pronunciación)
+          setCurrentModule(2);
+        }
+      } catch (error) {
+        console.error("Error loading progress:", error);
+      }
+    }
+  }, [wordId]);
   const [userInput, setUserInput] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [selectedMeaningOption, setSelectedMeaningOption] = useState<string | null>(null);
@@ -849,9 +866,19 @@ const LearnWord = () => {
                 ) : (
                   <>
                     <ArrowLeft className="w-5 h-5 mr-2" />
-                    Volver a la lista
+                    Ir a la lista
                   </>
                 )}
+              </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full max-w-xs mx-auto"
+                onClick={() => setCurrentModule(2)}
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                Ir a Pronunciar
               </Button>
               
               <Button

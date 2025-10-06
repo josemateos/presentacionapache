@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic } from "lucide-react";
+import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -891,12 +891,19 @@ const LearnWord = () => {
             size="sm"
             className="hover:bg-primary/10"
             onClick={() => {
-              setUserInput("");
-              setAttempts(0);
+              if (currentModule > 0) {
+                setCurrentModule(currentModule - 1);
+                setUserInput("");
+                setAttempts(0);
+                setSpellingAttempt("");
+                setUsedLetterIndices([]);
+                setSelectedImageId(null);
+              }
             }}
+            disabled={currentModule === 0}
           >
-            <RotateCcw className="w-4 h-4" />
-            <span className="hidden sm:inline ml-2">Reiniciar</span>
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline ml-2">Anterior</span>
           </Button>
         </div>
       </header>

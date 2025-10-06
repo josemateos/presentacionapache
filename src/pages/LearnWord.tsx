@@ -627,9 +627,21 @@ const LearnWord = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setModuleProgress(prev => prev.map(m => 
-                    m.id === 2 ? { ...m, completed: true } : m
-                  ));
+                  // Marcar módulo como NO completado y guardar estado "en progreso"
+                  const saved = localStorage.getItem("vocabulary_day1_progress");
+                  if (saved) {
+                    try {
+                      const savedWords = JSON.parse(saved);
+                      const updatedWords = savedWords.map((w: any) => 
+                        w.id === parseInt(wordId || "0") 
+                          ? { ...w, inProgress: true, learned: false } 
+                          : w
+                      );
+                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+                    } catch (error) {
+                      console.error("Error updating progress:", error);
+                    }
+                  }
                   setCurrentModule(3);
                 }}
                 className="w-full h-12 mt-4"
@@ -800,7 +812,9 @@ const LearnWord = () => {
                       try {
                         const savedWords = JSON.parse(saved);
                         const updatedWords = savedWords.map((w: any) => 
-                          w.id === parseInt(wordId || "0") ? { ...w, learned: true } : w
+                          w.id === parseInt(wordId || "0") 
+                            ? { ...w, learned: true, inProgress: false } 
+                            : w
                         );
                         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
                       } catch (error) {
@@ -822,7 +836,7 @@ const LearnWord = () => {
                       navigate("/vocabulario-dia-1");
                     }, 2000);
                   } else {
-                    // Si no se completaron todos los módulos, solo volver
+                    // Si no se completaron todos los módulos, solo volver sin marcar como aprendida
                     navigate("/vocabulario-dia-1");
                   }
                 }}

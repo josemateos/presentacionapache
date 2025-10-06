@@ -14,6 +14,7 @@ interface Word {
   english?: string;
   note?: string;
   learned: boolean;
+  inProgress?: boolean;
   audioFileName?: string;
 }
 
@@ -194,6 +195,8 @@ const VocabularyDay1 = () => {
                       className={`min-w-[110px] ${
                         word.learned
                           ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                          : word.inProgress
+                          ? "bg-amber-500 text-white hover:bg-amber-600"
                           : "gradient-animated"
                       }`}
                       onClick={(e) => {
@@ -201,7 +204,7 @@ const VocabularyDay1 = () => {
                         handleLearnWord(word);
                       }}
                     >
-                      {word.learned ? "Repasar" : "Continuar"}
+                      {word.learned ? "Repasar" : word.inProgress ? "Continuar" : "Aprender"}
                     </Button>
                   </div>
                 </Card>

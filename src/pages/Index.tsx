@@ -70,7 +70,7 @@ const Index = () => {
           label: "Orden Apache", 
           content: "El secreto: reorganizar en el orden del inglés",
           example: {
-            phrase: "Yo necesitar encontrar sistema eficiente \"rápido aprendizaje\" Inglés"
+            phrase: "Yo necesitar encontrar sistema eficiente rápido aprendizaje Inglés"
           }
         },
         { 

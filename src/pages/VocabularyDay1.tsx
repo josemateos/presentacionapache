@@ -23,16 +23,16 @@ const VocabularyDay1 = () => {
 
   // Vocabulario del día 1 - Frase 1: "Quiero comprar frutas frescas en el mercado"
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "Quiero", learned: false, audioFileName: "quiero.mp3" },
-    { id: 2, spanish: "Comprar", learned: false, audioFileName: "comprar.mp3" },
-    { id: 3, spanish: "Frutas", learned: false, audioFileName: "frutas.mp3" },
-    { id: 4, spanish: "Frescas", learned: false, audioFileName: "frescas.mp3" },
-    { id: 5, spanish: "En", learned: false, audioFileName: "en.mp3" },
-    { id: 6, spanish: "El", learned: false, audioFileName: "el.mp3" },
-    { id: 7, spanish: "Mercado", learned: false, audioFileName: "mercado.mp3" },
-    { id: 8, spanish: "Verduras", learned: false, audioFileName: "verduras.mp3" },
-    { id: 9, spanish: "Carne", learned: false, audioFileName: "carne.mp3" },
-    { id: 10, spanish: "Pan", learned: false, audioFileName: "pan.mp3" },
+    { id: 1, spanish: "Frescas", english: "Fresh", note: "adjetivo, plural femenino", learned: false, audioFileName: "frescas.mp3" },
+    { id: 2, spanish: "Mercado", english: "Market", note: "sustantivo masculino", learned: false, audioFileName: "mercado.mp3" },
+    { id: 3, spanish: "Quiero", english: "I want", note: "1ª persona singular del verbo querer", learned: false, audioFileName: "quiero.mp3" },
+    { id: 4, spanish: "Pan", english: "Bread", note: "sustantivo masculino", learned: false, audioFileName: "pan.mp3" },
+    { id: 5, spanish: "El", english: "The", note: "artículo masculino singular", learned: false, audioFileName: "el.mp3" },
+    { id: 6, spanish: "Frutas", english: "Fruits", note: "sustantivo femenino plural", learned: false, audioFileName: "frutas.mp3" },
+    { id: 7, spanish: "Verduras", english: "Vegetables", note: "sustantivo femenino plural", learned: false, audioFileName: "verduras.mp3" },
+    { id: 8, spanish: "Comprar", english: "To buy", note: "verbo infinitivo", learned: false, audioFileName: "comprar.mp3" },
+    { id: 9, spanish: "En", english: "In/At", note: "preposición", learned: false, audioFileName: "en.mp3" },
+    { id: 10, spanish: "Carne", english: "Meat", note: "sustantivo femenino", learned: false, audioFileName: "carne.mp3" },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -166,6 +166,18 @@ const VocabularyDay1 = () => {
                     <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                       {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
                     </h3>
+                    
+                    {word.english && (
+                      <p className="text-base md:text-lg text-muted-foreground mb-1">
+                        {word.english.charAt(0).toUpperCase() + word.english.slice(1)}
+                      </p>
+                    )}
+                    
+                    {word.note && (
+                      <p className="text-sm text-primary/80 italic mt-2">
+                        {word.note}
+                      </p>
+                    )}
                   </div>
 
 

@@ -50,14 +50,10 @@ const Index = () => {
               { spanish: "Yo", english: "I" },
               { spanish: "Sistema", english: "System" },
               { spanish: "Rápido", english: "Fast" },
-              { spanish: "en", english: "in" },
               { spanish: "Encontrar", english: "Find" },
-              { spanish: "del", english: "of the" },
               { spanish: "Necesitar", english: "Need" },
               { spanish: "Inglés", english: "English" },
-              { spanish: "un", english: "a/an" },
-              { spanish: "Aprendizaje", english: "Learning" },
-              { spanish: "el", english: "the" }
+              { spanish: "Aprendizaje", english: "Learning" }
             ]
           }
         },
@@ -66,7 +62,7 @@ const Index = () => {
           label: "Tu Frase en Español", 
           content: "Lo que quieres comunicar",
           example: {
-            phrase: "Necesito encontrar un sistema eficiente en el aprendizaje rápido del Ingles."
+            phrase: "Necesito encontrar un sistema eficiente en el \"aprendizaje rápido\" del Ingles."
           }
         },
         { 
@@ -74,7 +70,7 @@ const Index = () => {
           label: "Orden Apache", 
           content: "El secreto: reorganizar en el orden del inglés",
           example: {
-            phrase: "Yo necesitar encontrar un sistema eficiente en aprendizaje rápido de inglés"
+            phrase: "Yo necesitar encontrar sistema eficiente \"rápido aprendizaje\" Inglés"
           }
         },
         { 
@@ -82,7 +78,7 @@ const Index = () => {
           label: "Ingles entendible", 
           content: "Palabra por palabra al inglés",
           example: {
-            phrase: "I need find a system efficient in learning fast of English"
+            phrase: "I need find efficient system fast English learning"
           }
         },
         { 

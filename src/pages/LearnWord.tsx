@@ -86,8 +86,8 @@ const LearnWord = () => {
         const savedWords = JSON.parse(saved);
         const currentWord = savedWords.find((w: any) => w.id === parseInt(wordId));
         if (currentWord?.inProgress) {
-          // Si está en progreso, ir al módulo 3 (pronunciación)
-          setCurrentModule(2);
+          // Si está en progreso, ir al módulo 4 (pronunciación - ahora al final)
+          setCurrentModule(4);
         }
       } catch (error) {
         console.error("Error loading progress:", error);
@@ -118,9 +118,9 @@ const LearnWord = () => {
   const modules: LearningModule[] = [
     { id: 0, title: "Significado", completed: false },
     { id: 1, title: "Escritura", completed: false },
-    { id: 2, title: "Pronunciación", completed: false },
-    { id: 3, title: "Ortografía", completed: false },
-    { id: 4, title: "Imagen", completed: false },
+    { id: 2, title: "Ortografía", completed: false },
+    { id: 3, title: "Imagen", completed: false },
+    { id: 4, title: "Pronunciación", completed: false },
   ];
 
   const [moduleProgress, setModuleProgress] = useState(modules);
@@ -190,11 +190,11 @@ const LearnWord = () => {
             });
 
             setModuleProgress(prev => prev.map(m =>
-              m.id === 2 ? { ...m, completed: true } : m
+              m.id === 4 ? { ...m, completed: true } : m
             ));
 
             setTimeout(() => {
-              setCurrentModule(3);
+              setCurrentModule(5);
               setRecordedAudio(null);
               setIsVerifying(false);
             }, 1000);
@@ -356,9 +356,9 @@ const LearnWord = () => {
   }, []);
 
   useEffect(() => {
-    if (currentModule === 3) {
+    if (currentModule === 2) {
       setJumbledLetters(generateJumbledLetters(english));
-    } else if (currentModule === 4 && imageOptions.length === 0) {
+    } else if (currentModule === 3 && imageOptions.length === 0) {
       loadFixedImages();
     }
   }, [currentModule]);
@@ -594,92 +594,7 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 2: // Pronunciación
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-4 text-center gradient-text-primary">
-                Escucha y Pronuncia
-              </h3>
-              
-              <div className="flex justify-center items-center gap-4 mb-8">
-                <p className="text-3xl font-bold text-primary">
-                  {english.charAt(0).toUpperCase() + english.slice(1)}
-                </p>
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  className="w-14 h-14 rounded-full hover:bg-primary/10"
-                  onClick={handlePlayAudio}
-                >
-                  <Volume2 className="w-6 h-6 text-primary" />
-                </Button>
-              </div>
-              
-              <p className="text-center text-muted-foreground mb-6">
-                {isVerifying
-                  ? "Verificando tu pronunciación..."
-                  : "Escucha la palabra y practica tu pronunciación"}
-              </p>
-              
-              <Button
-                onClick={handlePronunciationButton}
-                disabled={isVerifying}
-                className={`w-full h-12 ${
-                  isRecording 
-                    ? 'bg-red-500 hover:bg-red-600' 
-                    : 'gradient-animated'
-                }`}
-              >
-                <Mic className="w-5 h-5 mr-2" />
-                {isRecording 
-                  ? 'Detener grabación' 
-                  : 'Practica tu pronunciación'}
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => {
-                  // Trackear visitas al módulo 3
-                  const visitKey = `module3_visits_word_${wordId}`;
-                  const visits = parseInt(localStorage.getItem(visitKey) || "0");
-                  const newVisits = visits + 1;
-                  localStorage.setItem(visitKey, newVisits.toString());
-
-                  // Marcar módulo como NO completado y guardar estado "en progreso"
-                  const saved = localStorage.getItem("vocabulary_day1_progress");
-                  if (saved) {
-                    try {
-                      const savedWords = JSON.parse(saved);
-                      const updatedWords = savedWords.map((w: any) => 
-                        w.id === parseInt(wordId || "0") 
-                          ? { ...w, inProgress: true, learned: false } 
-                          : w
-                      );
-                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
-                    } catch (error) {
-                      console.error("Error updating progress:", error);
-                    }
-                  }
-
-                  // Si es la 2da visita, ir a la lista
-                  if (newVisits >= 2) {
-                    navigate("/vocabulario-dia-1");
-                  } else {
-                    setCurrentModule(3);
-                  }
-                }}
-                className="w-full h-12 mt-4"
-              >
-                Hacer después, continuar
-              </Button>
-            </Card>
-          </motion.div>
-        );
+      case 2: // Ortografía (ahora case 2)
 
       case 3: // Ortografía
         return (
@@ -742,7 +657,7 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 4: // Selección de imagen
+      case 3: // Selección de imagen
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -787,6 +702,93 @@ const LearnWord = () => {
                   ))}
                 </div>
               )}
+            </Card>
+          </motion.div>
+        );
+
+      case 4: // Pronunciación
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-4 text-center gradient-text-primary">
+                Escucha y Pronuncia
+              </h3>
+              
+              <div className="flex justify-center items-center gap-4 mb-8">
+                <p className="text-3xl font-bold text-primary">
+                  {english.charAt(0).toUpperCase() + english.slice(1)}
+                </p>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="w-14 h-14 rounded-full hover:bg-primary/10"
+                  onClick={handlePlayAudio}
+                >
+                  <Volume2 className="w-6 h-6 text-primary" />
+                </Button>
+              </div>
+              
+              <p className="text-center text-muted-foreground mb-6">
+                {isVerifying
+                  ? "Verificando tu pronunciación..."
+                  : "Escucha la palabra y practica tu pronunciación"}
+              </p>
+              
+              <Button
+                onClick={handlePronunciationButton}
+                disabled={isVerifying}
+                className={`w-full h-12 ${
+                  isRecording 
+                    ? 'bg-red-500 hover:bg-red-600' 
+                    : 'gradient-animated'
+                }`}
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                {isRecording 
+                  ? 'Detener grabación' 
+                  : 'Practica tu pronunciación'}
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => {
+                  // Trackear visitas al módulo 4 (pronunciación ahora al final)
+                  const visitKey = `module4_visits_word_${wordId}`;
+                  const visits = parseInt(localStorage.getItem(visitKey) || "0");
+                  const newVisits = visits + 1;
+                  localStorage.setItem(visitKey, newVisits.toString());
+
+                  // Marcar módulo como NO completado y guardar estado "en progreso"
+                  const saved = localStorage.getItem("vocabulary_day1_progress");
+                  if (saved) {
+                    try {
+                      const savedWords = JSON.parse(saved);
+                      const updatedWords = savedWords.map((w: any) => 
+                        w.id === parseInt(wordId || "0") 
+                          ? { ...w, inProgress: true, learned: false } 
+                          : w
+                      );
+                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+                    } catch (error) {
+                      console.error("Error updating progress:", error);
+                    }
+                  }
+
+                  // Si es la 2da visita, ir a la lista
+                  if (newVisits >= 2) {
+                    navigate("/vocabulario-dia-1");
+                  } else {
+                    setCurrentModule(5);
+                  }
+                }}
+                className="w-full h-12 mt-4"
+              >
+                Hacer después, continuar
+              </Button>
             </Card>
           </motion.div>
         );
@@ -887,7 +889,7 @@ const LearnWord = () => {
                 size="lg"
                 variant="outline"
                 className="w-full max-w-xs mx-auto"
-                onClick={() => setCurrentModule(2)}
+                onClick={() => setCurrentModule(4)}
               >
                 <Mic className="w-5 h-5 mr-2" />
                 Ir a Pronunciar

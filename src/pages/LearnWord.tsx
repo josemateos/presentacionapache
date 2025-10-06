@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,8 @@ const LearnWord = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-
+  const recognitionRef = useRef<any>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
   const modules: LearningModule[] = [
     { id: 0, title: "Significado", completed: false },
     { id: 1, title: "Escritura", completed: false },
@@ -95,6 +96,69 @@ const LearnWord = () => {
       const recorder = new MediaRecorder(stream);
       const audioChunks: BlobPart[] = [];
 
+      // Configurar reconocimiento de voz en paralelo a la grabación
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast({
+          title: "No soportado",
+          description: "Tu navegador no soporta reconocimiento de voz",
+          variant: "destructive",
+        });
+      } else {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript.toLowerCase().trim();
+          const targetWord = english.toLowerCase().trim();
+
+          if (transcript === targetWord || transcript.includes(targetWord)) {
+            playSuccessSound();
+            toast({
+              title: "¡Excelente pronunciación!",
+              description: "Pronunciación correcta. Avanzando...",
+            });
+
+            setModuleProgress(prev => prev.map(m =>
+              m.id === 2 ? { ...m, completed: true } : m
+            ));
+
+            setTimeout(() => {
+              setCurrentModule(3);
+              setRecordedAudio(null);
+              setIsVerifying(false);
+            }, 1000);
+          } else {
+            toast({
+              title: "Intentar nuevamente",
+              description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
+              variant: "destructive",
+            });
+            setTimeout(() => {
+              setRecordedAudio(null);
+              setIsVerifying(false);
+            }, 1000);
+          }
+        };
+
+        recognition.onerror = () => {
+          toast({
+            title: "Error",
+            description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+            variant: "destructive",
+          });
+          setTimeout(() => {
+            setRecordedAudio(null);
+            setIsVerifying(false);
+          }, 1000);
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+      }
+
       recorder.ondataavailable = (event) => {
         audioChunks.push(event.data);
       };
@@ -121,7 +185,11 @@ const LearnWord = () => {
 
   const handleStopRecording = () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
+      setIsVerifying(true);
       mediaRecorder.stop();
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch {}
+      }
     }
   };
 
@@ -133,90 +201,8 @@ const LearnWord = () => {
     }
   };
 
-  // Verificación automática de pronunciación
-  const verifyPronunciation = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
-    if (!SpeechRecognition) {
-      toast({
-        title: "No soportado",
-        description: "Tu navegador no soporta reconocimiento de voz",
-        variant: "destructive",
-      });
-      return;
-    }
+  // Verificación de pronunciación integrada al flujo de grabación con SpeechRecognition.
 
-    toast({
-      title: "Verificando...",
-      description: "Analizando tu pronunciación",
-    });
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript.toLowerCase().trim();
-      const targetWord = english.toLowerCase().trim();
-      
-      console.log('Transcript:', transcript, 'Target:', targetWord);
-      
-      if (transcript === targetWord || transcript.includes(targetWord)) {
-        playSuccessSound();
-        toast({
-          title: "¡Excelente pronunciación!",
-          description: "Pronunciación correcta. Avanzando...",
-        });
-        
-        // Actualizar progreso y avanzar
-        setModuleProgress(prev => prev.map(m => 
-          m.id === 2 ? { ...m, completed: true } : m
-        ));
-        
-        setTimeout(() => {
-          setCurrentModule(3);
-          setRecordedAudio(null);
-        }, 1500);
-      } else {
-        toast({
-          title: "Intentar nuevamente",
-          description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
-          variant: "destructive",
-        });
-        // Resetear para permitir otra grabación
-        setTimeout(() => {
-          setRecordedAudio(null);
-        }, 1500);
-      }
-    };
-
-    recognition.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
-      toast({
-        title: "Error",
-        description: "No se pudo verificar la pronunciación. Intenta de nuevo",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        setRecordedAudio(null);
-      }, 1500);
-    };
-
-    recognition.start();
-  };
-
-  // Iniciar verificación automáticamente después de grabar
-  useEffect(() => {
-    if (recordedAudio && currentModule === 2) {
-      // Pequeño delay para que el usuario vea que se grabó
-      const timer = setTimeout(() => {
-        verifyPronunciation();
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [recordedAudio, currentModule]);
 
   // Generar opciones de significado
   const getMeaningOptions = () => {
@@ -552,7 +538,7 @@ const LearnWord = () => {
               
               <Button
                 onClick={handlePronunciationButton}
-                disabled={recordedAudio !== null && !isRecording}
+                disabled={isVerifying}
                 className={`w-full h-12 ${
                   isRecording 
                     ? 'bg-red-500 hover:bg-red-600' 

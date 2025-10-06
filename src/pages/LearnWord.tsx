@@ -260,7 +260,7 @@ const LearnWord = () => {
           related: [
             'Fresh lemons on a sunny wooden table, illustration style, no text',
             'A bright sunny day with clear blue sky and sun rays, illustration style, no text',
-            'A person sweating on a hot day drinking cold water, illustration style, no text'
+            'A person wiping sweat from forehead on a hot day, exhausted expression, illustration style, no text'
           ]
         },
         'market': {

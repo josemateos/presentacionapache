@@ -127,6 +127,7 @@ const LearnWord = () => {
               title: "¡Excelente pronunciación!",
               description: "Pronunciación correcta. Avanzando...",
               duration: 1500,
+              className: "bg-green-500 text-white border-green-600",
             });
 
             setModuleProgress(prev => prev.map(m =>
@@ -419,6 +420,7 @@ const LearnWord = () => {
         title: "¡Correcto!",
         description: "Excelente trabajo",
         duration: 1500,
+        className: "bg-green-500 text-white border-green-600",
       });
       
       setTimeout(() => {
@@ -449,6 +451,7 @@ const LearnWord = () => {
         title: "¡Correcto!",
         description: "Excelente trabajo",
         duration: 1500,
+        className: "bg-green-500 text-white border-green-600",
       });
       
       setTimeout(() => {
@@ -503,6 +506,7 @@ const LearnWord = () => {
         title: "¡Correcto!",
         description: "Excelente trabajo",
         duration: 1500,
+        className: "bg-green-500 text-white border-green-600",
       });
       
       setTimeout(() => {
@@ -534,6 +538,7 @@ const LearnWord = () => {
         title: "¡Correcto!",
         description: "Has identificado la imagen correcta",
         duration: 1500,
+        className: "bg-green-500 text-white border-green-600",
       });
       
       setTimeout(() => {
@@ -680,6 +685,19 @@ const LearnWord = () => {
                 {isRecording 
                   ? 'Detener grabación' 
                   : 'Practica tu pronunciación'}
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setModuleProgress(prev => prev.map(m => 
+                    m.id === 2 ? { ...m, completed: true } : m
+                  ));
+                  setCurrentModule(3);
+                }}
+                className="w-full h-12 mt-4"
+              >
+                Hacer después, continuar
               </Button>
             </Card>
           </motion.div>

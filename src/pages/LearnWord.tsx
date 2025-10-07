@@ -11,22 +11,138 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 // Importar imágenes fijas para todas las palabras del vocabulario
-import fresca1 from '@/assets/words/fresca-1.jpg';
-import fresca2 from '@/assets/words/fresca-2.jpg';
-import fresca3 from '@/assets/words/fresca-3.jpg';
-import fresca4 from '@/assets/words/fresca-4.jpg';
-import antes1 from '@/assets/words/antes-1.jpg';
-import antes2 from '@/assets/words/antes-2.jpg';
-import antes3 from '@/assets/words/antes-3.jpg';
-import antes4 from '@/assets/words/antes-4.jpg';
-import nos1 from '@/assets/words/nos-1.jpg';
-import nos2 from '@/assets/words/nos-2.jpg';
-import nos3 from '@/assets/words/nos-3.jpg';
-import nos4 from '@/assets/words/nos-4.jpg';
+import querer1 from '@/assets/words/querer-1.jpg';
+import querer2 from '@/assets/words/querer-2.jpg';
+import querer3 from '@/assets/words/querer-3.jpg';
+import querer4 from '@/assets/words/querer-4.jpg';
+import fruta1 from '@/assets/words/fruta-1.jpg';
+import fruta2 from '@/assets/words/fruta-2.jpg';
+import fruta3 from '@/assets/words/fruta-3.jpg';
+import fruta4 from '@/assets/words/fruta-4.jpg';
+import leer1 from '@/assets/words/leer-1.jpg';
+import leer2 from '@/assets/words/leer-2.jpg';
+import leer3 from '@/assets/words/leer-3.jpg';
+import leer4 from '@/assets/words/leer-4.jpg';
+import un1 from '@/assets/words/un-1.jpg';
+import un2 from '@/assets/words/un-2.jpg';
+import un3 from '@/assets/words/un-3.jpg';
+import un4 from '@/assets/words/un-4.jpg';
+import libro1 from '@/assets/words/libro-1.jpg';
+import libro2 from '@/assets/words/libro-2.jpg';
+import libro3 from '@/assets/words/libro-3.jpg';
+import libro4 from '@/assets/words/libro-4.jpg';
+import de1 from '@/assets/words/de-1.jpg';
+import de2 from '@/assets/words/de-2.jpg';
+import de3 from '@/assets/words/de-3.jpg';
+import de4 from '@/assets/words/de-4.jpg';
+import dormir1 from '@/assets/words/dormir-1.jpg';
+import dormir2 from '@/assets/words/dormir-2.jpg';
+import dormir3 from '@/assets/words/dormir-3.jpg';
+import dormir4 from '@/assets/words/dormir-4.jpg';
+import tener1 from '@/assets/words/tener-1.jpg';
+import tener2 from '@/assets/words/tener-2.jpg';
+import tener3 from '@/assets/words/tener-3.jpg';
+import tener4 from '@/assets/words/tener-4.jpg';
+import ir1 from '@/assets/words/ir-1.jpg';
+import ir2 from '@/assets/words/ir-2.jpg';
+import ir3 from '@/assets/words/ir-3.jpg';
+import ir4 from '@/assets/words/ir-4.jpg';
+import a1 from '@/assets/words/a-1.jpg';
+import a2 from '@/assets/words/a-2.jpg';
+import a3 from '@/assets/words/a-3.jpg';
+import a4 from '@/assets/words/a-4.jpg';
+import visitar1 from '@/assets/words/visitar-1.jpg';
+import visitar2 from '@/assets/words/visitar-2.jpg';
+import visitar3 from '@/assets/words/visitar-3.jpg';
+import visitar4 from '@/assets/words/visitar-4.jpg';
+import gustar1 from '@/assets/words/gustar-1.jpg';
+import gustar2 from '@/assets/words/gustar-2.jpg';
+import gustar3 from '@/assets/words/gustar-3.jpg';
+import gustar4 from '@/assets/words/gustar-4.jpg';
+import nosComplemento1 from '@/assets/words/nos-complemento-1.jpg';
+import nosComplemento2 from '@/assets/words/nos-complemento-2.jpg';
+import nosComplemento3 from '@/assets/words/nos-complemento-3.jpg';
+import nosComplemento4 from '@/assets/words/nos-complemento-4.jpg';
+import invitar1 from '@/assets/words/invitar-1.jpg';
+import invitar2 from '@/assets/words/invitar-2.jpg';
+import invitar3 from '@/assets/words/invitar-3.jpg';
+import invitar4 from '@/assets/words/invitar-4.jpg';
+import tuComplemento1 from '@/assets/words/tu-complemento-1.jpg';
+import tuComplemento2 from '@/assets/words/tu-complemento-2.jpg';
+import tuComplemento3 from '@/assets/words/tu-complemento-3.jpg';
+import tuComplemento4 from '@/assets/words/tu-complemento-4.jpg';
+import mananaTiempo1 from '@/assets/words/manana-tiempo-1.jpg';
+import mananaTiempo2 from '@/assets/words/manana-tiempo-2.jpg';
+import mananaTiempo3 from '@/assets/words/manana-tiempo-3.jpg';
+import mananaTiempo4 from '@/assets/words/manana-tiempo-4.jpg';
+import mananaDia1 from '@/assets/words/manana-dia-1.jpg';
+import mananaDia2 from '@/assets/words/manana-dia-2.jpg';
+import mananaDia3 from '@/assets/words/manana-dia-3.jpg';
+import mananaDia4 from '@/assets/words/manana-dia-4.jpg';
+import reunion1 from '@/assets/words/reunion-1.jpg';
+import reunion2 from '@/assets/words/reunion-2.jpg';
+import reunion3 from '@/assets/words/reunion-3.jpg';
+import reunion4 from '@/assets/words/reunion-4.jpg';
+import trabajo1 from '@/assets/words/trabajo-1.jpg';
+import trabajo2 from '@/assets/words/trabajo-2.jpg';
+import trabajo3 from '@/assets/words/trabajo-3.jpg';
+import trabajo4 from '@/assets/words/trabajo-4.jpg';
+import familia1 from '@/assets/words/familia-1.jpg';
+import familia2 from '@/assets/words/familia-2.jpg';
+import familia3 from '@/assets/words/familia-3.jpg';
+import familia4 from '@/assets/words/familia-4.jpg';
+import necesitar1 from '@/assets/words/necesitar-1.jpg';
+import necesitar2 from '@/assets/words/necesitar-2.jpg';
+import necesitar3 from '@/assets/words/necesitar-3.jpg';
+import necesitar4 from '@/assets/words/necesitar-4.jpg';
+import practicar1 from '@/assets/words/practicar-1.jpg';
+import practicar2 from '@/assets/words/practicar-2.jpg';
+import practicar3 from '@/assets/words/practicar-3.jpg';
+import practicar4 from '@/assets/words/practicar-4.jpg';
+import ingles1 from '@/assets/words/ingles-1.jpg';
+import ingles2 from '@/assets/words/ingles-2.jpg';
+import ingles3 from '@/assets/words/ingles-3.jpg';
+import ingles4 from '@/assets/words/ingles-4.jpg';
+import todos1 from '@/assets/words/todos-1.jpg';
+import todos2 from '@/assets/words/todos-2.jpg';
+import todos3 from '@/assets/words/todos-3.jpg';
+import todos4 from '@/assets/words/todos-4.jpg';
+import dias1 from '@/assets/words/dias-1.jpg';
+import dias2 from '@/assets/words/dias-2.jpg';
+import dias3 from '@/assets/words/dias-3.jpg';
+import dias4 from '@/assets/words/dias-4.jpg';
+import ella1 from '@/assets/words/ella-1.jpg';
+import ella2 from '@/assets/words/ella-2.jpg';
+import ella3 from '@/assets/words/ella-3.jpg';
+import ella4 from '@/assets/words/ella-4.jpg';
+import ellos1 from '@/assets/words/ellos-1.jpg';
+import ellos2 from '@/assets/words/ellos-2.jpg';
+import ellos3 from '@/assets/words/ellos-3.jpg';
+import ellos4 from '@/assets/words/ellos-4.jpg';
+import nosotros1 from '@/assets/words/nosotros-1.jpg';
+import nosotros2 from '@/assets/words/nosotros-2.jpg';
+import nosotros3 from '@/assets/words/nosotros-3.jpg';
+import nosotros4 from '@/assets/words/nosotros-4.jpg';
+import el1 from '@/assets/words/el-1.jpg';
+import el2 from '@/assets/words/el-2.jpg';
+import el3 from '@/assets/words/el-3.jpg';
+import el4 from '@/assets/words/el-4.jpg';
 import tu1 from '@/assets/words/tu-1.jpg';
 import tu2 from '@/assets/words/tu-2.jpg';
 import tu3 from '@/assets/words/tu-3.jpg';
 import tu4 from '@/assets/words/tu-4.jpg';
+import mi1 from '@/assets/words/mi-1.jpg';
+import mi2 from '@/assets/words/mi-2.jpg';
+import mi3 from '@/assets/words/mi-3.jpg';
+import mi4 from '@/assets/words/mi-4.jpg';
+import nos1 from '@/assets/words/nos-1.jpg';
+import nos2 from '@/assets/words/nos-2.jpg';
+import nos3 from '@/assets/words/nos-3.jpg';
+import nos4 from '@/assets/words/nos-4.jpg';
+import en1 from '@/assets/words/en-1.jpg';
+import en2 from '@/assets/words/en-2.jpg';
+import en3 from '@/assets/words/en-3.jpg';
+import en4 from '@/assets/words/en-4.jpg';
 import importante1 from '@/assets/words/importante-1.jpg';
 import importante2 from '@/assets/words/importante-2.jpg';
 import importante3 from '@/assets/words/importante-3.jpg';
@@ -35,22 +151,14 @@ import esta1 from '@/assets/words/esta-1.jpg';
 import esta2 from '@/assets/words/esta-2.jpg';
 import esta3 from '@/assets/words/esta-3.jpg';
 import esta4 from '@/assets/words/esta-4.jpg';
+import antes1 from '@/assets/words/antes-1.jpg';
+import antes2 from '@/assets/words/antes-2.jpg';
+import antes3 from '@/assets/words/antes-3.jpg';
+import antes4 from '@/assets/words/antes-4.jpg';
 import tarde1 from '@/assets/words/tarde-1.jpg';
 import tarde2 from '@/assets/words/tarde-2.jpg';
 import tarde3 from '@/assets/words/tarde-3.jpg';
 import tarde4 from '@/assets/words/tarde-4.jpg';
-import ellos1 from '@/assets/words/ellos-1.jpg';
-import ellos2 from '@/assets/words/ellos-2.jpg';
-import ellos3 from '@/assets/words/ellos-3.jpg';
-import ellos4 from '@/assets/words/ellos-4.jpg';
-import pedir1 from '@/assets/words/pedir-1.jpg';
-import pedir2 from '@/assets/words/pedir-2.jpg';
-import pedir3 from '@/assets/words/pedir-3.jpg';
-import pedir4 from '@/assets/words/pedir-4.jpg';
-import nosotros1 from '@/assets/words/nosotros-1.jpg';
-import nosotros2 from '@/assets/words/nosotros-2.jpg';
-import nosotros3 from '@/assets/words/nosotros-3.jpg';
-import nosotros4 from '@/assets/words/nosotros-4.jpg';
 import proximo1 from '@/assets/words/proximo-1.jpg';
 import proximo2 from '@/assets/words/proximo-2.jpg';
 import proximo3 from '@/assets/words/proximo-3.jpg';
@@ -59,26 +167,14 @@ import findesemana1 from '@/assets/words/findesemana-1.jpg';
 import findesemana2 from '@/assets/words/findesemana-2.jpg';
 import findesemana3 from '@/assets/words/findesemana-3.jpg';
 import findesemana4 from '@/assets/words/findesemana-4.jpg';
-import mi1 from '@/assets/words/mi-1.jpg';
-import mi2 from '@/assets/words/mi-2.jpg';
-import mi3 from '@/assets/words/mi-3.jpg';
-import mi4 from '@/assets/words/mi-4.jpg';
-import carne1 from '@/assets/words/carne-1.jpg';
-import carne2 from '@/assets/words/carne-2.jpg';
-import carne3 from '@/assets/words/carne-3.jpg';
-import carne4 from '@/assets/words/carne-4.jpg';
+import pedir1 from '@/assets/words/pedir-1.jpg';
+import pedir2 from '@/assets/words/pedir-2.jpg';
+import pedir3 from '@/assets/words/pedir-3.jpg';
+import pedir4 from '@/assets/words/pedir-4.jpg';
 import comprar1 from '@/assets/words/comprar-1.jpg';
 import comprar2 from '@/assets/words/comprar-2.jpg';
 import comprar3 from '@/assets/words/comprar-3.jpg';
 import comprar4 from '@/assets/words/comprar-4.jpg';
-import el1 from '@/assets/words/el-1.jpg';
-import el2 from '@/assets/words/el-2.jpg';
-import el3 from '@/assets/words/el-3.jpg';
-import el4 from '@/assets/words/el-4.jpg';
-import en1 from '@/assets/words/en-1.jpg';
-import en2 from '@/assets/words/en-2.jpg';
-import en3 from '@/assets/words/en-3.jpg';
-import en4 from '@/assets/words/en-4.jpg';
 import verduras1 from '@/assets/words/verduras-1.jpg';
 import verduras2 from '@/assets/words/verduras-2.jpg';
 import verduras3 from '@/assets/words/verduras-3.jpg';
@@ -91,6 +187,10 @@ import frescas1 from '@/assets/words/frescas-1.jpg';
 import frescas2 from '@/assets/words/frescas-2.jpg';
 import frescas3 from '@/assets/words/frescas-3.jpg';
 import frescas4 from '@/assets/words/frescas-4.jpg';
+import fresca1 from '@/assets/words/fresca-1.jpg';
+import fresca2 from '@/assets/words/fresca-2.jpg';
+import fresca3 from '@/assets/words/fresca-3.jpg';
+import fresca4 from '@/assets/words/fresca-4.jpg';
 import mercado1 from '@/assets/words/mercado-1.jpg';
 import mercado2 from '@/assets/words/mercado-2-new.jpg';
 import mercado3 from '@/assets/words/mercado-3-new.jpg';
@@ -99,6 +199,10 @@ import pan1 from '@/assets/words/pan-1.jpg';
 import pan2 from '@/assets/words/pan-2.jpg';
 import pan3 from '@/assets/words/pan-3.jpg';
 import pan4 from '@/assets/words/pan-4.jpg';
+import carne1 from '@/assets/words/carne-1.jpg';
+import carne2 from '@/assets/words/carne-2.jpg';
+import carne3 from '@/assets/words/carne-3.jpg';
+import carne4 from '@/assets/words/carne-4.jpg';
 import quiero1 from '@/assets/words/quiero-1.jpg';
 import quiero2 from '@/assets/words/quiero-2.jpg';
 import quiero3 from '@/assets/words/quiero-3.jpg';
@@ -371,32 +475,66 @@ const LearnWord = () => {
     try {
       // Orden: [imagen correcta, distractor1, distractor2, distractor3]
       const wordImageSets: Record<string, string[]> = {
-        'fresh': [fresca1, fresca2, fresca3, fresca4],
-        'before': [antes1, antes2, antes3, antes4],
-        'us': [nos1, nos2, nos3, nos4],
+        'to want': [querer1, querer2, querer3, querer4],
+        'fruit': [fruta1, fruta2, fruta3, fruta4],
+        'to read': [leer1, leer2, leer3, leer4],
+        'a': [un1, un2, un3, un4],
+        'an': [un1, un2, un3, un4],
+        'book': [libro1, libro2, libro3, libro4],
+        'of': [de1, de2, de3, de4],
+        'from': [de1, de2, de3, de4],
+        'to sleep': [dormir1, dormir2, dormir3, dormir4],
+        'to have': [tener1, tener2, tener3, tener4],
+        'to go': [ir1, ir2, ir3, ir4],
+        'to': [a1, a2, a3, a4],
+        'to visit': [visitar1, visitar2, visitar3, visitar4],
+        'to like': [gustar1, gustar2, gustar3, gustar4],
+        'us (indirect)': [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4],
+        'to invite': [invitar1, invitar2, invitar3, invitar4],
+        'you (direct object)': [tuComplemento1, tuComplemento2, tuComplemento3, tuComplemento4],
+        'tomorrow': [mananaTiempo1, mananaTiempo2, mananaTiempo3, mananaTiempo4],
+        'morning': [mananaDia1, mananaDia2, mananaDia3, mananaDia4],
+        'meeting': [reunion1, reunion2, reunion3, reunion4],
+        'work': [trabajo1, trabajo2, trabajo3, trabajo4],
+        'family': [familia1, familia2, familia3, familia4],
+        'to need': [necesitar1, necesitar2, necesitar3, necesitar4],
+        'to practice': [practicar1, practicar2, practicar3, practicar4],
+        'english': [ingles1, ingles2, ingles3, ingles4],
+        'all': [todos1, todos2, todos3, todos4],
+        'every': [todos1, todos2, todos3, todos4],
+        'days': [dias1, dias2, dias3, dias4],
+        'she': [ella1, ella2, ella3, ella4],
+        'they': [ellos1, ellos2, ellos3, ellos4],
+        'we': [nosotros1, nosotros2, nosotros3, nosotros4],
+        'the': [el1, el2, el3, el4],
         'you': [tu1, tu2, tu3, tu4],
+        'your': [tu1, tu2, tu3, tu4],
+        'my': [mi1, mi2, mi3, mi4],
+        'us': [nos1, nos2, nos3, nos4],
+        'in': [en1, en2, en3, en4],
+        'on': [en1, en2, en3, en4],
+        'at': [en1, en2, en3, en4],
         'important': [importante1, importante2, importante3, importante4],
         'this': [esta1, esta2, esta3, esta4],
+        'is': [esta1, esta2, esta3, esta4],
+        'before': [antes1, antes2, antes3, antes4],
         'afternoon': [tarde1, tarde2, tarde3, tarde4],
         'evening': [tarde1, tarde2, tarde3, tarde4],
-        'they': [ellos1, ellos2, ellos3, ellos4],
-        'to ask': [pedir1, pedir2, pedir3, pedir4],
-        'we': [nosotros1, nosotros2, nosotros3, nosotros4],
+        'late': [tarde1, tarde2, tarde3, tarde4],
         'next': [proximo1, proximo2, proximo3, proximo4],
         'weekend': [findesemana1, findesemana2, findesemana3, findesemana4],
-        'my': [mi1, mi2, mi3, mi4],
-        'meat': [carne1, carne2, carne3, carne4],
+        'to ask': [pedir1, pedir2, pedir3, pedir4],
+        'to order': [pedir1, pedir2, pedir3, pedir4],
         'to buy': [comprar1, comprar2, comprar3, comprar4],
-        'the': [el1, el2, el3, el4],
-        'in': [en1, en2, en3, en4],
-        'at': [en1, en2, en3, en4],
         'vegetables': [verduras1, verduras2, verduras3, verduras4],
         'fruits': [frutas1, frutas2, frutas3, frutas4],
         'fresh (plural)': [frescas1, frescas2, frescas3, frescas4],
+        'fresh': [fresca1, fresca2, fresca3, fresca4],
         'market': [mercado1, mercado2, mercado3, mercado4],
         'bread': [pan1, pan2, pan3, pan4],
-        'eat': [comer1, comer2, comer3, comer4],
+        'meat': [carne1, carne2, carne3, carne4],
         'i want': [quiero1, quiero2, quiero3, quiero4],
+        'to eat': [comer1, comer2, comer3, comer4],
       };
 
       const wordKey = english.toLowerCase();

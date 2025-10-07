@@ -10,7 +10,83 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-// Importar imágenes fijas
+// Importar imágenes fijas para todas las palabras del vocabulario
+import fresca1 from '@/assets/words/fresca-1.jpg';
+import fresca2 from '@/assets/words/fresca-2.jpg';
+import fresca3 from '@/assets/words/fresca-3.jpg';
+import fresca4 from '@/assets/words/fresca-4.jpg';
+import antes1 from '@/assets/words/antes-1.jpg';
+import antes2 from '@/assets/words/antes-2.jpg';
+import antes3 from '@/assets/words/antes-3.jpg';
+import antes4 from '@/assets/words/antes-4.jpg';
+import nos1 from '@/assets/words/nos-1.jpg';
+import nos2 from '@/assets/words/nos-2.jpg';
+import nos3 from '@/assets/words/nos-3.jpg';
+import nos4 from '@/assets/words/nos-4.jpg';
+import tu1 from '@/assets/words/tu-1.jpg';
+import tu2 from '@/assets/words/tu-2.jpg';
+import tu3 from '@/assets/words/tu-3.jpg';
+import tu4 from '@/assets/words/tu-4.jpg';
+import importante1 from '@/assets/words/importante-1.jpg';
+import importante2 from '@/assets/words/importante-2.jpg';
+import importante3 from '@/assets/words/importante-3.jpg';
+import importante4 from '@/assets/words/importante-4.jpg';
+import esta1 from '@/assets/words/esta-1.jpg';
+import esta2 from '@/assets/words/esta-2.jpg';
+import esta3 from '@/assets/words/esta-3.jpg';
+import esta4 from '@/assets/words/esta-4.jpg';
+import tarde1 from '@/assets/words/tarde-1.jpg';
+import tarde2 from '@/assets/words/tarde-2.jpg';
+import tarde3 from '@/assets/words/tarde-3.jpg';
+import tarde4 from '@/assets/words/tarde-4.jpg';
+import ellos1 from '@/assets/words/ellos-1.jpg';
+import ellos2 from '@/assets/words/ellos-2.jpg';
+import ellos3 from '@/assets/words/ellos-3.jpg';
+import ellos4 from '@/assets/words/ellos-4.jpg';
+import pedir1 from '@/assets/words/pedir-1.jpg';
+import pedir2 from '@/assets/words/pedir-2.jpg';
+import pedir3 from '@/assets/words/pedir-3.jpg';
+import pedir4 from '@/assets/words/pedir-4.jpg';
+import nosotros1 from '@/assets/words/nosotros-1.jpg';
+import nosotros2 from '@/assets/words/nosotros-2.jpg';
+import nosotros3 from '@/assets/words/nosotros-3.jpg';
+import nosotros4 from '@/assets/words/nosotros-4.jpg';
+import proximo1 from '@/assets/words/proximo-1.jpg';
+import proximo2 from '@/assets/words/proximo-2.jpg';
+import proximo3 from '@/assets/words/proximo-3.jpg';
+import proximo4 from '@/assets/words/proximo-4.jpg';
+import findesemana1 from '@/assets/words/findesemana-1.jpg';
+import findesemana2 from '@/assets/words/findesemana-2.jpg';
+import findesemana3 from '@/assets/words/findesemana-3.jpg';
+import findesemana4 from '@/assets/words/findesemana-4.jpg';
+import mi1 from '@/assets/words/mi-1.jpg';
+import mi2 from '@/assets/words/mi-2.jpg';
+import mi3 from '@/assets/words/mi-3.jpg';
+import mi4 from '@/assets/words/mi-4.jpg';
+import carne1 from '@/assets/words/carne-1.jpg';
+import carne2 from '@/assets/words/carne-2.jpg';
+import carne3 from '@/assets/words/carne-3.jpg';
+import carne4 from '@/assets/words/carne-4.jpg';
+import comprar1 from '@/assets/words/comprar-1.jpg';
+import comprar2 from '@/assets/words/comprar-2.jpg';
+import comprar3 from '@/assets/words/comprar-3.jpg';
+import comprar4 from '@/assets/words/comprar-4.jpg';
+import el1 from '@/assets/words/el-1.jpg';
+import el2 from '@/assets/words/el-2.jpg';
+import el3 from '@/assets/words/el-3.jpg';
+import el4 from '@/assets/words/el-4.jpg';
+import en1 from '@/assets/words/en-1.jpg';
+import en2 from '@/assets/words/en-2.jpg';
+import en3 from '@/assets/words/en-3.jpg';
+import en4 from '@/assets/words/en-4.jpg';
+import verduras1 from '@/assets/words/verduras-1.jpg';
+import verduras2 from '@/assets/words/verduras-2.jpg';
+import verduras3 from '@/assets/words/verduras-3.jpg';
+import verduras4 from '@/assets/words/verduras-4.jpg';
+import frutas1 from '@/assets/words/frutas-1.jpg';
+import frutas2 from '@/assets/words/frutas-2.jpg';
+import frutas3 from '@/assets/words/frutas-3.jpg';
+import frutas4 from '@/assets/words/frutas-4.jpg';
 import frescas1 from '@/assets/words/frescas-1.jpg';
 import frescas2 from '@/assets/words/frescas-2.jpg';
 import frescas3 from '@/assets/words/frescas-3.jpg';
@@ -19,38 +95,14 @@ import mercado1 from '@/assets/words/mercado-1.jpg';
 import mercado2 from '@/assets/words/mercado-2-new.jpg';
 import mercado3 from '@/assets/words/mercado-3-new.jpg';
 import mercado4 from '@/assets/words/mercado-4-new.jpg';
-import quiero1 from '@/assets/words/quiero-1.jpg';
-import quiero2 from '@/assets/words/quiero-2.jpg';
-import quiero3 from '@/assets/words/quiero-3.jpg';
-import quiero4 from '@/assets/words/quiero-4.jpg';
 import pan1 from '@/assets/words/pan-1.jpg';
 import pan2 from '@/assets/words/pan-2.jpg';
 import pan3 from '@/assets/words/pan-3.jpg';
 import pan4 from '@/assets/words/pan-4.jpg';
-import el1 from '@/assets/words/el-1.jpg';
-import el2 from '@/assets/words/el-2.jpg';
-import el3 from '@/assets/words/el-3.jpg';
-import el4 from '@/assets/words/el-4.jpg';
-import frutas1 from '@/assets/words/frutas-1.jpg';
-import frutas2 from '@/assets/words/frutas-2.jpg';
-import frutas3 from '@/assets/words/frutas-3.jpg';
-import frutas4 from '@/assets/words/frutas-4.jpg';
-import verduras1 from '@/assets/words/verduras-1.jpg';
-import verduras2 from '@/assets/words/verduras-2.jpg';
-import verduras3 from '@/assets/words/verduras-3.jpg';
-import verduras4 from '@/assets/words/verduras-4.jpg';
-import comprar1 from '@/assets/words/comprar-1.jpg';
-import comprar2 from '@/assets/words/comprar-2.jpg';
-import comprar3 from '@/assets/words/comprar-3.jpg';
-import comprar4 from '@/assets/words/comprar-4.jpg';
-import en1 from '@/assets/words/en-1.jpg';
-import en2 from '@/assets/words/en-2.jpg';
-import en3 from '@/assets/words/en-3.jpg';
-import en4 from '@/assets/words/en-4.jpg';
-import carne1 from '@/assets/words/carne-1.jpg';
-import carne2 from '@/assets/words/carne-2.jpg';
-import carne3 from '@/assets/words/carne-3.jpg';
-import carne4 from '@/assets/words/carne-4.jpg';
+import quiero1 from '@/assets/words/quiero-1.jpg';
+import quiero2 from '@/assets/words/quiero-2.jpg';
+import quiero3 from '@/assets/words/quiero-3.jpg';
+import quiero4 from '@/assets/words/quiero-4.jpg';
 
 interface LearningModule {
   id: number;
@@ -309,26 +361,41 @@ const LearnWord = () => {
     return [...letters, ...distractors].sort(() => Math.random() - 0.5);
   };
 
-  // Cargar imágenes fijas
+  // Cargar imágenes fijas - Mapeo completo según Excel de 33 palabras
   const loadFixedImages = () => {
     setIsLoadingImages(true);
     try {
+      // Orden: [imagen correcta, distractor1, distractor2, distractor3]
       const wordImageSets: Record<string, string[]> = {
-        'fresh': [frescas4, frescas1, frescas2, frescas3],
-        'market': [mercado1, mercado2, mercado3, mercado4],
-        'i want': [quiero1, quiero2, quiero3, quiero4],
-        'bread': [pan1, pan2, pan3, pan4],
-        'the': [el1, el2, el3, el4],
-        'fruits': [frutas1, frutas2, frutas3, frutas4],
-        'vegetables': [verduras1, verduras2, verduras3, verduras4],
-        'to buy': [comprar1, comprar2, comprar3, comprar4],
-        'in': [en3, en1, en2, en4],
-        'at': [en2, en1, en3, en4],
+        'fresh': [fresca1, fresca2, fresca3, fresca4],
+        'before': [antes1, antes2, antes3, antes4],
+        'us': [nos1, nos2, nos3, nos4],
+        'you': [tu1, tu2, tu3, tu4],
+        'important': [importante1, importante2, importante3, importante4],
+        'this': [esta1, esta2, esta3, esta4],
+        'afternoon': [tarde1, tarde2, tarde3, tarde4],
+        'evening': [tarde1, tarde2, tarde3, tarde4],
+        'they': [ellos1, ellos2, ellos3, ellos4],
+        'to ask': [pedir1, pedir2, pedir3, pedir4],
+        'we': [nosotros1, nosotros2, nosotros3, nosotros4],
+        'next': [proximo1, proximo2, proximo3, proximo4],
+        'weekend': [findesemana1, findesemana2, findesemana3, findesemana4],
+        'my': [mi1, mi2, mi3, mi4],
         'meat': [carne1, carne2, carne3, carne4],
+        'to buy': [comprar1, comprar2, comprar3, comprar4],
+        'the': [el1, el2, el3, el4],
+        'in': [en1, en2, en3, en4],
+        'at': [en1, en2, en3, en4],
+        'vegetables': [verduras1, verduras2, verduras3, verduras4],
+        'fruits': [frutas1, frutas2, frutas3, frutas4],
+        'fresh (plural)': [frescas1, frescas2, frescas3, frescas4],
+        'market': [mercado1, mercado2, mercado3, mercado4],
+        'bread': [pan1, pan2, pan3, pan4],
+        'i want': [quiero1, quiero2, quiero3, quiero4],
       };
 
       const wordKey = english.toLowerCase();
-      const images = wordImageSets[wordKey] || [frescas1, frescas2, frescas3, frescas4];
+      const images = wordImageSets[wordKey] || [fresca1, fresca2, fresca3, fresca4];
       
       const imageOptions: ImageOption[] = images.map((url, index) => ({
         id: index,

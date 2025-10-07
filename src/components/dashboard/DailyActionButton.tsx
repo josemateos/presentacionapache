@@ -32,7 +32,7 @@ export const DailyActionButton = ({
           onClick={() => setShowDays(!showDays)}
           className="w-full py-6 text-base md:text-lg font-semibold rounded-xl shadow-lg gradient-animated hover:scale-[1.02] active:scale-[0.98] transition-all"
         >
-          Empezar Vocabulario del Día {currentDay}
+          Empezar Vocabulario del Día
           <ChevronDown className={`w-5 h-5 ml-2 transition-transform ${showDays ? "rotate-180" : ""}`} />
         </Button>
       </div>

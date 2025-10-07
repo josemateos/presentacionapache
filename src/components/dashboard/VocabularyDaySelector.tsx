@@ -39,38 +39,40 @@ export const VocabularyDaySelector = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="grid grid-cols-3 gap-3"
+          className="bg-card border border-border rounded-2xl p-5 shadow-md"
         >
-          {daysToShow.map((day) => {
-            const isAccessible = day <= currentDay;
-            const isCompleted = day < currentDay;
+          <div className="grid grid-cols-3 gap-3">
+            {daysToShow.map((day) => {
+              const isAccessible = day <= currentDay;
+              const isCompleted = day < currentDay;
 
-            return (
-              <Card
-                key={day}
-                onClick={() => isAccessible && onSelectDay(day)}
-                className={`p-4 flex flex-col items-center justify-center cursor-pointer transition-all ${
-                  isAccessible
-                    ? "hover:shadow-lg hover:border-primary/50"
-                    : "opacity-50 cursor-not-allowed"
-                } ${
-                  isCompleted
-                    ? "bg-primary/10 border-primary"
-                    : "bg-card border-border"
-                }`}
-              >
-                <div className="text-2xl font-bold text-primary mb-1">
-                  {day}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Día {day}
-                </div>
-                {isCompleted && (
-                  <Check className="w-4 h-4 text-primary mt-2" />
-                )}
-              </Card>
-            );
-          })}
+              return (
+                <Card
+                  key={day}
+                  onClick={() => isAccessible && onSelectDay(day)}
+                  className={`p-4 flex flex-col items-center justify-center cursor-pointer transition-all ${
+                    isAccessible
+                      ? "hover:shadow-lg hover:border-primary/50"
+                      : "opacity-50 cursor-not-allowed"
+                  } ${
+                    isCompleted
+                      ? "bg-primary/10 border-primary"
+                      : "bg-card border-border"
+                  }`}
+                >
+                  <div className="text-2xl font-bold text-primary mb-1">
+                    {day}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Día {day}
+                  </div>
+                  {isCompleted && (
+                    <Check className="w-4 h-4 text-primary mt-2" />
+                  )}
+                </Card>
+              );
+            })}
+          </div>
         </motion.div>
       )}
     </motion.div>

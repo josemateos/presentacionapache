@@ -52,8 +52,19 @@ const VocabularyDay1 = () => {
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
+
+  // Función para mezclar array
+  const shuffleArray = (array: Word[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
   useEffect(() => {
     // Cargar progreso guardado, conservando "learned" pero usando textos/notas actuales
@@ -67,19 +78,23 @@ const VocabularyDay1 = () => {
           return match ? { ...current, learned: match.learned, inProgress: match.inProgress } : current;
         });
         setWords(merged);
+        setShuffledWords(shuffleArray(merged));
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(merged));
       } catch (error) {
         console.error("Error loading saved progress:", error);
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+        setShuffledWords(shuffleArray(words));
       }
     } else {
       localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+      setShuffledWords(shuffleArray(words));
     }
   }, []);
 
   useEffect(() => {
-    // Guardar progreso en localStorage
+    // Guardar progreso en localStorage y actualizar shuffled
     localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+    setShuffledWords(shuffleArray(words));
   }, [words]);
 
   const handleLearnWord = (word: Word) => {
@@ -161,7 +176,7 @@ const VocabularyDay1 = () => {
         {/* Word List */}
         <div className="space-y-3 mt-6">
           <AnimatePresence mode="popLayout">
-            {words.map((word, index) => (
+            {shuffledWords.map((word, index) => (
               <motion.div
                 key={word.id}
                 initial={{ opacity: 0, x: -20 }}

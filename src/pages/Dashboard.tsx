@@ -73,6 +73,18 @@ const Dashboard = () => {
     }
   };
 
+  const handleSelectVocabularyDay = (day: number) => {
+    const routes: Record<number, string> = {
+      1: "/vocabulario-dia-1",
+      2: "/vocabulario-dia-2",
+      3: "/vocabulario-dia-3",
+    };
+    
+    if (routes[day]) {
+      navigate(routes[day]);
+    }
+  };
+
   const handleSelectDay = (day: number) => {
     if (day > userProgress.currentDay) {
       setAlertModal({
@@ -154,6 +166,7 @@ const Dashboard = () => {
             currentDay={userProgress.currentDay}
             isCompleted={completedDays[userProgress.currentDay] || false}
             onClick={handleDailyAction}
+            onSelectDay={handleSelectVocabularyDay}
           />
 
           <DaySelector

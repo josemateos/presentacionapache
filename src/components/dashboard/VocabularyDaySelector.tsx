@@ -1,40 +1,37 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronDown } from "lucide-react";
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Check } from "lucide-react";
+import { useState } from "react";
 
-interface DailyActionButtonProps {
+interface VocabularyDaySelectorProps {
   currentDay: number;
-  isCompleted: boolean;
-  onClick: () => void;
-  onSelectDay?: (day: number) => void;
+  onSelectDay: (day: number) => void;
 }
 
-export const DailyActionButton = ({
+export const VocabularyDaySelector = ({
   currentDay,
-  isCompleted,
-  onClick,
   onSelectDay,
-}: DailyActionButtonProps) => {
+}: VocabularyDaySelectorProps) => {
   const [showDays, setShowDays] = useState(false);
   const daysToShow = [1, 2, 3];
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, delay: 0.2 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.4 }}
       className="space-y-3"
     >
-      <div className="relative">
-        <Button
-          onClick={() => setShowDays(!showDays)}
-          className="w-full py-6 text-base md:text-lg font-semibold rounded-xl shadow-lg gradient-animated hover:scale-[1.02] active:scale-[0.98] transition-all"
-        >
-          Empezar Vocabulario del Día {currentDay}
-          <ChevronDown className={`w-5 h-5 ml-2 transition-transform ${showDays ? "rotate-180" : ""}`} />
-        </Button>
+      <div
+        onClick={() => setShowDays(!showDays)}
+        className="cursor-pointer bg-card border border-border rounded-2xl p-5 shadow-md hover:shadow-lg transition-all"
+      >
+        <h2 className="text-lg font-bold text-center text-primary mb-2">
+          Vocabulario por Día
+        </h2>
+        <p className="text-sm text-center text-muted-foreground">
+          {showDays ? "Ocultar días" : "Mostrar días disponibles"}
+        </p>
       </div>
 
       {showDays && (
@@ -46,17 +43,18 @@ export const DailyActionButton = ({
         >
           {daysToShow.map((day) => {
             const isAccessible = day <= currentDay;
+            const isCompleted = day < currentDay;
 
             return (
               <Card
                 key={day}
-                onClick={() => isAccessible && onSelectDay && onSelectDay(day)}
+                onClick={() => isAccessible && onSelectDay(day)}
                 className={`p-4 flex flex-col items-center justify-center cursor-pointer transition-all ${
                   isAccessible
                     ? "hover:shadow-lg hover:border-primary/50"
                     : "opacity-50 cursor-not-allowed"
                 } ${
-                  day === currentDay
+                  isCompleted
                     ? "bg-primary/10 border-primary"
                     : "bg-card border-border"
                 }`}
@@ -67,6 +65,9 @@ export const DailyActionButton = ({
                 <div className="text-xs text-muted-foreground">
                   Día {day}
                 </div>
+                {isCompleted && (
+                  <Check className="w-4 h-4 text-primary mt-2" />
+                )}
               </Card>
             );
           })}

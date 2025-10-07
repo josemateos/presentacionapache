@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import VocabularyDay1 from "./pages/VocabularyDay1";
+import VocabularyDay2 from "./pages/VocabularyDay2";
+import VocabularyDay3 from "./pages/VocabularyDay3";
 import LearnWord from "./pages/LearnWord";
 import PhrasesDay from "./pages/PhrasesDay";
 import LearnPhrase from "./pages/LearnPhrase";
@@ -31,6 +33,8 @@ const App = () => (
             <Route path="/bienvenida" element={<Welcome />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/vocabulario-dia-1" element={<VocabularyDay1 />} />
+            <Route path="/vocabulario-dia-2" element={<VocabularyDay2 />} />
+            <Route path="/vocabulario-dia-3" element={<VocabularyDay3 />} />
             <Route path="/learn-word" element={<LearnWord />} />
             <Route path="/phrases-day" element={<PhrasesDay />} />
             <Route path="/learn-phrase" element={<LearnPhrase />} />

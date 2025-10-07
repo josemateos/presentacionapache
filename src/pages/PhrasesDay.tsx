@@ -17,25 +17,25 @@ interface Phrase {
 
 const phrasesData: Record<number, Phrase[]> = {
   1: [
-    { id: 1, english: "I want to buy fresh fruit in the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
-    { id: 2, english: "I like to read a book before sleeping", spanish: "Me gusta leer un libro antes de dormir", learned: false },
-    { id: 3, english: "You have to go visit us", spanish: "Tienes que ir a visitarnos", learned: false },
-    { id: 4, english: "We want to invite you to eat tomorrow", spanish: "Queremos invitarte a comer mañana", learned: false },
-    { id: 5, english: "I have an important work meeting this afternoon", spanish: "Esta tarde tengo una reunión de trabajo importante", learned: false },
+    { id: 1, english: "I want TO buy fresh fruit in the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
+    { id: 2, english: "I like TO read a book before sleepING", spanish: "Me gusta leer un libro antes de dormir", learned: false },
+    { id: 3, english: "You have TO go visit us", spanish: "Tienes que ir a visitarnos", learned: false },
+    { id: 4, english: "We want TO invite you to eat tomorrow", spanish: "Queremos invitarte a comer mañana", learned: false },
+    { id: 5, english: "I have AN important work meeting this afternoon", spanish: "Esta tarde tengo una reunión de trabajo importante", learned: false },
   ],
   2: [
-    { id: 6, english: "They are going to ask us to go", spanish: "Van a pedirnos que vayamos", learned: false },
-    { id: 7, english: "I will visit my family next weekend", spanish: "El próximo fin de semana visitaré a mi familia", learned: false },
-    { id: 8, english: "I need to practice English every day", spanish: "Necesito practicar inglés todos los días", learned: false },
+    { id: 6, english: "They are goING TO ask us TO go", spanish: "Van a pedirnos que vayamos", learned: false },
+    { id: 7, english: "I WILL visit my family next weekend", spanish: "El próximo fin de semana visitaré a mi familia", learned: false },
+    { id: 8, english: "I need TO practice English every day", spanish: "Necesito practicar inglés todos los días", learned: false },
     { id: 9, english: "She is always affectionate", spanish: "Ella siempre es cariñosa", learned: false },
-    { id: 10, english: "I drink coffee at work every morning", spanish: "Todas las mañanas tomo café en el trabajo", learned: false },
+    { id: 10, english: "Every morning I drink coffee AT work", spanish: "Todas las mañanas tomo café en el trabajo", learned: false },
   ],
   3: [
     { id: 11, english: "My house is near the school", spanish: "Mi casa está cerca de la escuela", learned: false },
     { id: 12, english: "I am a student and I work on weekends", spanish: "Soy estudiante y trabajo los fines de semana", learned: false },
-    { id: 13, english: "He always leaves in his car", spanish: "El siempre se va en su coche", learned: false },
+    { id: 13, english: "He always leaveS in his car", spanish: "El siempre se va en su coche", learned: false },
     { id: 14, english: "I am from Mexico but I currently live in Australia", spanish: "Soy de Mexico pero actualmente vivo en Australia", learned: false },
-    { id: 15, english: "I have to take the car to the workshop", spanish: "Tengo que llevar el automovil al taller", learned: false },
+    { id: 15, english: "I have TO take the car to the workshop", spanish: "Tengo que llevar el automovil al taller", learned: false },
   ],
 };
 

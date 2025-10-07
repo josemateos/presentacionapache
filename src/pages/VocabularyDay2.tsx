@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 interface Word {
   id: number;
@@ -15,40 +16,52 @@ interface Word {
   note?: string;
   learned: boolean;
   inProgress?: boolean;
-  audioFileName?: string;
 }
 
-const VocabularyDay1 = () => {
+const VocabularyDay2 = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [blocked, setBlocked] = useState(false);
 
-  // Vocabulario del día 1 - Palabras de las frases 1-5
+  // Guard: mostrar modal si no han completado el día 1
+  useEffect(() => {
+    try {
+      const savedDay1Phrases = localStorage.getItem("phrases_day1_progress");
+      const phrasesDay1: Array<{ learned: boolean }> = savedDay1Phrases ? JSON.parse(savedDay1Phrases) : [];
+      const allDay1PhrasesLearned = phrasesDay1.length > 0 && phrasesDay1.every((p) => p.learned);
+      
+      if (!allDay1PhrasesLearned) {
+        setBlocked(true);
+      } else {
+        setBlocked(false);
+      }
+    } catch {
+      setBlocked(true);
+    }
+  }, []);
+
+  // Vocabulario del día 2 - Palabras de las frases 6-10
   const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "Yo", english: "I", learned: false },
-    { id: 2, spanish: "Querer", english: "Want", learned: false },
-    { id: 3, spanish: "Comprar", english: "Buy", learned: false },
-    { id: 4, spanish: "Fresca", english: "Fresh", learned: false },
-    { id: 5, spanish: "Fruta", english: "Fruit", learned: false },
-    { id: 6, spanish: "Mercado", english: "Market", learned: false },
-    { id: 7, spanish: "Gustar", english: "Like", learned: false },
-    { id: 8, spanish: "Leer", english: "Read", learned: false },
-    { id: 9, spanish: "Libro", english: "Book", learned: false },
-    { id: 10, spanish: "Antes", english: "Before", learned: false },
-    { id: 11, spanish: "Dormir", english: "Sleep", learned: false },
-    { id: 12, spanish: "Tú", english: "You", learned: false },
-    { id: 13, spanish: "Tener", english: "Have", learned: false },
-    { id: 14, spanish: "Ir", english: "Go", learned: false },
-    { id: 15, spanish: "Visitar", english: "Visit", learned: false },
-    { id: 16, spanish: "Nos", english: "Us", learned: false },
-    { id: 17, spanish: "Nosotros", english: "We", learned: false },
-    { id: 18, spanish: "Invitar", english: "Invite", learned: false },
-    { id: 19, spanish: "Comer", english: "Eat", learned: false },
-    { id: 20, spanish: "Mañana", english: "Tomorrow", learned: false },
-    { id: 21, spanish: "Importante", english: "Important", learned: false },
-    { id: 22, spanish: "Reunión", english: "Meeting", learned: false },
-    { id: 23, spanish: "Trabajo", english: "Work", learned: false },
-    { id: 24, spanish: "Esta", english: "This", learned: false },
-    { id: 25, spanish: "Tarde", english: "Afternoon", learned: false },
+    { id: 1, spanish: "Ellos", english: "They", learned: false },
+    { id: 2, spanish: "Pedir", english: "Ask", learned: false },
+    { id: 3, spanish: "Próximo", english: "Next", learned: false },
+    { id: 4, spanish: "Fin de semana", english: "Weekend", learned: false },
+    { id: 5, spanish: "Visitar", english: "Visit", learned: false },
+    { id: 6, spanish: "Mi", english: "My", learned: false },
+    { id: 7, spanish: "Familia", english: "Family", learned: false },
+    { id: 8, spanish: "Necesitar", english: "Need", learned: false },
+    { id: 9, spanish: "Practicar", english: "Practice", learned: false },
+    { id: 10, spanish: "Inglés", english: "English", learned: false },
+    { id: 11, spanish: "Todos", english: "Every", learned: false },
+    { id: 12, spanish: "Días", english: "Days", learned: false },
+    { id: 13, spanish: "Ella", english: "She", learned: false },
+    { id: 14, spanish: "Siempre", english: "Always", learned: false },
+    { id: 15, spanish: "Ser", english: "Be", learned: false },
+    { id: 16, spanish: "Cariñosa", english: "Affectionate", learned: false },
+    { id: 17, spanish: "Todas", english: "All/Every", learned: false },
+    { id: 18, spanish: "Mañanas", english: "Mornings", learned: false },
+    { id: 19, spanish: "Tomar", english: "Take/Drink", learned: false },
+    { id: 20, spanish: "Café", english: "Coffee", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -56,39 +69,32 @@ const VocabularyDay1 = () => {
   const progress = (learnedCount / words.length) * 100;
 
   useEffect(() => {
-    // Cargar progreso guardado, conservando "learned" pero usando textos/notas actuales
-    const saved = localStorage.getItem("vocabulary_day1_progress");
+    const saved = localStorage.getItem("vocabulary_day2_progress");
     if (saved) {
       try {
         const savedWords: Word[] = JSON.parse(saved);
-        // Fusionar por "spanish": mantener estado aprendido e inProgress del guardado y textos actuales
         const merged = words.map(current => {
           const match = savedWords.find(w => w.spanish === current.spanish);
           return match ? { ...current, learned: match.learned, inProgress: match.inProgress } : current;
         });
         setWords(merged);
-        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(merged));
+        localStorage.setItem("vocabulary_day2_progress", JSON.stringify(merged));
       } catch (error) {
         console.error("Error loading saved progress:", error);
-        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+        localStorage.setItem("vocabulary_day2_progress", JSON.stringify(words));
       }
     } else {
-      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+      localStorage.setItem("vocabulary_day2_progress", JSON.stringify(words));
     }
   }, []);
 
   useEffect(() => {
-    // Guardar progreso en localStorage
-    localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+    localStorage.setItem("vocabulary_day2_progress", JSON.stringify(words));
   }, [words]);
 
   const handleLearnWord = (word: Word) => {
     navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english || '')}&note=${encodeURIComponent(word.note || '')}`);
   };
-
-
-
-
 
   const completionMessage = learnedCount === words.length ? (
     <motion.div
@@ -101,14 +107,13 @@ const VocabularyDay1 = () => {
         ¡Felicitaciones!
       </h3>
       <p className="text-muted-foreground">
-        Has completado el vocabulario del Día 1
+        Has completado el vocabulario del Día 2
       </p>
     </motion.div>
   ) : null;
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center max-w-4xl">
           <Button
@@ -122,7 +127,7 @@ const VocabularyDay1 = () => {
           </Button>
           
           <h1 className="text-lg md:text-xl font-bold text-foreground">
-            Vocabulario del Día 1
+            Vocabulario del Día 2
           </h1>
           
           <Button
@@ -137,9 +142,25 @@ const VocabularyDay1 = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {blocked && (
+        <AlertDialog open>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Completa el Día 1</AlertDialogTitle>
+              <AlertDialogDescription>
+                Para acceder al vocabulario del día 2, primero debes completar todas las frases del día 1.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => navigate("/dashboard")}>
+                Entendido
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
       <main className="flex-grow container mx-auto px-4 py-6 pb-8 max-w-4xl">
-        {/* Progress Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -155,10 +176,8 @@ const VocabularyDay1 = () => {
           </p>
         </motion.div>
 
-        {/* Completion Message */}
         {completionMessage}
 
-        {/* Word List */}
         <div className="space-y-3 mt-6">
           <AnimatePresence mode="popLayout">
             {words.map((word, index) => (
@@ -177,15 +196,12 @@ const VocabularyDay1 = () => {
                   }`}
                   onClick={() => handleLearnWord(word)}
                 >
-                  {/* Word Info */}
                   <div className="text-center mb-4">
                     <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
                       {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
                     </h3>
                   </div>
 
-
-                  {/* Action Buttons */}
                   <div className="flex gap-3 items-center justify-center">
                     <Badge
                       variant={word.learned ? "default" : "secondary"}
@@ -227,10 +243,9 @@ const VocabularyDay1 = () => {
             ))}
           </AnimatePresence>
         </div>
-
       </main>
     </div>
   );
 };
 
-export default VocabularyDay1;
+export default VocabularyDay2;

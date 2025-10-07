@@ -60,7 +60,7 @@ export default function GenerateWordImages() {
 
   const generateImage = async (prompt: string): Promise<string> => {
     const { data, error } = await supabase.functions.invoke('generate-image', {
-      body: { prompt: `Simple, clean illustration: ${prompt}. Style: minimalist, clear, educational, 512x512 pixels` }
+      body: { prompt: `Fotografía/ilustración realista (sin dibujos ni caricaturas): ${prompt}. Estilo: fotografía realista, iluminación natural, fondo neutro, encuadre limpio, 1:1` }
     });
 
     if (error) throw error;

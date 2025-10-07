@@ -103,6 +103,10 @@ import quiero1 from '@/assets/words/quiero-1.jpg';
 import quiero2 from '@/assets/words/quiero-2.jpg';
 import quiero3 from '@/assets/words/quiero-3.jpg';
 import quiero4 from '@/assets/words/quiero-4.jpg';
+import comer1 from '@/assets/words/comer-1.jpg';
+import comer2 from '@/assets/words/comer-2.jpg';
+import comer3 from '@/assets/words/comer-3.jpg';
+import comer4 from '@/assets/words/comer-4.jpg';
 
 interface LearningModule {
   id: number;
@@ -391,6 +395,7 @@ const LearnWord = () => {
         'fresh (plural)': [frescas1, frescas2, frescas3, frescas4],
         'market': [mercado1, mercado2, mercado3, mercado4],
         'bread': [pan1, pan2, pan3, pan4],
+        'eat': [comer1, comer2, comer3, comer4],
         'i want': [quiero1, quiero2, quiero3, quiero4],
       };
 

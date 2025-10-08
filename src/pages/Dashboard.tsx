@@ -12,6 +12,7 @@ import { BottomNav } from "@/components/dashboard/BottomNav";
 import { AlertModal } from "@/components/dashboard/AlertModal";
 import { AIChat } from "@/components/ai/AIChat";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface UserProgress {
   currentDay: number;
@@ -181,6 +182,17 @@ const Dashboard = () => {
             onReviewClick={handleReviewClick}
             onAuxiliariesClick={handleAuxiliariesClick}
           />
+
+          {/* Acceso directo para revisar imágenes */}
+          <section className="grid grid-cols-1">
+            <Button
+              variant="outline"
+              className="py-6 rounded-xl font-medium text-base justify-start"
+              onClick={() => navigate('/review-word-images')}
+            >
+              Revisar Imágenes de Vocabulario
+            </Button>
+          </section>
 
           <ProgressChart
             currentDay={userProgress.currentDay}

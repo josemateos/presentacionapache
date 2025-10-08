@@ -344,7 +344,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "A (lugar/direccion)",
     images: [a1, a2, a3, a4],
     descriptions: {
-      correct: "Una flecha apuntando directamente a un destino",
+      correct: "Una señal (flecha) apuntando a un destino",
       distractor1: "Una flecha en círculo",
       distractor2: "Una flecha rebotando",
       distractor3: "Una signo de Infinito"
@@ -355,7 +355,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "VISITAR",
     images: [visitar1, visitar2, visitar3, visitar4],
     descriptions: {
-      correct: "Dos personas saludándose alegremente en una puerta",
+      correct: "Dos personas saludándose entre ellas afuera de una casa",
       distractor1: "Una hoja de papel",
       distractor2: "Una silla",
       distractor3: "Un pez"

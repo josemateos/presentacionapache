@@ -501,88 +501,90 @@ const LearnWord = () => {
   };
 
   // Cargar imágenes fijas - Mapeo completo según Excel de 33 palabras
-  const loadFixedImages = () => {
+  const loadFixedImages = async () => {
     setIsLoadingImages(true);
     try {
-      // Helper function to get loaded images or fallback to static imports
-      const getImages = (wordKey: string, fallback: string[]): string[] => {
-        return loadedImages[wordKey] || fallback;
-      };
-
       // Orden: [imagen correcta, distractor1, distractor2, distractor3]
-      const wordImageSets: Record<string, string[]> = {
-        'to want': getImages('querer', [querer1, querer2, querer3, querer4]),
-        'fruit': getImages('fruta', [fruta1, fruta2, fruta3, fruta4]),
-        'to read': getImages('leer', [leer1, leer2, leer3, leer4]),
-        'a': getImages('un', [un1, un2, un3, un4]),
-        'an': getImages('un', [un1, un2, un3, un4]),
-        'book': getImages('libro', [libro1, libro2, libro3, libro4]),
-        'of': getImages('de', [de1, de2, de3, de4]),
-        'from': getImages('de', [de1, de2, de3, de4]),
-        'to sleep': getImages('dormir', [dormir1, dormir2, dormir3, dormir4]),
-        'to have': getImages('tener', [tener1, tener2, tener3, tener4]),
-        'to go': getImages('ir', [ir1, ir2, ir3, ir4]),
-        'to': getImages('a', [a1, a2, a3, a4]),
-        'to visit': getImages('visitar', [visitar1, visitar2, visitar3, visitar4]),
-        'to like': [gustar1, gustar2, gustar3, gustar4],
-        'us (indirect)': [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4],
-        'to invite': [invitar1, invitar2, invitar3, invitar4],
-        'you (direct object)': [tuComplemento1, tuComplemento2, tuComplemento3, tuComplemento4],
-        'tomorrow': [mananaTiempo1, mananaTiempo2, mananaTiempo3, mananaTiempo4],
-        'morning': [mananaDia1, mananaDia2, mananaDia3, mananaDia4],
-        'meeting': [reunion1, reunion2, reunion3, reunion4],
-        'work': [trabajo1, trabajo2, trabajo3, trabajo4],
-        'family': [familia1, familia2, familia3, familia4],
-        'to need': [necesitar1, necesitar2, necesitar3, necesitar4],
-        'to practice': [practicar1, practicar2, practicar3, practicar4],
-        'english': [ingles1, ingles2, ingles3, ingles4],
-        'all': [todos1, todos2, todos3, todos4],
-        'every': [todos1, todos2, todos3, todos4],
-        'days': [dias1, dias2, dias3, dias4],
-        'she': [ella1, ella2, ella3, ella4],
-        'they': [ellos1, ellos2, ellos3, ellos4],
-        'we': [nosotros1, nosotros2, nosotros3, nosotros4],
-        'the': [el1, el2, el3, el4],
-        'you': [tu1, tu2, tu3, tu4],
-        'your': [tu1, tu2, tu3, tu4],
-        'my': [mi1, mi2, mi3, mi4],
-        'us': [nos1, nos2, nos3, nos4],
-        'in': [en1, en2, en3, en4],
-        'on': [en1, en2, en3, en4],
-        'at': [en1, en2, en3, en4],
-        'important': [importante1, importante2, importante3, importante4],
-        'this': [esta1, esta2, esta3, esta4],
-        'is': [esta1, esta2, esta3, esta4],
-        'before': [antes1, antes2, antes3, antes4],
-        'afternoon': [tarde1, tarde2, tarde3, tarde4],
-        'evening': [tarde1, tarde2, tarde3, tarde4],
-        'late': [tarde1, tarde2, tarde3, tarde4],
-        'next': [proximo1, proximo2, proximo3, proximo4],
-        'weekend': [findesemana1, findesemana2, findesemana3, findesemana4],
-        'to ask': [pedir1, pedir2, pedir3, pedir4],
-        'to order': [pedir1, pedir2, pedir3, pedir4],
-        'to buy': [comprar1, comprar2, comprar3, comprar4],
-        'vegetables': [verduras1, verduras2, verduras3, verduras4],
-        'fruits': [frutas1, frutas2, frutas3, frutas4],
-        'fresh (plural)': [frescas1, frescas2, frescas3, frescas4],
-        'fresh': [fresca1, fresca2, fresca3, fresca4],
-        'market': [mercado1, mercado2, mercado3, mercado4],
-        'bread': [pan1, pan2, pan3, pan4],
-        'meat': [carne1, carne2, carne3, carne4],
-        'i want': [quiero1, quiero2, quiero3, quiero4],
-        'to eat': [comer1, comer2, comer3, comer4],
+      const sets: Record<string, { slug: string; fallbacks: [string, string, string, string] }> = {
+        'to want': { slug: 'querer', fallbacks: [querer1, querer2, querer3, querer4] },
+        'fruit': { slug: 'fruta', fallbacks: [fruta1, fruta2, fruta3, fruta4] },
+        'to read': { slug: 'leer', fallbacks: [leer1, leer2, leer3, leer4] },
+        'a': { slug: 'un', fallbacks: [un1, un2, un3, un4] },
+        'an': { slug: 'un', fallbacks: [un1, un2, un3, un4] },
+        'book': { slug: 'libro', fallbacks: [libro1, libro2, libro3, libro4] },
+        'of': { slug: 'de', fallbacks: [de1, de2, de3, de4] },
+        'from': { slug: 'de', fallbacks: [de1, de2, de3, de4] },
+        'to sleep': { slug: 'dormir', fallbacks: [dormir1, dormir2, dormir3, dormir4] },
+        'to have': { slug: 'tener', fallbacks: [tener1, tener2, tener3, tener4] },
+        'to go': { slug: 'ir', fallbacks: [ir1, ir2, ir3, ir4] },
+        'to': { slug: 'a', fallbacks: [a1, a2, a3, a4] },
+        'to visit': { slug: 'visitar', fallbacks: [visitar1, visitar2, visitar3, visitar4] },
+        'to like': { slug: 'gustar', fallbacks: [gustar1, gustar2, gustar3, gustar4] },
+        'us (indirect)': { slug: 'nos-complemento', fallbacks: [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4] },
+        'to invite': { slug: 'invitar', fallbacks: [invitar1, invitar2, invitar3, invitar4] },
+        'you (direct object)': { slug: 'tu-complemento', fallbacks: [tuComplemento1, tuComplemento2, tuComplemento3, tuComplemento4] },
+        'tomorrow': { slug: 'manana-tiempo', fallbacks: [mananaTiempo1, mananaTiempo2, mananaTiempo3, mananaTiempo4] },
+        'morning': { slug: 'manana-dia', fallbacks: [mananaDia1, mananaDia2, mananaDia3, mananaDia4] },
+        'meeting': { slug: 'reunion', fallbacks: [reunion1, reunion2, reunion3, reunion4] },
+        'work': { slug: 'trabajo', fallbacks: [trabajo1, trabajo2, trabajo3, trabajo4] },
+        'family': { slug: 'familia', fallbacks: [familia1, familia2, familia3, familia4] },
+        'to need': { slug: 'necesitar', fallbacks: [necesitar1, necesitar2, necesitar3, necesitar4] },
+        'to practice': { slug: 'practicar', fallbacks: [practicar1, practicar2, practicar3, practicar4] },
+        'english': { slug: 'ingles', fallbacks: [ingles1, ingles2, ingles3, ingles4] },
+        'all': { slug: 'todos', fallbacks: [todos1, todos2, todos3, todos4] },
+        'every': { slug: 'todos', fallbacks: [todos1, todos2, todos3, todos4] },
+        'days': { slug: 'dias', fallbacks: [dias1, dias2, dias3, dias4] },
+        'she': { slug: 'ella', fallbacks: [ella1, ella2, ella3, ella4] },
+        'they': { slug: 'ellos', fallbacks: [ellos1, ellos2, ellos3, ellos4] },
+        'we': { slug: 'nosotros', fallbacks: [nosotros1, nosotros2, nosotros3, nosotros4] },
+        'the': { slug: 'el', fallbacks: [el1, el2, el3, el4] },
+        'you': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
+        'your': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
+        'my': { slug: 'mi', fallbacks: [mi1, mi2, mi3, mi4] },
+        'us': { slug: 'nos', fallbacks: [nos1, nos2, nos3, nos4] },
+        'in': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
+        'on': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
+        'at': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
+        'important': { slug: 'importante', fallbacks: [importante1, importante2, importante3, importante4] },
+        'this': { slug: 'esta', fallbacks: [esta1, esta2, esta3, esta4] },
+        'is': { slug: 'esta', fallbacks: [esta1, esta2, esta3, esta4] },
+        'before': { slug: 'antes', fallbacks: [antes1, antes2, antes3, antes4] },
+        'afternoon': { slug: 'tarde', fallbacks: [tarde1, tarde2, tarde3, tarde4] },
+        'evening': { slug: 'tarde', fallbacks: [tarde1, tarde2, tarde3, tarde4] },
+        'late': { slug: 'tarde', fallbacks: [tarde1, tarde2, tarde3, tarde4] },
+        'next': { slug: 'proximo', fallbacks: [proximo1, proximo2, proximo3, proximo4] },
+        'weekend': { slug: 'findesemana', fallbacks: [findesemana1, findesemana2, findesemana3, findesemana4] },
+        'to ask': { slug: 'pedir', fallbacks: [pedir1, pedir2, pedir3, pedir4] },
+        'to order': { slug: 'pedir', fallbacks: [pedir1, pedir2, pedir3, pedir4] },
+        'to buy': { slug: 'comprar', fallbacks: [comprar1, comprar2, comprar3, comprar4] },
+        'vegetables': { slug: 'verduras', fallbacks: [verduras1, verduras2, verduras3, verduras4] },
+        'fruits': { slug: 'frutas', fallbacks: [frutas1, frutas2, frutas3, frutas4] },
+        'fresh (plural)': { slug: 'frescas', fallbacks: [frescas1, frescas2, frescas3, frescas4] },
+        'fresh': { slug: 'fresca', fallbacks: [fresca1, fresca2, fresca3, fresca4] },
+        'market': { slug: 'mercado', fallbacks: [mercado1, mercado2, mercado3, mercado4] },
+        'bread': { slug: 'pan', fallbacks: [pan1, pan2, pan3, pan4] },
+        'meat': { slug: 'carne', fallbacks: [carne1, carne2, carne3, carne4] },
+        'i want': { slug: 'quiero', fallbacks: [quiero1, quiero2, quiero3, quiero4] },
+        'to eat': { slug: 'comer', fallbacks: [comer1, comer2, comer3, comer4] },
       };
 
       const wordKey = english.toLowerCase();
-      const images = wordImageSets[wordKey] || [fresca1, fresca2, fresca3, fresca4];
+      const item = sets[wordKey];
+
+      let images: [string, string, string, string];
+      if (item) {
+        images = await loadWordImages(item.slug, item.fallbacks);
+      } else {
+        images = [fresca1, fresca2, fresca3, fresca4];
+      }
       
-      const imageOptions: ImageOption[] = images.map((url, index) => ({
+      const options: ImageOption[] = images.map((url, index) => ({
         id: index,
         url,
         isCorrect: index === 0
       }));
 
-      setImageOptions(imageOptions.sort(() => Math.random() - 0.5));
+      setImageOptions(options.sort(() => Math.random() - 0.5));
     } catch (error) {
       console.error('Error loading images:', error);
       toast({

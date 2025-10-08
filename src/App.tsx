@@ -16,6 +16,7 @@ import LearnWord from "./pages/LearnWord";
 import PhrasesDay from "./pages/PhrasesDay";
 import LearnPhrase from "./pages/LearnPhrase";
 import GenerateWordImages from "./pages/GenerateWordImages";
+import ReviewWordImages from "./pages/ReviewWordImages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/phrases-day" element={<PhrasesDay />} />
             <Route path="/learn-phrase" element={<LearnPhrase />} />
             <Route path="/generate-word-images" element={<GenerateWordImages />} />
+            <Route path="/review-word-images" element={<ReviewWordImages />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

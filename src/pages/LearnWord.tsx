@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { loadWordImages } from "@/lib/imageLoader";
 
 // Importar imágenes fijas para todas las palabras del vocabulario
 import querer1 from '@/assets/words/querer-1.jpg';
@@ -237,6 +238,36 @@ const LearnWord = () => {
   const displayNote = english.toLowerCase().trim() === "strumming" ? "Rasgueando" : note;
 
   const [currentModule, setCurrentModule] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<string, [string, string, string, string]>>({});
+
+  // Load images from storage or fallback to local
+  useEffect(() => {
+    const loadAllImages = async () => {
+      // Map of word keys to their fallback images
+      const imageMap: Record<string, [string, string, string, string]> = {
+        "querer": [querer1, querer2, querer3, querer4],
+        "fruta": [fruta1, fruta2, fruta3, fruta4],
+        "leer": [leer1, leer2, leer3, leer4],
+        "un": [un1, un2, un3, un4],
+        "libro": [libro1, libro2, libro3, libro4],
+        "de": [de1, de2, de3, de4],
+        "dormir": [dormir1, dormir2, dormir3, dormir4],
+        "tener": [tener1, tener2, tener3, tener4],
+        "ir": [ir1, ir2, ir3, ir4],
+        "a": [a1, a2, a3, a4],
+        "visitar": [visitar1, visitar2, visitar3, visitar4],
+        // Add more words as needed
+      };
+
+      const loaded: Record<string, [string, string, string, string]> = {};
+      for (const [word, fallbacks] of Object.entries(imageMap)) {
+        loaded[word] = await loadWordImages(word, fallbacks);
+      }
+      setLoadedImages(loaded);
+    };
+
+    loadAllImages();
+  }, []);
 
   // Detectar el primer módulo no completado al cargar
   useEffect(() => {
@@ -473,21 +504,26 @@ const LearnWord = () => {
   const loadFixedImages = () => {
     setIsLoadingImages(true);
     try {
+      // Helper function to get loaded images or fallback to static imports
+      const getImages = (wordKey: string, fallback: string[]): string[] => {
+        return loadedImages[wordKey] || fallback;
+      };
+
       // Orden: [imagen correcta, distractor1, distractor2, distractor3]
       const wordImageSets: Record<string, string[]> = {
-        'to want': [querer1, querer2, querer3, querer4],
-        'fruit': [fruta1, fruta2, fruta3, fruta4],
-        'to read': [leer1, leer2, leer3, leer4],
-        'a': [un1, un2, un3, un4],
-        'an': [un1, un2, un3, un4],
-        'book': [libro1, libro2, libro3, libro4],
-        'of': [de1, de2, de3, de4],
-        'from': [de1, de2, de3, de4],
-        'to sleep': [dormir1, dormir2, dormir3, dormir4],
-        'to have': [tener1, tener2, tener3, tener4],
-        'to go': [ir1, ir2, ir3, ir4],
-        'to': [a1, a2, a3, a4],
-        'to visit': [visitar1, visitar2, visitar3, visitar4],
+        'to want': getImages('querer', [querer1, querer2, querer3, querer4]),
+        'fruit': getImages('fruta', [fruta1, fruta2, fruta3, fruta4]),
+        'to read': getImages('leer', [leer1, leer2, leer3, leer4]),
+        'a': getImages('un', [un1, un2, un3, un4]),
+        'an': getImages('un', [un1, un2, un3, un4]),
+        'book': getImages('libro', [libro1, libro2, libro3, libro4]),
+        'of': getImages('de', [de1, de2, de3, de4]),
+        'from': getImages('de', [de1, de2, de3, de4]),
+        'to sleep': getImages('dormir', [dormir1, dormir2, dormir3, dormir4]),
+        'to have': getImages('tener', [tener1, tener2, tener3, tener4]),
+        'to go': getImages('ir', [ir1, ir2, ir3, ir4]),
+        'to': getImages('a', [a1, a2, a3, a4]),
+        'to visit': getImages('visitar', [visitar1, visitar2, visitar3, visitar4]),
         'to like': [gustar1, gustar2, gustar3, gustar4],
         'us (indirect)': [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4],
         'to invite': [invitar1, invitar2, invitar3, invitar4],

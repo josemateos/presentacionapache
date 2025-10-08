@@ -461,6 +461,7 @@ const WORDS_REVIEW: WordReview[] = [
 export default function ReviewWordImages() {
   const navigate = useNavigate();
   const [regenerating, setRegenerating] = useState<string | null>(null);
+  const [updatedImages, setUpdatedImages] = useState<Record<string, string>>({});
 
   const regenerateImage = async (word: string, imageIndex: number) => {
     const wordData = WORDS_REVIEW.find(w => w.word === word);
@@ -489,6 +490,13 @@ export default function ReviewWordImages() {
       if (error) throw error;
       if (!data?.imageUrl) throw new Error('No se recibió URL de imagen');
 
+      // Update the image in the state to show immediately
+      const imageKey = `${word}-${imageIndex}`;
+      setUpdatedImages(prev => ({
+        ...prev,
+        [imageKey]: data.imageUrl
+      }));
+
       // Download the image
       const link = document.createElement('a');
       link.href = data.imageUrl;
@@ -497,7 +505,7 @@ export default function ReviewWordImages() {
       link.click();
       document.body.removeChild(link);
 
-      toast.success(`Imagen regenerada: ${wordData.displayName} (${imageIndex === 0 ? 'Correcta' : 'Distractor ' + imageIndex})`);
+      toast.success(`Imagen regenerada y descargada. Reemplaza manualmente el archivo: ${word}-${imageIndex + 1}.jpg en src/assets/words/`);
     } catch (error) {
       console.error('Error regenerando imagen:', error);
       toast.error('Error al regenerar la imagen');
@@ -535,7 +543,7 @@ export default function ReviewWordImages() {
                   <div key={index} className="space-y-3">
                     <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
                       <img
-                        src={img}
+                        src={updatedImages[`${wordData.word}-${index}`] || img}
                         alt={`${wordData.word}-${index + 1}`}
                         className="w-full h-full object-cover"
                       />

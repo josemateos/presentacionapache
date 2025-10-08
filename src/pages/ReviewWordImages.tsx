@@ -6,6 +6,21 @@ import { toast } from "sonner";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+// Helper function to convert base64 to blob
+const base64ToBlob = (base64: string): Blob => {
+  const parts = base64.split(';base64,');
+  const contentType = parts[0].split(':')[1];
+  const raw = window.atob(parts[1]);
+  const rawLength = raw.length;
+  const uInt8Array = new Uint8Array(rawLength);
+  
+  for (let i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
+  
+  return new Blob([uInt8Array], { type: contentType });
+};
+
 // Import all existing images
 import yo1 from "@/assets/words/yo-1.jpg";
 import yo2 from "@/assets/words/yo-2.jpg";
@@ -490,22 +505,33 @@ export default function ReviewWordImages() {
       if (error) throw error;
       if (!data?.imageUrl) throw new Error('No se recibió URL de imagen');
 
+      // Convert base64 to blob
+      const blob = base64ToBlob(data.imageUrl);
+      
+      // Upload to Supabase Storage
+      const fileName = `${word}-${imageIndex + 1}.jpg`;
+      const { error: uploadError } = await supabase.storage
+        .from('word-images')
+        .upload(fileName, blob, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('word-images')
+        .getPublicUrl(fileName);
+
       // Update the image in the state to show immediately
       const imageKey = `${word}-${imageIndex}`;
       setUpdatedImages(prev => ({
         ...prev,
-        [imageKey]: data.imageUrl
+        [imageKey]: publicUrl
       }));
 
-      // Download the image
-      const link = document.createElement('a');
-      link.href = data.imageUrl;
-      link.download = `${word}-${imageIndex + 1}.jpg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.success(`Imagen regenerada y descargada. Reemplaza manualmente el archivo: ${word}-${imageIndex + 1}.jpg en src/assets/words/`);
+      toast.success(`Imagen regenerada: ${wordData.displayName} (${imageIndex === 0 ? 'Correcta' : 'Distractor ' + imageIndex})`);
     } catch (error) {
       console.error('Error regenerando imagen:', error);
       toast.error('Error al regenerar la imagen');

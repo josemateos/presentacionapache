@@ -300,7 +300,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "DE (de algo)",
     images: [de1, de2, de3, de4],
     descriptions: {
-      correct: "Dos engranajes conectados, mostrando origen/relación",
+      correct: "Un helado de chocolate, uno de fresa y uno de vainilla",
       distractor1: "Dos engranajes separados",
       distractor2: "Un muro",
       distractor3: "Un puente roto"

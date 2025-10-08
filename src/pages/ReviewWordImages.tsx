@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { loadWordImage, clearImageCache } from "@/lib/imageLoader";
 
 // Helper function to convert base64 to blob
 const base64ToBlob = (base64: string): Blob => {
@@ -477,6 +478,23 @@ export default function ReviewWordImages() {
   const navigate = useNavigate();
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [updatedImages, setUpdatedImages] = useState<Record<string, string>>({});
+  const [resolvedImages, setResolvedImages] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const loadAll = async () => {
+      const entries = await Promise.all(
+        WORDS_REVIEW.flatMap((w) =>
+          w.images.map(async (fallback, index) => {
+            const url = await loadWordImage(w.word, index + 1, fallback);
+            const withTs = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+            return [`${w.word}-${index}`, withTs] as const;
+          })
+        )
+      );
+      setResolvedImages(Object.fromEntries(entries));
+    };
+    loadAll();
+  }, []);
 
   const regenerateImage = async (word: string, imageIndex: number) => {
     const wordData = WORDS_REVIEW.find(w => w.word === word);
@@ -524,12 +542,12 @@ export default function ReviewWordImages() {
         .from('word-images')
         .getPublicUrl(fileName);
 
-      // Update the image in the state to show immediately
+      // Cache-bust and update local state immediately
       const imageKey = `${word}-${imageIndex}`;
-      setUpdatedImages(prev => ({
-        ...prev,
-        [imageKey]: publicUrl
-      }));
+      const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
+      clearImageCache();
+      setResolvedImages(prev => ({ ...prev, [imageKey]: cacheBustedUrl }));
+      setUpdatedImages(prev => ({ ...prev, [imageKey]: cacheBustedUrl }));
 
       toast.success(`Imagen regenerada: ${wordData.displayName} (${imageIndex === 0 ? 'Correcta' : 'Distractor ' + imageIndex})`);
     } catch (error) {
@@ -569,7 +587,7 @@ export default function ReviewWordImages() {
                   <div key={index} className="space-y-3">
                     <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
                       <img
-                        src={updatedImages[`${wordData.word}-${index}`] || img}
+                        src={updatedImages[`${wordData.word}-${index}`] || resolvedImages[`${wordData.word}-${index}`] || img}
                         alt={`${wordData.word}-${index + 1}`}
                         className="w-full h-full object-cover"
                       />

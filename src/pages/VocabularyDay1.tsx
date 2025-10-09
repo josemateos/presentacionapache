@@ -223,8 +223,22 @@ const VocabularyDay1 = () => {
                 >
                   {/* Word Info */}
                   <div className="text-center mb-4">
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
-                      {word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1)}
+                    <h3 className="text-xl md:text-2xl text-foreground mb-2">
+                      {(() => {
+                        const text = word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1);
+                        const parenMatch = text.match(/^(.*?)(\([^)]+\))(.*)$/);
+                        
+                        if (parenMatch) {
+                          return (
+                            <>
+                              <span className="font-bold">{parenMatch[1]}</span>
+                              <span className="text-base font-normal">{parenMatch[2]}</span>
+                              <span className="font-bold">{parenMatch[3]}</span>
+                            </>
+                          );
+                        }
+                        return <span className="font-bold">{text}</span>;
+                      })()}
                     </h3>
                   </div>
 

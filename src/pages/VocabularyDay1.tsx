@@ -232,7 +232,7 @@ const VocabularyDay1 = () => {
                       variant={word.learned ? "default" : "secondary"}
                       className={`min-w-[110px] py-2 justify-center text-sm font-medium ${
                         word.learned 
-                          ? "bg-primary text-primary-foreground" 
+                          ? "bg-green-600 text-white hover:bg-green-700" 
                           : "bg-secondary text-secondary-foreground border border-border"
                       }`}
                     >

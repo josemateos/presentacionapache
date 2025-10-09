@@ -356,7 +356,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "VISITAR",
     images: [visitar1, visitar2, visitar3, visitar4],
     descriptions: {
-      correct: "Dos personas saludándose entre ellas afuera de una casa",
+      correct: "Dos personas saludándose en la puerta de una casa, una de ellas con una maleta de equipaje",
       distractor1: "Una hoja de papel",
       distractor2: "Una silla",
       distractor3: "Un pez"

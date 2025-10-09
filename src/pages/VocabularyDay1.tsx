@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Settings, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, Settings, Check, Sparkles, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -106,6 +106,16 @@ const VocabularyDay1 = () => {
     navigate(`/learn-word?id=${word.id}&spanish=${encodeURIComponent(word.spanish)}&english=${encodeURIComponent(word.english || '')}&note=${encodeURIComponent(word.note || '')}`);
   };
 
+  const handleResetProgress = () => {
+    const resetWords = words.map(w => ({ ...w, learned: false, inProgress: false }));
+    setWords(resetWords);
+    localStorage.removeItem("vocabulary_day1_progress");
+    toast({
+      title: "Progreso reiniciado",
+      description: "Todas las palabras están listas para aprender de nuevo",
+    });
+  };
+
 
 
 
@@ -145,15 +155,26 @@ const VocabularyDay1 = () => {
             Vocabulario del Día 1
           </h1>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hover:bg-primary/10"
-            onClick={() => toast({ title: "Ajustes", description: "Próximamente" })}
-          >
-            <span className="hidden sm:inline mr-2">Ajustes</span>
-            <Settings className="w-4 h-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hover:bg-primary/10"
+              onClick={handleResetProgress}
+              title="Reiniciar progreso"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hover:bg-primary/10"
+              onClick={() => toast({ title: "Ajustes", description: "Próximamente" })}
+            >
+              <span className="hidden sm:inline mr-2">Ajustes</span>
+              <Settings className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </header>
 

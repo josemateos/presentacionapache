@@ -42,6 +42,22 @@ const Dashboard = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Simular que todas las palabras del Día 1 están aprendidas
+  useEffect(() => {
+    const simulateVocabularyCompleted = () => {
+      const words = Array.from({ length: 30 }, (_, i) => ({
+        id: i + 1,
+        spanish: `Palabra ${i + 1}`,
+        english: `Word ${i + 1}`,
+        learned: true,
+        inProgress: false
+      }));
+      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
+    };
+    
+    simulateVocabularyCompleted();
+  }, []);
+
   // Estado simulado del usuario
   const [userProgress] = useState<UserProgress>({
     currentDay: 1,

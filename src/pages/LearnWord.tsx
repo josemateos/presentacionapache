@@ -439,7 +439,24 @@ const LearnWord = () => {
       recognition.continuous = false;
       recognition.interimResults = false;
 
+      let resultReceived = false;
+
+      recognition.onerror = (event: any) => {
+        console.error("Recognition error:", event.error);
+        toast({
+          title: "Error",
+          description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+          variant: "destructive",
+          duration: 2000,
+        });
+        clearVerifyTimeout();
+        setRecordedAudio(null);
+        setIsVerifying(false);
+        setIsRecording(false);
+      };
+
       recognition.onresult = (event: any) => {
+        resultReceived = true;
         const transcript = event.results[0][0].transcript.toLowerCase().trim();
         const targetWord = english.toLowerCase().trim();
 
@@ -469,7 +486,6 @@ const LearnWord = () => {
             variant: "destructive",
             duration: 2000,
           });
-          // Permitir repetir la grabación sin avanzar
           clearVerifyTimeout();
           setRecordedAudio(null);
           setIsVerifying(false);
@@ -477,26 +493,21 @@ const LearnWord = () => {
         }
       };
 
-      recognition.onerror = (event: any) => {
-        console.error("Recognition error:", event.error);
-        toast({
-          title: "Error",
-          description: "No se pudo verificar la pronunciación. Intenta de nuevo",
-          variant: "destructive",
-          duration: 2000,
-        });
-        // Permitir repetir la grabación
-        clearVerifyTimeout();
-        setRecordedAudio(null);
-        setIsVerifying(false);
-        setIsRecording(false);
-      };
-
       recognition.onend = () => {
-        // Si no llegó resultado, aseguramos reactivar el botón
-        clearVerifyTimeout();
-        setIsVerifying(false);
-        setIsRecording(false);
+        // Si después de 3 segundos no se recibió resultado
+        setTimeout(() => {
+          if (!resultReceived) {
+            toast({
+              title: "Inténtalo nuevamente",
+              description: "No se detectó la grabación",
+              variant: "destructive",
+              duration: 2000,
+            });
+            setRecordedAudio(null);
+            setIsVerifying(false);
+            setIsRecording(false);
+          }
+        }, 500);
       };
 
       recognitionRef.current = recognition;
@@ -625,6 +636,7 @@ const LearnWord = () => {
         'to sleep': { slug: 'dormir', fallbacks: [dormir1, dormir2, dormir3, dormir4] },
         'to have': { slug: 'tener', fallbacks: [tener1, tener2, tener3, tener4] },
         'to go': { slug: 'ir', fallbacks: [ir1, ir2, ir3, ir4] },
+        'go': { slug: 'ir', fallbacks: [ir1, ir2, ir3, ir4] },
         'to': { slug: 'a', fallbacks: [a1, a2, a3, a4] },
         'to visit': { slug: 'visitar', fallbacks: [visitar1, visitar2, visitar3, visitar4] },
         'to like': { slug: 'gustar', fallbacks: [gustar1, gustar2, gustar3, gustar4] },

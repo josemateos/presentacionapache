@@ -362,6 +362,29 @@ const LearnWord = () => {
   const [moduleProgress, setModuleProgress] = useState(modules);
   const progress = (moduleProgress.filter(m => m.completed).length / modules.length) * 100;
 
+  // Verificar si todos los módulos están completados
+  const checkIfAllModulesCompleted = (updatedProgress: LearningModule[]) => {
+    return updatedProgress.every(m => m.completed);
+  };
+
+  // Marcar palabra como aprendida automáticamente
+  const markWordAsLearned = () => {
+    const saved = localStorage.getItem("vocabulary_day1_progress");
+    if (saved && wordId) {
+      try {
+        const savedWords = JSON.parse(saved);
+        const updatedWords = savedWords.map((w: any) => 
+          w.id === parseInt(wordId) 
+            ? { ...w, learned: true, inProgress: false } 
+            : w
+        );
+        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+      } catch (error) {
+        console.error("Error updating progress:", error);
+      }
+    }
+  };
+
   // Sonido de éxito
   const playSuccessSound = () => {
     const context = new AudioContext();
@@ -677,10 +700,17 @@ const LearnWord = () => {
       });
       
       setTimeout(() => {
-        setModuleProgress(prev => prev.map(m => 
+        const updatedProgress = moduleProgress.map(m => 
           m.id === currentModule ? { ...m, completed: true } : m
-        ));
-        setCurrentModule(currentModule + 1);
+        );
+        setModuleProgress(updatedProgress);
+        
+        if (checkIfAllModulesCompleted(updatedProgress)) {
+          markWordAsLearned();
+          setCurrentModule(5); // Ir al resumen
+        } else {
+          setCurrentModule(currentModule + 1);
+        }
         setSelectedMeaningOption(null);
       }, 1000);
     } else {
@@ -711,10 +741,17 @@ const LearnWord = () => {
         });
         
         setTimeout(() => {
-          setModuleProgress(prev => prev.map(m => 
+          const updatedProgress = moduleProgress.map(m => 
             m.id === currentModule ? { ...m, completed: true } : m
-          ));
-          setCurrentModule(currentModule + 1);
+          );
+          setModuleProgress(updatedProgress);
+          
+          if (checkIfAllModulesCompleted(updatedProgress)) {
+            markWordAsLearned();
+            setCurrentModule(5); // Ir al resumen
+          } else {
+            setCurrentModule(currentModule + 1);
+          }
           setUserInput1("");
           setUserInput2("");
         }, 1000);
@@ -741,10 +778,17 @@ const LearnWord = () => {
       });
       
       setTimeout(() => {
-        setModuleProgress(prev => prev.map(m => 
+        const updatedProgress = moduleProgress.map(m => 
           m.id === currentModule ? { ...m, completed: true } : m
-        ));
-        setCurrentModule(currentModule + 1);
+        );
+        setModuleProgress(updatedProgress);
+        
+        if (checkIfAllModulesCompleted(updatedProgress)) {
+          markWordAsLearned();
+          setCurrentModule(5); // Ir al resumen
+        } else {
+          setCurrentModule(currentModule + 1);
+        }
         setUserInput("");
       }, 1000);
     } else {
@@ -796,10 +840,17 @@ const LearnWord = () => {
       });
       
       setTimeout(() => {
-        setModuleProgress(prev => prev.map(m => 
+        const updatedProgress = moduleProgress.map(m => 
           m.id === currentModule ? { ...m, completed: true } : m
-        ));
-        setCurrentModule(currentModule + 1);
+        );
+        setModuleProgress(updatedProgress);
+        
+        if (checkIfAllModulesCompleted(updatedProgress)) {
+          markWordAsLearned();
+          setCurrentModule(5); // Ir al resumen
+        } else {
+          setCurrentModule(currentModule + 1);
+        }
         setSpellingAttempt("");
         setUsedLetterIndices([]);
       }, 1000);
@@ -828,11 +879,17 @@ const LearnWord = () => {
       });
       
       setTimeout(() => {
-        setModuleProgress(prev => prev.map(m => 
+        const updatedProgress = moduleProgress.map(m => 
           m.id === currentModule ? { ...m, completed: true } : m
-        ));
-        // Este es el último módulo, ir a resumen
-        setCurrentModule(currentModule + 1);
+        );
+        setModuleProgress(updatedProgress);
+        
+        if (checkIfAllModulesCompleted(updatedProgress)) {
+          markWordAsLearned();
+          setCurrentModule(5); // Ir al resumen
+        } else {
+          setCurrentModule(currentModule + 1);
+        }
       }, 1000);
     } else {
       toast({
@@ -1195,88 +1252,93 @@ const LearnWord = () => {
             </Card>
             
             <div className="flex flex-col gap-3">
-              <Button
-                size="lg"
-                className="gradient-animated w-full max-w-xs mx-auto"
-                onClick={() => {
-                  // Marcar palabra como aprendida solo cuando se completen todos los módulos
-                  if (moduleProgress.every(m => m.completed)) {
-                    playSuccessSound();
-                    const saved = localStorage.getItem("vocabulary_day1_progress");
-                    if (saved) {
-                      try {
-                        const savedWords = JSON.parse(saved);
-                        const updatedWords = savedWords.map((w: any) => 
-                          w.id === parseInt(wordId || "0") 
-                            ? { ...w, learned: true, inProgress: false } 
-                            : w
-                        );
-                        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
-                      } catch (error) {
-                        console.error("Error updating progress:", error);
-                      }
-                    }
-                    const toastDiv = document.createElement('div');
-                    toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
-                    toastDiv.innerHTML = `
-                      <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
-                        <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
-                        <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
-                        <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
-                      </div>
-                    `;
-                    document.body.appendChild(toastDiv);
-                    setTimeout(() => {
-                      document.body.removeChild(toastDiv);
-                      navigate("/vocabulario-dia-1");
-                    }, 2000);
-                  } else {
-                    // Si no se completaron todos los módulos, solo volver sin marcar como aprendida
-                    navigate("/vocabulario-dia-1");
-                  }
-                }}
-              >
-                {moduleProgress.every(m => m.completed) ? (
-                  <>
+              {moduleProgress.every(m => m.completed) ? (
+                <>
+                  <Button
+                    size="lg"
+                    className="gradient-animated w-full max-w-xs mx-auto"
+                    onClick={() => {
+                      playSuccessSound();
+                      const toastDiv = document.createElement('div');
+                      toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
+                      toastDiv.innerHTML = `
+                        <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
+                          <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
+                          <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
+                          <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                        </div>
+                      `;
+                      document.body.appendChild(toastDiv);
+                      setTimeout(() => {
+                        document.body.removeChild(toastDiv);
+                        navigate("/vocabulario-dia-1");
+                      }, 2000);
+                    }}
+                  >
                     <Check className="w-5 h-5 mr-2" />
-                    Marcar como aprendida
-                  </>
-                ) : (
-                  <>
+                    Marcar como Aprendida
+                  </Button>
+                  
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full max-w-xs mx-auto"
+                    onClick={() => {
+                      setCurrentModule(0);
+                      setUserInput("");
+                      setAttempts(0);
+                      setSpellingAttempt("");
+                      setUsedLetterIndices([]);
+                      setSelectedImageId(null);
+                      setImageOptions([]);
+                      setModuleProgress(modules.map(m => ({ ...m, completed: false })));
+                    }}
+                  >
+                    <RotateCcw className="w-5 h-5 mr-2" />
+                    Repasar palabra
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="lg"
+                    className="gradient-animated w-full max-w-xs mx-auto"
+                    onClick={() => navigate("/vocabulario-dia-1")}
+                  >
                     <ArrowLeft className="w-5 h-5 mr-2" />
                     Ir a la lista
-                  </>
-                )}
-              </Button>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full max-w-xs mx-auto"
-                onClick={() => setCurrentModule(4)}
-              >
-                <Mic className="w-5 h-5 mr-2" />
-                Ir a Pronunciar
-              </Button>
-              
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full max-w-xs mx-auto"
-                onClick={() => {
-                  setCurrentModule(0);
-                  setUserInput("");
-                  setAttempts(0);
-                  setSpellingAttempt("");
-                  setUsedLetterIndices([]);
-                  setSelectedImageId(null);
-                  setImageOptions([]);
-                  setModuleProgress(modules.map(m => ({ ...m, completed: false })));
-                }}
-              >
-                <RotateCcw className="w-5 h-5 mr-2" />
-                Repasar palabra
-              </Button>
+                  </Button>
+                  
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full max-w-xs mx-auto"
+                    onClick={() => setCurrentModule(4)}
+                  >
+                    <Mic className="w-5 h-5 mr-2" />
+                    Ir a Pronunciar
+                  </Button>
+                  
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full max-w-xs mx-auto"
+                    onClick={() => {
+                      setCurrentModule(0);
+                      setUserInput("");
+                      setAttempts(0);
+                      setSpellingAttempt("");
+                      setUsedLetterIndices([]);
+                      setSelectedImageId(null);
+                      setImageOptions([]);
+                      setModuleProgress(modules.map(m => ({ ...m, completed: false })));
+                    }}
+                  >
+                    <RotateCcw className="w-5 h-5 mr-2" />
+                    Repasar palabra
+                  </Button>
+                </>
+              )}
             </div>
           </motion.div>
         );
@@ -1302,7 +1364,7 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            Módulo {currentModule + 1} de {modules.length}
+            {moduleProgress.every(m => m.completed) ? "Palabra Aprendida" : `Módulo ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button

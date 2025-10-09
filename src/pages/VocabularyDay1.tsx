@@ -71,36 +71,23 @@ const VocabularyDay1 = () => {
     return shuffled;
   };
 
-  // Función para cargar progreso
-  const loadProgress = () => {
-    const saved = localStorage.getItem("vocabulary_day1_progress");
-    if (saved) {
-      try {
-        const savedWords: Word[] = JSON.parse(saved);
-        // Fusionar por "spanish": mantener estado aprendido e inProgress del guardado y textos actuales
-        const merged = words.map(current => {
-          const match = savedWords.find(w => w.spanish === current.spanish);
-          return match ? { ...current, learned: match.learned, inProgress: match.inProgress } : current;
-        });
-        setWords(merged);
-        setShuffledWords(shuffleArray(merged));
-        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(merged));
-      } catch (error) {
-        console.error("Error loading saved progress:", error);
-        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
-        setShuffledWords(shuffleArray(words));
+  useEffect(() => {
+    // Cargar progreso guardado al montar y cuando cambia la visibilidad
+    const loadProgress = () => {
+      const saved = localStorage.getItem("vocabulary_day1_progress");
+      if (saved) {
+        try {
+          const savedWords: Word[] = JSON.parse(saved);
+          setWords(savedWords);
+          setShuffledWords(shuffleArray(savedWords));
+        } catch (error) {
+          console.error("Error loading saved progress:", error);
+        }
       }
-    } else {
-      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
-      setShuffledWords(shuffleArray(words));
-    }
-  };
+    };
 
-  useEffect(() => {
     loadProgress();
-  }, []);
 
-  useEffect(() => {
     // Recargar cuando la página se vuelve visible
     const handleVisibilityChange = () => {
       if (!document.hidden) {

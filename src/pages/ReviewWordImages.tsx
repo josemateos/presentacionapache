@@ -290,7 +290,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "ANTES",
     images: [antes1, antes2, antes3, antes4],
     descriptions: {
-      correct: "Una flecha apuntando a la izquierda en una línea de tiempo",
+      correct: "Evolucion humana con una flecha apuntando hacia la izquierda",
       distractor1: "Un reloj marcando el futuro",
       distractor2: "Un signo de \"play\"",
       distractor3: "Un trofeo"

@@ -216,6 +216,14 @@ import yo1 from '@/assets/words/yo-1.jpg';
 import yo2 from '@/assets/words/yo-2.jpg';
 import yo3 from '@/assets/words/yo-3.jpg';
 import yo4 from '@/assets/words/yo-4.jpg';
+import tenerQue1 from '@/assets/words/tener-que-1.jpg';
+import tenerQue2 from '@/assets/words/tener-que-2.jpg';
+import tenerQue3 from '@/assets/words/tener-que-3.jpg';
+import tenerQue4 from '@/assets/words/tener-que-4.jpg';
+import venir1 from '@/assets/words/venir-1.jpg';
+import venir2 from '@/assets/words/venir-2.jpg';
+import venir3 from '@/assets/words/venir-3.jpg';
+import venir4 from '@/assets/words/venir-4.jpg';
 
 interface LearningModule {
   id: number;
@@ -300,6 +308,8 @@ const LearnWord = () => {
         "esta": [esta1, esta2, esta3, esta4],
         "tarde": [tarde1, tarde2, tarde3, tarde4],
         "nos": [nos1, nos2, nos3, nos4],
+        "tener-que": [tenerQue1, tenerQue2, tenerQue3, tenerQue4],
+        "venir": [venir1, venir2, venir3, venir4],
       };
 
       const loaded: Record<string, [string, string, string, string]> = {};

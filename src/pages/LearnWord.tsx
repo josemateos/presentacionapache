@@ -608,6 +608,7 @@ const LearnWord = () => {
         'bread': { slug: 'pan', fallbacks: [pan1, pan2, pan3, pan4] },
         'meat': { slug: 'carne', fallbacks: [carne1, carne2, carne3, carne4] },
         'i want': { slug: 'quiero', fallbacks: [quiero1, quiero2, quiero3, quiero4] },
+        'want': { slug: 'querer', fallbacks: [querer1, querer2, querer3, querer4] },
         'to eat': { slug: 'comer', fallbacks: [comer1, comer2, comer3, comer4] },
       };
 

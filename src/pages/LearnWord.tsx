@@ -429,70 +429,77 @@ const LearnWord = () => {
           description: "Tu navegador no soporta reconocimiento de voz",
           variant: "destructive",
         });
-      } else {
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.continuous = false;
-        recognition.interimResults = false;
+        setIsRecording(false);
+        setIsVerifying(false);
+        return;
+      }
 
-        recognition.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript.toLowerCase().trim();
-          const targetWord = english.toLowerCase().trim();
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
 
-          if (transcript === targetWord || transcript.includes(targetWord)) {
-            playSuccessSound();
-            toast({
-              title: "¡Excelente pronunciación!",
-              description: "Pronunciación correcta. Avanzando...",
-              duration: 1500,
-              className: "bg-green-500 text-white border-green-600",
-            });
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript.toLowerCase().trim();
+        const targetWord = english.toLowerCase().trim();
 
-            setModuleProgress(prev => prev.map(m =>
-              m.id === 4 ? { ...m, completed: true } : m
-            ));
+        if (transcript === targetWord || transcript.includes(targetWord)) {
+          playSuccessSound();
+          toast({
+            title: "¡Excelente pronunciación!",
+            description: "Pronunciación correcta. Avanzando...",
+            duration: 1500,
+            className: "bg-green-500 text-white border-green-600",
+          });
 
-            setTimeout(() => {
-              setCurrentModule(5);
-              setRecordedAudio(null);
-              setIsVerifying(false);
-            }, 1000);
-          } else {
-            toast({
-              title: "Intentar nuevamente",
-              description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
-              variant: "destructive",
-              duration: 1500,
-            });
-            // Permitir repetir la grabación sin avanzar
-            clearVerifyTimeout();
+          setModuleProgress(prev => prev.map(m =>
+            m.id === 4 ? { ...m, completed: true } : m
+          ));
+
+          setTimeout(() => {
+            setCurrentModule(5);
             setRecordedAudio(null);
             setIsVerifying(false);
-          }
-        };
-
-        recognition.onerror = () => {
+            setIsRecording(false);
+          }, 1000);
+        } else {
           toast({
-            title: "Error",
-            description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+            title: "Intentar nuevamente",
+            description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
             variant: "destructive",
-            duration: 1500,
+            duration: 2000,
           });
-          // Permitir repetir la grabación
+          // Permitir repetir la grabación sin avanzar
           clearVerifyTimeout();
           setRecordedAudio(null);
           setIsVerifying(false);
-        };
+          setIsRecording(false);
+        }
+      };
 
-        recognition.onend = () => {
-          // Si no llegó resultado, aseguramos reactivar el botón
-          clearVerifyTimeout();
-          setIsVerifying(false);
-        };
+      recognition.onerror = (event: any) => {
+        console.error("Recognition error:", event.error);
+        toast({
+          title: "Error",
+          description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+          variant: "destructive",
+          duration: 2000,
+        });
+        // Permitir repetir la grabación
+        clearVerifyTimeout();
+        setRecordedAudio(null);
+        setIsVerifying(false);
+        setIsRecording(false);
+      };
 
-        recognitionRef.current = recognition;
-        recognition.start();
-      }
+      recognition.onend = () => {
+        // Si no llegó resultado, aseguramos reactivar el botón
+        clearVerifyTimeout();
+        setIsVerifying(false);
+        setIsRecording(false);
+      };
+
+      recognitionRef.current = recognition;
 
       recorder.ondataavailable = (event) => {
         audioChunks.push(event.data);
@@ -501,13 +508,38 @@ const LearnWord = () => {
       recorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         setRecordedAudio(audioBlob);
-        setIsRecording(false);
         stream.getTracks().forEach(track => track.stop());
+        
+        // Detener el reconocimiento de voz
+        if (recognitionRef.current) {
+          try { 
+            recognitionRef.current.stop(); 
+          } catch (e) {
+            console.log("Recognition already stopped");
+          }
+        }
       };
 
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
+      
+      // Iniciar reconocimiento de voz
+      try {
+        recognition.start();
+      } catch (e) {
+        console.error("Error starting recognition:", e);
+      }
+
+      // Auto-detener después de 3 segundos
+      setTimeout(() => {
+        if (recorder.state === 'recording') {
+          recorder.stop();
+          setIsRecording(false);
+          setIsVerifying(true);
+        }
+      }, 3000);
+
     } catch (error) {
       console.error("Error starting recording:", error);
       toast({
@@ -515,6 +547,8 @@ const LearnWord = () => {
         description: "No se pudo acceder al micrófono",
         variant: "destructive",
       });
+      setIsRecording(false);
+      setIsVerifying(false);
     }
   };
 
@@ -522,14 +556,20 @@ const LearnWord = () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
       setIsVerifying(true);
       mediaRecorder.stop();
+      setIsRecording(false);
+      
       if (recognitionRef.current) {
-        try { recognitionRef.current.stop(); } catch {}
+        try { recognitionRef.current.stop(); } catch (e) {
+          console.log("Recognition already stopped");
+        }
       }
-      // Fallback para evitar que el botón quede deshabilitado si no llega resultado
+      
+      // Timeout de seguridad para evitar que el botón quede bloqueado
       clearVerifyTimeout();
       verifyTimeoutRef.current = window.setTimeout(() => {
         setIsVerifying(false);
-      }, 3000);
+        setIsRecording(false);
+      }, 5000);
     }
   };
 

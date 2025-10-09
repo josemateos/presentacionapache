@@ -78,8 +78,14 @@ const VocabularyDay1 = () => {
       if (saved) {
         try {
           const savedWords: Word[] = JSON.parse(saved);
-          setWords(savedWords);
-          setShuffledWords(shuffleArray(savedWords));
+          // Sincronizar con la lista actual: agregar palabras nuevas que no están en el progreso guardado
+          const currentWords = words;
+          const syncedWords = currentWords.map(currentWord => {
+            const savedWord = savedWords.find(sw => sw.id === currentWord.id);
+            return savedWord || currentWord;
+          });
+          setWords(syncedWords);
+          setShuffledWords(shuffleArray(syncedWords));
         } catch (error) {
           console.error("Error loading saved progress:", error);
         }

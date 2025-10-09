@@ -329,6 +329,8 @@ const LearnWord = () => {
     }
   }, [wordId]);
   const [userInput, setUserInput] = useState("");
+  const [userInput1, setUserInput1] = useState("");
+  const [userInput2, setUserInput2] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [selectedMeaningOption, setSelectedMeaningOption] = useState<string | null>(null);
   const [spellingAttempt, setSpellingAttempt] = useState("");
@@ -694,6 +696,39 @@ const LearnWord = () => {
 
   // Manejar verificación de escritura
   const handleCheckWriting = () => {
+    // Special handling for a/an
+    if (english.toLowerCase() === "a/an") {
+      const correct1 = userInput1.trim().toLowerCase() === "a";
+      const correct2 = userInput2.trim().toLowerCase() === "an";
+      
+      if (correct1 && correct2) {
+        playSuccessSound();
+        toast({
+          title: "¡Correcto!",
+          description: "Excelente trabajo",
+          duration: 1500,
+          className: "bg-green-500 text-white border-green-600",
+        });
+        
+        setTimeout(() => {
+          setModuleProgress(prev => prev.map(m => 
+            m.id === currentModule ? { ...m, completed: true } : m
+          ));
+          setCurrentModule(currentModule + 1);
+          setUserInput1("");
+          setUserInput2("");
+        }, 1000);
+      } else {
+        toast({
+          title: "Incorrecto",
+          description: "Escribe 'a' en el primer campo y 'an' en el segundo",
+          variant: "destructive",
+          duration: 1500,
+        });
+      }
+      return;
+    }
+    
     const isCorrect = userInput.toLowerCase().trim() === english.toLowerCase().trim();
     
     if (isCorrect) {
@@ -875,18 +910,18 @@ const LearnWord = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <Input
-                      value={userInput}
-                      onChange={(e) => setUserInput(e.target.value)}
-                      placeholder="a"
+                      value={userInput1}
+                      onChange={(e) => setUserInput1(e.target.value)}
+                      placeholder="..."
                       className="text-center text-xl h-14 w-32"
                       onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                       autoComplete="off"
                     />
                     <span className="text-2xl font-bold text-muted-foreground">o</span>
                     <Input
-                      value={userInput}
-                      onChange={(e) => setUserInput(e.target.value)}
-                      placeholder="an"
+                      value={userInput2}
+                      onChange={(e) => setUserInput2(e.target.value)}
+                      placeholder="..."
                       className="text-center text-xl h-14 w-32"
                       onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                       autoComplete="off"
@@ -896,7 +931,7 @@ const LearnWord = () => {
                   <Button
                     onClick={handleCheckWriting}
                     className="w-full h-12 gradient-animated"
-                    disabled={!userInput.trim()}
+                    disabled={!userInput1.trim() || !userInput2.trim()}
                   >
                     Verificar
                   </Button>

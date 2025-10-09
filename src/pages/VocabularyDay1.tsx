@@ -50,7 +50,7 @@ const VocabularyDay1 = () => {
     { id: 24, spanish: "Esta", english: "This", learned: false },
     { id: 25, spanish: "Tarde", english: "Afternoon", learned: false },
     { id: 26, spanish: "En", english: "In", learned: false },
-    { id: 27, spanish: "El", english: "The", learned: false },
+    { id: 27, spanish: "El, La, Los, Las", english: "The", learned: false },
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);

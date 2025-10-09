@@ -323,7 +323,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "TENER",
     images: [tener1, tener2, tener3, tener4],
     descriptions: {
-      correct: "Una persona mostrando que tiene hambre",
+      correct: "Una mano con la palma hacia arriba con unas llaves sobre ella",
       distractor1: "Un camino de tierra",
       distractor2: "Un plato vacío",
       distractor3: "Un lápiz"

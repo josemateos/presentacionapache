@@ -871,22 +871,56 @@ const LearnWord = () => {
                 ¿Cómo se dice "<span className="text-primary font-semibold">{spanish}</span>" en inglés?
               </p>
               
-              <Input
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                placeholder="Escribe aquí..."
-                className="text-center text-xl h-14 mb-4"
-                onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
-                autoComplete="off"
-              />
-              
-              <Button
-                onClick={handleCheckWriting}
-                className="w-full h-12 gradient-animated"
-                disabled={!userInput.trim()}
-              >
-                Verificar
-              </Button>
+              {english.toLowerCase() === "a/an" ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center gap-4">
+                    <Input
+                      value={userInput}
+                      onChange={(e) => setUserInput(e.target.value)}
+                      placeholder="a"
+                      className="text-center text-xl h-14 w-32"
+                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                      autoComplete="off"
+                    />
+                    <span className="text-2xl font-bold text-muted-foreground">o</span>
+                    <Input
+                      value={userInput}
+                      onChange={(e) => setUserInput(e.target.value)}
+                      placeholder="an"
+                      className="text-center text-xl h-14 w-32"
+                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                      autoComplete="off"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={handleCheckWriting}
+                    className="w-full h-12 gradient-animated"
+                    disabled={!userInput.trim()}
+                  >
+                    Verificar
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Input
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value)}
+                    placeholder="Escribe aquí..."
+                    className="text-center text-xl h-14 mb-4"
+                    onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                    autoComplete="off"
+                  />
+                  
+                  <Button
+                    onClick={handleCheckWriting}
+                    className="w-full h-12 gradient-animated"
+                    disabled={!userInput.trim()}
+                  >
+                    Verificar
+                  </Button>
+                </>
+              )}
             </Card>
           </motion.div>
         );

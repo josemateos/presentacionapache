@@ -624,13 +624,13 @@ const LearnWord = () => {
 
   // Generar letras desordenadas para ortografía
   const generateJumbledLetters = (word: string) => {
-    const letters = word.toLowerCase().replace(/ /g, '').split('');
+    const letters = word.toLowerCase().split('');
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     const distractors: string[] = [];
     
     while (distractors.length < 3) {
       const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-      if (!letters.includes(randomLetter)) {
+      if (!letters.includes(randomLetter) && randomLetter !== ' ') {
         distractors.push(randomLetter);
       }
     }

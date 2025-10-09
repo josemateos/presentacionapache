@@ -212,6 +212,10 @@ import comer1 from '@/assets/words/comer-1.jpg';
 import comer2 from '@/assets/words/comer-2.jpg';
 import comer3 from '@/assets/words/comer-3.jpg';
 import comer4 from '@/assets/words/comer-4.jpg';
+import yo1 from '@/assets/words/yo-1.jpg';
+import yo2 from '@/assets/words/yo-2.jpg';
+import yo3 from '@/assets/words/yo-3.jpg';
+import yo4 from '@/assets/words/yo-4.jpg';
 
 interface LearningModule {
   id: number;
@@ -256,7 +260,46 @@ const LearnWord = () => {
         "ir": [ir1, ir2, ir3, ir4],
         "a": [a1, a2, a3, a4],
         "visitar": [visitar1, visitar2, visitar3, visitar4],
-        // Add more words as needed
+        "gustar": [gustar1, gustar2, gustar3, gustar4],
+        "nos-complemento": [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4],
+        "invitar": [invitar1, invitar2, invitar3, invitar4],
+        "tu-complemento": [tuComplemento1, tuComplemento2, tuComplemento3, tuComplemento4],
+        "manana-tiempo": [mananaTiempo1, mananaTiempo2, mananaTiempo3, mananaTiempo4],
+        "manana-dia": [mananaDia1, mananaDia2, mananaDia3, mananaDia4],
+        "reunion": [reunion1, reunion2, reunion3, reunion4],
+        "trabajo": [trabajo1, trabajo2, trabajo3, trabajo4],
+        "familia": [familia1, familia2, familia3, familia4],
+        "necesitar": [necesitar1, necesitar2, necesitar3, necesitar4],
+        "practicar": [practicar1, practicar2, practicar3, practicar4],
+        "ingles": [ingles1, ingles2, ingles3, ingles4],
+        "importante": [importante1, importante2, importante3, importante4],
+        "findesemana": [findesemana1, findesemana2, findesemana3, findesemana4],
+        "proximo": [proximo1, proximo2, proximo3, proximo4],
+        "mi": [mi1, mi2, mi3, mi4],
+        "nosotros": [nosotros1, nosotros2, nosotros3, nosotros4],
+        "tu": [tu1, tu2, tu3, tu4],
+        "el": [el1, el2, el3, el4],
+        "ella": [ella1, ella2, ella3, ella4],
+        "ellos": [ellos1, ellos2, ellos3, ellos4],
+        "yo": [yo1, yo2, yo3, yo4],
+        "comprar": [comprar1, comprar2, comprar3, comprar4],
+        "fresca": [fresca1, fresca2, fresca3, fresca4],
+        "frescas": [frescas1, frescas2, frescas3, frescas4],
+        "frutas": [frutas1, frutas2, frutas3, frutas4],
+        "en": [en1, en2, en3, en4],
+        "mercado": [mercado1, mercado2, mercado3, mercado4],
+        "antes": [antes1, antes2, antes3, antes4],
+        "todos": [todos1, todos2, todos3, todos4],
+        "dias": [dias1, dias2, dias3, dias4],
+        "pedir": [pedir1, pedir2, pedir3, pedir4],
+        "verduras": [verduras1, verduras2, verduras3, verduras4],
+        "pan": [pan1, pan2, pan3, pan4],
+        "carne": [carne1, carne2, carne3, carne4],
+        "quiero": [quiero1, quiero2, quiero3, quiero4],
+        "comer": [comer1, comer2, comer3, comer4],
+        "esta": [esta1, esta2, esta3, esta4],
+        "tarde": [tarde1, tarde2, tarde3, tarde4],
+        "nos": [nos1, nos2, nos3, nos4],
       };
 
       const loaded: Record<string, [string, string, string, string]> = {};

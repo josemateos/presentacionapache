@@ -320,8 +320,8 @@ const LearnWord = () => {
         const savedWords = JSON.parse(saved);
         const currentWord = savedWords.find((w: any) => w.id === parseInt(wordId));
         if (currentWord?.inProgress) {
-          // Si está en progreso, ir al módulo 4 (pronunciación - ahora al final)
-          setCurrentModule(4);
+          // Si está en progreso, ir al módulo 5 (pronunciación - ahora al final)
+          setCurrentModule(5);
         }
       } catch (error) {
         console.error("Error loading progress:", error);
@@ -356,7 +356,8 @@ const LearnWord = () => {
     { id: 1, title: "Escritura", completed: false },
     { id: 2, title: "Ortografía", completed: false },
     { id: 3, title: "Imagen", completed: false },
-    { id: 4, title: "Pronunciación", completed: false },
+    { id: 4, title: "Traducción", completed: false },
+    { id: 5, title: "Pronunciación", completed: false },
   ];
 
   const [moduleProgress, setModuleProgress] = useState(modules);
@@ -470,11 +471,11 @@ const LearnWord = () => {
           });
 
           setModuleProgress(prev => prev.map(m =>
-            m.id === 4 ? { ...m, completed: true } : m
+            m.id === 5 ? { ...m, completed: true } : m
           ));
 
           setTimeout(() => {
-            setCurrentModule(5);
+            setCurrentModule(6);
             setRecordedAudio(null);
             setIsVerifying(false);
             setIsRecording(false);
@@ -595,12 +596,20 @@ const LearnWord = () => {
   // Verificación de pronunciación integrada al flujo de grabación con SpeechRecognition.
 
 
-  // Generar opciones de significado
+  // Generar opciones de significado (Español -> Inglés)
   const getMeaningOptions = () => {
     const distractors = ["always", "can", "get", "want", "yesterday", "all", "seem", "must", "time"];
     const filtered = distractors.filter(d => d !== english.toLowerCase());
     const randomDistractors = filtered.sort(() => Math.random() - 0.5).slice(0, 3);
     return [english, ...randomDistractors].sort(() => Math.random() - 0.5);
+  };
+
+  // Generar opciones de significado inverso (Inglés -> Español)
+  const getReverseMeaningOptions = () => {
+    const distractors = ["correr", "taza", "yo", "ella", "libro", "casa", "agua", "comer", "dormir"];
+    const filtered = distractors.filter(d => d !== spanish.toLowerCase());
+    const randomDistractors = filtered.sort(() => Math.random() - 0.5).slice(0, 3);
+    return [spanish, ...randomDistractors].sort(() => Math.random() - 0.5);
   };
 
   // Generar letras desordenadas para ortografía
@@ -737,7 +746,7 @@ const LearnWord = () => {
     }
   }, [currentModule]);
 
-  // Manejar selección de significado
+  // Manejar selección de significado (Español -> Inglés)
   const handleMeaningSelection = (option: string) => {
     setSelectedMeaningOption(option);
     const isCorrect = option.toLowerCase() === english.toLowerCase();
@@ -759,7 +768,46 @@ const LearnWord = () => {
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
-          setCurrentModule(5); // Ir al resumen
+          setCurrentModule(6); // Ir al resumen
+        } else {
+          setCurrentModule(currentModule + 1);
+        }
+        setSelectedMeaningOption(null);
+      }, 1000);
+    } else {
+      toast({
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
+        variant: "destructive",
+        duration: 1500,
+      });
+      setTimeout(() => setSelectedMeaningOption(null), 1000);
+    }
+  };
+
+  // Manejar selección de traducción inversa (Inglés -> Español)
+  const handleReverseMeaningSelection = (option: string) => {
+    setSelectedMeaningOption(option);
+    const isCorrect = option.toLowerCase() === spanish.toLowerCase();
+    
+    if (isCorrect) {
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Excelente trabajo",
+        duration: 1500,
+        className: "bg-green-500 text-white border-green-600",
+      });
+      
+      setTimeout(() => {
+        const updatedProgress = moduleProgress.map(m => 
+          m.id === currentModule ? { ...m, completed: true } : m
+        );
+        setModuleProgress(updatedProgress);
+        
+        if (checkIfAllModulesCompleted(updatedProgress)) {
+          markWordAsLearned();
+          setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
         }
@@ -837,7 +885,7 @@ const LearnWord = () => {
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
-          setCurrentModule(5); // Ir al resumen
+          setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
         }
@@ -899,7 +947,7 @@ const LearnWord = () => {
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
-          setCurrentModule(5); // Ir al resumen
+          setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
         }
@@ -938,7 +986,7 @@ const LearnWord = () => {
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
-          setCurrentModule(5); // Ir al resumen
+          setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
         }
@@ -1179,7 +1227,49 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 4: // Pronunciación
+      case 4: // Traducción inversa (Inglés -> Español)
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Elige el significado correcto
+              </h3>
+              <p className="text-center text-3xl font-bold text-primary mb-8">
+                {english.charAt(0).toUpperCase() + english.slice(1)}
+              </p>
+              
+              <p className="text-sm text-center text-muted-foreground mb-6">
+                ¿Cuál es el significado en español?
+              </p>
+              
+              <div className="space-y-3">
+                {getReverseMeaningOptions().map((option, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className={`w-full h-14 text-lg ${
+                      selectedMeaningOption === option
+                        ? option.toLowerCase() === spanish.toLowerCase()
+                          ? "bg-green-500/20 border-green-500 hover:bg-green-500/30"
+                          : "bg-red-500/20 border-red-500 hover:bg-red-500/30"
+                        : "hover:bg-accent"
+                    }`}
+                    onClick={() => handleReverseMeaningSelection(option)}
+                    disabled={selectedMeaningOption !== null}
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        );
+
+      case 5: // Pronunciación
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1229,8 +1319,8 @@ const LearnWord = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  // Trackear visitas al módulo 4 (pronunciación ahora al final)
-                  const visitKey = `module4_visits_word_${wordId}`;
+                  // Trackear visitas al módulo 5 (pronunciación ahora al final)
+                  const visitKey = `module5_visits_word_${wordId}`;
                   const visits = parseInt(localStorage.getItem(visitKey) || "0");
                   const newVisits = visits + 1;
                   localStorage.setItem(visitKey, newVisits.toString());
@@ -1255,7 +1345,7 @@ const LearnWord = () => {
                   if (newVisits >= 2) {
                     navigate("/vocabulario-dia-1");
                   } else {
-                    setCurrentModule(5);
+                    setCurrentModule(6);
                   }
                 }}
                 className="w-full h-12 mt-4"
@@ -1266,7 +1356,7 @@ const LearnWord = () => {
           </motion.div>
         );
 
-      case 5: // Resumen final
+      case 6: // Resumen final
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1304,12 +1394,13 @@ const LearnWord = () => {
             </Card>
             
             <div className="flex flex-col gap-3">
-              {currentModule === 5 && moduleProgress.every(m => m.completed) ? (
+              {currentModule === 6 && moduleProgress.every(m => m.completed) ? (
                 <Button
                   size="lg"
                   className="gradient-animated w-full max-w-xs mx-auto"
                   onClick={() => {
                     playSuccessSound();
+                    markWordAsLearned();
                     const toastDiv = document.createElement('div');
                     toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
                     toastDiv.innerHTML = `
@@ -1335,7 +1426,7 @@ const LearnWord = () => {
                   }}
                 >
                   <Check className="w-5 h-5 mr-2" />
-                  Marcar como Aprendida
+                  Agregar al Vocabulario
                 </Button>
               ) : (
                 <>

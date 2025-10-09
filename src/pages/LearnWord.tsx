@@ -1313,10 +1313,18 @@ const LearnWord = () => {
                     const toastDiv = document.createElement('div');
                     toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
                     toastDiv.innerHTML = `
-                      <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
-                        <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
-                        <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
-                        <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                      <div class="bg-card border-2 border-green-500 rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent"></div>
+                        <div class="relative">
+                          <div class="w-16 h-16 mx-auto mb-4 bg-green-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                          </div>
+                          <p class="text-lg text-green-600 font-semibold mb-2">Palabra aprendida</p>
+                          <p class="text-4xl font-bold text-green-600 my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
+                          <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                        </div>
                       </div>
                     `;
                     document.body.appendChild(toastDiv);

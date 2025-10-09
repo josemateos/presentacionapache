@@ -290,7 +290,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "ANTES",
     images: [antes1, antes2, antes3, antes4],
     descriptions: {
-      correct: "Evolución humana: chimpancé a la izquierda, luego australopiteco, luego homo erectus, luego humano moderno a la derecha. Una flecha grande apuntando hacia la izquierda ubicada arriba de todas las figuras sin taparlas",
+      correct: "Evolución humana: chimpancé a la izquierda, luego australopiteco, luego homo erectus, luego humano moderno a la derecha. Una flecha recta horizontal apuntando de derecha a izquierda (←) ubicada arriba de todas las figuras sin taparlas",
       distractor1: "Un reloj marcando el futuro",
       distractor2: "Un signo de \"play\"",
       distractor3: "Un trofeo"

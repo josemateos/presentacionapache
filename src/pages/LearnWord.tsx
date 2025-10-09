@@ -619,7 +619,12 @@ const LearnWord = () => {
       if (item) {
         images = await loadWordImages(item.slug, item.fallbacks);
       } else {
-        images = [fresca1, fresca2, fresca3, fresca4];
+        // Try loading by Spanish slug as a fallback for unmapped words
+        const slugFromSpanish = (spanish || '')
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-');
+        images = await loadWordImages(slugFromSpanish, [fresca1, fresca2, fresca3, fresca4]);
       }
       
       const options: ImageOption[] = images.map((url, index) => ({

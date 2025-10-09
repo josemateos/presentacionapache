@@ -42,6 +42,11 @@ const Dashboard = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Limpiar simulación anterior del localStorage
+  useEffect(() => {
+    localStorage.removeItem("vocabulary_day1_progress");
+  }, []);
+
   // Estado simulado del usuario
   const [userProgress] = useState<UserProgress>({
     currentDay: 1,

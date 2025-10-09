@@ -654,6 +654,7 @@ const LearnWord = () => {
         'from': { slug: 'de', fallbacks: [de1, de2, de3, de4] },
         'to sleep': { slug: 'dormir', fallbacks: [dormir1, dormir2, dormir3, dormir4] },
         'to have': { slug: 'tener', fallbacks: [tener1, tener2, tener3, tener4] },
+        'have to': { slug: 'tener-que', fallbacks: [tenerQue1, tenerQue2, tenerQue3, tenerQue4] },
         'to go': { slug: 'ir', fallbacks: [ir1, ir2, ir3, ir4] },
         'go': { slug: 'ir', fallbacks: [ir1, ir2, ir3, ir4] },
         'to': { slug: 'a', fallbacks: [a1, a2, a3, a4] },
@@ -675,7 +676,7 @@ const LearnWord = () => {
         'days': { slug: 'dias', fallbacks: [dias1, dias2, dias3, dias4] },
         'she': { slug: 'ella', fallbacks: [ella1, ella2, ella3, ella4] },
         'they': { slug: 'ellos', fallbacks: [ellos1, ellos2, ellos3, ellos4] },
-        'we': { slug: 'nosotros', fallbacks: [nosotros1, nosotros2, nosotros3, nosotros4] },
+        'we': { slug: 'nosotros', fallbacks: [nosotros1, nosotros2, nosotros4, nosotros4] },
         'the': { slug: 'el', fallbacks: [el1, el2, el3, el4] },
         'you': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
         'your': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
@@ -706,6 +707,8 @@ const LearnWord = () => {
         'i want': { slug: 'quiero', fallbacks: [quiero1, quiero2, quiero3, quiero4] },
         'want': { slug: 'querer', fallbacks: [querer1, querer2, querer3, querer4] },
         'to eat': { slug: 'comer', fallbacks: [comer1, comer2, comer3, comer4] },
+        'come': { slug: 'venir', fallbacks: [venir1, venir2, venir3, venir4] },
+        'to come': { slug: 'venir', fallbacks: [venir1, venir2, venir3, venir4] },
       };
 
       const wordKey = english.toLowerCase();
@@ -938,7 +941,7 @@ const LearnWord = () => {
   };
 
   const handleCheckSpelling = () => {
-    const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase().replace(/ /g, '');
+    const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase();
     
     if (isCorrect) {
       playSuccessSound();

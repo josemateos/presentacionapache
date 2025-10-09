@@ -1252,52 +1252,31 @@ const LearnWord = () => {
             </Card>
             
             <div className="flex flex-col gap-3">
-              {moduleProgress.every(m => m.completed) ? (
-                <>
-                  <Button
-                    size="lg"
-                    className="gradient-animated w-full max-w-xs mx-auto"
-                    onClick={() => {
-                      playSuccessSound();
-                      const toastDiv = document.createElement('div');
-                      toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
-                      toastDiv.innerHTML = `
-                        <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
-                          <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
-                          <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
-                          <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
-                        </div>
-                      `;
-                      document.body.appendChild(toastDiv);
-                      setTimeout(() => {
-                        document.body.removeChild(toastDiv);
-                        navigate("/vocabulario-dia-1");
-                      }, 2000);
-                    }}
-                  >
-                    <Check className="w-5 h-5 mr-2" />
-                    Marcar como Aprendida
-                  </Button>
-                  
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full max-w-xs mx-auto"
-                    onClick={() => {
-                      setCurrentModule(0);
-                      setUserInput("");
-                      setAttempts(0);
-                      setSpellingAttempt("");
-                      setUsedLetterIndices([]);
-                      setSelectedImageId(null);
-                      setImageOptions([]);
-                      setModuleProgress(modules.map(m => ({ ...m, completed: false })));
-                    }}
-                  >
-                    <RotateCcw className="w-5 h-5 mr-2" />
-                    Repasar palabra
-                  </Button>
-                </>
+              {currentModule === 5 && moduleProgress.every(m => m.completed) ? (
+                <Button
+                  size="lg"
+                  className="gradient-animated w-full max-w-xs mx-auto"
+                  onClick={() => {
+                    playSuccessSound();
+                    const toastDiv = document.createElement('div');
+                    toastDiv.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/50';
+                    toastDiv.innerHTML = `
+                      <div class="bg-card border border-border rounded-xl p-8 shadow-2xl max-w-md mx-4 text-center">
+                        <p class="text-lg text-muted-foreground mb-2">Palabra aprendida</p>
+                        <p class="text-4xl font-bold gradient-text-primary my-4">${english.charAt(0).toUpperCase() + english.slice(1)}</p>
+                        <p class="text-lg text-muted-foreground mt-2">se ha agregado a tu vocabulario</p>
+                      </div>
+                    `;
+                    document.body.appendChild(toastDiv);
+                    setTimeout(() => {
+                      document.body.removeChild(toastDiv);
+                      navigate("/vocabulario-dia-1");
+                    }, 2000);
+                  }}
+                >
+                  <Check className="w-5 h-5 mr-2" />
+                  Marcar como Aprendida
+                </Button>
               ) : (
                 <>
                   <Button
@@ -1364,7 +1343,7 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            {moduleProgress.every(m => m.completed) ? "Palabra Aprendida" : `Módulo ${currentModule + 1} de ${modules.length}`}
+            {currentModule === 5 && moduleProgress.every(m => m.completed) ? "Palabra Aprendida" : `Módulo ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button

@@ -323,7 +323,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "TENER",
     images: [tener1, tener2, tener3, tener4],
     descriptions: {
-      correct: "Una mano sosteniendo unas llaves",
+      correct: "Una persona mostrando que tiene hambre",
       distractor1: "Un camino de tierra",
       distractor2: "Un plato vacío",
       distractor3: "Un lápiz"
@@ -345,7 +345,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "A (lugar/direccion)",
     images: [a1, a2, a3, a4],
     descriptions: {
-      correct: "Una señal (flecha) apuntando a un destino",
+      correct: "Una señalización vial (flecha) apuntando a una dirección",
       distractor1: "Una flecha en círculo",
       distractor2: "Una flecha rebotando",
       distractor3: "Una signo de Infinito"
@@ -367,7 +367,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "NOS (complemento)",
     images: [nosComplemento1, nosComplemento2, nosComplemento3, nosComplemento4],
     descriptions: {
-      correct: "Una flecha apuntando hacia un grupo de personas",
+      correct: "Tres personas levantando la mano",
       distractor1: "Una flecha apuntando a una sola persona",
       distractor2: "Una casa vacía",
       distractor3: "Un árbol solitario"
@@ -378,7 +378,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "INVITAR",
     images: [invitar1, invitar2, invitar3, invitar4],
     descriptions: {
-      correct: "Una persona entregando una tarjeta de invitación",
+      correct: "Una persona invitando a pasar a una casa",
       distractor1: "Un ladrillo",
       distractor2: "Unas tijeras",
       distractor3: "Un taza"
@@ -389,7 +389,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "TU",
     images: [tu1, tu2, tu3, tu4],
     descriptions: {
-      correct: "Una mano señalando directamente al espectador",
+      correct: "Una persona señalando al observador de la imagen",
       distractor1: "Un grupo de gente",
       distractor2: "Un animal",
       distractor3: "Un edificio"
@@ -400,7 +400,7 @@ const WORDS_REVIEW: WordReview[] = [
     displayName: "COMER",
     images: [comer1, comer2, comer3, comer4],
     descriptions: {
-      correct: "Una persona llevándose un tenedor con comida a la boca",
+      correct: "Una persona comiendo pizza",
       distractor1: "Un guante",
       distractor2: "Un botón",
       distractor3: "Un barco"

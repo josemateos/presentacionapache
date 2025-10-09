@@ -71,8 +71,8 @@ const VocabularyDay1 = () => {
     return shuffled;
   };
 
-  useEffect(() => {
-    // Cargar progreso guardado, conservando "learned" pero usando textos/notas actuales
+  // Función para cargar progreso
+  const loadProgress = () => {
     const saved = localStorage.getItem("vocabulary_day1_progress");
     if (saved) {
       try {
@@ -94,6 +94,22 @@ const VocabularyDay1 = () => {
       localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
       setShuffledWords(shuffleArray(words));
     }
+  };
+
+  useEffect(() => {
+    loadProgress();
+  }, []);
+
+  useEffect(() => {
+    // Recargar cuando la página se vuelve visible
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadProgress();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
   useEffect(() => {

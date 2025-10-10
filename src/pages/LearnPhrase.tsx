@@ -184,6 +184,21 @@ const LearnPhrase = () => {
   const recognitionRef = useRef<any>(null);
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
+  
+  // Sinónimos aceptados para equivalencias (minimizando cambios a datos)
+  const WORD_SYNONYMS: Record<string, string[]> = {
+    in: ["at"],
+    at: ["in"],
+  };
+  
+  const isEquivalentWord = (user: string, expected: string) => {
+    // "I" debe ir en mayúscula exacta cuando se espera "I"
+    if (expected === "I") return user === "I";
+    const u = user.toLowerCase().trim();
+    const e = expected.toLowerCase().trim();
+    if (u === e) return true;
+    return (WORD_SYNONYMS[e] || []).includes(u);
+  };
 
   // Randomizar banco de palabras al entrar en paso 2
   useEffect(() => {
@@ -255,13 +270,12 @@ const LearnPhrase = () => {
 
   const getInputColorClass = (index: number, value: string) => {
     if (!value) return "";
-    // Para "I" (yo), debe ser mayúscula exacta
-    const isCorrect = value === exerciseData.apacheEnglishSolution[index];
+    const expected = exerciseData.apacheEnglishSolution[index];
+    const isCorrect = isEquivalentWord(value, expected);
     return isCorrect 
       ? "text-green-500 bg-green-500/20 border-green-500" 
       : "text-red-500 bg-red-500/20 border-red-500";
   };
-
   const getAuxiliaryColorClass = () => {
     if (!userAuxiliary) return "";
     const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary;
@@ -271,14 +285,13 @@ const LearnPhrase = () => {
   };
 
   const checkEnglishSolution = () => {
-    // Validar con case-sensitive para "I" mayúscula
-    const userTrimmed = userAttemptEnglish.map(w => w.trim());
-    const isCorrect = JSON.stringify(userTrimmed) === JSON.stringify(exerciseData.apacheEnglishSolution);
+    const userTrimmed = userAttemptEnglish.map(w => (w ?? "").trim());
+    const expected = exerciseData.apacheEnglishSolution;
+    const allGood = expected.every((exp, idx) => isEquivalentWord(userTrimmed[idx] || "", exp));
     
-    if (isCorrect) {
+    if (allGood) {
       setFeedback("¡Perfecto! Has traducido correctamente al Inglés Apache");
       setIsStepComplete(true);
-      // Scroll para mostrar el botón de continuar
       setTimeout(() => {
         if (step3Ref.current) {
           step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -293,7 +306,6 @@ const LearnPhrase = () => {
       });
     }
   };
-
   const checkAuxiliary = () => {
     const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary.toLowerCase();
     
@@ -312,9 +324,13 @@ const LearnPhrase = () => {
 
   const checkFinalPhrase = () => {
     const userTrimmed = finalPhrase.trim();
-    const correctPhrase = exerciseData.finalEnglishSolution.join(" ");
+    const expectedWords = exerciseData.finalEnglishSolution;
+    const userWords = userTrimmed.split(/\s+/);
     
-    if (userTrimmed === correctPhrase) {
+    const sameLength = userWords.length === expectedWords.length;
+    const allGood = sameLength && expectedWords.every((exp, idx) => isEquivalentWord(userWords[idx] || "", exp));
+    
+    if (allGood) {
       setFeedback("¡Perfecto! Ahora practica tu pronunciación");
       setIsStepComplete(true);
     } else {
@@ -326,7 +342,6 @@ const LearnPhrase = () => {
       });
     }
   };
-
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -404,14 +419,14 @@ const LearnPhrase = () => {
     const correctPhrase = englishPhrase.toLowerCase().trim();
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
     
-    // Calcular similitud palabra por palabra
     const userWords = userPhrase.split(/\s+/).filter(w => w.length > 0);
     const correctWords = correctPhrase.split(/\s+/).filter(w => w.length > 0);
     let matches = 0;
     
-    // Verificar cada palabra correcta en las palabras del usuario
+    // Contar coincidencias considerando sinónimos aceptados
     correctWords.forEach((word) => {
-      if (userWords.some(userWord => userWord === word)) {
+      const eq = (uw: string) => uw === word || (WORD_SYNONYMS[word] || []).includes(uw);
+      if (userWords.some(eq)) {
         matches++;
       }
     });
@@ -820,7 +835,7 @@ const LearnPhrase = () => {
                   recordedTranscript.map((word, index) => {
                     const wordLower = word.toLowerCase();
                     const correctWords = englishPhrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
-                    const isCorrect = correctWords.includes(wordLower);
+                    const isCorrect = correctWords.includes(wordLower) || correctWords.some(cw => (WORD_SYNONYMS[cw] || []).includes(wordLower));
                     
                     return (
                       <span 

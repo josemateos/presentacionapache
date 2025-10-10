@@ -344,6 +344,11 @@ const LearnPhrase = () => {
           setRecordedTranscript(words);
         };
         
+        recognition.onend = () => {
+          // Evaluar pronunciación solo cuando finaliza el reconocimiento
+          checkPronunciation();
+        };
+        
         recognition.start();
         recognitionRef.current = recognition;
       }
@@ -388,10 +393,7 @@ const LearnPhrase = () => {
     
     setIsRecording(false);
     
-    // Verificar pronunciación
-    setTimeout(() => {
-      checkPronunciation();
-    }, 500);
+    // La evaluación ocurrirá en recognition.onend
   };
 
   const checkPronunciation = () => {

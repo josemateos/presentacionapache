@@ -62,14 +62,29 @@ const LearnPhrase = () => {
   const [showTipsModal, setShowTipsModal] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [isStepComplete, setIsStepComplete] = useState(false);
+  const [randomizedBank, setRandomizedBank] = useState<string[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedTranscript, setRecordedTranscript] = useState<string[]>([]);
+  const [recordingTime, setRecordingTime] = useState(0);
   
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
   const step4Ref = useRef<HTMLDivElement>(null);
   const step5Ref = useRef<HTMLDivElement>(null);
+  const step6Ref = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
+
+  // Randomizar banco de palabras al entrar en paso 2
+  useEffect(() => {
+    if (currentStep === 2) {
+      const shuffled = [...exerciseData.apacheSpanishBank].sort(() => Math.random() - 0.5);
+      setRandomizedBank(shuffled);
+    }
+  }, [currentStep, exerciseData.apacheSpanishBank]);
 
   useEffect(() => {
     if (currentStep === 1) {
@@ -216,8 +231,110 @@ const LearnPhrase = () => {
     }
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      // Iniciar reconocimiento de voz
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        
+        recognition.onresult = (event: any) => {
+          const transcript = Array.from(event.results)
+            .map((result: any) => result[0].transcript)
+            .join(' ');
+          const words = transcript.split(' ').filter(w => w.trim());
+          setRecordedTranscript(words);
+        };
+        
+        recognition.start();
+        recognitionRef.current = recognition;
+      }
+      
+      setIsRecording(true);
+      setRecordingTime(0);
+      setRecordedTranscript([]);
+      
+      // Contador de tiempo
+      const interval = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= 10) {
+            stopRecording();
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      
+      mediaRecorder.start();
+      
+    } catch (error) {
+      console.error('Error al acceder al micrófono:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo acceder al micrófono",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    }
+    
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    
+    setIsRecording(false);
+    
+    // Verificar pronunciación
+    setTimeout(() => {
+      checkPronunciation();
+    }, 500);
+  };
+
+  const checkPronunciation = () => {
+    const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
+    const correctPhrase = exerciseData.finalEnglishSolution.join(' ').toLowerCase();
+    
+    // Calcular similitud (simple comparación de palabras)
+    const userWords = userPhrase.split(' ');
+    const correctWords = correctPhrase.split(' ');
+    let matches = 0;
+    
+    correctWords.forEach((word, index) => {
+      if (userWords[index] && userWords[index].toLowerCase() === word.toLowerCase()) {
+        matches++;
+      }
+    });
+    
+    const accuracy = (matches / correctWords.length) * 100;
+    
+    if (accuracy >= 80) {
+      setFeedback("¡Excelente pronunciación! Has completado la frase");
+      setIsStepComplete(true);
+    } else {
+      setFeedback(`Pronunciación incorrecta (${Math.round(accuracy)}% correcto). Intenta de nuevo`);
+      toast({
+        title: "Intenta nuevamente",
+        description: "Revisa tu pronunciación y vuelve a intentar",
+        variant: "destructive",
+      });
+    }
+  };
+
   const goToNextStep = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(currentStep + 1);
       setIsStepComplete(false);
       setFeedback("");
@@ -229,7 +346,7 @@ const LearnPhrase = () => {
       
       // Scroll to center the next step
       setTimeout(() => {
-        const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref];
+        const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref, step6Ref];
         const nextRef = refs[currentStep + 1];
         if (nextRef?.current) {
           nextRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -337,7 +454,7 @@ const LearnPhrase = () => {
             {/* Banco de palabras */}
             <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border">
               <div className="flex flex-wrap gap-2 justify-center">
-                {exerciseData.apacheSpanishBank.map((word, index) => (
+                {randomizedBank.map((word, index) => (
                   <button
                     key={index}
                     onClick={() => handleWordClick(word)}
@@ -560,8 +677,91 @@ const LearnPhrase = () => {
             {isStepComplete && currentStep === 5 && (
               <Button 
                 onClick={goToNextStep} 
+                className="w-full mt-4"
+              >
+                Continuar
+              </Button>
+            )}
+          </Card>
+        )}
+
+        {/* Paso 6: Pronunciación */}
+        {currentStep === 6 && (
+          <Card ref={step6Ref} className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                <span className="text-primary font-bold">6</span>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Practica tu pronunciación</h2>
+                <p className="text-sm text-muted-foreground">Graba tu pronunciación de la frase completa</p>
+              </div>
+            </div>
+
+            {/* Frase en español */}
+            <div className="bg-background/50 rounded-lg p-4 mb-4 border-2 border-border">
+              <p className="text-sm text-muted-foreground text-center mb-1">Frase en Español:</p>
+              <p className="text-center text-foreground font-medium">"{exerciseData.spanishWords.join(" ")}"</p>
+            </div>
+
+            {/* Palabras reconocidas */}
+            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border min-h-20">
+              <p className="text-sm text-muted-foreground text-center mb-2">Palabras detectadas:</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {recordedTranscript.length > 0 ? (
+                  recordedTranscript.map((word, index) => (
+                    <span key={index} className="px-3 py-1 bg-secondary text-foreground rounded-md text-sm">
+                      {word}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-sm">Las palabras aparecerán aquí mientras hablas...</p>
+                )}
+              </div>
+            </div>
+
+            {/* Controles de grabación */}
+            <div className="flex flex-col gap-4">
+              {isRecording && (
+                <div className="text-center">
+                  <p className="text-lg font-bold text-primary">
+                    Grabando... {recordingTime}s / 10s
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                {!isRecording ? (
+                  <Button 
+                    onClick={startRecording} 
+                    disabled={isStepComplete}
+                    className="flex-1"
+                  >
+                    <Volume2 className="w-4 h-4 mr-2" />
+                    Iniciar Grabación
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={stopRecording} 
+                    variant="destructive"
+                    className="flex-1"
+                  >
+                    Detener Grabación
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {feedback && (
+              <p className={`text-sm text-center mt-4 ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
+                {feedback}
+              </p>
+            )}
+
+            {isStepComplete && (
+              <Button 
+                onClick={goToNextStep} 
                 className="w-full mt-4 bg-green-600 hover:bg-green-700"
-                disabled={!finalPhrase.trim()}
               >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
                 Ir a siguiente frase

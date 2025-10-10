@@ -148,6 +148,9 @@ const PhrasesDay = () => {
             <BookOpen className="w-4 h-4" />
             Progreso General
           </h2>
+          <p className="text-sm text-center text-muted-foreground mb-2">
+            {learnedCount} de {phrases.length} frases practicadas
+          </p>
           <Progress value={progress} className="h-2 mb-2" />
         </motion.div>
 

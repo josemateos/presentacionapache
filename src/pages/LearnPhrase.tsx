@@ -577,7 +577,7 @@ const LearnPhrase = () => {
         <DialogContent className="bg-card text-foreground">
           <DialogHeader>
             <DialogTitle className="text-accent">
-              {currentStep === 2 ? "Tips para Español Apache" : "Tips de Preposiciones"}
+              {currentStep === 2 && "Tips para Español Apache"}
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
               {currentStep === 2 ? (
@@ -590,10 +590,10 @@ const LearnPhrase = () => {
               ) : (
                 <div className="mt-4 space-y-3">
                   <p className="text-foreground text-base">
-                    <strong>IN</strong> = Ubicación del objeto
+                    Utiliza <strong>IN</strong> si vas a ubicar el objeto
                   </p>
                   <p className="text-foreground text-base">
-                    <strong>AT</strong> = Ubicación de la acción
+                    Utiliza <strong>AT</strong> si vas a ubicar la acción.
                   </p>
                 </div>
               )}

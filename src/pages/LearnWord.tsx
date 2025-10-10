@@ -630,6 +630,22 @@ const LearnWord = () => {
 
   // Generar letras desordenadas para ortografía
   const generateJumbledLetters = (word: string) => {
+    // Special case for "En" which needs letters for both "In" and "At"
+    if (wordId === "26") {
+      const letters = ['i', 'n', 'a', 't'];
+      const alphabet = "abcdefghijklmnopqrstuvwxyz";
+      const distractors: string[] = [];
+      
+      while (distractors.length < 3) {
+        const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+        if (!letters.includes(randomLetter) && randomLetter !== ' ') {
+          distractors.push(randomLetter);
+        }
+      }
+      
+      return [...letters, ...distractors].sort(() => Math.random() - 0.5);
+    }
+    
     const letters = word.toLowerCase().split('');
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     const distractors: string[] = [];

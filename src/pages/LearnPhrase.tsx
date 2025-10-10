@@ -562,16 +562,19 @@ const LearnPhrase = () => {
             {/* Banco de palabras */}
             <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border">
               <div className="flex flex-wrap gap-2 justify-center">
-                {randomizedBank.map((word, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleWordClick(word)}
-                    disabled={isStepComplete}
-                    className="px-3 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {word}
-                  </button>
-                ))}
+                {randomizedBank.map((word, index) => {
+                  const isUsed = userAttemptSpanish.includes(word);
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleWordClick(word)}
+                      disabled={isStepComplete || isUsed}
+                      className="px-3 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      {word}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

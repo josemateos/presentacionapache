@@ -144,14 +144,11 @@ const PhrasesDay = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-card border border-border rounded-2xl p-6 shadow-md mb-6"
         >
-          <h2 className="text-lg font-semibold mb-3 text-center text-primary flex items-center justify-center gap-2">
-            <BookOpen className="w-5 h-5" />
+          <h2 className="text-base font-semibold mb-4 text-center text-primary flex items-center justify-center gap-2">
+            <BookOpen className="w-4 h-4" />
             Progreso General
           </h2>
-          <Progress value={progress} className="h-5 mb-2" />
-          <p className="text-center text-sm text-muted-foreground mt-3">
-            {learnedCount} de {phrases.length} frases aprendidas
-          </p>
+          <Progress value={progress} className="h-2 mb-2" />
         </motion.div>
 
         {/* Phrases List */}
@@ -178,16 +175,12 @@ const PhrasesDay = () => {
                       {index + 1}.
                     </span>
                     {phrase.learned && (
-                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
                     )}
                   </div>
                   
                   <p className="text-base md:text-lg font-medium text-foreground mb-2">
                     {phrase.spanish}
-                  </p>
-                  
-                  <p className="text-sm md:text-base text-muted-foreground italic">
-                    {phrase.english}
                   </p>
                 </div>
 

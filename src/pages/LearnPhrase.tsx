@@ -30,8 +30,8 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     spanishWords: ["Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado"],
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "fresca", "en", "el", "mercado", "querer", "frescas", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
-    apacheEnglishSolution: ["I", "want", "buy", "fresh", "fruit", "in", "the", "market"],
-    finalEnglishSolution: ["I", "want", "to", "buy", "fresh", "fruit", "in", "the", "market"],
+    apacheEnglishSolution: ["I", "want", "buy", "fresh", "fruits", "in", "the", "market"],
+    finalEnglishSolution: ["I", "want", "to", "buy", "fresh", "fruits", "in", "the", "market"],
     auxiliary: "to",
   },
   2: {

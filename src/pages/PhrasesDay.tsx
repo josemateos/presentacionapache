@@ -17,7 +17,7 @@ interface Phrase {
 
 const phrasesData: Record<number, Phrase[]> = {
   1: [
-    { id: 1, english: "I want TO buy fresh fruit in the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
+    { id: 1, english: "I want TO buy fresh fruits in the market", spanish: "Quiero comprar frutas frescas en el mercado", learned: false },
     { id: 2, english: "I like TO read a book before sleepING", spanish: "Me gusta leer un libro antes de dormir", learned: false },
     { id: 3, english: "You have TO go visit us", spanish: "Tienes que ir a visitarnos", learned: false },
     { id: 4, english: "We want TO invite you to eat tomorrow", spanish: "Queremos invitarte a comer mañana", learned: false },

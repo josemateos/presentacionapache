@@ -418,7 +418,7 @@ const LearnPhrase = () => {
     
     const accuracy = (matches / correctWords.length) * 100;
     
-    if (accuracy >= 80) {
+    if (accuracy >= 100) {
       setFeedback("¡Excelente pronunciación! Has completado la frase");
       setIsStepComplete(true);
       

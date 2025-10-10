@@ -190,7 +190,7 @@ const PhrasesDay = () => {
                     size="sm"
                     className={`min-w-[140px] ${
                       phrase.learned
-                        ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        ? "bg-green-600 text-white hover:bg-green-700"
                         : "gradient-animated"
                     }`}
                     onClick={(e) => {

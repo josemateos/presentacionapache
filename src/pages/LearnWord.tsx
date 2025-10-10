@@ -608,6 +608,12 @@ const LearnWord = () => {
 
   // Generar opciones de significado (Español -> Inglés)
   const getMeaningOptions = () => {
+    // Special case for "En" word (id=26) - show "In/At" as the correct option
+    if (wordId === "26") {
+      const distractors = ["on", "with", "of"];
+      return ["In/At", ...distractors].sort(() => Math.random() - 0.5);
+    }
+    
     const distractors = ["always", "can", "get", "want", "yesterday", "all", "seem", "must", "time"];
     const filtered = distractors.filter(d => d !== english.toLowerCase());
     const randomDistractors = filtered.sort(() => Math.random() - 0.5).slice(0, 3);
@@ -762,7 +768,10 @@ const LearnWord = () => {
   // Manejar selección de significado (Español -> Inglés)
   const handleMeaningSelection = (option: string) => {
     setSelectedMeaningOption(option);
-    const isCorrect = option.toLowerCase() === english.toLowerCase();
+    // Special case for "En" word (id=26)
+    const isCorrect = wordId === "26" 
+      ? option === "In/At" 
+      : option.toLowerCase() === english.toLowerCase();
     
     if (isCorrect) {
       playSuccessSound();
@@ -839,6 +848,46 @@ const LearnWord = () => {
 
   // Manejar verificación de escritura
   const handleCheckWriting = () => {
+    // Special handling for "En" word (id=26)
+    if (wordId === "26") {
+      const correct1 = userInput1.trim().toLowerCase() === "in";
+      const correct2 = userInput2.trim().toLowerCase() === "at";
+      
+      if (correct1 && correct2) {
+        playSuccessSound();
+        toast({
+          title: "¡Correcto!",
+          description: "Excelente trabajo",
+          duration: 1500,
+          className: "bg-green-500 text-white border-green-600",
+        });
+        
+        setTimeout(() => {
+          const updatedProgress = moduleProgress.map(m => 
+            m.id === currentModule ? { ...m, completed: true } : m
+          );
+          setModuleProgress(updatedProgress);
+          
+          if (checkIfAllModulesCompleted(updatedProgress)) {
+            markWordAsLearned();
+            setCurrentModule(6);
+          } else {
+            setCurrentModule(currentModule + 1);
+          }
+          setUserInput1("");
+          setUserInput2("");
+        }, 1000);
+      } else {
+        toast({
+          title: "Incorrecto",
+          description: "Escribe 'In' en el primer campo y 'At' en el segundo",
+          variant: "destructive",
+          duration: 1500,
+        });
+      }
+      return;
+    }
+    
     // Special handling for a/an
     if (english.toLowerCase() === "a/an") {
       const correct1 = userInput1.trim().toLowerCase() === "a";
@@ -1045,7 +1094,7 @@ const LearnWord = () => {
                     variant="outline"
                     className={`w-full h-14 text-lg ${
                       selectedMeaningOption === option
-                        ? option.toLowerCase() === english.toLowerCase()
+                        ? (wordId === "26" ? option === "In/At" : option.toLowerCase() === english.toLowerCase())
                           ? "bg-green-500/20 border-green-500 hover:bg-green-500/30"
                           : "bg-red-500/20 border-red-500 hover:bg-red-500/30"
                         : "hover:bg-accent"
@@ -1076,7 +1125,37 @@ const LearnWord = () => {
                 ¿Cómo se dice "<span className="text-primary font-semibold">{spanish}</span>" en inglés?
               </p>
               
-              {english.toLowerCase() === "a/an" ? (
+              {wordId === "26" ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center gap-4">
+                    <Input
+                      value={userInput1}
+                      onChange={(e) => setUserInput1(e.target.value)}
+                      placeholder="..."
+                      className="text-center text-xl h-14 w-32"
+                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                      autoComplete="off"
+                    />
+                    <span className="text-2xl font-bold text-muted-foreground">o</span>
+                    <Input
+                      value={userInput2}
+                      onChange={(e) => setUserInput2(e.target.value)}
+                      placeholder="..."
+                      className="text-center text-xl h-14 w-32"
+                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                      autoComplete="off"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={handleCheckWriting}
+                    className="w-full h-12 gradient-animated"
+                    disabled={!userInput1.trim() || !userInput2.trim()}
+                  >
+                    Verificar
+                  </Button>
+                </div>
+              ) : english.toLowerCase() === "a/an" ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <Input

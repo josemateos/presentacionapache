@@ -29,7 +29,7 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     spanishWords: ["Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado"],
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "fresca", "en", "el", "mercado", "querer", "frescas", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
-    apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruit", "at", "the", "market"],
+    apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "at", "the", "market"],
     finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruit", "at", "the", "market"],
     auxiliary: "to",
   },
@@ -408,9 +408,15 @@ const LearnPhrase = () => {
               </div>
             </div>
 
-            <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="w-full mb-4">
-              Verificar Frase
-            </Button>
+            <div className="flex gap-2 mb-4">
+              <Button variant="outline" onClick={() => setShowTipsModal(true)}>
+                <Lightbulb className="w-4 h-4 mr-2" />
+                Tips
+              </Button>
+              <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="flex-1">
+                Verificar Frase
+              </Button>
+            </div>
 
             {feedback && (
               <p className={`text-sm text-center ${feedback.includes("Perfecto") ? "text-green-500" : "text-red-500"}`}>
@@ -570,14 +576,27 @@ const LearnPhrase = () => {
       <Dialog open={showTipsModal} onOpenChange={setShowTipsModal}>
         <DialogContent className="bg-card text-foreground">
           <DialogHeader>
-            <DialogTitle className="text-accent">Tips para Español Apache</DialogTitle>
+            <DialogTitle className="text-accent">
+              {currentStep === 2 ? "Tips para Español Apache" : "Tips de Preposiciones"}
+            </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              <ul className="list-disc list-inside space-y-2 mt-4">
-                <li>El orden correcto es: Persona, Verbo, Objeto</li>
-                <li>En Ingles no existe "quiero, juego, aprendo" siempre se utiliza "querer, jugar, aprender"</li>
-                <li>Frutas frescas, suéter rojo, mesa grande siempre se invierte por "Frescas frutas, rojo sueter, grande mesa"</li>
-                <li>En Ingles nunca se utiliza fresca<span className="text-yellow-500">s</span>, rojo<span className="text-yellow-500">s</span>, grande<span className="text-yellow-500">s</span> solo se dice "fresca, rojo, grande"</li>
-              </ul>
+              {currentStep === 2 ? (
+                <ul className="list-disc list-inside space-y-2 mt-4">
+                  <li>El orden correcto es: Persona, Verbo, Objeto</li>
+                  <li>En Ingles no existe "quiero, juego, aprendo" siempre se utiliza "querer, jugar, aprender"</li>
+                  <li>Frutas frescas, suéter rojo, mesa grande siempre se invierte por "Frescas frutas, rojo sueter, grande mesa"</li>
+                  <li>En Ingles nunca se utiliza fresca<span className="text-yellow-500">s</span>, rojo<span className="text-yellow-500">s</span>, grande<span className="text-yellow-500">s</span> solo se dice "fresca, rojo, grande"</li>
+                </ul>
+              ) : (
+                <div className="mt-4 space-y-3">
+                  <p className="text-foreground text-base">
+                    <strong>IN</strong> = Ubicación del objeto
+                  </p>
+                  <p className="text-foreground text-base">
+                    <strong>AT</strong> = Ubicación de la acción
+                  </p>
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setShowTipsModal(false)}>Entendido</Button>

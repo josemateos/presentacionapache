@@ -399,37 +399,42 @@ const LearnPhrase = () => {
   const checkPronunciation = () => {
     const correctPhrase = englishPhrase.toLowerCase().trim();
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
-    
-    const userWords = userPhrase.split(/\s+/).filter(w => w.length > 0);
-    const correctWords = correctPhrase.split(/\s+/).filter(w => w.length > 0);
-    
-    // Calcular porcentaje basado en palabras coincidentes
-    const wordMatches = userWords.filter((userWord) => 
-      correctWords.includes(userWord)
-    );
-    
-    const accuracy = correctWords.length > 0 
-      ? (wordMatches.length / correctWords.length) * 100 
-      : 0;
-    
-    if (accuracy >= 100) {
+
+    const userWords = userPhrase.split(/\s+/).filter((w) => w.length > 0);
+    const correctWords = correctPhrase.split(/\s+/).filter((w) => w.length > 0);
+
+    // Mapear frecuencias para validar presencia y conteo
+    const freq = (arr: string[]) => arr.reduce<Record<string, number>>((acc, w) => {
+      acc[w] = (acc[w] || 0) + 1;
+      return acc;
+    }, {});
+
+    const correctFreq = freq(correctWords);
+    const userFreq = freq(userWords);
+
+    // Verificar: todas las palabras requeridas presentes con el conteo correcto o mayor
+    const missingRequired = Object.entries(correctFreq).some(([w, c]) => (userFreq[w] || 0) < c);
+    // Verificar: no haya palabras extra que no estén en la frase correcta
+    const hasExtras = Object.keys(userFreq).some((w) => !correctFreq[w]);
+
+    const isAllCorrect = !missingRequired && !hasExtras && userWords.length > 0;
+
+    if (isAllCorrect) {
       setFeedback("¡Excelente pronunciación! Has completado la frase");
       setIsStepComplete(true);
-      
+
       // Marcar como aprendida
       const savedKey = `phrases_day${day}_progress`;
       const saved = localStorage.getItem(savedKey);
       if (saved) {
         const phrases = JSON.parse(saved);
-        const updated = phrases.map((p: any) => 
-          p.id === phraseId ? { ...p, learned: true } : p
-        );
+        const updated = phrases.map((p: any) => (p.id === phraseId ? { ...p, learned: true } : p));
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
     } else {
-      setFeedback(`Pronunciación incorrecta (${Math.round(accuracy)}% correcto). Intenta de nuevo`);
+      setFeedback("Aún hay palabras por corregir en la pronunciación.");
       toast({
-        title: "Intenta nuevamente",
+        title: "Hay palabras por corregir",
         description: "Revisa tu pronunciación y vuelve a intentar",
         variant: "destructive",
       });
@@ -849,7 +854,7 @@ const LearnPhrase = () => {
                 {!isRecording ? (
                   <Button 
                     onClick={startRecording} 
-                    disabled={isStepComplete}
+                    disabled={false}
                     className="flex-1"
                   >
                     <Volume2 className="w-4 h-4 mr-2" />

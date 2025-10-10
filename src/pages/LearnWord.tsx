@@ -1306,7 +1306,7 @@ const LearnWord = () => {
                 Deletrea la palabra
               </h3>
               <p className="text-center text-lg text-muted-foreground mb-6">
-                Forma la palabra: <span className="text-primary font-semibold">{wordId === "26" ? "In/At" : english}</span>
+                <span className="text-primary font-semibold">{wordId === "26" ? "In/At" : english}</span> en Inglés
               </p>
               
               {wordId === "26" ? (

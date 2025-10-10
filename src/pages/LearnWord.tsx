@@ -1201,7 +1201,7 @@ const LearnWord = () => {
                 Escribe la palabra en Inglés
               </h3>
               <p className="text-center text-lg text-muted-foreground mb-6">
-                ¿Cómo se dice "<span className="text-primary font-semibold">{spanish}</span>" en inglés?
+                Escribe <span className="text-primary font-semibold">{spanish}</span> en Inglés
               </p>
               
               {wordId === "26" ? (
@@ -1306,7 +1306,7 @@ const LearnWord = () => {
                 Deletrea la palabra
               </h3>
               <p className="text-center text-lg text-muted-foreground mb-6">
-                <span className="text-primary font-semibold">{wordId === "26" ? "In/At" : english}</span> en Inglés
+                <span className="text-primary font-semibold">{spanish}</span> en Inglés
               </p>
               
               {wordId === "26" ? (

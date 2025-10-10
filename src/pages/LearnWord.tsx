@@ -977,19 +977,82 @@ const LearnWord = () => {
   // Manejar ortografía
   const handleLetterClick = (letter: string, index: number) => {
     if (!usedLetterIndices.includes(index)) {
-      setSpellingAttempt(prev => prev + letter);
+      // Special handling for wordId 26 (In/At)
+      if (wordId === "26") {
+        // If userInput1 has less than 2 letters, add to userInput1
+        if (userInput1.length < 2) {
+          setUserInput1(prev => prev + letter);
+        } else if (userInput2.length < 2) {
+          // Otherwise add to userInput2
+          setUserInput2(prev => prev + letter);
+        }
+      } else {
+        setSpellingAttempt(prev => prev + letter);
+      }
       setUsedLetterIndices(prev => [...prev, index]);
     }
   };
 
   const handleRemoveLastLetter = () => {
-    if (spellingAttempt.length > 0) {
-      setSpellingAttempt(prev => prev.slice(0, -1));
-      setUsedLetterIndices(prev => prev.slice(0, -1));
+    if (wordId === "26") {
+      // Remove from userInput2 first, then userInput1
+      if (userInput2.length > 0) {
+        setUserInput2(prev => prev.slice(0, -1));
+        setUsedLetterIndices(prev => prev.slice(0, -1));
+      } else if (userInput1.length > 0) {
+        setUserInput1(prev => prev.slice(0, -1));
+        setUsedLetterIndices(prev => prev.slice(0, -1));
+      }
+    } else {
+      if (spellingAttempt.length > 0) {
+        setSpellingAttempt(prev => prev.slice(0, -1));
+        setUsedLetterIndices(prev => prev.slice(0, -1));
+      }
     }
   };
 
   const handleCheckSpelling = () => {
+    // Special handling for wordId 26 (In/At)
+    if (wordId === "26") {
+      const correct1 = userInput1.toLowerCase() === "in";
+      const correct2 = userInput2.toLowerCase() === "at";
+      
+      if (correct1 && correct2) {
+        playSuccessSound();
+        toast({
+          title: "¡Correcto!",
+          description: "Excelente trabajo",
+          duration: 1500,
+          className: "bg-green-500 text-white border-green-600",
+        });
+        
+        setTimeout(() => {
+          const updatedProgress = moduleProgress.map(m => 
+            m.id === currentModule ? { ...m, completed: true } : m
+          );
+          setModuleProgress(updatedProgress);
+          
+          if (checkIfAllModulesCompleted(updatedProgress)) {
+            markWordAsLearned();
+            setCurrentModule(6);
+          } else {
+            setCurrentModule(currentModule + 1);
+          }
+          setUserInput1("");
+          setUserInput2("");
+          setUsedLetterIndices([]);
+        }, 1000);
+      } else {
+        toast({
+          title: "Incorrecto",
+          description: "Forma 'In' y 'At' con las letras disponibles",
+          variant: "destructive",
+          duration: 1500,
+        });
+      }
+      return;
+    }
+    
     const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase();
     
     if (isCorrect) {
@@ -1128,23 +1191,29 @@ const LearnWord = () => {
               {wordId === "26" ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-4">
-                    <Input
-                      value={userInput1}
-                      onChange={(e) => setUserInput1(e.target.value)}
-                      placeholder="..."
-                      className="text-center text-xl h-14 w-32"
-                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
-                      autoComplete="off"
-                    />
-                    <span className="text-2xl font-bold text-muted-foreground">o</span>
-                    <Input
-                      value={userInput2}
-                      onChange={(e) => setUserInput2(e.target.value)}
-                      placeholder="..."
-                      className="text-center text-xl h-14 w-32"
-                      onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
-                      autoComplete="off"
-                    />
+                    <div className="flex flex-col items-center">
+                      <p className="text-xs text-muted-foreground mb-2">Ubicación del objeto</p>
+                      <Input
+                        value={userInput1}
+                        onChange={(e) => setUserInput1(e.target.value)}
+                        placeholder="..."
+                        className="text-center text-xl h-14 w-32"
+                        onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <span className="text-2xl font-bold text-muted-foreground mt-6">o</span>
+                    <div className="flex flex-col items-center">
+                      <p className="text-xs text-muted-foreground mb-2">Ubicación de la acción</p>
+                      <Input
+                        value={userInput2}
+                        onChange={(e) => setUserInput2(e.target.value)}
+                        placeholder="..."
+                        className="text-center text-xl h-14 w-32"
+                        onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
+                        autoComplete="off"
+                      />
+                    </div>
                   </div>
                   
                   <Button
@@ -1221,51 +1290,108 @@ const LearnWord = () => {
                 Deletrea la palabra
               </h3>
               <p className="text-center text-lg text-muted-foreground mb-6">
-                Forma la palabra: <span className="text-primary font-semibold">{english}</span>
+                Forma la palabra: <span className="text-primary font-semibold">{wordId === "26" ? "In/At" : english}</span>
               </p>
               
-              {/* Área de respuesta */}
-              <div className="min-h-[80px] bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 mb-6 flex items-center justify-center">
-                <p className="text-2xl font-bold tracking-wider text-primary">
-                  {spellingAttempt || " "}
-                </p>
-              </div>
-              
-              {/* Botones de letras */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {jumbledLetters.map((letter, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className={`w-12 h-12 text-xl font-bold ${
-                      usedLetterIndices.includes(index) ? "opacity-30" : ""
-                    }`}
-                    onClick={() => handleLetterClick(letter, index)}
-                    disabled={usedLetterIndices.includes(index)}
-                  >
-                    {letter.toUpperCase()}
-                  </Button>
-                ))}
-              </div>
-              
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={handleRemoveLastLetter}
-                  disabled={spellingAttempt.length === 0}
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Borrar Última
-                </Button>
-                <Button
-                  className="flex-1 gradient-animated"
-                  onClick={handleCheckSpelling}
-                  disabled={spellingAttempt.length === 0}
-                >
-                  Verificar
-                </Button>
-              </div>
+              {wordId === "26" ? (
+                <>
+                  {/* Área de respuesta para "In" y "At" */}
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="min-h-[80px] w-32 bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 flex items-center justify-center">
+                      <p className="text-2xl font-bold tracking-wider text-primary">
+                        {userInput1 || " "}
+                      </p>
+                    </div>
+                    <span className="text-2xl font-bold text-muted-foreground">o</span>
+                    <div className="min-h-[80px] w-32 bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 flex items-center justify-center">
+                      <p className="text-2xl font-bold tracking-wider text-primary">
+                        {userInput2 || " "}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Botones de letras */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    {jumbledLetters.map((letter, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className={`w-12 h-12 text-xl font-bold ${
+                          usedLetterIndices.includes(index) ? "opacity-30" : ""
+                        }`}
+                        onClick={() => handleLetterClick(letter, index)}
+                        disabled={usedLetterIndices.includes(index)}
+                      >
+                        {letter.toUpperCase()}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={handleRemoveLastLetter}
+                      disabled={userInput1.length === 0 && userInput2.length === 0}
+                    >
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Borrar Última
+                    </Button>
+                    <Button
+                      className="flex-1 gradient-animated"
+                      onClick={handleCheckSpelling}
+                      disabled={userInput1.length === 0 || userInput2.length === 0}
+                    >
+                      Verificar
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Área de respuesta */}
+                  <div className="min-h-[80px] bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 mb-6 flex items-center justify-center">
+                    <p className="text-2xl font-bold tracking-wider text-primary">
+                      {spellingAttempt || " "}
+                    </p>
+                  </div>
+                  
+                  {/* Botones de letras */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    {jumbledLetters.map((letter, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className={`w-12 h-12 text-xl font-bold ${
+                          usedLetterIndices.includes(index) ? "opacity-30" : ""
+                        }`}
+                        onClick={() => handleLetterClick(letter, index)}
+                        disabled={usedLetterIndices.includes(index)}
+                      >
+                        {letter.toUpperCase()}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={handleRemoveLastLetter}
+                      disabled={spellingAttempt.length === 0}
+                    >
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Borrar Última
+                    </Button>
+                    <Button
+                      className="flex-1 gradient-animated"
+                      onClick={handleCheckSpelling}
+                      disabled={spellingAttempt.length === 0}
+                    >
+                      Verificar
+                    </Button>
+                  </div>
+                </>
+              )}
             </Card>
           </motion.div>
         );
@@ -1282,7 +1408,7 @@ const LearnWord = () => {
                 Selecciona la imagen correcta
               </h3>
               <p className="text-center text-lg text-muted-foreground mb-6">
-                ¿Cuál imagen representa: <span className="text-primary font-semibold">{english}</span>?
+                ¿Cuál imagen representa: <span className="text-primary font-semibold">{wordId === "26" ? "In/At" : english}</span>?
               </p>
               
               {isLoadingImages ? (
@@ -1331,7 +1457,7 @@ const LearnWord = () => {
                 Elige el significado correcto
               </h3>
               <p className="text-center text-3xl font-bold text-primary mb-8">
-                {english.charAt(0).toUpperCase() + english.slice(1)}
+                {wordId === "26" ? "In/At" : english.charAt(0).toUpperCase() + english.slice(1)}
               </p>
               
               <p className="text-sm text-center text-muted-foreground mb-6">

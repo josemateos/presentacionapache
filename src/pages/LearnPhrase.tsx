@@ -400,15 +400,15 @@ const LearnPhrase = () => {
     
     const userWords = userPhrase.split(/\s+/).filter(w => w.length > 0);
     const correctWords = correctPhrase.split(/\s+/).filter(w => w.length > 0);
-    let matches = 0;
     
-    correctWords.forEach((word) => {
-      if (userWords.some(userWord => userWord === word)) {
-        matches++;
-      }
-    });
+    // Calcular porcentaje basado en palabras coincidentes
+    const wordMatches = userWords.filter((userWord) => 
+      correctWords.includes(userWord)
+    );
     
-    const accuracy = (matches / correctWords.length) * 100;
+    const accuracy = correctWords.length > 0 
+      ? (wordMatches.length / correctWords.length) * 100 
+      : 0;
     
     if (accuracy >= 100) {
       setFeedback("¡Excelente pronunciación! Has completado la frase");

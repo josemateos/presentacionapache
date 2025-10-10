@@ -293,8 +293,9 @@ const LearnPhrase = () => {
   };
 
   const checkPronunciation = () => {
+    // Usar la frase de la URL como referencia
+    const correctPhrase = englishPhrase.toLowerCase().trim();
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
-    const correctPhrase = exerciseData.finalEnglishSolution.join(' ').toLowerCase();
     
     // Calcular similitud palabra por palabra
     const userWords = userPhrase.split(/\s+/).filter(w => w.length > 0);
@@ -711,7 +712,7 @@ const LearnPhrase = () => {
                 {recordedTranscript.length > 0 ? (
                   recordedTranscript.map((word, index) => {
                     const wordLower = word.toLowerCase();
-                    const correctWords = exerciseData.finalEnglishSolution.map(w => w.toLowerCase());
+                    const correctWords = englishPhrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
                     const isCorrect = correctWords.includes(wordLower);
                     
                     return (

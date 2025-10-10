@@ -26,8 +26,8 @@ interface PhraseData {
 // Datos de las frases con sus ejercicios
 const phrasesExerciseData: Record<number, PhraseData> = {
   1: {
-    spanishWords: ["Quiero", "comprar", "fruta", "fresca", "en", "el", "mercado"],
-    apacheSpanishBank: ["Yo", "Quiero", "comprar", "fruta", "fresca", "en", "el", "mercado", "querer", "frescas", "ahora"],
+    spanishWords: ["Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado"],
+    apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "fresca", "en", "el", "mercado", "querer", "frescas", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "fruta", "en", "el", "mercado"],
     apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruit", "at", "the", "market"],
     finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruit", "at", "the", "market"],

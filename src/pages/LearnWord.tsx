@@ -1198,7 +1198,7 @@ const LearnWord = () => {
           >
             <Card className="p-8">
               <h3 className="text-2xl font-bold mb-6 text-center gradient-text-primary">
-                Escribe <span className="text-white font-bold text-3xl">{spanish}</span> en Inglés
+                Escribe <span className="!text-white font-bold text-3xl">{spanish}</span> en Inglés
               </h3>
               
               {wordId === "26" ? (

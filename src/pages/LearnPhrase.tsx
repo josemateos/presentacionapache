@@ -208,19 +208,8 @@ const LearnPhrase = () => {
     const correctPhrase = exerciseData.finalEnglishSolution.join(" ");
     
     if (userTrimmed === correctPhrase) {
-      setFeedback("¡Perfecto! Has dominado esta frase completamente");
+      setFeedback("¡Perfecto! Ahora practica tu pronunciación");
       setIsStepComplete(true);
-      
-      // Marcar como aprendida
-      const savedKey = `phrases_day${day}_progress`;
-      const saved = localStorage.getItem(savedKey);
-      if (saved) {
-        const phrases = JSON.parse(saved);
-        const updated = phrases.map((p: any) => 
-          p.id === phraseId ? { ...p, learned: true } : p
-        );
-        localStorage.setItem(savedKey, JSON.stringify(updated));
-      }
     } else {
       setFeedback("No es correcto. Revisa tu respuesta o repasa los ejercicios");
       toast({
@@ -307,13 +296,14 @@ const LearnPhrase = () => {
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
     const correctPhrase = exerciseData.finalEnglishSolution.join(' ').toLowerCase();
     
-    // Calcular similitud (simple comparación de palabras)
-    const userWords = userPhrase.split(' ');
-    const correctWords = correctPhrase.split(' ');
+    // Calcular similitud palabra por palabra
+    const userWords = userPhrase.split(/\s+/).filter(w => w.length > 0);
+    const correctWords = correctPhrase.split(/\s+/).filter(w => w.length > 0);
     let matches = 0;
     
-    correctWords.forEach((word, index) => {
-      if (userWords[index] && userWords[index].toLowerCase() === word.toLowerCase()) {
+    // Verificar cada palabra correcta en las palabras del usuario
+    correctWords.forEach((word) => {
+      if (userWords.some(userWord => userWord === word)) {
         matches++;
       }
     });
@@ -323,6 +313,17 @@ const LearnPhrase = () => {
     if (accuracy >= 80) {
       setFeedback("¡Excelente pronunciación! Has completado la frase");
       setIsStepComplete(true);
+      
+      // Marcar como aprendida
+      const savedKey = `phrases_day${day}_progress`;
+      const saved = localStorage.getItem(savedKey);
+      if (saved) {
+        const phrases = JSON.parse(saved);
+        const updated = phrases.map((p: any) => 
+          p.id === phraseId ? { ...p, learned: true } : p
+        );
+        localStorage.setItem(savedKey, JSON.stringify(updated));
+      }
     } else {
       setFeedback(`Pronunciación incorrecta (${Math.round(accuracy)}% correcto). Intenta de nuevo`);
       toast({
@@ -700,8 +701,7 @@ const LearnPhrase = () => {
 
             {/* Frase en español */}
             <div className="bg-background/50 rounded-lg p-4 mb-4 border-2 border-border">
-              <p className="text-sm text-muted-foreground text-center mb-1">Frase en Español:</p>
-              <p className="text-center text-foreground font-medium">"{exerciseData.spanishWords.join(" ")}"</p>
+              <p className="text-center text-foreground font-medium text-lg">"{exerciseData.spanishWords.join(" ")}"</p>
             </div>
 
             {/* Palabras reconocidas */}
@@ -709,11 +709,24 @@ const LearnPhrase = () => {
               <p className="text-sm text-muted-foreground text-center mb-2">Palabras detectadas:</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {recordedTranscript.length > 0 ? (
-                  recordedTranscript.map((word, index) => (
-                    <span key={index} className="px-3 py-1 bg-secondary text-foreground rounded-md text-sm">
-                      {word}
-                    </span>
-                  ))
+                  recordedTranscript.map((word, index) => {
+                    const wordLower = word.toLowerCase();
+                    const correctWords = exerciseData.finalEnglishSolution.map(w => w.toLowerCase());
+                    const isCorrect = correctWords.includes(wordLower);
+                    
+                    return (
+                      <span 
+                        key={index} 
+                        className={`px-3 py-1 rounded-md text-sm ${
+                          isCorrect 
+                            ? "bg-green-500/20 text-green-500 border border-green-500" 
+                            : "bg-red-500/20 text-red-500 border border-red-500"
+                        }`}
+                      >
+                        {word}
+                      </span>
+                    );
+                  })
                 ) : (
                   <p className="text-muted-foreground text-sm">Las palabras aparecerán aquí mientras hablas...</p>
                 )}

@@ -29,8 +29,8 @@ const phrasesExerciseData: Record<number, PhraseData> = {
     spanishWords: ["Quiero", "comprar", "frutas", "frescas", "en", "el", "mercado"],
     apacheSpanishBank: ["Yo", "Quiero", "comprar", "frutas", "fresca", "en", "el", "mercado", "querer", "frescas", "ahora"],
     apacheSpanishSolution: ["yo", "querer", "comprar", "fresca", "frutas", "en", "el", "mercado"],
-    apacheEnglishSolution: ["i", "want", "buy", "fresh", "fruits", "at", "the", "market"],
-    finalEnglishSolution: ["i", "want", "to", "buy", "fresh", "fruit", "at", "the", "market"],
+    apacheEnglishSolution: ["I", "want", "buy", "fresh", "fruits", "at", "the", "market"],
+    finalEnglishSolution: ["I", "want", "to", "buy", "fresh", "fruits", "at", "the", "market"],
     auxiliary: "to",
   },
   2: {
@@ -133,7 +133,8 @@ const LearnPhrase = () => {
 
   const getInputColorClass = (index: number, value: string) => {
     if (!value) return "";
-    const isCorrect = value.toLowerCase() === exerciseData.apacheEnglishSolution[index];
+    // Para "I" (yo), debe ser mayúscula exacta
+    const isCorrect = value === exerciseData.apacheEnglishSolution[index];
     return isCorrect 
       ? "text-green-500 bg-green-500/20 border-green-500" 
       : "text-red-500 bg-red-500/20 border-red-500";
@@ -148,8 +149,9 @@ const LearnPhrase = () => {
   };
 
   const checkEnglishSolution = () => {
-    const userLower = userAttemptEnglish.map(w => w.toLowerCase().trim());
-    const isCorrect = JSON.stringify(userLower) === JSON.stringify(exerciseData.apacheEnglishSolution);
+    // Validar con case-sensitive para "I" mayúscula
+    const userTrimmed = userAttemptEnglish.map(w => w.trim());
+    const isCorrect = JSON.stringify(userTrimmed) === JSON.stringify(exerciseData.apacheEnglishSolution);
     
     if (isCorrect) {
       setFeedback("¡Perfecto! Has traducido correctamente al Inglés Apache");
@@ -188,10 +190,7 @@ const LearnPhrase = () => {
 
   const checkFinalPhrase = () => {
     const userTrimmed = finalPhrase.trim();
-    // Crear la frase correcta con "I" mayúscula
-    const correctPhraseArray = [...exerciseData.finalEnglishSolution];
-    correctPhraseArray[0] = correctPhraseArray[0] === "i" ? "I" : correctPhraseArray[0];
-    const correctPhrase = correctPhraseArray.join(" ");
+    const correctPhrase = exerciseData.finalEnglishSolution.join(" ");
     
     if (userTrimmed === correctPhrase) {
       setFeedback("¡Perfecto! Has dominado esta frase completamente");

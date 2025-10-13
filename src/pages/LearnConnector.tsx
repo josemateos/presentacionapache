@@ -187,9 +187,9 @@ const LearnConnector = () => {
       
       toast({
         title: "¡Completado!",
-        description: `Conector ${connector.english} "${connector.spanish}" ha sido agregado a tu Vocabulario`,
+        description: `Conector "${connector.english}" "${connector.spanish}" ha sido agregado a tu Vocabulario`,
         duration: 3000,
-        className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-xl font-bold bg-green-500/90 text-white border-green-500",
+        className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md text-center text-xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 text-white border-2 border-green-400 shadow-2xl p-6 rounded-xl",
       });
       setTimeout(() => {
         navigate("/auxiliaries/conectores-ing");
@@ -232,7 +232,7 @@ const LearnConnector = () => {
         title: "Incompleto",
         description: "Debes fusionar 'ing' con el verbo correcto",
         variant: "destructive",
-        duration: 1000,
+        duration: 2000,
       });
       return;
     }
@@ -255,7 +255,7 @@ const LearnConnector = () => {
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1000,
+        duration: 2000,
       });
     }
   };
@@ -263,7 +263,12 @@ const LearnConnector = () => {
   // Paso 2: Manejar clic en palabra (incluyendo "ing")
   const handleWordClick = (word: string) => {
     if (!isStepComplete) {
-      setUserWords([...userWords, word]);
+      // Solo permitir si la palabra no ha sido usada aún
+      const usedCount = userWords.filter(w => w === word || w === word + "ing").length;
+      const totalCount = randomizedWords.filter(w => w === word).length;
+      if (usedCount < totalCount) {
+        setUserWords([...userWords, word]);
+      }
     }
   };
 
@@ -313,7 +318,7 @@ const LearnConnector = () => {
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1000,
+        duration: 2000,
       });
     }
   };
@@ -350,7 +355,7 @@ const LearnConnector = () => {
           title: "Incorrecto",
           description: "Intenta nuevamente",
           variant: "destructive",
-          duration: 1000,
+          duration: 2000,
         });
       }
     } else {
@@ -358,7 +363,7 @@ const LearnConnector = () => {
         title: "Incompleto",
         description: "Debes completar la palabra antes de verificar",
         variant: "destructive",
-        duration: 1000,
+        duration: 2000,
       });
     }
   };
@@ -379,7 +384,7 @@ const LearnConnector = () => {
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1000,
+        duration: 2000,
       });
     }
   };
@@ -522,38 +527,26 @@ const LearnConnector = () => {
               className="space-y-4"
             >
               <Card className="bg-card border-border shadow-md">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-xl font-bold text-center text-primary">
-                    Ordena las palabras correctamente
-                  </h2>
-                  <p className="text-center text-lg font-medium text-muted-foreground">
-                    {connector.spanish}
-                  </p>
-
-                  {/* Área de construcción */}
-                  <div className="bg-muted/30 rounded-lg p-4 min-h-[100px] border-2 border-dashed border-border">
-                    <div className="flex flex-wrap gap-2 justify-center items-center">
-                      {userWords.map((word, index) => {
-                        // Separar la palabra base y el "ing" fusionado para colorearlo
-                        const hasIng = word.endsWith("ing") && ingToken === index.toString();
-                        const baseWord = hasIng ? word.slice(0, -3) : word;
-                        const ingPart = hasIng ? "ing" : "";
-                        
-                        return (
-                          <div key={index} className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-base">
-                            {baseWord}
-                            {ingPart && <span className="text-yellow-400">{ingPart}</span>}
-                          </div>
-                        );
-                      })}
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-xl font-bold text-primary">2</span>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-lg font-bold text-primary mb-1">
+                        Traduce a Español Apache
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Haz clic en las palabras para formar la frase
+                      </p>
                     </div>
                   </div>
 
                   {/* Banco de palabras */}
-                  <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                  <div className="bg-primary/10 rounded-xl p-4 border-2 border-dashed border-primary/30">
                     <div className="flex flex-wrap gap-2 justify-center">
                       {randomizedWords.map((word, index) => {
-                        const usedCount = userWords.filter(w => w === word).length;
+                        const usedCount = userWords.filter(w => w === word || w === word + "ing").length;
                         const totalCount = randomizedWords.filter(w => w === word).length;
                         const isUsed = usedCount >= totalCount;
                         return (
@@ -561,7 +554,7 @@ const LearnConnector = () => {
                             key={index}
                             onClick={() => handleWordClick(word)}
                             disabled={isStepComplete || isUsed}
-                            className="px-4 py-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-medium text-base transition-all disabled:opacity-30 disabled:cursor-not-allowed border border-border"
+                            className="px-4 py-2.5 bg-primary/90 hover:bg-primary text-primary-foreground rounded-lg font-semibold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
                           >
                             {word}
                           </button>
@@ -571,25 +564,48 @@ const LearnConnector = () => {
                       <button
                         onClick={handleFuseIng}
                         disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
-                        className="px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-600 dark:text-yellow-400 rounded-md font-bold text-base transition-all disabled:opacity-30 disabled:cursor-not-allowed border border-yellow-500/50"
+                        className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
                       >
                         ing
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
+                  {/* Área de construcción */}
+                  <div className="bg-card/50 rounded-xl p-4 min-h-[120px] border border-border">
+                    <div className="flex flex-wrap gap-2 justify-center items-center">
+                      {userWords.length === 0 ? (
+                        <p className="text-muted-foreground/50 text-sm">Selecciona las palabras arriba...</p>
+                      ) : (
+                        userWords.map((word, index) => {
+                          // Separar la palabra base y el "ing" fusionado para colorearlo
+                          const hasIng = word.endsWith("ing") && ingToken === index.toString();
+                          const baseWord = hasIng ? word.slice(0, -3) : word;
+                          const ingPart = hasIng ? "ing" : "";
+                          
+                          return (
+                            <div key={index} className="px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold text-sm shadow-sm">
+                              {baseWord}
+                              {ingPart && <span className="text-yellow-400">{ingPart}</span>}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
                     <Button
                       onClick={handleRemoveWord}
                       variant="outline"
-                      className="flex-1 border-border hover:bg-secondary/80"
+                      className="flex-1 border-border hover:bg-secondary/80 font-semibold"
                       disabled={userWords.length === 0}
                     >
                       Borrar
                     </Button>
                     <Button
                       onClick={handleVerifyWords}
-                      className="flex-1 gradient-animated"
+                      className="flex-1 gradient-animated font-semibold"
                     >
                       Verificar
                     </Button>

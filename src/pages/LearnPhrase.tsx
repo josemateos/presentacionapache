@@ -392,13 +392,16 @@ const LearnPhrase = () => {
     }
     
     setIsRecording(false);
-    
-    // La evaluación ocurrirá en recognition.onend
   };
 
   const checkPronunciation = () => {
     const correctPhrase = englishPhrase.toLowerCase().trim();
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
+
+    // Si no hay transcripción, no validar
+    if (!userPhrase || recordedTranscript.length === 0) {
+      return;
+    }
 
     const userWords = userPhrase.split(/\s+/).filter((w) => w.length > 0);
     const correctWords = correctPhrase.split(/\s+/).filter((w) => w.length > 0);

@@ -30,6 +30,7 @@ const LearnConnector = () => {
   // Paso 2: Ordenar palabras en inglés
   const [userWords, setUserWords] = useState<string[]>([]);
   const [randomizedWords, setRandomizedWords] = useState<string[]>([]);
+  const [ingToken, setIngToken] = useState<string | null>(null);
 
   // Paso 3: Elegir significado correcto en inglés
   const [selectedEnglishMeaning, setSelectedEnglishMeaning] = useState("");
@@ -41,34 +42,38 @@ const LearnConnector = () => {
   // Paso 5: Elegir significado correcto en español
   const [selectedSpanishMeaning, setSelectedSpanishMeaning] = useState("");
 
-  // Generar frase de ejemplo en inglés
+  // Generar frase de ejemplo en inglés y obtener el verbo después del conector
   const generateEnglishPhrase = () => {
     const word = connector?.english || "";
-    const phrases: { [key: string]: string } = {
-      "About": "I am thinking about going there",
-      "After": "She called me after finishing work",
-      "Against": "They are fighting against corruption",
-      "At": "He is good at speaking English",
-      "Besides": "Besides studying I enjoy playing sports",
-      "Before": "Check everything before leaving home",
-      "By": "She learned English by watching movies",
-      "Despite": "Despite raining we went outside",
-      "For": "Thank you for helping me today",
-      "From": "I come from learning new things",
-      "In": "She is interested in learning languages",
-      "Instead of": "Instead of complaining try helping",
-      "Like": "It feels like flying in sky",
-      "Of": "I am tired of waiting here",
-      "On": "Keep on working hard everyday",
-      "Since": "Since starting I have improved",
-      "Through": "I succeeded through practicing daily",
-      "Towards": "We are working towards achieving goals",
-      "Upon": "Upon arriving she started working",
-      "With": "Start with understanding the basics",
-      "Without": "Without trying you cannot succeed",
+    const phrases: { [key: string]: { phrase: string; verbAfterConnector: string } } = {
+      "About": { phrase: "I am thinking about going there", verbAfterConnector: "going" },
+      "After": { phrase: "She called me after finishing work", verbAfterConnector: "finishing" },
+      "Against": { phrase: "They are fighting against corruption", verbAfterConnector: "corruption" },
+      "At": { phrase: "He is good at speaking English", verbAfterConnector: "speaking" },
+      "Besides": { phrase: "Besides studying I enjoy playing sports", verbAfterConnector: "studying" },
+      "Before": { phrase: "Check everything before leaving home", verbAfterConnector: "leaving" },
+      "By": { phrase: "She learned English by watching movies", verbAfterConnector: "watching" },
+      "Despite": { phrase: "Despite raining we went outside", verbAfterConnector: "raining" },
+      "For": { phrase: "Thank you for helping me today", verbAfterConnector: "helping" },
+      "From": { phrase: "I come from learning new things", verbAfterConnector: "learning" },
+      "In": { phrase: "She is interested in learning languages", verbAfterConnector: "learning" },
+      "Instead of": { phrase: "Instead of complaining try helping", verbAfterConnector: "complaining" },
+      "Like": { phrase: "It feels like flying in sky", verbAfterConnector: "flying" },
+      "Of": { phrase: "I am tired of waiting here", verbAfterConnector: "waiting" },
+      "On": { phrase: "Keep on working hard everyday", verbAfterConnector: "working" },
+      "Since": { phrase: "Since starting I have improved", verbAfterConnector: "starting" },
+      "Through": { phrase: "I succeeded through practicing daily", verbAfterConnector: "practicing" },
+      "Towards": { phrase: "We are working towards achieving goals", verbAfterConnector: "achieving" },
+      "Upon": { phrase: "Upon arriving she started working", verbAfterConnector: "arriving" },
+      "With": { phrase: "Start with understanding the basics", verbAfterConnector: "understanding" },
+      "Without": { phrase: "Without trying you cannot succeed", verbAfterConnector: "trying" },
     };
-    return phrases[word] || `I am ${word.toLowerCase()} doing something`;
+    return phrases[word] || { phrase: `I am ${word.toLowerCase()} doing something`, verbAfterConnector: "doing" };
   };
+
+  const [englishPhraseData] = useState(generateEnglishPhrase());
+  const englishPhrase = englishPhraseData.phrase;
+  const verbAfterConnector = englishPhraseData.verbAfterConnector;
 
   // Opciones para paso 3 (significado en inglés)
   const getEnglishOptions = () => {
@@ -86,7 +91,6 @@ const LearnConnector = () => {
     return [connector?.spanish || "", ...uniqueOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
   };
 
-  const [englishPhrase] = useState(generateEnglishPhrase());
   const [englishOptions] = useState(getEnglishOptions());
   const [spanishOptions] = useState(getSpanishOptions());
 
@@ -96,8 +100,13 @@ const LearnConnector = () => {
       return;
     }
 
-    // Inicializar palabras para paso 2 con dos palabras distractoras
-    const words = englishPhrase.split(" ");
+    // Inicializar palabras para paso 2 - eliminar "ing" del verbo después del conector
+    const words = englishPhrase.split(" ").map(word => {
+      if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
+        return word.slice(0, -3); // Eliminar "ing"
+      }
+      return word;
+    });
     const distractorWords = ["yesterday", "quickly"];
     const allWords = [...words, ...distractorWords];
     setRandomizedWords([...allWords].sort(() => Math.random() - 0.5));
@@ -107,7 +116,7 @@ const LearnConnector = () => {
     const distractorLetters = ["Z", "Q"];
     const allLetters = [...letters, ...distractorLetters];
     setRandomizedLetters([...allLetters].sort(() => Math.random() - 0.5));
-  }, [connector, navigate, englishPhrase]);
+  }, [connector, navigate, englishPhrase, verbAfterConnector]);
 
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -159,6 +168,7 @@ const LearnConnector = () => {
       
       if (currentStep === 1) {
         setUserWords([]);
+        setIngToken(null);
       } else if (currentStep === 2) {
         setSelectedEnglishMeaning("");
       } else if (currentStep === 3) {
@@ -179,7 +189,7 @@ const LearnConnector = () => {
         title: "¡Completado!",
         description: `Conector ${connector.english} "${connector.spanish}" ha sido agregado a tu Vocabulario`,
         duration: 3000,
-        className: "text-center",
+        className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-xl font-bold bg-green-500/90 text-white border-green-500",
       });
       setTimeout(() => {
         navigate("/auxiliaries/conectores-ing");
@@ -194,21 +204,58 @@ const LearnConnector = () => {
     }
   };
 
+  // Reproducir sonido de éxito
+  const playSuccessSound = () => {
+    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZUQ0PVK/m7q1aGAc+lt7xwHAiBS2Ay/DajEEIGmm99+GVTgsRYrbn7KZTEwtJpd/yuWwfBTOK0/PYgTAHH3DO8OSaTgwOVbHm7bhfHAU8mdvvxG0hBSx/yO/akTsJF2S68+OUSwsSYbjn7qpUEQxHpOHxumseBS6Gzu7Ygzf7ImfD8eaaSg0NVrHl67dcGgY7mNvwxW8gBS1+x+/bkToJFmK48OGSTQwQYLnm7bBUFA1HouDyu2odBi6DzO/bjTf9I2nE8O2aSwwNVa/l7rdZHgU6l9nww3AdBSt8xu/cjzsJF2G28+aSTg0PX7nn77FTEw1IpN/xuWodBi2CzO7akzj+IWXB8OybSQ4NVq/m77VZHgU5l9rvxHAeBSp7x+7dkDoJFmC28uqRTw4OXrnn8LFSEw1IpN/wtmkdBSyBzO7ZkTj/I2bC8OybSQ4OVa/l77RaGQU5l9nvw3AfBSt7xe3dkToJFl+28OuSTg0OXrjn8LJSEw1IpODwuGkdBi2CzO7akzj/I2XB8OyaSg0OVa7l7rRYGgU4ltnww3EfBSp6xO3dkToJFV6179mRTQ4OXbfm8LFSFAxHo+DwuWkdBi2Cy+7akzj+I2TA8OyaSg0OVa7l7rNYGgU4ltnww3EfBSp6xO3dkToJFl628OuQTw4OXbfm77JTEw1HouDwuGodBiyByu7YkTf/ImXA8eybSQ0OVa3k7rJWGgQ4lNrvw3EdBSp5xO3djzsJFl608eqQTg4OW7bnbrNSEQ1HoeHvt2geByyAyO7YkDb/IW') ;
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+  };
+
   // Paso 2: Verificar orden de palabras
   const handleVerifyWords = () => {
     const userPhrase = userWords.join(" ");
-    if (userPhrase === englishPhrase) {
-      setIsStepComplete(true);
-      toast({
-        title: "¡Correcto!",
-        description: "Has ordenado las palabras correctamente",
-        className: "bg-green-500 border-green-500 text-white",
-        duration: 2000,
-      });
+    // Reconstruir la frase esperada con "ing" añadido
+    const expectedWords = englishPhrase.split(" ").map(word => {
+      if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
+        return word.slice(0, -3); // Sin "ing"
+      }
+      return word;
+    });
+    const userPhraseWithoutIng = userWords.filter(w => w !== "ing").join(" ");
+    const expectedPhraseWithoutIng = expectedWords.join(" ");
+    
+    // Verificar que la frase esté ordenada correctamente Y que "ing" esté en el lugar correcto
+    const verbIndex = userWords.findIndex(w => {
+      const baseWord = w.replace(/ing$/, '');
+      return baseWord.toLowerCase() === verbAfterConnector.toLowerCase().replace(/ing$/, '');
+    });
+    
+    if (verbIndex !== -1 && ingToken !== null) {
+      // Verificar si "ing" está después del verbo correcto
+      const hasIngAfterVerb = userWords[verbIndex + 1] === "ing";
+      const correctPhrase = userPhraseWithoutIng === expectedPhraseWithoutIng && hasIngAfterVerb;
+      
+      if (correctPhrase) {
+        setIsStepComplete(true);
+        playSuccessSound();
+        toast({
+          title: "¡Correcto!",
+          description: "Has ordenado las palabras correctamente",
+          className: "bg-green-500/90 border-green-500 text-white",
+          duration: 2000,
+        });
+      } else {
+        toast({
+          title: "Incorrecto",
+          description: "Intenta nuevamente",
+          variant: "destructive",
+          duration: 1000,
+        });
+      }
     } else {
       toast({
-        title: "Incorrecto",
-        description: "Intenta nuevamente",
+        title: "Incompleto",
+        description: "Debes agregar 'ing' al verbo correcto",
         variant: "destructive",
         duration: 1000,
       });
@@ -225,7 +272,21 @@ const LearnConnector = () => {
   // Paso 2: Eliminar última palabra
   const handleRemoveWord = () => {
     if (userWords.length > 0) {
+      const lastWord = userWords[userWords.length - 1];
+      if (lastWord === "ing") {
+        setIngToken(null);
+      }
       setUserWords(userWords.slice(0, -1));
+    }
+  };
+
+  // Paso 2: Agregar "ing" a una palabra
+  const handleAddIng = (index: number) => {
+    if (ingToken === null && !isStepComplete) {
+      const newWords = [...userWords];
+      newWords.splice(index + 1, 0, "ing");
+      setUserWords(newWords);
+      setIngToken(index.toString());
     }
   };
 
@@ -233,10 +294,11 @@ const LearnConnector = () => {
   const handleVerifyEnglishMeaning = () => {
     if (selectedEnglishMeaning === connector.english) {
       setIsStepComplete(true);
+      playSuccessSound();
       toast({
         title: "¡Correcto!",
         description: "Has seleccionado el significado correcto",
-        className: "bg-green-500 border-green-500 text-white",
+        className: "bg-green-500/90 border-green-500 text-white",
         duration: 2000,
       });
     } else {
@@ -269,10 +331,11 @@ const LearnConnector = () => {
       
       if (userWord === correctWord) {
         setIsStepComplete(true);
+        playSuccessSound();
         toast({
           title: "¡Correcto!",
           description: "Has formado la palabra correctamente",
-          className: "bg-green-500 border-green-500 text-white",
+          className: "bg-green-500/90 border-green-500 text-white",
           duration: 2000,
         });
       } else {
@@ -297,10 +360,11 @@ const LearnConnector = () => {
   const handleVerifySpanishMeaning = () => {
     if (selectedSpanishMeaning === connector.spanish) {
       setIsStepComplete(true);
+      playSuccessSound();
       toast({
         title: "¡Correcto!",
         description: "Has seleccionado el significado correcto",
-        className: "bg-green-500 border-green-500 text-white",
+        className: "bg-green-500/90 border-green-500 text-white",
         duration: 2000,
       });
     } else {
@@ -391,14 +455,25 @@ const LearnConnector = () => {
                   </p>
                   <p className="text-center text-2xl font-bold text-foreground">
                     {englishPhrase.split(' ').map((word, idx) => {
-                      if (word.toLowerCase().endsWith('ing')) {
+                      const lowerWord = word.toLowerCase();
+                      const lowerConnector = connector.english.toLowerCase();
+                      const isConnector = lowerWord === lowerConnector || 
+                                         (connector.english.includes(' ') && englishPhrase.toLowerCase().includes(connector.english.toLowerCase()));
+                      
+                      if (lowerWord === verbAfterConnector.toLowerCase()) {
                         const base = word.slice(0, -3);
                         return (
                           <span key={idx}>
-                            {base}<span className="text-yellow-500">ing</span>{' '}
+                            <span className={isConnector ? "underline decoration-yellow-500 decoration-2" : ""}>{base}</span>
+                            <span className="text-yellow-500">ing</span>{' '}
                           </span>
                         );
                       }
+                      
+                      if (isConnector) {
+                        return <span key={idx} className="underline decoration-yellow-500 decoration-2">{word} </span>;
+                      }
+                      
                       return <span key={idx}>{word} </span>;
                     })}
                   </p>
@@ -450,15 +525,34 @@ const LearnConnector = () => {
 
                   {/* Área de construcción */}
                   <div className="bg-muted/30 rounded-lg p-4 min-h-[100px] border-2 border-dashed border-border">
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {userWords.map((word, index) => (
-                        <div
-                          key={index}
-                          className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-base"
-                        >
-                          {word}
-                        </div>
-                      ))}
+                    <div className="flex flex-wrap gap-2 justify-center items-center">
+                      {userWords.map((word, index) => {
+                        if (word === "ing") {
+                          return (
+                            <div
+                              key={index}
+                              className="px-3 py-2 bg-yellow-500 text-black rounded-md font-bold text-base"
+                            >
+                              {word}
+                            </div>
+                          );
+                        }
+                        return (
+                          <div key={index} className="flex items-center gap-1">
+                            <div className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-base">
+                              {word}
+                            </div>
+                            {!isStepComplete && ingToken === null && (
+                              <button
+                                onClick={() => handleAddIng(index)}
+                                className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-black rounded text-xs font-bold"
+                              >
+                                +ing
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 

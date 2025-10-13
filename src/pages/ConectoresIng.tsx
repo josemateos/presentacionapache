@@ -97,9 +97,9 @@ const ConectoresIng = () => {
                   onClick={() => handleSelectConnector(connector)}
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-1">
+                        <p className="text-sm font-medium text-muted-foreground">
                           {idx + 1}.
                         </p>
                         <p className="text-lg font-bold text-foreground">
@@ -107,7 +107,7 @@ const ConectoresIng = () => {
                         </p>
                       </div>
                       {isCompleted && (
-                        <div className="flex-shrink-0 ml-2">
+                        <div className="flex-shrink-0">
                           <Check className="h-6 w-6 text-green-500" />
                         </div>
                       )}

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -39,6 +39,14 @@ const ConectoresIng = () => {
   const [selectedConnector, setSelectedConnector] = useState<Connector | null>(
     null
   );
+  const [completedConnectors, setCompletedConnectors] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('completedConnectors');
+    if (saved) {
+      setCompletedConnectors(JSON.parse(saved));
+    }
+  }, []);
 
   const handleSelectConnector = (connector: Connector) => {
     setSelectedConnector(connector);
@@ -63,7 +71,10 @@ const ConectoresIng = () => {
               Conectores "ing"
             </h1>
             <p className="text-sm text-muted-foreground">
-              Preposiciones seguidas de gerundio
+              Al verbo después del Conector siempre agrégale "ing"
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Conector, verbo+ing
             </p>
           </div>
         </div>
@@ -72,27 +83,40 @@ const ConectoresIng = () => {
       {/* Content */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {conectores.map((connector, idx) => (
-            <motion.div
-              key={connector.english}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: idx * 0.03 }}
-            >
-              <Card
-                className="cursor-pointer hover:shadow-lg transition-all hover:scale-105"
-                onClick={() => handleSelectConnector(connector)}
+          {conectores.map((connector, idx) => {
+            const isCompleted = completedConnectors.includes(connector.english);
+            return (
+              <motion.div
+                key={connector.english}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.03 }}
               >
-                <CardContent className="p-4">
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-foreground">
-                      {connector.spanish}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                <Card
+                  className="cursor-pointer hover:shadow-lg transition-all hover:scale-105"
+                  onClick={() => handleSelectConnector(connector)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm text-muted-foreground">
+                          {idx + 1}.
+                        </p>
+                        <p className="text-lg font-bold text-foreground">
+                          {connector.spanish}
+                        </p>
+                      </div>
+                      {isCompleted && (
+                        <div className="flex-shrink-0 ml-2">
+                          <Check className="h-6 w-6 text-green-500" />
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       </main>
     </div>

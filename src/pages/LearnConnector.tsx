@@ -167,12 +167,23 @@ const LearnConnector = () => {
         setSelectedSpanishMeaning("");
       }
     } else {
+      // Guardar conector completado
+      const saved = localStorage.getItem('completedConnectors');
+      const completed = saved ? JSON.parse(saved) : [];
+      if (!completed.includes(connector.english)) {
+        completed.push(connector.english);
+        localStorage.setItem('completedConnectors', JSON.stringify(completed));
+      }
+      
       toast({
         title: "¡Completado!",
-        description: `Has completado el aprendizaje de "${connector.spanish}"`,
-        duration: 1500,
+        description: `Conector ${connector.english} "${connector.spanish}" ha sido agregado a tu Vocabulario`,
+        duration: 3000,
+        className: "text-center",
       });
-      navigate("/auxiliaries/conectores-ing");
+      setTimeout(() => {
+        navigate("/auxiliaries/conectores-ing");
+      }, 2000);
     }
   };
 
@@ -191,15 +202,15 @@ const LearnConnector = () => {
       toast({
         title: "¡Correcto!",
         description: "Has ordenado las palabras correctamente",
-        className: "bg-green-500/80 border-green-500 text-white",
-        duration: 1500,
+        className: "bg-green-500 border-green-500 text-white",
+        duration: 2000,
       });
     } else {
       toast({
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1500,
+        duration: 1000,
       });
     }
   };
@@ -225,15 +236,15 @@ const LearnConnector = () => {
       toast({
         title: "¡Correcto!",
         description: "Has seleccionado el significado correcto",
-        className: "bg-green-500/80 border-green-500 text-white",
-        duration: 1500,
+        className: "bg-green-500 border-green-500 text-white",
+        duration: 2000,
       });
     } else {
       toast({
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1500,
+        duration: 1000,
       });
     }
   };
@@ -261,15 +272,15 @@ const LearnConnector = () => {
         toast({
           title: "¡Correcto!",
           description: "Has formado la palabra correctamente",
-          className: "bg-green-500/80 border-green-500 text-white",
-          duration: 1500,
+          className: "bg-green-500 border-green-500 text-white",
+          duration: 2000,
         });
       } else {
         toast({
           title: "Incorrecto",
           description: "Intenta nuevamente",
           variant: "destructive",
-          duration: 1500,
+          duration: 1000,
         });
       }
     } else {
@@ -277,7 +288,7 @@ const LearnConnector = () => {
         title: "Incompleto",
         description: "Debes completar la palabra antes de verificar",
         variant: "destructive",
-        duration: 1500,
+        duration: 1000,
       });
     }
   };
@@ -289,15 +300,15 @@ const LearnConnector = () => {
       toast({
         title: "¡Correcto!",
         description: "Has seleccionado el significado correcto",
-        className: "bg-green-500/80 border-green-500 text-white",
-        duration: 1500,
+        className: "bg-green-500 border-green-500 text-white",
+        duration: 2000,
       });
     } else {
       toast({
         title: "Incorrecto",
         description: "Intenta nuevamente",
         variant: "destructive",
-        duration: 1500,
+        duration: 1000,
       });
     }
   };
@@ -345,7 +356,16 @@ const LearnConnector = () => {
               </div>
             </div>
           </div>
-          <Progress value={progressPercent} className="h-2" />
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((step) => (
+              <div
+                key={step}
+                className={`flex-1 h-2 rounded-full transition-colors ${
+                  step <= currentStep ? 'bg-primary' : 'bg-muted'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </header>
 
@@ -370,7 +390,17 @@ const LearnConnector = () => {
                     Escucha al menos 3 veces
                   </p>
                   <p className="text-center text-2xl font-bold text-foreground">
-                    {englishPhrase}
+                    {englishPhrase.split(' ').map((word, idx) => {
+                      if (word.toLowerCase().endsWith('ing')) {
+                        const base = word.slice(0, -3);
+                        return (
+                          <span key={idx}>
+                            {base}<span className="text-yellow-500">ing</span>{' '}
+                          </span>
+                        );
+                      }
+                      return <span key={idx}>{word} </span>;
+                    })}
                   </p>
 
                   <div className="flex gap-3 justify-center">
@@ -511,16 +541,8 @@ const LearnConnector = () => {
 
                   <div className="flex gap-3">
                     <Button
-                      onClick={() => setSelectedEnglishMeaning("")}
-                      variant="outline"
-                      className="flex-1 border-border hover:bg-secondary/80"
-                      disabled={!selectedEnglishMeaning}
-                    >
-                      Borrar
-                    </Button>
-                    <Button
                       onClick={handleVerifyEnglishMeaning}
-                      className="flex-1 gradient-animated"
+                      className="w-full gradient-animated"
                       disabled={!selectedEnglishMeaning}
                     >
                       Verificar
@@ -659,7 +681,7 @@ const LearnConnector = () => {
         <Button
           onClick={handleNextStep}
           disabled={!isStepComplete}
-          className="w-full gradient-animated"
+          className="w-full gradient-animated mt-6"
           size="lg"
         >
           {currentStep === 5 ? "Finalizar" : "Siguiente"}

@@ -204,68 +204,80 @@ const LearnConnector = () => {
     }
   };
 
-  // Reproducir sonido de éxito
+  // Sonido de éxito (mismo que en VocabularyDay1)
   const playSuccessSound = () => {
-    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZUQ0PVK/m7q1aGAc+lt7xwHAiBS2Ay/DajEEIGmm99+GVTgsRYrbn7KZTEwtJpd/yuWwfBTOK0/PYgTAHH3DO8OSaTgwOVbHm7bhfHAU8mdvvxG0hBSx/yO/akTsJF2S68+OUSwsSYbjn7qpUEQxHpOHxumseBS6Gzu7Ygzf7ImfD8eaaSg0NVrHl67dcGgY7mNvwxW8gBS1+x+/bkToJFmK48OGSTQwQYLnm7bBUFA1HouDyu2odBi6DzO/bjTf9I2nE8O2aSwwNVa/l7rdZHgU6l9nww3AdBSt8xu/cjzsJF2G28+aSTg0PX7nn77FTEw1IpN/xuWodBi2CzO7akzj+IWXB8OybSQ4NVq/m77VZHgU5l9rvxHAeBSp7x+7dkDoJFmC28uqRTw4OXrnn8LFSEw1IpN/wtmkdBSyBzO7ZkTj/I2bC8OybSQ4OVa/l77RaGQU5l9nvw3AfBSt7xe3dkToJFl+28OuSTg0OXrjn8LJSEw1IpODwuGkdBi2CzO7akzj/I2XB8OyaSg0OVa7l7rRYGgU4ltnww3EfBSp6xO3dkToJFV6179mRTQ4OXbfm8LFSFAxHo+DwuWkdBi2Cy+7akzj+I2TA8OyaSg0OVa7l7rNYGgU4ltnww3EfBSp6xO3dkToJFl628OuQTw4OXbfm77JTEw1HouDwuGodBiyByu7YkTf/ImXA8eybSQ0OVa3k7rJWGgQ4lNrvw3EdBSp5xO3djzsJFl608eqQTg4OW7bnbrNSEQ1HoeHvt2geByyAyO7YkDb/IW') ;
-    audio.volume = 0.3;
-    audio.play().catch(() => {});
+    const context = new AudioContext();
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    
+    oscillator.frequency.value = 523.25; // C5
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.3, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+    
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.5);
   };
 
   // Paso 2: Verificar orden de palabras
   const handleVerifyWords = () => {
-    const userPhrase = userWords.join(" ");
-    // Reconstruir la frase esperada con "ing" añadido
-    const expectedWords = englishPhrase.split(" ").map(word => {
-      if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
-        return word.slice(0, -3); // Sin "ing"
-      }
-      return word;
-    });
-    const userPhraseWithoutIng = userWords.filter(w => w !== "ing").join(" ");
-    const expectedPhraseWithoutIng = expectedWords.join(" ");
+    // Verificar que todas las palabras estén colocadas y que "ing" esté fusionado con alguna palabra
+    const hasFusedIng = userWords.some(word => word.endsWith("ing"));
     
-    // Verificar que la frase esté ordenada correctamente Y que "ing" esté en el lugar correcto
-    const verbIndex = userWords.findIndex(w => {
-      const baseWord = w.replace(/ing$/, '');
-      return baseWord.toLowerCase() === verbAfterConnector.toLowerCase().replace(/ing$/, '');
-    });
-    
-    if (verbIndex !== -1 && ingToken !== null) {
-      // Verificar si "ing" está después del verbo correcto
-      const hasIngAfterVerb = userWords[verbIndex + 1] === "ing";
-      const correctPhrase = userPhraseWithoutIng === expectedPhraseWithoutIng && hasIngAfterVerb;
-      
-      if (correctPhrase) {
-        setIsStepComplete(true);
-        playSuccessSound();
-        toast({
-          title: "¡Correcto!",
-          description: "Has ordenado las palabras correctamente",
-          className: "bg-green-500/90 border-green-500 text-white",
-          duration: 2000,
-        });
-      } else {
-        toast({
-          title: "Incorrecto",
-          description: "Intenta nuevamente",
-          variant: "destructive",
-          duration: 1000,
-        });
-      }
-    } else {
+    if (!hasFusedIng) {
       toast({
         title: "Incompleto",
-        description: "Debes agregar 'ing' al verbo correcto",
+        description: "Debes fusionar 'ing' con el verbo correcto",
+        variant: "destructive",
+        duration: 1000,
+      });
+      return;
+    }
+    
+    // Reconstruir la frase esperada
+    const expectedPhrase = englishPhrase;
+    const userPhrase = userWords.join(" ");
+    
+    if (userPhrase.toLowerCase() === expectedPhrase.toLowerCase()) {
+      setIsStepComplete(true);
+      playSuccessSound();
+      toast({
+        title: "¡Correcto!",
+        description: "Has ordenado las palabras correctamente",
+        className: "bg-green-500/90 border-green-500 text-white",
+        duration: 2000,
+      });
+    } else {
+      toast({
+        title: "Incorrecto",
+        description: "Intenta nuevamente",
         variant: "destructive",
         duration: 1000,
       });
     }
   };
 
-  // Paso 2: Manejar clic en palabra
+  // Paso 2: Manejar clic en palabra (incluyendo "ing")
   const handleWordClick = (word: string) => {
     if (!isStepComplete) {
       setUserWords([...userWords, word]);
+    }
+  };
+
+  // Paso 2: Fusionar "ing" con la palabra anterior
+  const handleFuseIng = () => {
+    if (userWords.length > 0 && ingToken === null && !isStepComplete) {
+      const lastIndex = userWords.length - 1;
+      const lastWord = userWords[lastIndex];
+      
+      // Fusionar "ing" con la última palabra
+      const newWords = [...userWords];
+      newWords[lastIndex] = lastWord + "ing";
+      setUserWords(newWords);
+      setIngToken(lastIndex.toString());
     }
   };
 
@@ -273,20 +285,15 @@ const LearnConnector = () => {
   const handleRemoveWord = () => {
     if (userWords.length > 0) {
       const lastWord = userWords[userWords.length - 1];
-      if (lastWord === "ing") {
+      // Si la última palabra termina en "ing" y fue fusionada, remover solo "ing"
+      if (lastWord.endsWith("ing") && ingToken !== null) {
+        const newWords = [...userWords];
+        newWords[newWords.length - 1] = lastWord.slice(0, -3);
+        setUserWords(newWords);
         setIngToken(null);
+      } else {
+        setUserWords(userWords.slice(0, -1));
       }
-      setUserWords(userWords.slice(0, -1));
-    }
-  };
-
-  // Paso 2: Agregar "ing" a una palabra
-  const handleAddIng = (index: number) => {
-    if (ingToken === null && !isStepComplete) {
-      const newWords = [...userWords];
-      newWords.splice(index + 1, 0, "ing");
-      setUserWords(newWords);
-      setIngToken(index.toString());
     }
   };
 
@@ -527,29 +534,15 @@ const LearnConnector = () => {
                   <div className="bg-muted/30 rounded-lg p-4 min-h-[100px] border-2 border-dashed border-border">
                     <div className="flex flex-wrap gap-2 justify-center items-center">
                       {userWords.map((word, index) => {
-                        if (word === "ing") {
-                          return (
-                            <div
-                              key={index}
-                              className="px-3 py-2 bg-yellow-500 text-black rounded-md font-bold text-base"
-                            >
-                              {word}
-                            </div>
-                          );
-                        }
+                        // Separar la palabra base y el "ing" fusionado para colorearlo
+                        const hasIng = word.endsWith("ing") && ingToken === index.toString();
+                        const baseWord = hasIng ? word.slice(0, -3) : word;
+                        const ingPart = hasIng ? "ing" : "";
+                        
                         return (
-                          <div key={index} className="flex items-center gap-1">
-                            <div className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-base">
-                              {word}
-                            </div>
-                            {!isStepComplete && ingToken === null && (
-                              <button
-                                onClick={() => handleAddIng(index)}
-                                className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-black rounded text-xs font-bold"
-                              >
-                                +ing
-                              </button>
-                            )}
+                          <div key={index} className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-base">
+                            {baseWord}
+                            {ingPart && <span className="text-yellow-400">{ingPart}</span>}
                           </div>
                         );
                       })}
@@ -574,6 +567,14 @@ const LearnConnector = () => {
                           </button>
                         );
                       })}
+                      {/* Botón "ing" para fusionar */}
+                      <button
+                        onClick={handleFuseIng}
+                        disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
+                        className="px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-600 dark:text-yellow-400 rounded-md font-bold text-base transition-all disabled:opacity-30 disabled:cursor-not-allowed border border-yellow-500/50"
+                      >
+                        ing
+                      </button>
                     </div>
                   </div>
 

@@ -821,16 +821,6 @@ const LearnConnector = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Botón siguiente */}
-        <Button
-          onClick={handleNextStep}
-          disabled={!isStepComplete}
-          className="w-full gradient-animated mt-6"
-          size="lg"
-        >
-          {currentStep === 5 ? "Finalizar" : "Siguiente"}
-        </Button>
       </main>
     </div>
   );

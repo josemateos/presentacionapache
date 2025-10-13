@@ -11,27 +11,27 @@ interface Connector {
 }
 
 const conectores: Connector[] = [
-  { english: "About", spanish: "sobre/acerca de" },
-  { english: "After", spanish: "después de" },
-  { english: "Against", spanish: "en contra de" },
-  { english: "At", spanish: "en, a" },
-  { english: "Besides", spanish: "además de" },
-  { english: "Before", spanish: "antes de" },
-  { english: "By", spanish: "mediante, haciendo" },
-  { english: "Despite", spanish: "a pesar de" },
-  { english: "For", spanish: "para, por" },
-  { english: "From", spanish: "de, desde" },
-  { english: "In", spanish: "en, dentro de" },
-  { english: "Instead of", spanish: "en lugar de" },
-  { english: "Like", spanish: "como/comparación" },
-  { english: "Of", spanish: "de" },
-  { english: "On", spanish: "en, sobre" },
-  { english: "Since", spanish: "desde" },
-  { english: "Through", spanish: "a través de" },
-  { english: "Towards", spanish: "hacia" },
-  { english: "Upon", spanish: "al, tras" },
-  { english: "With", spanish: "con" },
-  { english: "Without", spanish: "sin" },
+  { english: "About", spanish: "Sobre/Acerca de" },
+  { english: "After", spanish: "Después de" },
+  { english: "Against", spanish: "En contra de" },
+  { english: "At", spanish: "En, a" },
+  { english: "Besides", spanish: "Además de" },
+  { english: "Before", spanish: "Antes de" },
+  { english: "By", spanish: "Mediante, haciendo" },
+  { english: "Despite", spanish: "A pesar de" },
+  { english: "For", spanish: "Para, por" },
+  { english: "From", spanish: "De, desde" },
+  { english: "In", spanish: "En, dentro de" },
+  { english: "Instead of", spanish: "En lugar de" },
+  { english: "Like", spanish: "Como/comparación" },
+  { english: "Of", spanish: "De" },
+  { english: "On", spanish: "En, sobre" },
+  { english: "Since", spanish: "Desde" },
+  { english: "Through", spanish: "A través de" },
+  { english: "Towards", spanish: "Hacia" },
+  { english: "Upon", spanish: "Al, tras" },
+  { english: "With", spanish: "Con" },
+  { english: "Without", spanish: "Sin" },
 ];
 
 const ConectoresIng = () => {
@@ -85,10 +85,7 @@ const ConectoresIng = () => {
               >
                 <CardContent className="p-4">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-foreground mb-1">
-                      {connector.english}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-lg font-bold text-foreground">
                       {connector.spanish}
                     </p>
                   </div>

@@ -17,6 +17,9 @@ import PhrasesDay from "./pages/PhrasesDay";
 import LearnPhrase from "./pages/LearnPhrase";
 import GenerateWordImages from "./pages/GenerateWordImages";
 import ReviewWordImages from "./pages/ReviewWordImages";
+import AuxiliariesHub from "./pages/AuxiliariesHub";
+import ConectoresIng from "./pages/ConectoresIng";
+import LearnConnector from "./pages/LearnConnector";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +45,9 @@ const App = () => (
             <Route path="/learn-phrase" element={<LearnPhrase />} />
             <Route path="/generate-word-images" element={<GenerateWordImages />} />
             <Route path="/review-word-images" element={<ReviewWordImages />} />
+            <Route path="/auxiliaries" element={<AuxiliariesHub />} />
+            <Route path="/auxiliaries/conectores-ing" element={<ConectoresIng />} />
+            <Route path="/learn-connector" element={<LearnConnector />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

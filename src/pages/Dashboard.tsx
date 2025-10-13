@@ -117,13 +117,7 @@ const Dashboard = () => {
   };
 
   const handleAuxiliariesClick = () => {
-    if (!userProgress.isPremium) {
-      toast({
-        title: "Auxiliares Clave",
-        description: "Función premium - Próximamente disponible",
-        variant: "default",
-      });
-    }
+    navigate("/auxiliaries");
   };
 
   const handleTabChange = (tab: string) => {

@@ -250,6 +250,10 @@ const LearnConnector = () => {
         className: "bg-green-500/90 border-green-500 text-white",
         duration: 2000,
       });
+      // Transición automática al siguiente paso
+      setTimeout(() => {
+        handleNextStep();
+      }, 2500);
     } else {
       toast({
         title: "Incorrecto",
@@ -313,6 +317,10 @@ const LearnConnector = () => {
         className: "bg-green-500/90 border-green-500 text-white",
         duration: 2000,
       });
+      // Transición automática al siguiente paso
+      setTimeout(() => {
+        handleNextStep();
+      }, 2500);
     } else {
       toast({
         title: "Incorrecto",
@@ -350,6 +358,10 @@ const LearnConnector = () => {
           className: "bg-green-500/90 border-green-500 text-white",
           duration: 2000,
         });
+        // Transición automática al siguiente paso
+        setTimeout(() => {
+          handleNextStep();
+        }, 2500);
       } else {
         toast({
           title: "Incorrecto",
@@ -379,6 +391,10 @@ const LearnConnector = () => {
         className: "bg-green-500/90 border-green-500 text-white",
         duration: 2000,
       });
+      // Transición automática al siguiente paso (finalización)
+      setTimeout(() => {
+        handleNextStep();
+      }, 2500);
     } else {
       toast({
         title: "Incorrecto",
@@ -533,7 +549,7 @@ const LearnConnector = () => {
                       <span className="text-2xl font-bold text-white">2</span>
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-lg font-bold text-white mb-1">
+                      <h2 className="text-xl font-bold text-white mb-1">
                         Forma la frase que escuchaste
                       </h2>
                       <p className="text-sm text-muted-foreground">
@@ -625,10 +641,18 @@ const LearnConnector = () => {
               className="space-y-4"
             >
               <Card className="bg-card border-border shadow-md">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-xl font-bold text-center text-primary">
-                    Elige el significado correcto
-                  </h2>
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">3</span>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-white mb-1">
+                        Elige el significado correcto
+                      </h2>
+                      <p className="text-sm text-muted-foreground">Selecciona la opción correcta</p>
+                    </div>
+                  </div>
                   <p className="text-center text-2xl font-bold text-foreground">
                     {connector.spanish}
                   </p>
@@ -674,13 +698,18 @@ const LearnConnector = () => {
               className="space-y-4"
             >
               <Card className="bg-card border-border shadow-md">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-xl font-bold text-center text-primary">
-                    Deletrea la palabra
-                  </h2>
-                  <p className="text-center text-lg font-medium text-muted-foreground">
-                    {connector.spanish}
-                  </p>
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">4</span>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-white mb-1">
+                        Deletrea la palabra
+                      </h2>
+                      <p className="text-sm text-muted-foreground">{connector.spanish}</p>
+                    </div>
+                  </div>
 
                   {/* Área de construcción */}
                   <div className="bg-muted/30 rounded-lg p-4 min-h-[80px] border-2 border-dashed border-border">
@@ -748,13 +777,18 @@ const LearnConnector = () => {
               className="space-y-4"
             >
               <Card className="bg-card border-border shadow-md">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-xl font-bold text-center text-primary">
-                    ¿Qué significa en español?
-                  </h2>
-                  <p className="text-center text-2xl font-bold text-foreground">
-                    {connector.english}
-                  </p>
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">5</span>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-white mb-1">
+                        ¿Qué significa en español?
+                      </h2>
+                      <p className="text-sm text-muted-foreground">{connector.english}</p>
+                    </div>
+                  </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     {spanishOptions.map((option, index) => (

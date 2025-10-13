@@ -214,6 +214,12 @@ const LearnPhrase = () => {
     if (!isStepComplete) {
       setUserAttemptSpanish([...userAttemptSpanish, word]);
       setFeedback("");
+      
+      // Reproducir sonido de la palabra
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
     }
   };
 

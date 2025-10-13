@@ -534,10 +534,10 @@ const LearnConnector = () => {
                     </div>
                     <div className="flex-1">
                       <h2 className="text-lg font-bold text-primary mb-1">
-                        Traduce a Español {connector.spanish}
+                        Haz clic en las palabras para formar la frase que escuchaste
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Haz clic en las palabras para formar la frase
+                        Conector, verbo+ing
                       </p>
                     </div>
                   </div>

@@ -534,7 +534,7 @@ const LearnConnector = () => {
                     </div>
                     <div className="flex-1">
                       <h2 className="text-lg font-bold text-primary mb-1">
-                        Traduce a Español Apache
+                        Traduce a Español {connector.spanish}
                       </h2>
                       <p className="text-sm text-muted-foreground">
                         Haz clic en las palabras para formar la frase
@@ -542,8 +542,31 @@ const LearnConnector = () => {
                     </div>
                   </div>
 
-                  {/* Banco de palabras */}
-                  <div className="bg-primary/10 rounded-xl p-4 border-2 border-dashed border-primary/30">
+                  {/* Área de construcción - ARRIBA con azul más oscuro */}
+                  <div className="bg-[#1a2f4a] rounded-xl p-4 min-h-[120px] border-2 border-dashed border-[#2a4a6a]">
+                    <div className="flex flex-wrap gap-2 justify-center items-center">
+                      {userWords.length === 0 ? (
+                        <p className="text-white/50 text-sm">Selecciona las palabras abajo...</p>
+                      ) : (
+                        userWords.map((word, index) => {
+                          // Separar la palabra base y el "ing" fusionado para colorearlo
+                          const hasIng = word.endsWith("ing") && ingToken === index.toString();
+                          const baseWord = hasIng ? word.slice(0, -3) : word;
+                          const ingPart = hasIng ? "ing" : "";
+                          
+                          return (
+                            <div key={index} className="px-4 py-2.5 bg-[#2d4a6d] hover:bg-[#3d5a7d] text-white rounded-lg font-bold text-sm shadow-sm transition-all">
+                              {baseWord}
+                              {ingPart && <span className="text-yellow-400">{ingPart}</span>}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Banco de palabras - ABAJO con fondo más claro */}
+                  <div className="bg-[#2a4563] rounded-xl p-4 border border-[#3a5573]">
                     <div className="flex flex-wrap gap-2 justify-center">
                       {randomizedWords.map((word, index) => {
                         const usedCount = userWords.filter(w => w === word || w === word + "ing").length;
@@ -554,7 +577,7 @@ const LearnConnector = () => {
                             key={index}
                             onClick={() => handleWordClick(word)}
                             disabled={isStepComplete || isUsed}
-                            className="px-4 py-2.5 bg-primary/90 hover:bg-primary text-primary-foreground rounded-lg font-semibold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
+                            className="px-4 py-2.5 bg-[#3d5f8a] hover:bg-[#4d6f9a] text-white rounded-lg font-semibold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
                           >
                             {word}
                           </button>
@@ -568,29 +591,6 @@ const LearnConnector = () => {
                       >
                         ing
                       </button>
-                    </div>
-                  </div>
-
-                  {/* Área de construcción */}
-                  <div className="bg-card/50 rounded-xl p-4 min-h-[120px] border border-border">
-                    <div className="flex flex-wrap gap-2 justify-center items-center">
-                      {userWords.length === 0 ? (
-                        <p className="text-muted-foreground/50 text-sm">Selecciona las palabras arriba...</p>
-                      ) : (
-                        userWords.map((word, index) => {
-                          // Separar la palabra base y el "ing" fusionado para colorearlo
-                          const hasIng = word.endsWith("ing") && ingToken === index.toString();
-                          const baseWord = hasIng ? word.slice(0, -3) : word;
-                          const ingPart = hasIng ? "ing" : "";
-                          
-                          return (
-                            <div key={index} className="px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold text-sm shadow-sm">
-                              {baseWord}
-                              {ingPart && <span className="text-yellow-400">{ingPart}</span>}
-                            </div>
-                          );
-                        })
-                      )}
                     </div>
                   </div>
 

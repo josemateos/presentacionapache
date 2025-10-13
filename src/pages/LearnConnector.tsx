@@ -529,12 +529,12 @@ const LearnConnector = () => {
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
                   <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                      <span className="text-xl font-bold text-primary">2</span>
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">2</span>
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-lg font-bold text-primary mb-1">
-                        Haz clic en las palabras para formar la frase que escuchaste
+                      <h2 className="text-lg font-bold text-white mb-1">
+                        Forma la frase que escuchaste
                       </h2>
                       <p className="text-sm text-muted-foreground">
                         Conector, verbo+ing
@@ -542,11 +542,40 @@ const LearnConnector = () => {
                     </div>
                   </div>
 
-                  {/* Área de construcción - ARRIBA con azul más oscuro */}
-                  <div className="bg-[#1a2f4a] rounded-xl p-4 min-h-[120px] border-2 border-dashed border-[#2a4a6a]">
+                  {/* Banco de palabras - ARRIBA con fondo más claro */}
+                  <div className="bg-[#2a4563] rounded-xl p-4 border border-[#3a5573]">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {randomizedWords.map((word, index) => {
+                        const usedCount = userWords.filter(w => w === word || w === word + "ing").length;
+                        const totalCount = randomizedWords.filter(w => w === word).length;
+                        const isUsed = usedCount >= totalCount;
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleWordClick(word)}
+                            disabled={isStepComplete || isUsed}
+                            className="px-4 py-2.5 bg-[#36537a] hover:bg-[#46638a] text-white rounded-lg font-semibold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
+                          >
+                            {word}
+                          </button>
+                        );
+                      })}
+                      {/* Botón "ing" para fusionar */}
+                      <button
+                        onClick={handleFuseIng}
+                        disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
+                        className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
+                      >
+                        ing
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Área de construcción - ABAJO con azul más oscuro */}
+                  <div className="bg-[#1e3a54] rounded-xl p-4 min-h-[120px] border-2 border-dashed border-[#2e4a64]">
                     <div className="flex flex-wrap gap-2 justify-center items-center">
                       {userWords.length === 0 ? (
-                        <p className="text-white/50 text-sm">Selecciona las palabras abajo...</p>
+                        <p className="text-white/50 text-sm">Selecciona las palabras arriba...</p>
                       ) : (
                         userWords.map((word, index) => {
                           // Separar la palabra base y el "ing" fusionado para colorearlo
@@ -565,35 +594,6 @@ const LearnConnector = () => {
                     </div>
                   </div>
 
-                  {/* Banco de palabras - ABAJO con fondo más claro */}
-                  <div className="bg-[#2a4563] rounded-xl p-4 border border-[#3a5573]">
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {randomizedWords.map((word, index) => {
-                        const usedCount = userWords.filter(w => w === word || w === word + "ing").length;
-                        const totalCount = randomizedWords.filter(w => w === word).length;
-                        const isUsed = usedCount >= totalCount;
-                        return (
-                          <button
-                            key={index}
-                            onClick={() => handleWordClick(word)}
-                            disabled={isStepComplete || isUsed}
-                            className="px-4 py-2.5 bg-[#3d5f8a] hover:bg-[#4d6f9a] text-white rounded-lg font-semibold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
-                          >
-                            {word}
-                          </button>
-                        );
-                      })}
-                      {/* Botón "ing" para fusionar */}
-                      <button
-                        onClick={handleFuseIng}
-                        disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
-                        className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
-                      >
-                        ing
-                      </button>
-                    </div>
-                  </div>
-
                   <div className="flex gap-3 pt-2">
                     <Button
                       onClick={handleRemoveWord}
@@ -605,7 +605,7 @@ const LearnConnector = () => {
                     </Button>
                     <Button
                       onClick={handleVerifyWords}
-                      className="flex-1 gradient-animated font-semibold"
+                      className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold"
                     >
                       Verificar
                     </Button>
@@ -653,7 +653,7 @@ const LearnConnector = () => {
                   <div className="flex gap-3">
                     <Button
                       onClick={handleVerifyEnglishMeaning}
-                      className="w-full gradient-animated"
+                      className="w-full bg-primary hover:bg-primary/90 text-white"
                       disabled={!selectedEnglishMeaning}
                     >
                       Verificar
@@ -728,7 +728,7 @@ const LearnConnector = () => {
                     </Button>
                     <Button
                       onClick={handleVerifyLetters}
-                      className="flex-1 gradient-animated"
+                      className="flex-1 bg-primary hover:bg-primary/90 text-white"
                     >
                       Verificar
                     </Button>
@@ -776,7 +776,7 @@ const LearnConnector = () => {
                   <div className="flex gap-3">
                     <Button
                       onClick={handleVerifySpanishMeaning}
-                      className="w-full gradient-animated"
+                      className="w-full bg-primary hover:bg-primary/90 text-white"
                       disabled={!selectedSpanishMeaning}
                     >
                       Verificar

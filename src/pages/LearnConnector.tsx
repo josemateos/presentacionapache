@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Volume2, Check, X } from "lucide-react";
+import { ArrowLeft, Volume2, Check, X, Trash2, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -26,8 +26,9 @@ const LearnConnector = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
-  // Paso 1: Escuchar
-  const [listenCount, setListenCount] = useState(0);
+  // Paso 1: Ordenar letras
+  const [userLetters, setUserLetters] = useState<string[]>([]);
+  const [randomizedLetters, setRandomizedLetters] = useState<string[]>([]);
 
   // Paso 2: Ordenar frase
   const [userAttemptSpanish, setUserAttemptSpanish] = useState<string[]>([]);
@@ -40,16 +41,20 @@ const LearnConnector = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcribedText, setTranscribedText] = useState("");
   const [pronunciationFeedback, setPronunciationFeedback] = useState("");
+  const [playbackRate, setPlaybackRate] = useState(1.0);
 
   // Ejemplos de frases (en una app real, estos vendrían de una base de datos)
   const exampleSentences: ExampleSentence[] = [
     {
-      english: `I'm thinking ${connector.english.toLowerCase()} traveling.`,
-      spanish: `Estoy pensando en viajar. (${connector.spanish})`,
+      english: `I'm thinking ${connector?.english?.toLowerCase()} traveling.`,
+      spanish: `Estoy pensando ${connector?.spanish} en viajar.`,
     },
   ];
 
   const currentExample = exampleSentences[0];
+
+  // Palabras distractoras para paso 2
+  const distractorWords = ["rápido", "nunca"];
 
   useEffect(() => {
     if (!connector) {
@@ -57,24 +62,51 @@ const LearnConnector = () => {
       return;
     }
 
-    // Inicializar banco de palabras para paso 2
+    // Inicializar letras para paso 1
+    const letters = connector.english.toUpperCase().split("");
+    setRandomizedLetters([...letters].sort(() => Math.random() - 0.5));
+
+    // Inicializar banco de palabras para paso 2 (con distractoras)
     const words = currentExample.spanish.split(" ");
-    setRandomizedBank([...words].sort(() => Math.random() - 0.5));
+    const allWords = [...words, ...distractorWords];
+    setRandomizedBank([...allWords].sort(() => Math.random() - 0.5));
   }, [connector, navigate]);
 
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
-    setListenCount((prev) => prev + 1);
-
-    if (listenCount >= 2 && currentStep === 1) {
-      setIsStepComplete(true);
+    utterance.rate = playbackRate;
+    
+    // Try to use a latina/female voice
+    const voices = window.speechSynthesis.getVoices();
+    const latinaVoice = voices.find(voice => 
+      voice.lang.includes("es") && voice.name.toLowerCase().includes("female")
+    ) || voices.find(voice => 
+      voice.lang.includes("en") && voice.name.toLowerCase().includes("female")
+    );
+    
+    if (latinaVoice) {
+      utterance.voice = latinaVoice;
     }
+    
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const togglePlaybackSpeed = () => {
+    setPlaybackRate(prev => prev === 1.0 ? 0.75 : 1.0);
   };
 
   const handleNextStep = () => {
+    // Validación especial para paso 2
+    if (currentStep === 2 && !isStepComplete) {
+      toast({
+        title: "Ejercicio incompleto",
+        description: "Debes ordenar correctamente la frase antes de continuar",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
       setIsStepComplete(false);
@@ -97,14 +129,50 @@ const LearnConnector = () => {
     }
   };
 
+  // Paso 1: Ordenar letras
+  const handleLetterClick = (letter: string, index: number) => {
+    if (!isStepComplete) {
+      const newAttempt = [...userLetters, letter];
+      setUserLetters(newAttempt);
+
+      // Verificar si está completo y correcto
+      if (newAttempt.length === connector.english.length) {
+        const userWord = newAttempt.join("");
+        const correctWord = connector.english.toUpperCase();
+        
+        if (userWord === correctWord) {
+          setIsStepComplete(true);
+          toast({
+            title: "¡Correcto!",
+            description: "Has formado la palabra correctamente",
+          });
+        } else {
+          toast({
+            title: "Incorrecto",
+            description: "Intenta nuevamente",
+            variant: "destructive",
+          });
+          setUserLetters([]);
+        }
+      }
+    }
+  };
+
+  const handleRemoveLetter = () => {
+    if (userLetters.length > 0) {
+      setUserLetters(userLetters.slice(0, -1));
+    }
+  };
+
   // Paso 2: Ordenar palabras
   const handleWordClick = (word: string) => {
     if (!isStepComplete) {
       const newAttempt = [...userAttemptSpanish, word];
       setUserAttemptSpanish(newAttempt);
 
-      // Verificar si está completo
-      if (newAttempt.length === randomizedBank.length) {
+      // Verificar si está completo (sin contar distractoras)
+      const correctWords = currentExample.spanish.split(" ");
+      if (newAttempt.length === correctWords.length) {
         const userSentence = newAttempt.join(" ");
         const correctSentence = currentExample.spanish;
         
@@ -114,6 +182,12 @@ const LearnConnector = () => {
             title: "¡Correcto!",
             description: "Has ordenado la frase correctamente",
           });
+        } else {
+          toast({
+            title: "Incorrecto",
+            description: "El orden no es correcto, intenta nuevamente",
+            variant: "destructive",
+          });
         }
       }
     }
@@ -122,6 +196,14 @@ const LearnConnector = () => {
   const handleRemoveWord = (index: number) => {
     const newAttempt = userAttemptSpanish.filter((_, i) => i !== index);
     setUserAttemptSpanish(newAttempt);
+    setIsStepComplete(false);
+  };
+
+  const handleDeleteLastWord = () => {
+    if (userAttemptSpanish.length > 0) {
+      setUserAttemptSpanish(userAttemptSpanish.slice(0, -1));
+      setIsStepComplete(false);
+    }
   };
 
   // Paso 3: Traducir
@@ -212,11 +294,14 @@ const LearnConnector = () => {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-xl font-bold text-foreground">
+              <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
                 {connector.english}
+                <span className="text-sm font-normal text-muted-foreground">
+                  {currentStep} de 4
+                </span>
               </h1>
               <p className="text-sm text-muted-foreground">
-                {connector.spanish}
+                {connector.spanish.replace(/[()]/g, '')}
               </p>
             </div>
           </div>
@@ -227,7 +312,7 @@ const LearnConnector = () => {
       {/* Content */}
       <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
         <AnimatePresence mode="wait">
-          {/* Paso 1: Escuchar */}
+          {/* Paso 1: Ordenar letras */}
           {currentStep === 1 && (
             <motion.div
               key="step1"
@@ -239,26 +324,56 @@ const LearnConnector = () => {
               <Card>
                 <CardContent className="p-6 space-y-4">
                   <h2 className="text-lg font-semibold text-center">
-                    Paso 1: Escucha la frase
+                    Paso 1: Forma la palabra en inglés
                   </h2>
-                  <p className="text-center text-muted-foreground">
-                    Escucha al menos 3 veces
+                  <p className="text-center text-lg font-medium text-muted-foreground">
+                    {connector.spanish.replace(/[()]/g, '')}
                   </p>
 
-                  <div className="flex justify-center">
-                    <Button
-                      size="lg"
-                      onClick={() => playAudio(currentExample.english)}
-                      className="gap-2"
-                    >
-                      <Volume2 className="h-5 w-5" />
-                      Reproducir
-                    </Button>
+                  {/* Área de construcción */}
+                  <div className="bg-muted/30 rounded-lg p-4 min-h-[80px] border-2 border-dashed border-border">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {userLetters.map((letter, index) => (
+                        <div
+                          key={index}
+                          className="px-4 py-3 bg-primary text-primary-foreground rounded-md font-bold text-lg"
+                        >
+                          {letter}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <p className="text-center text-sm text-muted-foreground">
-                    Reproducciones: {listenCount}
-                  </p>
+                  {/* Banco de letras */}
+                  <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {randomizedLetters.map((letter, index) => {
+                        const isUsed = userLetters.includes(letter);
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleLetterClick(letter, index)}
+                            disabled={isStepComplete || isUsed}
+                            className="px-4 py-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-bold text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          >
+                            {letter}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Botón borrar */}
+                  {userLetters.length > 0 && (
+                    <Button
+                      onClick={handleRemoveLetter}
+                      variant="outline"
+                      className="w-full gap-2"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Borrar última letra
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -312,6 +427,19 @@ const LearnConnector = () => {
                       })}
                     </div>
                   </div>
+
+                  {/* Botón borrar última palabra */}
+                  {userAttemptSpanish.length > 0 && (
+                    <Button
+                      onClick={handleDeleteLastWord}
+                      variant="outline"
+                      className="w-full gap-2"
+                      disabled={isStepComplete}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Borrar última palabra
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -373,6 +501,25 @@ const LearnConnector = () => {
                   <p className="text-center text-muted-foreground">
                     {currentExample.english}
                   </p>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => playAudio(currentExample.english)}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Volume2 className="h-5 w-5" />
+                      Escuchar
+                    </Button>
+                    <Button
+                      onClick={togglePlaybackSpeed}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Gauge className="h-5 w-5" />
+                      {playbackRate === 1.0 ? "Normal" : "Lento"}
+                    </Button>
+                  </div>
 
                   <Button
                     onClick={handleStartRecording}

@@ -173,11 +173,12 @@ const ReviewDay = () => {
         setStep("english-to-spanish");
         setUserAnswers({});
         setErrors({});
-        toast({
-          title: "✓ Verificación correcta",
-          description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white",
-        });
+      toast({
+        title: "✓ Verificación correcta",
+        description: "Pasando a la siguiente sección",
+        className: "bg-green-500 text-white border-green-500",
+        duration: 2000,
+      });
       } else if (step === "english-to-spanish") {
         setStep("phrase-translation");
         setUserAnswers({});
@@ -185,7 +186,8 @@ const ReviewDay = () => {
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500 text-white border-green-500",
+          duration: 2000,
         });
       }
     } else {
@@ -208,7 +210,8 @@ const ReviewDay = () => {
       toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-white border-green-500",
+        duration: 2000,
       });
     } else {
       setErrors({ 0: true });
@@ -234,7 +237,8 @@ const ReviewDay = () => {
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500 text-white border-green-500",
+          duration: 2000,
         });
       } else {
         setStep("completed");
@@ -277,9 +281,22 @@ const ReviewDay = () => {
     speechSynthesis.speak(utterance);
   };
 
+  const [wordBankOrder] = useState<string[]>(() => {
+    return [];
+  });
+
   const getWordBank = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
-    return currentPhrase.english.split(" ").sort(() => Math.random() - 0.5);
+    const words = currentPhrase.english.split(" ");
+    
+    // Si ya tenemos un orden guardado para esta frase, úsalo
+    if (wordBankOrder.length === words.length) {
+      return wordBankOrder;
+    }
+    
+    // De lo contrario, crea un nuevo orden aleatorio
+    const shuffled = [...words].sort(() => Math.random() - 0.5);
+    return shuffled;
   };
 
   const addWordToSelection = (word: string) => {
@@ -496,22 +513,10 @@ const ReviewDay = () => {
                   Ordena las palabras
                 </h3>
 
-                <div className="flex justify-center gap-2 mb-6">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => speakPhrase(reviewPhrases[currentPhraseIndex].english)}
-                  >
-                    <Volume2 className="w-4 h-4 mr-2" />
-                    Escuchar
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setAudioSpeed(audioSpeed === 1 ? 0.7 : 1)}
-                  >
-                    Velocidad: {audioSpeed === 1 ? "Normal" : "Lenta"}
-                  </Button>
+                <div className="text-center mb-6">
+                  <p className="text-xl font-medium text-foreground">
+                    {reviewPhrases[currentPhraseIndex].spanish}
+                  </p>
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 min-h-[80px] mb-4">
@@ -535,18 +540,19 @@ const ReviewDay = () => {
                   <div className="flex flex-wrap gap-2">
                     {getWordBank().map((word, index) => {
                       const isSelected = wordBankSelection.includes(word);
+                      const isAuxiliary = isAuxiliaryWord(word);
                       return (
                         <Button
-                          key={index}
+                          key={`${word}-${index}`}
                           variant="outline"
                           size="sm"
                           onClick={() => !isSelected && addWordToSelection(word)}
                           disabled={isSelected}
                           className={`${
-                            isAuxiliaryWord(word) ? "text-yellow-500" : ""
-                          } ${isSelected ? "opacity-50" : ""}`}
+                            isAuxiliary ? "text-yellow-500" : ""
+                          } ${isSelected ? "opacity-30 cursor-not-allowed" : ""}`}
                         >
-                          {isAuxiliaryWord(word) ? word.toLowerCase() : word}
+                          {isAuxiliary ? word.toLowerCase() : word}
                         </Button>
                       );
                     })}

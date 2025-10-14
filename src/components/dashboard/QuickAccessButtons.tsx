@@ -47,12 +47,12 @@ export const QuickAccessButtons = ({
         >
           <RotateCcw className="w-5 h-5 mr-3 text-primary" />
           <span>MI REPASO</span>
+          <ChevronDown className={`w-5 h-5 ml-2 transition-transform ${showReviewDays ? "rotate-180" : ""}`} />
           {pendingReviewDays > 0 && (
-            <Badge className="ml-auto bg-red-500 text-white mr-2">
+            <Badge className="ml-auto bg-red-500 text-white">
               {pendingReviewDays}
             </Badge>
           )}
-          <ChevronDown className={`w-5 h-5 ml-auto transition-transform ${showReviewDays ? "rotate-180" : ""}`} />
         </Button>
 
         <Button

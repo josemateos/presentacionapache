@@ -553,8 +553,8 @@ const [verified, setVerified] = useState(false);
     if (step === "spanish-to-english") return 1;
     if (step === "english-to-spanish") return 2;
     if (step === "phrase-translation") return 3 + (currentPhraseIndex * 3);
-    if (step === "apache-translation") return 4 + (currentPhraseIndex * 3);
-    if (step === "phrase-ordering") return 5 + (currentPhraseIndex * 3);
+    if (step === "apache-translation") return 3 + (currentPhraseIndex * 3);
+    if (step === "phrase-ordering") return 4 + (currentPhraseIndex * 3);
     return totalSteps;
   };
 
@@ -701,9 +701,12 @@ const [verified, setVerified] = useState(false);
               className="space-y-4"
             >
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4 text-center text-foreground">
+                <h3 className="text-lg font-bold mb-2 text-center text-foreground">
                   {step === "apache-translation" ? "Traduce a Español Apache" : "Traduce al Español"}
                 </h3>
+                {step === "apache-translation" && (
+                  <p className="text-sm text-center text-muted-foreground mb-4">Sin auxiliares clave</p>
+                )}
                 
                 <div className="text-center mb-4">
                   <p className="text-xl font-medium text-foreground mb-4">
@@ -735,16 +738,20 @@ const [verified, setVerified] = useState(false);
 
                 {step === "apache-translation" ? (
                   <>
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                      {apacheExpectedWords.map((_, index) => (
-                        <div key={index} className="flex flex-col">
+                    <div className="flex flex-wrap gap-3 mb-6 justify-center">
+                      {apacheExpectedWords.map((expectedWord, index) => {
+                        const width = Math.max(60, expectedWord.length * 16 + 32);
+                        
+                        return (
                           <input
+                            key={index}
                             ref={(el) => (apacheInputsRef.current[index] = el)}
                             type="text"
                             value={apacheInputValues[index] || ""}
                             onChange={(e) => handleApacheInputChange(index, e.target.value)}
                             placeholder={`Palabra ${index + 1}`}
-                            className={`w-full p-3 text-lg rounded-lg border ${
+                            style={{ width: `${width}px` }}
+                            className={`p-3 text-lg text-center rounded-lg border ${
                               apacheInputValues[index] && !apacheInputErrors[index]
                                 ? "border-green-500 bg-green-500/10 text-green-600"
                                 : apacheInputErrors[index]
@@ -752,8 +759,8 @@ const [verified, setVerified] = useState(false);
                                 : "border-border"
                             } bg-background transition-colors`}
                           />
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </>
                 ) : (

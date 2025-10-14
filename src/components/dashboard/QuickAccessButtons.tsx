@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { History, Star, ChevronDown } from "lucide-react";
+import { History, Star, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 interface QuickAccessButtonsProps {
   reviewPendingCount?: number;
@@ -16,7 +17,19 @@ export const QuickAccessButtons = ({
   onReviewClick,
   onAuxiliariesClick,
 }: QuickAccessButtonsProps) => {
+  const navigate = useNavigate();
   const [showAuxiliaries, setShowAuxiliaries] = useState(false);
+  const [showReviewDays, setShowReviewDays] = useState(false);
+  const [completedReviewDays, setCompletedReviewDays] = useState<number[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("completed_review_days");
+    if (saved) {
+      setCompletedReviewDays(JSON.parse(saved));
+    }
+  }, []);
+
+  const availableDays = [1, 2, 3];
 
   return (
     <motion.section
@@ -27,17 +40,18 @@ export const QuickAccessButtons = ({
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button
-          onClick={onReviewClick}
+          onClick={() => setShowReviewDays(!showReviewDays)}
           variant="outline"
           className="relative py-6 rounded-xl font-medium text-base border-2 hover:bg-muted justify-start"
         >
           <History className="w-5 h-5 mr-3 text-primary" />
           <span>MI REPASO</span>
           {reviewPendingCount && reviewPendingCount > 0 && (
-            <Badge className="ml-auto bg-destructive text-destructive-foreground">
+            <Badge className="ml-auto bg-destructive text-destructive-foreground mr-2">
               {reviewPendingCount}
             </Badge>
           )}
+          <ChevronDown className={`w-5 h-5 ml-auto transition-transform ${showReviewDays ? "rotate-180" : ""}`} />
         </Button>
 
         <Button
@@ -49,6 +63,37 @@ export const QuickAccessButtons = ({
           <ChevronDown className={`w-5 h-5 ml-auto transition-transform ${showAuxiliaries ? "rotate-180" : ""}`} />
         </Button>
       </div>
+
+      {showReviewDays && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden"
+        >
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {availableDays.map((day) => {
+                const isCompleted = completedReviewDays.includes(day);
+                return (
+                  <Button
+                    key={day}
+                    onClick={() => navigate(`/review-day?day=${day}`)}
+                    variant="outline"
+                    className={`py-6 rounded-xl font-medium text-base justify-center hover:bg-muted border-2 ${
+                      isCompleted ? "border-green-500/50 bg-green-500/10" : ""
+                    }`}
+                  >
+                    {isCompleted && <CheckCircle className="w-4 h-4 mr-2 text-green-500" />}
+                    <span>Día {day}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {showAuxiliaries && (
         <motion.div

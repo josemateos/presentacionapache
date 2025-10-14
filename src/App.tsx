@@ -20,6 +20,7 @@ import ReviewWordImages from "./pages/ReviewWordImages";
 import AuxiliariesHub from "./pages/AuxiliariesHub";
 import ConectoresIng from "./pages/ConectoresIng";
 import LearnConnector from "./pages/LearnConnector";
+import ReviewDay from "./pages/ReviewDay";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/auxiliaries" element={<AuxiliariesHub />} />
             <Route path="/auxiliaries/conectores-ing" element={<ConectoresIng />} />
             <Route path="/learn-connector" element={<LearnConnector />} />
+            <Route path="/review-day" element={<ReviewDay />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

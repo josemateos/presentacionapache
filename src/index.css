@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 190 70% 50%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
@@ -26,15 +26,15 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 280 70% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 93% 58%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 190 70% 50%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
@@ -45,65 +45,65 @@ All colors MUST be HSL.
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 190 70% 50%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Apache theme colors */
-    --apache-dark: 260 50% 15%;
-    --apache-darker: 260 55% 10%;
-    --apache-blue: 190 70% 50%;
-    --apache-blue-light: 190 65% 60%;
-    --apache-card: 260 40% 20%;
-    --apache-border: 260 30% 30%;
+    --apache-dark: 217 67% 12%;
+    --apache-darker: 217 70% 8%;
+    --apache-blue: 217 91% 60%;
+    --apache-blue-light: 217 85% 70%;
+    --apache-card: 217 60% 18%;
+    --apache-border: 217 50% 28%;
     --apache-gold: 45 93% 58%;
-    --apache-purple: 280 70% 55%;
+    --apache-purple: 271 81% 56%;
     --apache-green: 142 76% 36%;
-    --apache-red: 340 75% 50%;
+    --apache-red: 0 72% 51%;
     
-    /* Gradients - Inspired by vibrant TikTok-style */
-    --gradient-hero: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));
-    --gradient-card: linear-gradient(180deg, hsl(260 40% 20% / 0.8), hsl(260 50% 15% / 0.6));
-    --gradient-primary: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217 67% 12%), hsl(217 70% 8%));
+    --gradient-card: linear-gradient(180deg, hsl(217 60% 18% / 0.5), hsl(217 60% 15% / 0.3));
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%));
     --gradient-gold: linear-gradient(135deg, hsl(45 93% 58%), hsl(36 86% 51%));
     --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(145 80% 42%));
   }
 
   .dark {
-    --background: 260 50% 15%;
+    --background: 217 67% 12%;
     --foreground: 210 40% 98%;
 
-    --card: 260 40% 20%;
+    --card: 217 60% 18%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 260 40% 20%;
+    --popover: 217 60% 18%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 190 70% 50%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 340 75% 40%;
+    --secondary: 217 50% 28%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 260 30% 25%;
+    --muted: 217 50% 28%;
     --muted-foreground: 215 20.2% 75%;
 
-    --accent: 280 70% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 93% 58%;
+    --accent-foreground: 217 67% 12%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 260 30% 30%;
-    --input: 260 30% 30%;
-    --ring: 190 70% 50%;
+    --border: 217 50% 28%;
+    --input: 217 50% 28%;
+    --ring: 217 91% 60%;
 
-    --sidebar-background: 260 50% 15%;
+    --sidebar-background: 217 70% 8%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 190 70% 50%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 260 40% 20%;
+    --sidebar-accent: 217 60% 18%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 260 30% 30%;
-    --sidebar-ring: 190 70% 50%;
+    --sidebar-border: 217 50% 28%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -120,11 +120,11 @@ All colors MUST be HSL.
 
 @layer utilities {
   .gradient-hero {
-    background: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));
+    background: linear-gradient(135deg, hsl(217 67% 12%), hsl(217 70% 8%));
   }
   
   .gradient-card {
-    background: linear-gradient(180deg, hsl(260 40% 20% / 0.8), hsl(260 50% 15% / 0.6));
+    background: linear-gradient(180deg, hsl(217 60% 18% / 0.5), hsl(217 60% 15% / 0.3));
   }
 
   .text-shadow-glow {
@@ -165,7 +165,7 @@ All colors MUST be HSL.
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%));
   }
 
   .gradient-gold {
@@ -190,7 +190,7 @@ All colors MUST be HSL.
   }
 
   .gradient-animated {
-    background: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%), hsl(340 75% 40%));
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%), hsl(45 93% 58%), hsl(217 91% 60%));
     background-size: 300% 300%;
     animation: gradientShift 3s ease infinite;
   }
@@ -202,7 +202,7 @@ All colors MUST be HSL.
   }
 
   .gradient-text-primary {
-    background: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(271 81% 56%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -324,7 +324,7 @@ const [verified, setVerified] = useState(false);
           duration: 2000,
         });
         setTimeout(() => {
-          setStep("phrase-translation");
+          setStep("apache-translation");
           setCurrentPhraseIndex(0);
           setUserAnswers({});
           setErrors({});
@@ -356,7 +356,7 @@ const [verified, setVerified] = useState(false);
         duration: 2000,
       });
       setTimeout(() => {
-        setStep("apache-translation");
+        setStep("phrase-ordering");
         setUserAnswers({});
         window.scrollTo(0, 0);
         t.dismiss();
@@ -413,7 +413,7 @@ const [verified, setVerified] = useState(false);
         duration: 2000,
       });
       setTimeout(() => {
-        setStep("phrase-ordering");
+        setStep("phrase-translation");
         setUserAnswers({});
         setApacheInputValues([]);
         window.scrollTo(0, 0);
@@ -445,7 +445,7 @@ const [verified, setVerified] = useState(false);
         setUserAnswers({});
         
         setTimeout(() => {
-          setStep("phrase-translation");
+          setStep("apache-translation");
           window.scrollTo(0, 0);
         }, 2000);
         
@@ -482,19 +482,18 @@ const [verified, setVerified] = useState(false);
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
-      setReviewWords(englishToSpanishWords);
-      setStep("english-to-spanish");
+      setStep("apache-translation");
       setUserAnswers({});
       setErrors({});
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "apache-translation") {
-      setStep("phrase-translation");
+      setStep("english-to-spanish");
       setUserAnswers({});
       setErrors({});
       window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
-      setStep("apache-translation");
+      setStep("phrase-translation");
       setWordBankSelection([]);
       setUserAnswers({});
       window.scrollTo(0, 0);
@@ -703,7 +702,7 @@ const [verified, setVerified] = useState(false);
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-2 text-center text-foreground">
                   {step === "apache-translation" ? (
-                    <>Traduce a <span className="text-yellow-500">Español Apache</span></>
+                    <>Traduce a <span className="text-accent">Español Apache</span></>
                   ) : (
                     "Traduce al Español"
                   )}
@@ -829,7 +828,7 @@ const [verified, setVerified] = useState(false);
                         variant="secondary"
                         size="sm"
                         onClick={() => removeWordFromSelection(index)}
-                        className={isAuxiliaryWord(word) ? "text-yellow-500" : ""}
+                        className={isAuxiliaryWord(word) ? "text-accent" : ""}
                       >
                         {isAuxiliaryWord(word) ? word.toLowerCase() : word}
                       </Button>
@@ -855,7 +854,7 @@ const [verified, setVerified] = useState(false);
                           onClick={() => !isFullySelected && addWordToSelection(word)}
                           disabled={isFullySelected}
                           className={`${
-                            isAuxiliary ? "text-yellow-500" : ""
+                            isAuxiliary ? "text-accent" : ""
                           } ${isFullySelected ? "opacity-30" : ""}`}
                         >
                           {isING ? word : isAuxiliary ? word.toLowerCase() : word}

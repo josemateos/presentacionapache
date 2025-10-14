@@ -346,7 +346,15 @@ const [verified, setVerified] = useState(false);
     const currentPhrase = reviewPhrases[currentPhraseIndex];
     const userAnswer = userAnswers[0] || "";
     
-    if (normalizeText(userAnswer, false) === normalizeText(currentPhrase.spanish, false)) {
+    // Normalizar ambas versiones
+    const normalizedUserAnswer = normalizeText(userAnswer, false);
+    const normalizedCorrectAnswer = normalizeText(currentPhrase.spanish, false);
+    
+    // Permitir "una" como alternativa a "un" para AN
+    const userAnswerWithUna = normalizedUserAnswer.replace(/\buna\b/g, "un");
+    const isCorrect = userAnswerWithUna === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
+    
+    if (isCorrect) {
       setPhraseTranslationCorrect(true);
       setErrors({});
       const t = toast({
@@ -481,16 +489,18 @@ const [verified, setVerified] = useState(false);
       setErrors({});
       setVerified(false);
       window.scrollTo(0, 0);
+    } else if (step === "apache-translation") {
+      setReviewWords(englishToSpanishWords);
+      setStep("english-to-spanish");
+      setUserAnswers({});
+      setErrors({});
+      setVerified(false);
+      window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
       setStep("apache-translation");
       setUserAnswers({});
       setErrors({});
       setVerified(false);
-      window.scrollTo(0, 0);
-    } else if (step === "apache-translation") {
-      setStep("english-to-spanish");
-      setUserAnswers({});
-      setErrors({});
       window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
       setStep("phrase-translation");
@@ -811,7 +821,7 @@ const [verified, setVerified] = useState(false);
             >
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-4 text-center text-foreground">
-                  Ordena las palabras
+                  Forma la frase en Ingles Perfecto utilizando los auxiliares clave
                 </h3>
 
                 <div className="text-center mb-6">

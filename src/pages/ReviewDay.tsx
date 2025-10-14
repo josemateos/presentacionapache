@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Volume2, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Volume2, CheckCircle2, AlertCircle, Sparkles, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -20,6 +20,7 @@ import {
 interface Word {
   spanish: string;
   english: string;
+  clarification?: string;
 }
 
 interface Phrase {
@@ -27,7 +28,7 @@ interface Phrase {
   spanish: string;
 }
 
-// Datos de vocabulario por día
+// Datos de vocabulario por día (solo vocabulario del día, sin auxiliares clave)
 const vocabularyByDay: Record<number, Word[]> = {
   1: [
     { spanish: "Yo", english: "I" },
@@ -49,18 +50,11 @@ const vocabularyByDay: Record<number, Word[]> = {
     { spanish: "Nosotros", english: "We" },
     { spanish: "Invitar", english: "Invite" },
     { spanish: "Comer", english: "Eat" },
-    { spanish: "Mañana", english: "Tomorrow" },
+    { spanish: "Mañana", english: "Tomorrow", clarification: "(tiempo)" },
     { spanish: "Importante", english: "Important" },
     { spanish: "Reunión", english: "Meeting" },
     { spanish: "Trabajo", english: "Work" },
-    { spanish: "Esta", english: "This" },
-    { spanish: "Tarde", english: "Afternoon" },
-    { spanish: "En", english: "In" },
-    { spanish: "El", english: "The" },
-    { spanish: "Un", english: "a/an" },
-    { spanish: "De", english: "Of" },
-    { spanish: "A", english: "To" },
-    { spanish: "Tener que", english: "Have to" },
+    { spanish: "Tarde", english: "Afternoon", clarification: "(parte del día)" },
     { spanish: "Venir", english: "Come" },
   ],
   2: [
@@ -111,6 +105,11 @@ const phrasesByDay: Record<number, Phrase[]> = {
 
 type ExerciseStep = "spanish-to-english" | "english-to-spanish" | "phrase-translation" | "phrase-ordering" | "completed";
 
+const isAuxiliaryWord = (word: string) => {
+  const auxiliaries = ["to", "at", "an", "a", "the", "of", "in"];
+  return auxiliaries.includes(word.toLowerCase());
+};
+
 const ReviewDay = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -146,8 +145,10 @@ const ReviewDay = () => {
     setReviewPhrases(selectedPhrases);
   }, [day]);
 
-  const normalizeText = (text: string) => {
-    return text.toLowerCase().trim().replace(/[.,!?]/g, "");
+  const normalizeText = (text: string, preserveI: boolean = false) => {
+    const normalized = text.trim().replace(/[.,!?]/g, "");
+    if (preserveI && normalized === "I") return normalized;
+    return normalized.toLowerCase();
   };
 
   const verifyAnswers = () => {
@@ -157,8 +158,9 @@ const ReviewDay = () => {
     reviewWords.forEach((word, index) => {
       const userAnswer = userAnswers[index] || "";
       const correctAnswer = step === "spanish-to-english" ? word.english : word.spanish;
+      const isEnglishAnswer = step === "spanish-to-english";
       
-      if (normalizeText(userAnswer) !== normalizeText(correctAnswer)) {
+      if (normalizeText(userAnswer, isEnglishAnswer) !== normalizeText(correctAnswer, isEnglishAnswer)) {
         newErrors[index] = true;
         allCorrect = false;
       }
@@ -172,16 +174,18 @@ const ReviewDay = () => {
         setUserAnswers({});
         setErrors({});
         toast({
-          title: "¡Excelente!",
-          description: "Pasando a la siguiente fase",
+          title: "✓ Verificación correcta",
+          description: "Pasando a la siguiente sección",
+          className: "bg-green-500 text-white",
         });
       } else if (step === "english-to-spanish") {
         setStep("phrase-translation");
         setUserAnswers({});
         setErrors({});
         toast({
-          title: "¡Palabras completadas!",
-          description: "Ahora vamos con las frases",
+          title: "✓ Verificación correcta",
+          description: "Pasando a la siguiente sección",
+          className: "bg-green-500 text-white",
         });
       }
     } else {
@@ -197,12 +201,14 @@ const ReviewDay = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
     const userAnswer = userAnswers[0] || "";
     
-    if (normalizeText(userAnswer) === normalizeText(currentPhrase.spanish)) {
+    if (normalizeText(userAnswer, false) === normalizeText(currentPhrase.spanish, false)) {
       setPhraseTranslationCorrect(true);
       setErrors({});
+      setStep("phrase-ordering");
       toast({
-        title: "¡Correcto!",
-        description: "Ahora ordena las palabras",
+        title: "✓ Verificación correcta",
+        description: "Pasando a la siguiente sección",
+        className: "bg-green-500 text-white",
       });
     } else {
       setErrors({ 0: true });
@@ -218,15 +224,17 @@ const ReviewDay = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
     const userSentence = wordBankSelection.join(" ");
     
-    if (normalizeText(userSentence) === normalizeText(currentPhrase.english)) {
+    if (normalizeText(userSentence, true) === normalizeText(currentPhrase.english, true)) {
       if (currentPhraseIndex < reviewPhrases.length - 1) {
         setCurrentPhraseIndex(currentPhraseIndex + 1);
         setPhraseTranslationCorrect(false);
         setWordBankSelection([]);
         setUserAnswers({});
+        setStep("phrase-translation");
         toast({
-          title: "¡Correcto!",
-          description: "Siguiente frase",
+          title: "✓ Verificación correcta",
+          description: "Pasando a la siguiente sección",
+          className: "bg-green-500 text-white",
         });
       } else {
         setStep("completed");
@@ -243,6 +251,22 @@ const ReviewDay = () => {
         description: "Intenta de nuevo",
         variant: "destructive",
       });
+    }
+  };
+
+  const goToPreviousStep = () => {
+    if (step === "english-to-spanish") {
+      setStep("spanish-to-english");
+      setUserAnswers({});
+      setErrors({});
+    } else if (step === "phrase-translation") {
+      setStep("english-to-spanish");
+      setUserAnswers({});
+      setErrors({});
+    } else if (step === "phrase-ordering") {
+      setStep("phrase-translation");
+      setWordBankSelection([]);
+      setPhraseTranslationCorrect(false);
     }
   };
 
@@ -266,9 +290,12 @@ const ReviewDay = () => {
     setWordBankSelection(wordBankSelection.filter((_, i) => i !== index));
   };
 
-  const progress = step === "spanish-to-english" ? 25 : 
-                   step === "english-to-spanish" ? 50 :
-                   step === "phrase-translation" ? 75 : 100;
+  const totalWords = reviewWords.length;
+  const totalPhrases = reviewPhrases.length;
+  const currentStepIndex = step === "spanish-to-english" ? 0 : 
+                          step === "english-to-spanish" ? 1 :
+                          step === "phrase-translation" ? 2 : 3;
+  const totalSteps = 3 + totalPhrases;
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">
@@ -288,7 +315,17 @@ const ReviewDay = () => {
             Repaso Día {day}
           </h1>
           
-          <div className="w-20"></div>
+          {step !== "spanish-to-english" && step !== "completed" && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goToPreviousStep}
+              className="hover:bg-primary/10"
+            >
+              <Undo2 className="w-4 h-4" />
+            </Button>
+          )}
+          {(step === "spanish-to-english" || step === "completed") && <div className="w-20"></div>}
         </div>
       </header>
 
@@ -298,13 +335,26 @@ const ReviewDay = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-card border border-border rounded-2xl p-6 shadow-md mb-6"
         >
-          <h2 className="text-base font-semibold mb-4 text-center text-primary">
-            Progreso del Repaso
-          </h2>
-          <Progress value={progress} className="h-2 mb-2" />
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-base font-semibold text-primary">
+              Progreso del Repaso
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {step === "spanish-to-english" && `1 de ${totalSteps}`}
+              {step === "english-to-spanish" && `2 de ${totalSteps}`}
+              {step === "phrase-translation" && `${3 + currentPhraseIndex} de ${totalSteps}`}
+              {step === "phrase-ordering" && `${3 + currentPhraseIndex + 1} de ${totalSteps}`}
+              {step === "completed" && `${totalSteps} de ${totalSteps}`}
+            </p>
+          </div>
+          <div className="flex gap-1">
+            <div className={`flex-1 h-2 rounded-full ${step !== "spanish-to-english" ? "bg-primary" : "bg-muted"}`}></div>
+            <div className={`flex-1 h-2 rounded-full ${currentStepIndex >= 1 ? "bg-primary" : "bg-muted"}`}></div>
+            <div className={`flex-1 h-2 rounded-full ${currentStepIndex >= 2 ? "bg-primary" : "bg-muted"}`}></div>
+          </div>
           <p className="text-center text-xs text-muted-foreground mt-2">
-            {step === "spanish-to-english" && "Español → Inglés"}
-            {step === "english-to-spanish" && "Inglés → Español"}
+            {step === "spanish-to-english" && "Traducción al Inglés"}
+            {step === "english-to-spanish" && "Traducción al Español"}
             {step === "phrase-translation" && "Traducción de Frases"}
             {step === "phrase-ordering" && "Ordenar Frases"}
             {step === "completed" && "¡Completado!"}
@@ -325,26 +375,39 @@ const ReviewDay = () => {
                   {step === "spanish-to-english" ? "Escribe en Inglés" : "Escribe en Español"}
                 </h3>
                 
-                <div className="space-y-4">
-                  {reviewWords.map((word, index) => (
-                    <div key={index} className="space-y-2">
-                      <p className="font-medium text-foreground">
-                        {step === "spanish-to-english" ? word.spanish : word.english}
-                      </p>
-                      <Input
-                        value={userAnswers[index] || ""}
-                        onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
-                        placeholder="Tu respuesta..."
-                        className={errors[index] ? "border-destructive" : ""}
-                      />
-                      {errors[index] && (
-                        <p className="text-sm text-destructive flex items-center gap-1">
-                          <AlertCircle className="w-4 h-4" />
-                          Incorrecto. Intenta de nuevo.
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                <div className="space-y-6">
+                  {reviewWords.map((word, index) => {
+                    const userAnswer = userAnswers[index] || "";
+                    const correctAnswer = step === "spanish-to-english" ? word.english : word.spanish;
+                    const isCorrect = userAnswer && normalizeText(userAnswer, step === "spanish-to-english") === normalizeText(correctAnswer, step === "spanish-to-english");
+                    
+                    return (
+                      <div key={index} className="space-y-2">
+                        <div className="flex items-center justify-center gap-2">
+                          <p className="text-2xl font-semibold text-foreground">
+                            {step === "spanish-to-english" ? word.spanish : word.english}
+                          </p>
+                          {word.clarification && (
+                            <span className="text-xs text-muted-foreground">{word.clarification}</span>
+                          )}
+                        </div>
+                        <Input
+                          value={userAnswer}
+                          onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
+                          placeholder="Tu respuesta..."
+                          className={`text-center text-lg ${
+                            errors[index] ? "border-destructive" : ""
+                          } ${isCorrect ? "text-green-500" : ""}`}
+                        />
+                        {errors[index] && (
+                          <p className="text-sm text-destructive flex items-center justify-center gap-1">
+                            <AlertCircle className="w-4 h-4" />
+                            Incorrecto. Intenta de nuevo.
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 <Button
@@ -394,12 +457,13 @@ const ReviewDay = () => {
                   </div>
                 </div>
 
-                <Input
+                <textarea
                   value={userAnswers[0] || ""}
                   onChange={(e) => setUserAnswers({ 0: e.target.value })}
                   placeholder="Escribe la traducción en español..."
-                  className={errors[0] ? "border-destructive" : ""}
-                  disabled={phraseTranslationCorrect}
+                  className={`w-full min-h-[100px] p-4 text-lg rounded-lg border ${
+                    errors[0] ? "border-destructive" : "border-border"
+                  } bg-background resize-none`}
                 />
                 
                 {errors[0] && (
@@ -409,68 +473,103 @@ const ReviewDay = () => {
                   </p>
                 )}
 
-                {!phraseTranslationCorrect && (
+                <Button
+                  onClick={verifyPhraseTranslation}
+                  className="w-full mt-6 gradient-animated"
+                >
+                  Verificar Traducción
+                </Button>
+              </Card>
+            </motion.div>
+          )}
+
+          {step === "phrase-ordering" && reviewPhrases[currentPhraseIndex] && (
+            <motion.div
+              key="phrase-ordering"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4 text-center text-foreground">
+                  Ordena las palabras
+                </h3>
+
+                <div className="flex justify-center gap-2 mb-6">
                   <Button
-                    onClick={verifyPhraseTranslation}
-                    className="w-full mt-6 gradient-animated"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => speakPhrase(reviewPhrases[currentPhraseIndex].english)}
                   >
-                    Verificar Traducción
+                    <Volume2 className="w-4 h-4 mr-2" />
+                    Escuchar
                   </Button>
-                )}
-
-                {phraseTranslationCorrect && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-6 space-y-4"
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setAudioSpeed(audioSpeed === 1 ? 0.7 : 1)}
                   >
-                    <p className="text-center text-green-500 font-medium flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-5 h-5" />
-                      ¡Correcto! Ahora ordena las palabras
-                    </p>
+                    Velocidad: {audioSpeed === 1 ? "Normal" : "Lenta"}
+                  </Button>
+                </div>
 
-                    <div className="bg-muted/50 rounded-lg p-4 min-h-[60px]">
-                      <div className="flex flex-wrap gap-2">
-                        {wordBankSelection.map((word, index) => (
-                          <Button
-                            key={index}
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => removeWordFromSelection(index)}
-                          >
-                            {word}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
+                <div className="bg-muted/50 rounded-lg p-4 min-h-[80px] mb-4">
+                  <div className="flex flex-wrap gap-2">
+                    {wordBankSelection.map((word, index) => (
+                      <Button
+                        key={index}
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => removeWordFromSelection(index)}
+                        className={isAuxiliaryWord(word) ? "text-yellow-500" : ""}
+                      >
+                        {isAuxiliaryWord(word) ? word.toLowerCase() : word}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
 
-                    <div className="bg-card border border-border rounded-lg p-4">
-                      <p className="text-sm text-muted-foreground mb-2">Banco de palabras:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {getWordBank()
-                          .filter(word => !wordBankSelection.includes(word))
-                          .map((word, index) => (
-                            <Button
-                              key={index}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => addWordToSelection(word)}
-                            >
-                              {word}
-                            </Button>
-                          ))}
-                      </div>
-                    </div>
+                <div className="bg-card border border-border rounded-lg p-4 mb-4">
+                  <p className="text-sm text-muted-foreground mb-2">Banco de palabras:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {getWordBank().map((word, index) => {
+                      const isSelected = wordBankSelection.includes(word);
+                      return (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => !isSelected && addWordToSelection(word)}
+                          disabled={isSelected}
+                          className={`${
+                            isAuxiliaryWord(word) ? "text-yellow-500" : ""
+                          } ${isSelected ? "opacity-50" : ""}`}
+                        >
+                          {isAuxiliaryWord(word) ? word.toLowerCase() : word}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-                    <Button
-                      onClick={verifyPhraseOrdering}
-                      className="w-full gradient-animated"
-                      disabled={wordBankSelection.length === 0}
-                    >
-                      Verificar Orden
-                    </Button>
-                  </motion.div>
-                )}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setWordBankSelection(wordBankSelection.slice(0, -1))}
+                    variant="outline"
+                    className="flex-1"
+                    disabled={wordBankSelection.length === 0}
+                  >
+                    Borrar
+                  </Button>
+                  <Button
+                    onClick={verifyPhraseOrdering}
+                    className="flex-1 gradient-animated"
+                    disabled={wordBankSelection.length === 0}
+                  >
+                    Verificar Orden
+                  </Button>
+                </div>
               </Card>
             </motion.div>
           )}

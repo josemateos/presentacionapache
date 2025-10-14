@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { History, Star, ChevronDown, CheckCircle } from "lucide-react";
+import { History, Star, ChevronDown, CheckCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
@@ -30,6 +30,7 @@ export const QuickAccessButtons = ({
   }, []);
 
   const availableDays = [1, 2, 3];
+  const pendingReviewDays = availableDays.filter(day => !completedReviewDays.includes(day)).length;
 
   return (
     <motion.section
@@ -44,11 +45,11 @@ export const QuickAccessButtons = ({
           variant="outline"
           className="relative py-6 rounded-xl font-medium text-base border-2 hover:bg-muted justify-start"
         >
-          <History className="w-5 h-5 mr-3 text-primary" />
+          <RotateCcw className="w-5 h-5 mr-3 text-primary" />
           <span>MI REPASO</span>
-          {reviewPendingCount && reviewPendingCount > 0 && (
-            <Badge className="ml-auto bg-destructive text-destructive-foreground mr-2">
-              {reviewPendingCount}
+          {pendingReviewDays > 0 && (
+            <Badge className="ml-auto bg-red-500 text-white mr-2">
+              {pendingReviewDays}
             </Badge>
           )}
           <ChevronDown className={`w-5 h-5 ml-auto transition-transform ${showReviewDays ? "rotate-180" : ""}`} />
@@ -80,9 +81,10 @@ export const QuickAccessButtons = ({
                   <Button
                     key={day}
                     onClick={() => navigate(`/review-day?day=${day}`)}
-                    variant="outline"
-                    className={`py-6 rounded-xl font-medium text-base justify-center hover:bg-muted border-2 ${
-                      isCompleted ? "border-green-500/50 bg-green-500/10" : ""
+                    className={`py-6 rounded-xl font-medium text-base justify-center border-2 relative ${
+                      isCompleted 
+                        ? "bg-card border-border hover:bg-muted text-foreground" 
+                        : "bg-red-500 border-red-600 hover:bg-red-600 text-white"
                     }`}
                   >
                     {isCompleted && <CheckCircle className="w-4 h-4 mr-2 text-green-500" />}

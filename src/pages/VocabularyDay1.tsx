@@ -38,7 +38,7 @@ const VocabularyDay1 = () => {
     { id: 12, spanish: "Tú", english: "You", learned: false },
     { id: 13, spanish: "Tener", english: "Have", learned: false },
     { id: 14, spanish: "Ir", english: "Go", learned: false },
-    { id: 15, spanish: "Visitar", english: "Visit", learned: false },
+    { id: 15, spanish: "Visita", english: "Visit", learned: false },
     { id: 16, spanish: "Nos (complemento)", english: "Us", learned: false },
     { id: 17, spanish: "Nosotros", english: "We", learned: false },
     { id: 18, spanish: "Invitar", english: "Invite", learned: false },

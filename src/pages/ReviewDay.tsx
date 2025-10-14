@@ -45,7 +45,7 @@ const vocabularyByDay: Record<number, Word[]> = {
     { spanish: "Tú", english: "You" },
     { spanish: "Tener", english: "Have" },
     { spanish: "Ir", english: "Go" },
-    { spanish: "Visitar", english: "Visit" },
+    { spanish: "Visita", english: "Visit" },
     { spanish: "Nos", english: "Us" },
     { spanish: "Nosotros", english: "We" },
     { spanish: "Invitar", english: "Invite" },
@@ -54,7 +54,7 @@ const vocabularyByDay: Record<number, Word[]> = {
     { spanish: "Importante", english: "Important" },
     { spanish: "Reunión", english: "Meeting" },
     { spanish: "Trabajo", english: "Work" },
-    { spanish: "Tarde", english: "Afternoon", clarification: "(parte del día)" },
+    { spanish: "Tarde", english: "Afternoon" },
     { spanish: "Venir", english: "Come" },
   ],
   2: [
@@ -106,7 +106,7 @@ const phrasesByDay: Record<number, Phrase[]> = {
 type ExerciseStep = "spanish-to-english" | "english-to-spanish" | "phrase-translation" | "phrase-ordering" | "completed";
 
 const isAuxiliaryWord = (word: string) => {
-  const auxiliaries = ["to", "at", "an", "a", "the", "of", "in"];
+  const auxiliaries = ["to", "will"];
   return auxiliaries.includes(word.toLowerCase());
 };
 
@@ -127,22 +127,32 @@ const ReviewDay = () => {
   const [audioSpeed, setAudioSpeed] = useState(1);
   const [phraseTranslationCorrect, setPhraseTranslationCorrect] = useState(false);
   const [wordBankSelection, setWordBankSelection] = useState<string[]>([]);
+  const [spanishToEnglishWords, setSpanishToEnglishWords] = useState<Word[]>([]);
+  const [englishToSpanishWords, setEnglishToSpanishWords] = useState<Word[]>([]);
 
   useEffect(() => {
     const allWords = vocabularyByDay[day] || [];
     const allPhrases = phrasesByDay[day] || [];
     
-    // Seleccionar un tercio aleatorio de palabras
-    const shuffledWords = [...allWords].sort(() => Math.random() - 0.5);
-    const wordCount = Math.ceil(allWords.length / 3);
-    const selectedWords = shuffledWords.slice(0, wordCount);
+    // Seleccionar 10 palabras aleatorias para español a inglés
+    const shuffled1 = [...allWords].sort(() => Math.random() - 0.5);
+    const selectedWords1 = shuffled1.slice(0, Math.min(10, allWords.length));
+    
+    // Seleccionar 10 palabras aleatorias diferentes para inglés a español
+    const shuffled2 = [...allWords].sort(() => Math.random() - 0.5);
+    const selectedWords2 = shuffled2.slice(0, Math.min(10, allWords.length));
     
     // Seleccionar 2 frases aleatorias
     const shuffledPhrases = [...allPhrases].sort(() => Math.random() - 0.5);
     const selectedPhrases = shuffledPhrases.slice(0, 2);
     
-    setReviewWords(selectedWords);
+    setSpanishToEnglishWords(selectedWords1);
+    setEnglishToSpanishWords(selectedWords2);
+    setReviewWords(selectedWords1);
     setReviewPhrases(selectedPhrases);
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
   }, [day]);
 
   const normalizeText = (text: string, preserveI: boolean = false) => {
@@ -170,23 +180,26 @@ const ReviewDay = () => {
 
     if (allCorrect) {
       if (step === "spanish-to-english") {
+        setReviewWords(englishToSpanishWords);
         setStep("english-to-spanish");
         setUserAnswers({});
         setErrors({});
-      toast({
-        title: "✓ Verificación correcta",
-        description: "Pasando a la siguiente sección",
-        className: "bg-green-500 text-white border-green-500",
-        duration: 2000,
-      });
+        window.scrollTo(0, 0);
+        toast({
+          title: "✓ Verificación correcta",
+          description: "Pasando a la siguiente sección",
+          className: "bg-green-500 text-white border-green-600",
+          duration: 2000,
+        });
       } else if (step === "english-to-spanish") {
         setStep("phrase-translation");
         setUserAnswers({});
         setErrors({});
+        window.scrollTo(0, 0);
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white border-green-500",
+          className: "bg-green-500 text-white border-green-600",
           duration: 2000,
         });
       }
@@ -207,10 +220,11 @@ const ReviewDay = () => {
       setPhraseTranslationCorrect(true);
       setErrors({});
       setStep("phrase-ordering");
+      window.scrollTo(0, 0);
       toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
-        className: "bg-green-500 text-white border-green-500",
+        className: "bg-green-500 text-white border-green-600",
         duration: 2000,
       });
     } else {
@@ -234,10 +248,11 @@ const ReviewDay = () => {
         setWordBankSelection([]);
         setUserAnswers({});
         setStep("phrase-translation");
+        window.scrollTo(0, 0);
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white border-green-500",
+          className: "bg-green-500 text-white border-green-600",
           duration: 2000,
         });
       } else {
@@ -260,17 +275,22 @@ const ReviewDay = () => {
 
   const goToPreviousStep = () => {
     if (step === "english-to-spanish") {
+      setReviewWords(spanishToEnglishWords);
       setStep("spanish-to-english");
       setUserAnswers({});
       setErrors({});
+      window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
+      setReviewWords(englishToSpanishWords);
       setStep("english-to-spanish");
       setUserAnswers({});
       setErrors({});
+      window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
       setStep("phrase-translation");
       setWordBankSelection([]);
       setPhraseTranslationCorrect(false);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -281,26 +301,37 @@ const ReviewDay = () => {
     speechSynthesis.speak(utterance);
   };
 
-  const [wordBankOrder] = useState<string[]>(() => {
-    return [];
-  });
+  const [wordBankOrder, setWordBankOrder] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (step === "phrase-ordering" && reviewPhrases[currentPhraseIndex]) {
+      const currentPhrase = reviewPhrases[currentPhraseIndex];
+      const words = currentPhrase.english.split(" ");
+      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      setWordBankOrder(shuffled);
+    }
+  }, [step, currentPhraseIndex, reviewPhrases]);
 
   const getWordBank = () => {
-    const currentPhrase = reviewPhrases[currentPhraseIndex];
-    const words = currentPhrase.english.split(" ");
-    
-    // Si ya tenemos un orden guardado para esta frase, úsalo
-    if (wordBankOrder.length === words.length) {
-      return wordBankOrder;
-    }
-    
-    // De lo contrario, crea un nuevo orden aleatorio
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
-    return shuffled;
+    return wordBankOrder;
   };
 
   const addWordToSelection = (word: string) => {
-    setWordBankSelection([...wordBankSelection, word]);
+    // Si la palabra termina con "ING", fusionarla con la última palabra
+    if (word === "ING" && wordBankSelection.length > 0) {
+      const lastWord = wordBankSelection[wordBankSelection.length - 1];
+      const updatedSelection = [...wordBankSelection];
+      updatedSelection[updatedSelection.length - 1] = lastWord + word.toLowerCase();
+      setWordBankSelection(updatedSelection);
+    } else {
+      setWordBankSelection([...wordBankSelection, word]);
+    }
+  };
+
+  const removeLastWord = () => {
+    if (wordBankSelection.length > 0) {
+      setWordBankSelection(wordBankSelection.slice(0, -1));
+    }
   };
 
   const removeWordFromSelection = (index: number) => {
@@ -309,10 +340,15 @@ const ReviewDay = () => {
 
   const totalWords = reviewWords.length;
   const totalPhrases = reviewPhrases.length;
-  const currentStepIndex = step === "spanish-to-english" ? 0 : 
-                          step === "english-to-spanish" ? 1 :
-                          step === "phrase-translation" ? 2 : 3;
-  const totalSteps = 3 + totalPhrases;
+  const totalSteps = 2 + (totalPhrases * 2); // 2 word exercises + 2 steps per phrase
+  
+  const getCurrentStep = () => {
+    if (step === "spanish-to-english") return 1;
+    if (step === "english-to-spanish") return 2;
+    if (step === "phrase-translation") return 3 + (currentPhraseIndex * 2);
+    if (step === "phrase-ordering") return 4 + (currentPhraseIndex * 2);
+    return totalSteps;
+  };
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">
@@ -357,23 +393,22 @@ const ReviewDay = () => {
               Progreso del Repaso
             </h2>
             <p className="text-sm text-muted-foreground">
-              {step === "spanish-to-english" && `1 de ${totalSteps}`}
-              {step === "english-to-spanish" && `2 de ${totalSteps}`}
-              {step === "phrase-translation" && `${3 + currentPhraseIndex} de ${totalSteps}`}
-              {step === "phrase-ordering" && `${3 + currentPhraseIndex + 1} de ${totalSteps}`}
-              {step === "completed" && `${totalSteps} de ${totalSteps}`}
+              {getCurrentStep()} de {totalSteps}
             </p>
           </div>
           <div className="flex gap-1">
-            <div className={`flex-1 h-2 rounded-full ${step !== "spanish-to-english" ? "bg-primary" : "bg-muted"}`}></div>
-            <div className={`flex-1 h-2 rounded-full ${currentStepIndex >= 1 ? "bg-primary" : "bg-muted"}`}></div>
-            <div className={`flex-1 h-2 rounded-full ${currentStepIndex >= 2 ? "bg-primary" : "bg-muted"}`}></div>
+            {Array.from({ length: totalSteps }).map((_, index) => (
+              <div 
+                key={index}
+                className={`flex-1 h-2 rounded-full ${getCurrentStep() > index ? "bg-primary" : "bg-muted"}`}
+              />
+            ))}
           </div>
           <p className="text-center text-xs text-muted-foreground mt-2">
             {step === "spanish-to-english" && "Traducción al Inglés"}
             {step === "english-to-spanish" && "Traducción al Español"}
-            {step === "phrase-translation" && "Traducción de Frases"}
-            {step === "phrase-ordering" && "Ordenar Frases"}
+            {step === "phrase-translation" && `Traducción de Frase ${currentPhraseIndex + 1} al Español`}
+            {step === "phrase-ordering" && `Traducción de Frase ${currentPhraseIndex + 1} al Inglés`}
             {step === "completed" && "¡Completado!"}
           </p>
         </motion.div>
@@ -391,12 +426,18 @@ const ReviewDay = () => {
                 <h3 className="text-lg font-bold mb-4 text-center text-foreground">
                   {step === "spanish-to-english" ? "Escribe en Inglés" : "Escribe en Español"}
                 </h3>
+                {step === "english-to-spanish" && (
+                  <p className="text-sm text-center text-muted-foreground mb-4">
+                    *Tomar en cuenta los acentos
+                  </p>
+                )}
                 
                 <div className="space-y-6">
                   {reviewWords.map((word, index) => {
                     const userAnswer = userAnswers[index] || "";
                     const correctAnswer = step === "spanish-to-english" ? word.english : word.spanish;
                     const isCorrect = userAnswer && normalizeText(userAnswer, step === "spanish-to-english") === normalizeText(correctAnswer, step === "spanish-to-english");
+                    const hasError = errors[index];
                     
                     return (
                       <div key={index} className="space-y-2">
@@ -405,7 +446,7 @@ const ReviewDay = () => {
                             {step === "spanish-to-english" ? word.spanish : word.english}
                           </p>
                           {word.clarification && (
-                            <span className="text-xs text-muted-foreground">{word.clarification}</span>
+                            <span className="text-sm text-muted-foreground">{word.clarification}</span>
                           )}
                         </div>
                         <Input
@@ -413,10 +454,10 @@ const ReviewDay = () => {
                           onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
                           placeholder="Tu respuesta..."
                           className={`text-center text-lg ${
-                            errors[index] ? "border-destructive" : ""
-                          } ${isCorrect ? "text-green-500" : ""}`}
+                            hasError ? "border-destructive text-destructive" : isCorrect ? "text-green-500" : ""
+                          }`}
                         />
-                        {errors[index] && (
+                        {hasError && (
                           <p className="text-sm text-destructive flex items-center justify-center gap-1">
                             <AlertCircle className="w-4 h-4" />
                             Incorrecto. Intenta de nuevo.
@@ -539,20 +580,24 @@ const ReviewDay = () => {
                   <p className="text-sm text-muted-foreground mb-2">Banco de palabras:</p>
                   <div className="flex flex-wrap gap-2">
                     {getWordBank().map((word, index) => {
-                      const isSelected = wordBankSelection.includes(word);
+                      const selectedCount = wordBankSelection.filter(w => w === word).length;
+                      const wordCount = getWordBank().filter(w => w === word).length;
+                      const isFullySelected = selectedCount >= wordCount;
                       const isAuxiliary = isAuxiliaryWord(word);
+                      const isING = word === "ING";
+                      
                       return (
                         <Button
                           key={`${word}-${index}`}
                           variant="outline"
                           size="sm"
-                          onClick={() => !isSelected && addWordToSelection(word)}
-                          disabled={isSelected}
+                          onClick={() => !isFullySelected && addWordToSelection(word)}
+                          disabled={isFullySelected}
                           className={`${
                             isAuxiliary ? "text-yellow-500" : ""
-                          } ${isSelected ? "opacity-30 cursor-not-allowed" : ""}`}
+                          } ${isFullySelected ? "opacity-30" : ""}`}
                         >
-                          {isAuxiliary ? word.toLowerCase() : word}
+                          {isING ? word : isAuxiliary ? word.toLowerCase() : word}
                         </Button>
                       );
                     })}
@@ -561,7 +606,7 @@ const ReviewDay = () => {
 
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => setWordBankSelection(wordBankSelection.slice(0, -1))}
+                    onClick={removeLastWord}
                     variant="outline"
                     className="flex-1"
                     disabled={wordBankSelection.length === 0}

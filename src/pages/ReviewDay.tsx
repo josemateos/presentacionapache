@@ -103,7 +103,7 @@ const phrasesByDay: Record<number, Phrase[]> = {
   ],
 };
 
-type ExerciseStep = "spanish-to-english" | "english-to-spanish" | "phrase-translation" | "phrase-ordering" | "completed";
+type ExerciseStep = "spanish-to-english" | "english-to-spanish" | "phrase-translation" | "apache-translation" | "phrase-ordering" | "completed";
 
 const isAuxiliaryWord = (word: string) => {
   const auxiliaries = ["to", "will"];
@@ -184,11 +184,15 @@ const ReviewDay = () => {
     if (allCorrect) {
       if (step === "spanish-to-english") {
         setReviewWords(englishToSpanishWords);
-        setStep("english-to-spanish");
-        setUserAnswers({});
-        setErrors({});
-        setVerified(false);
-        window.scrollTo(0, 0);
+        
+        setTimeout(() => {
+          setStep("english-to-spanish");
+          setUserAnswers({});
+          setErrors({});
+          setVerified(false);
+          window.scrollTo(0, 0);
+        }, 2000);
+        
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
@@ -196,11 +200,14 @@ const ReviewDay = () => {
           duration: 2000,
         });
       } else if (step === "english-to-spanish") {
-        setStep("phrase-translation");
-        setUserAnswers({});
-        setErrors({});
-        setVerified(false);
-        window.scrollTo(0, 0);
+        setTimeout(() => {
+          setStep("phrase-translation");
+          setUserAnswers({});
+          setErrors({});
+          setVerified(false);
+          window.scrollTo(0, 0);
+        }, 2000);
+        
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
@@ -224,8 +231,128 @@ const ReviewDay = () => {
     if (normalizeText(userAnswer, false) === normalizeText(currentPhrase.spanish, false)) {
       setPhraseTranslationCorrect(true);
       setErrors({});
-      setStep("phrase-ordering");
-      window.scrollTo(0, 0);
+      
+      setTimeout(() => {
+        setStep("apache-translation");
+        setUserAnswers({});
+        window.scrollTo(0, 0);
+      }, 2000);
+      
+      toast({
+        title: "✓ Verificación correcta",
+        description: "Pasando a la siguiente sección",
+        className: "bg-green-500 text-white border-green-600",
+        duration: 2000,
+      });
+    } else {
+      setErrors({ 0: true });
+      toast({
+        title: "Incorrecto",
+        description: "Intenta de nuevo",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const verifyApacheTranslation = () => {
+    const currentPhrase = reviewPhrases[currentPhraseIndex];
+    const userAnswer = userAnswers[0] || "";
+    
+    // Crear traducción literal esperada basada en la frase en inglés
+    const englishWords = currentPhrase.english.split(" ");
+    const literalTranslation = englishWords.map(word => {
+      const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
+      
+      // Mapeo de palabras a sus traducciones literales Apache
+      const apacheMap: Record<string, string> = {
+        "i": "yo",
+        "want": "querer",
+        "to": "a",
+        "buy": "comprar",
+        "fresh": "fresca",
+        "fruits": "frutas",
+        "at": "en",
+        "the": "el",
+        "market": "mercado",
+        "like": "gustar",
+        "read": "leer",
+        "a": "un",
+        "book": "libro",
+        "before": "antes",
+        "sleeping": "durmiendo",
+        "sleep": "dormir",
+        "you": "tú",
+        "have": "tener",
+        "go": "ir",
+        "visit": "visita",
+        "us": "nos",
+        "we": "nosotros",
+        "invite": "invitar",
+        "eat": "comer",
+        "tomorrow": "mañana",
+        "an": "un",
+        "important": "importante",
+        "work": "trabajo",
+        "meeting": "reunión",
+        "this": "esta",
+        "afternoon": "tarde",
+        "they": "ellos",
+        "are": "ser",
+        "going": "yendo",
+        "ask": "pedir",
+        "will": "will",
+        "my": "mi",
+        "family": "familia",
+        "next": "próximo",
+        "weekend": "fin de semana",
+        "need": "necesitar",
+        "practice": "practicar",
+        "english": "inglés",
+        "every": "todos",
+        "day": "día",
+        "days": "días",
+        "she": "ella",
+        "is": "ser",
+        "always": "siempre",
+        "affectionate": "cariñosa",
+        "morning": "mañana",
+        "drink": "tomar",
+        "coffee": "café",
+        "house": "casa",
+        "near": "cerca",
+        "school": "escuela",
+        "am": "ser",
+        "student": "estudiante",
+        "and": "y",
+        "on": "en",
+        "weekends": "fines de semana",
+        "he": "él",
+        "leaves": "va",
+        "in": "en",
+        "his": "su",
+        "car": "coche",
+        "from": "de",
+        "mexico": "méxico",
+        "but": "pero",
+        "currently": "actualmente",
+        "live": "vivir",
+        "australia": "australia",
+        "take": "llevar",
+        "workshop": "taller",
+      };
+      
+      return apacheMap[cleanWord] || cleanWord;
+    }).join(" ");
+    
+    if (normalizeText(userAnswer, false) === normalizeText(literalTranslation, false)) {
+      setErrors({});
+      
+      setTimeout(() => {
+        setStep("phrase-ordering");
+        setUserAnswers({});
+        window.scrollTo(0, 0);
+      }, 2000);
+      
       toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
@@ -252,8 +379,12 @@ const ReviewDay = () => {
         setPhraseTranslationCorrect(false);
         setWordBankSelection([]);
         setUserAnswers({});
-        setStep("phrase-translation");
-        window.scrollTo(0, 0);
+        
+        setTimeout(() => {
+          setStep("phrase-translation");
+          window.scrollTo(0, 0);
+        }, 2000);
+        
         toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
@@ -293,10 +424,15 @@ const ReviewDay = () => {
       setErrors({});
       setVerified(false);
       window.scrollTo(0, 0);
-    } else if (step === "phrase-ordering") {
+    } else if (step === "apache-translation") {
       setStep("phrase-translation");
+      setUserAnswers({});
+      setErrors({});
+      window.scrollTo(0, 0);
+    } else if (step === "phrase-ordering") {
+      setStep("apache-translation");
       setWordBankSelection([]);
-      setPhraseTranslationCorrect(false);
+      setUserAnswers({});
       window.scrollTo(0, 0);
     }
   };
@@ -347,13 +483,14 @@ const ReviewDay = () => {
 
   const totalWords = reviewWords.length;
   const totalPhrases = reviewPhrases.length;
-  const totalSteps = 2 + (totalPhrases * 2); // 2 word exercises + 2 steps per phrase
+  const totalSteps = 2 + (totalPhrases * 3); // 2 word exercises + 3 steps per phrase (translation, apache, ordering)
   
   const getCurrentStep = () => {
     if (step === "spanish-to-english") return 1;
     if (step === "english-to-spanish") return 2;
-    if (step === "phrase-translation") return 3 + (currentPhraseIndex * 2);
-    if (step === "phrase-ordering") return 4 + (currentPhraseIndex * 2);
+    if (step === "phrase-translation") return 3 + (currentPhraseIndex * 3);
+    if (step === "apache-translation") return 4 + (currentPhraseIndex * 3);
+    if (step === "phrase-ordering") return 5 + (currentPhraseIndex * 3);
     return totalSteps;
   };
 
@@ -415,6 +552,7 @@ const ReviewDay = () => {
             {step === "spanish-to-english" && "Traducción al Inglés"}
             {step === "english-to-spanish" && "Traducción al Español"}
             {step === "phrase-translation" && `Traducción de Frase ${currentPhraseIndex + 1} al Español`}
+            {step === "apache-translation" && `Traducción de Frase ${currentPhraseIndex + 1} a Español Apache`}
             {step === "phrase-ordering" && `Traducción de Frase ${currentPhraseIndex + 1} al Inglés`}
             {step === "completed" && "¡Completado!"}
           </p>
@@ -459,6 +597,11 @@ const ReviewDay = () => {
                         <Input
                           value={userAnswer}
                           onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
+                          onFocus={() => {
+                            if (errors[index]) {
+                              setErrors({ ...errors, [index]: false });
+                            }
+                          }}
                           placeholder="Tu respuesta..."
                           className={`text-center text-lg ${
                             hasError ? "border-destructive text-destructive" : verified && isCorrect ? "text-green-500" : "text-white"
@@ -485,7 +628,7 @@ const ReviewDay = () => {
             </motion.div>
           )}
 
-          {step === "phrase-translation" && reviewPhrases[currentPhraseIndex] && (
+          {(step === "phrase-translation" || step === "apache-translation") && reviewPhrases[currentPhraseIndex] && (
             <motion.div
               key="phrase-translation"
               initial={{ opacity: 0, x: 20 }}

@@ -133,6 +133,12 @@ const [verified, setVerified] = useState(false);
 
   // Refs y palabras esperadas para el ejercicio Apache por palabra
   const apacheInputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const [apacheInputValues, setApacheInputValues] = useState<string[]>([]);
+  const [apacheInputErrors, setApacheInputErrors] = useState<boolean[]>([]);
+
+  // Palabras auxiliares que se deben filtrar
+  const AUXILIARIES = ["to", "will", "would", "can", "could", "should", "may", "might"];
+
   const apacheExpectedWords = useMemo(() => {
     const current = reviewPhrases[currentPhraseIndex];
     if (!current) return [] as string[];
@@ -140,7 +146,6 @@ const [verified, setVerified] = useState(false);
     const map: Record<string, string> = {
       i: "yo",
       want: "querer",
-      to: "a",
       buy: "comprar",
       fresh: "fresca",
       fruits: "frutas",
@@ -173,7 +178,6 @@ const [verified, setVerified] = useState(false);
       are: "ser",
       going: "yendo",
       ask: "pedir",
-      will: "will",
       my: "mi",
       family: "familia",
       next: "próximo",
@@ -213,8 +217,31 @@ const [verified, setVerified] = useState(false);
       take: "llevar",
       workshop: "taller",
     };
-    return englishWords.map((w) => map[w.replace(/[.,!?]/g, "").toLowerCase()] || w.replace(/[.,!?]/g, "").toLowerCase());
+    
+    // Filtrar auxiliares y mapear a español apache
+    const filteredWords = englishWords
+      .map(w => w.replace(/[.,!?]/g, ""))
+      .filter(w => !AUXILIARIES.includes(w.toLowerCase()));
+    
+    return filteredWords.map((w) => map[w.toLowerCase()] || w.toLowerCase());
   }, [reviewPhrases, currentPhraseIndex]);
+
+  const englishPhraseWithoutAuxiliaries = useMemo(() => {
+    const current = reviewPhrases[currentPhraseIndex];
+    if (!current) return "";
+    return current.english
+      .split(" ")
+      .filter(w => !AUXILIARIES.includes(w.replace(/[.,!?]/g, "").toLowerCase()))
+      .join(" ");
+  }, [reviewPhrases, currentPhraseIndex]);
+
+  // Inicializar inputs cuando cambia la frase
+  useEffect(() => {
+    if (step === "apache-translation") {
+      setApacheInputValues(new Array(apacheExpectedWords.length).fill(""));
+      setApacheInputErrors(new Array(apacheExpectedWords.length).fill(false));
+    }
+  }, [step, apacheExpectedWords.length]);
 
   useEffect(() => {
     const allWords = vocabularyByDay[day] || [];
@@ -344,98 +371,41 @@ const [verified, setVerified] = useState(false);
     }
   };
 
+  const handleApacheInputChange = (index: number, value: string) => {
+    const newValues = [...apacheInputValues];
+    newValues[index] = value;
+    setApacheInputValues(newValues);
+
+    const newErrors = [...apacheInputErrors];
+    const expectedWord = apacheExpectedWords[index].toLowerCase();
+    const inputWord = value.toLowerCase().trim();
+
+    if (inputWord.length > 0) {
+      if (inputWord === expectedWord) {
+        newErrors[index] = false;
+        // Auto-focus al siguiente input si es correcto
+        if (index < apacheExpectedWords.length - 1) {
+          setTimeout(() => {
+            apacheInputsRef.current[index + 1]?.focus();
+          }, 100);
+        }
+      } else {
+        newErrors[index] = true;
+      }
+    } else {
+      newErrors[index] = false;
+    }
+    setApacheInputErrors(newErrors);
+  };
+
   const verifyApacheTranslation = () => {
-    const currentPhrase = reviewPhrases[currentPhraseIndex];
-    const userAnswer = userAnswers[0] || "";
-    
-    // Crear traducción literal esperada basada en la frase en inglés
-    const englishWords = currentPhrase.english.split(" ");
-    const literalTranslation = englishWords.map(word => {
-      const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
-      
-      // Mapeo de palabras a sus traducciones literales Apache
-      const apacheMap: Record<string, string> = {
-        "i": "yo",
-        "want": "querer",
-        "to": "a",
-        "buy": "comprar",
-        "fresh": "fresca",
-        "fruits": "frutas",
-        "at": "en",
-        "the": "el",
-        "market": "mercado",
-        "like": "gustar",
-        "read": "leer",
-        "a": "un",
-        "book": "libro",
-        "before": "antes",
-        "sleeping": "durmiendo",
-        "sleep": "dormir",
-        "you": "tu",
-        "have": "tener",
-        "go": "ir",
-        "visit": "visita",
-        "us": "nos",
-        "we": "nosotros",
-        "invite": "invitar",
-        "eat": "comer",
-        "tomorrow": "mañana",
-        "an": "un",
-        "important": "importante",
-        "work": "trabajo",
-        "meeting": "reunión",
-        "this": "esta",
-        "afternoon": "tarde",
-        "they": "ellos",
-        "are": "ser",
-        "going": "yendo",
-        "ask": "pedir",
-        "will": "will",
-        "my": "mi",
-        "family": "familia",
-        "next": "próximo",
-        "weekend": "fin de semana",
-        "need": "necesitar",
-        "practice": "practicar",
-        "english": "inglés",
-        "every": "todos",
-        "day": "día",
-        "days": "días",
-        "she": "ella",
-        "is": "ser",
-        "always": "siempre",
-        "affectionate": "cariñosa",
-        "morning": "mañana",
-        "drink": "tomar",
-        "coffee": "café",
-        "house": "casa",
-        "near": "cerca",
-        "school": "escuela",
-        "am": "ser",
-        "student": "estudiante",
-        "and": "y",
-        "on": "en",
-        "weekends": "fines de semana",
-        "he": "él",
-        "leaves": "va",
-        "in": "en",
-        "his": "su",
-        "car": "coche",
-        "from": "de",
-        "mexico": "méxico",
-        "but": "pero",
-        "currently": "actualmente",
-        "live": "vivir",
-        "australia": "australia",
-        "take": "llevar",
-        "workshop": "taller",
-      };
-      
-      return apacheMap[cleanWord] || cleanWord;
-    }).join(" ");
-    
-    if (normalizeText(userAnswer, false) === normalizeText(literalTranslation, false)) {
-      setErrors({});
+    // Verificar que todas las palabras sean correctas
+    const allCorrect = apacheInputValues.every((val, idx) => 
+      val.toLowerCase().trim() === apacheExpectedWords[idx].toLowerCase()
+    );
+
+    if (allCorrect) {
+      setApacheInputErrors(new Array(apacheExpectedWords.length).fill(false));
       const t = toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
@@ -445,14 +415,19 @@ const [verified, setVerified] = useState(false);
       setTimeout(() => {
         setStep("phrase-ordering");
         setUserAnswers({});
+        setApacheInputValues([]);
         window.scrollTo(0, 0);
         t.dismiss();
       }, 2000);
     } else {
-      setErrors({ 0: true });
+      // Marcar errores en palabras incorrectas
+      const newErrors = apacheInputValues.map((val, idx) => 
+        val.toLowerCase().trim() !== apacheExpectedWords[idx].toLowerCase()
+      );
+      setApacheInputErrors(newErrors);
       toast({
         title: "Incorrecto",
-        description: "Intenta de nuevo",
+        description: "Verifica las palabras marcadas en rojo",
         variant: "destructive",
       });
     }
@@ -732,7 +707,9 @@ const [verified, setVerified] = useState(false);
                 
                 <div className="text-center mb-4">
                   <p className="text-xl font-medium text-foreground mb-4">
-                    {reviewPhrases[currentPhraseIndex].english}
+                    {step === "apache-translation" 
+                      ? englishPhraseWithoutAuxiliaries 
+                      : reviewPhrases[currentPhraseIndex].english}
                   </p>
                   
                   {step === "phrase-translation" && (
@@ -756,25 +733,52 @@ const [verified, setVerified] = useState(false);
                   )}
                 </div>
 
-                <textarea
-                  value={userAnswers[0] || ""}
-                  onChange={(e) => setUserAnswers({ 0: e.target.value })}
-                  onFocus={() => {
-                    if (errors[0]) {
-                      setErrors({ ...errors, 0: false });
-                    }
-                  }}
-                  placeholder="Escribe la traducción en español..."
-                  className={`w-full min-h-[100px] p-4 text-lg rounded-lg border ${
-                    errors[0] ? "border-destructive" : "border-border"
-                  } bg-background resize-none`}
-                />
-                
-                {errors[0] && (
-                  <p className="text-sm text-destructive flex items-center gap-1 mt-2">
-                    <AlertCircle className="w-4 h-4" />
-                    Incorrecto. Intenta de nuevo.
-                  </p>
+                {step === "apache-translation" ? (
+                  <>
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      {apacheExpectedWords.map((_, index) => (
+                        <div key={index} className="flex flex-col">
+                          <input
+                            ref={(el) => (apacheInputsRef.current[index] = el)}
+                            type="text"
+                            value={apacheInputValues[index] || ""}
+                            onChange={(e) => handleApacheInputChange(index, e.target.value)}
+                            placeholder={`Palabra ${index + 1}`}
+                            className={`w-full p-3 text-lg rounded-lg border ${
+                              apacheInputValues[index] && !apacheInputErrors[index]
+                                ? "border-green-500 bg-green-500/10 text-green-600"
+                                : apacheInputErrors[index]
+                                ? "border-destructive bg-destructive/10 text-destructive"
+                                : "border-border"
+                            } bg-background transition-colors`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <textarea
+                      value={userAnswers[0] || ""}
+                      onChange={(e) => setUserAnswers({ 0: e.target.value })}
+                      onFocus={() => {
+                        if (errors[0]) {
+                          setErrors({ ...errors, 0: false });
+                        }
+                      }}
+                      placeholder="Escribe la traducción en español..."
+                      className={`w-full min-h-[100px] p-4 text-lg rounded-lg border ${
+                        errors[0] ? "border-destructive" : "border-border"
+                      } bg-background resize-none`}
+                    />
+                    
+                    {errors[0] && (
+                      <p className="text-sm text-destructive flex items-center gap-1 mt-2">
+                        <AlertCircle className="w-4 h-4" />
+                        Incorrecto. Intenta de nuevo.
+                      </p>
+                    )}
+                  </>
                 )}
 
                 <Button

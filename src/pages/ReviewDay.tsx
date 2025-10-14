@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Volume2, CheckCircle2, AlertCircle, Sparkles, Undo2 } from "lucide-react";
@@ -129,7 +129,92 @@ const ReviewDay = () => {
   const [wordBankSelection, setWordBankSelection] = useState<string[]>([]);
   const [spanishToEnglishWords, setSpanishToEnglishWords] = useState<Word[]>([]);
   const [englishToSpanishWords, setEnglishToSpanishWords] = useState<Word[]>([]);
-  const [verified, setVerified] = useState(false);
+const [verified, setVerified] = useState(false);
+
+  // Refs y palabras esperadas para el ejercicio Apache por palabra
+  const apacheInputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const apacheExpectedWords = useMemo(() => {
+    const current = reviewPhrases[currentPhraseIndex];
+    if (!current) return [] as string[];
+    const englishWords = current.english.split(" ");
+    const map: Record<string, string> = {
+      i: "yo",
+      want: "querer",
+      to: "a",
+      buy: "comprar",
+      fresh: "fresca",
+      fruits: "frutas",
+      at: "en",
+      the: "el",
+      market: "mercado",
+      like: "gustar",
+      read: "leer",
+      a: "un",
+      book: "libro",
+      before: "antes",
+      sleeping: "durmiendo",
+      sleep: "dormir",
+      you: "tu",
+      have: "tener",
+      go: "ir",
+      visit: "visita",
+      us: "nos",
+      we: "nosotros",
+      invite: "invitar",
+      eat: "comer",
+      tomorrow: "mañana",
+      an: "un",
+      important: "importante",
+      work: "trabajo",
+      meeting: "reunión",
+      this: "esta",
+      afternoon: "tarde",
+      they: "ellos",
+      are: "ser",
+      going: "yendo",
+      ask: "pedir",
+      will: "will",
+      my: "mi",
+      family: "familia",
+      next: "próximo",
+      weekend: "fin de semana",
+      need: "necesitar",
+      practice: "practicar",
+      english: "inglés",
+      every: "todos",
+      day: "día",
+      days: "días",
+      she: "ella",
+      is: "ser",
+      always: "siempre",
+      affectionate: "cariñosa",
+      morning: "mañana",
+      drink: "tomar",
+      coffee: "café",
+      house: "casa",
+      near: "cerca",
+      school: "escuela",
+      am: "ser",
+      student: "estudiante",
+      and: "y",
+      on: "en",
+      weekends: "fines de semana",
+      he: "él",
+      leaves: "va",
+      in: "en",
+      his: "su",
+      car: "coche",
+      from: "de",
+      mexico: "méxico",
+      but: "pero",
+      currently: "actualmente",
+      live: "vivir",
+      australia: "australia",
+      take: "llevar",
+      workshop: "taller",
+    };
+    return englishWords.map((w) => map[w.replace(/[.,!?]/g, "").toLowerCase()] || w.replace(/[.,!?]/g, "").toLowerCase());
+  }, [reviewPhrases, currentPhraseIndex]);
 
   useEffect(() => {
     const allWords = vocabularyByDay[day] || [];
@@ -212,7 +297,7 @@ const ReviewDay = () => {
           duration: 2000,
         });
         setTimeout(() => {
-          setStep("phrase-translation");
+          setStep("apache-translation");
           setCurrentPhraseIndex(0);
           setUserAnswers({});
           setErrors({});

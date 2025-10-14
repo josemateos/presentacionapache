@@ -324,7 +324,7 @@ const [verified, setVerified] = useState(false);
           duration: 2000,
         });
         setTimeout(() => {
-          setStep("apache-translation");
+          setStep("phrase-translation");
           setCurrentPhraseIndex(0);
           setUserAnswers({});
           setErrors({});
@@ -702,7 +702,11 @@ const [verified, setVerified] = useState(false);
             >
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-2 text-center text-foreground">
-                  {step === "apache-translation" ? "Traduce a Español Apache" : "Traduce al Español"}
+                  {step === "apache-translation" ? (
+                    <>Traduce a <span className="text-yellow-500">Español Apache</span></>
+                  ) : (
+                    "Traduce al Español"
+                  )}
                 </h3>
                 {step === "apache-translation" && (
                   <p className="text-sm text-center text-muted-foreground mb-4">Sin auxiliares clave</p>

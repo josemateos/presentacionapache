@@ -143,15 +143,21 @@ const ReviewDay = () => {
     const shuffled2 = [...allWords].sort(() => Math.random() - 0.5);
     const selectedWords2 = shuffled2.slice(0, Math.min(10, allWords.length));
     
-    // Seleccionar 2 frases aleatorias
-    const shuffledPhrases = [...allPhrases].sort(() => Math.random() - 0.5);
-    const selectedPhrases = shuffledPhrases.slice(0, 2);
+    // Seleccionar 2 frases asegurando que la primera sea "Quiero comprar frutas frescas en el mercado" si existe
+    const preferredSpanish = "Quiero comprar frutas frescas en el mercado";
+    const preferred = allPhrases.find((p) => p.spanish === preferredSpanish);
+    const remaining = allPhrases.filter((p) => p !== preferred);
+    const shuffledPhrases = [...remaining].sort(() => Math.random() - 0.5);
+    const selectedPhrases = preferred
+      ? [preferred, ...shuffledPhrases.slice(0, Math.max(0, 2 - 1))]
+      : shuffledPhrases.slice(0, 2);
     
     setSpanishToEnglishWords(selectedWords1);
     setEnglishToSpanishWords(selectedWords2);
     setReviewWords(selectedWords1);
     setReviewPhrases(selectedPhrases);
     setVerified(false);
+    setCurrentPhraseIndex(0);
     
     // Scroll to top
     window.scrollTo(0, 0);
@@ -184,22 +190,27 @@ const ReviewDay = () => {
     if (allCorrect) {
       if (step === "spanish-to-english") {
         setReviewWords(englishToSpanishWords);
-        
+        const t = toast({
+          title: "✓ Verificación correcta",
+          description: "Pasando a la siguiente sección",
+          className: "bg-green-500 text-white border-green-600",
+          duration: 2000,
+        });
         setTimeout(() => {
           setStep("english-to-spanish");
           setUserAnswers({});
           setErrors({});
           setVerified(false);
           window.scrollTo(0, 0);
+          t.dismiss();
         }, 2000);
-        
-        toast({
+      } else if (step === "english-to-spanish") {
+        const t = toast({
           title: "✓ Verificación correcta",
           description: "Pasando a la siguiente sección",
           className: "bg-green-500 text-white border-green-600",
           duration: 2000,
         });
-      } else if (step === "english-to-spanish") {
         setTimeout(() => {
           setStep("phrase-translation");
           setCurrentPhraseIndex(0);
@@ -207,14 +218,8 @@ const ReviewDay = () => {
           setErrors({});
           setVerified(false);
           window.scrollTo(0, 0);
+          t.dismiss();
         }, 2000);
-        
-        toast({
-          title: "✓ Verificación correcta",
-          description: "Pasando a la siguiente sección",
-          className: "bg-green-500 text-white border-green-600",
-          duration: 2000,
-        });
       }
     } else {
       toast({
@@ -232,19 +237,18 @@ const ReviewDay = () => {
     if (normalizeText(userAnswer, false) === normalizeText(currentPhrase.spanish, false)) {
       setPhraseTranslationCorrect(true);
       setErrors({});
-      
-      setTimeout(() => {
-        setStep("apache-translation");
-        setUserAnswers({});
-        window.scrollTo(0, 0);
-      }, 2000);
-      
-      toast({
+      const t = toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
         className: "bg-green-500 text-white border-green-600",
         duration: 2000,
       });
+      setTimeout(() => {
+        setStep("apache-translation");
+        setUserAnswers({});
+        window.scrollTo(0, 0);
+        t.dismiss();
+      }, 2000);
     } else {
       setErrors({ 0: true });
       toast({
@@ -282,7 +286,7 @@ const ReviewDay = () => {
         "before": "antes",
         "sleeping": "durmiendo",
         "sleep": "dormir",
-        "you": "tú",
+        "you": "tu",
         "have": "tener",
         "go": "ir",
         "visit": "visita",
@@ -347,19 +351,18 @@ const ReviewDay = () => {
     
     if (normalizeText(userAnswer, false) === normalizeText(literalTranslation, false)) {
       setErrors({});
-      
-      setTimeout(() => {
-        setStep("phrase-ordering");
-        setUserAnswers({});
-        window.scrollTo(0, 0);
-      }, 2000);
-      
-      toast({
+      const t = toast({
         title: "✓ Verificación correcta",
         description: "Pasando a la siguiente sección",
         className: "bg-green-500 text-white border-green-600",
         duration: 2000,
       });
+      setTimeout(() => {
+        setStep("phrase-ordering");
+        setUserAnswers({});
+        window.scrollTo(0, 0);
+        t.dismiss();
+      }, 2000);
     } else {
       setErrors({ 0: true });
       toast({

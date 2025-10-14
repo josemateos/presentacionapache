@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217 91% 60%;
+    --primary: 190 70% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
@@ -26,15 +26,15 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 45 93% 58%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 280 70% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --ring: 190 70% 50%;
 
     --radius: 0.75rem;
 
@@ -45,19 +45,19 @@ All colors MUST be HSL.
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 190 70% 50%;
 
     /* Apache theme colors */
-    --apache-dark: 217 67% 12%;
-    --apache-darker: 217 70% 8%;
-    --apache-blue: 217 91% 60%;
-    --apache-blue-light: 217 85% 70%;
-    --apache-card: 217 60% 18%;
-    --apache-border: 217 50% 28%;
+    --apache-dark: 260 50% 15%;
+    --apache-darker: 260 55% 10%;
+    --apache-blue: 190 70% 50%;
+    --apache-blue-light: 190 65% 60%;
+    --apache-card: 260 40% 20%;
+    --apache-border: 260 30% 30%;
     --apache-gold: 45 93% 58%;
-    --apache-purple: 271 81% 56%;
+    --apache-purple: 280 70% 55%;
     --apache-green: 142 76% 36%;
-    --apache-red: 0 72% 51%;
+    --apache-red: 340 75% 50%;
     
     /* Gradients - Inspired by vibrant TikTok-style */
     --gradient-hero: linear-gradient(135deg, hsl(340 75% 40%), hsl(280 70% 55%), hsl(190 70% 50%));

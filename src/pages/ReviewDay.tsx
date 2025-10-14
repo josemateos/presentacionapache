@@ -454,7 +454,7 @@ const ReviewDay = () => {
                           onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
                           placeholder="Tu respuesta..."
                           className={`text-center text-lg ${
-                            hasError ? "border-destructive text-destructive" : isCorrect ? "text-green-500" : ""
+                            hasError ? "border-destructive text-destructive" : isCorrect ? "text-green-500" : "text-white"
                           }`}
                         />
                         {hasError && (

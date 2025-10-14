@@ -129,6 +129,7 @@ const ReviewDay = () => {
   const [wordBankSelection, setWordBankSelection] = useState<string[]>([]);
   const [spanishToEnglishWords, setSpanishToEnglishWords] = useState<Word[]>([]);
   const [englishToSpanishWords, setEnglishToSpanishWords] = useState<Word[]>([]);
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     const allWords = vocabularyByDay[day] || [];
@@ -150,6 +151,7 @@ const ReviewDay = () => {
     setEnglishToSpanishWords(selectedWords2);
     setReviewWords(selectedWords1);
     setReviewPhrases(selectedPhrases);
+    setVerified(false);
     
     // Scroll to top
     window.scrollTo(0, 0);
@@ -177,6 +179,7 @@ const ReviewDay = () => {
     });
 
     setErrors(newErrors);
+    setVerified(true);
 
     if (allCorrect) {
       if (step === "spanish-to-english") {
@@ -184,6 +187,7 @@ const ReviewDay = () => {
         setStep("english-to-spanish");
         setUserAnswers({});
         setErrors({});
+        setVerified(false);
         window.scrollTo(0, 0);
         toast({
           title: "✓ Verificación correcta",
@@ -195,6 +199,7 @@ const ReviewDay = () => {
         setStep("phrase-translation");
         setUserAnswers({});
         setErrors({});
+        setVerified(false);
         window.scrollTo(0, 0);
         toast({
           title: "✓ Verificación correcta",
@@ -279,12 +284,14 @@ const ReviewDay = () => {
       setStep("spanish-to-english");
       setUserAnswers({});
       setErrors({});
+      setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
       setReviewWords(englishToSpanishWords);
       setStep("english-to-spanish");
       setUserAnswers({});
       setErrors({});
+      setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
       setStep("phrase-translation");
@@ -454,7 +461,7 @@ const ReviewDay = () => {
                           onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
                           placeholder="Tu respuesta..."
                           className={`text-center text-lg ${
-                            hasError ? "border-destructive text-destructive" : isCorrect ? "text-green-500" : "text-white"
+                            hasError ? "border-destructive text-destructive" : verified && isCorrect ? "text-green-500" : "text-white"
                           }`}
                         />
                         {hasError && (

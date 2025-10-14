@@ -552,9 +552,9 @@ const [verified, setVerified] = useState(false);
   const getCurrentStep = () => {
     if (step === "spanish-to-english") return 1;
     if (step === "english-to-spanish") return 2;
-    if (step === "phrase-translation") return 3 + (currentPhraseIndex * 3);
     if (step === "apache-translation") return 3 + (currentPhraseIndex * 3);
-    if (step === "phrase-ordering") return 4 + (currentPhraseIndex * 3);
+    if (step === "phrase-translation") return 4 + (currentPhraseIndex * 3);
+    if (step === "phrase-ordering") return 5 + (currentPhraseIndex * 3);
     return totalSteps;
   };
 
@@ -740,7 +740,7 @@ const [verified, setVerified] = useState(false);
                   <>
                     <div className="flex flex-wrap gap-3 mb-6 justify-center">
                       {apacheExpectedWords.map((expectedWord, index) => {
-                        const width = Math.max(60, expectedWord.length * 16 + 32);
+                        const width = Math.max(50, expectedWord.length * 12 + 24);
                         
                         return (
                           <input
@@ -751,7 +751,7 @@ const [verified, setVerified] = useState(false);
                             onChange={(e) => handleApacheInputChange(index, e.target.value)}
                             placeholder={`Palabra ${index + 1}`}
                             style={{ width: `${width}px` }}
-                            className={`p-3 text-lg text-center rounded-lg border ${
+                            className={`p-2 text-base text-center rounded-lg border ${
                               apacheInputValues[index] && !apacheInputErrors[index]
                                 ? "border-green-500 bg-green-500/10 text-green-600"
                                 : apacheInputErrors[index]

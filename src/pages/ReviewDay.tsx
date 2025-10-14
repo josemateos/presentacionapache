@@ -202,6 +202,7 @@ const ReviewDay = () => {
       } else if (step === "english-to-spanish") {
         setTimeout(() => {
           setStep("phrase-translation");
+          setCurrentPhraseIndex(0);
           setUserAnswers({});
           setErrors({});
           setVerified(false);
@@ -630,7 +631,7 @@ const ReviewDay = () => {
 
           {(step === "phrase-translation" || step === "apache-translation") && reviewPhrases[currentPhraseIndex] && (
             <motion.div
-              key="phrase-translation"
+              key={step}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -638,7 +639,7 @@ const ReviewDay = () => {
             >
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-4 text-center text-foreground">
-                  Traduce al Español
+                  {step === "apache-translation" ? "Traduce a Español Apache" : "Traduce al Español"}
                 </h3>
                 
                 <div className="text-center mb-4">
@@ -646,28 +647,35 @@ const ReviewDay = () => {
                     {reviewPhrases[currentPhraseIndex].english}
                   </p>
                   
-                  <div className="flex justify-center gap-2 mb-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => speakPhrase(reviewPhrases[currentPhraseIndex].english)}
-                    >
-                      <Volume2 className="w-4 h-4 mr-2" />
-                      Escuchar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setAudioSpeed(audioSpeed === 1 ? 0.7 : 1)}
-                    >
-                      Velocidad: {audioSpeed === 1 ? "Normal" : "Lenta"}
-                    </Button>
-                  </div>
+                  {step === "phrase-translation" && (
+                    <div className="flex justify-center gap-2 mb-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => speakPhrase(reviewPhrases[currentPhraseIndex].english)}
+                      >
+                        <Volume2 className="w-4 h-4 mr-2" />
+                        Escuchar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setAudioSpeed(audioSpeed === 1 ? 0.7 : 1)}
+                      >
+                        Velocidad: {audioSpeed === 1 ? "Normal" : "Lenta"}
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 <textarea
                   value={userAnswers[0] || ""}
                   onChange={(e) => setUserAnswers({ 0: e.target.value })}
+                  onFocus={() => {
+                    if (errors[0]) {
+                      setErrors({ ...errors, 0: false });
+                    }
+                  }}
                   placeholder="Escribe la traducción en español..."
                   className={`w-full min-h-[100px] p-4 text-lg rounded-lg border ${
                     errors[0] ? "border-destructive" : "border-border"
@@ -682,7 +690,7 @@ const ReviewDay = () => {
                 )}
 
                 <Button
-                  onClick={verifyPhraseTranslation}
+                  onClick={step === "apache-translation" ? verifyApacheTranslation : verifyPhraseTranslation}
                   className="w-full mt-6 gradient-animated"
                 >
                   Verificar Traducción

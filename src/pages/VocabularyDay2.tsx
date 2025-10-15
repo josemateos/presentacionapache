@@ -46,7 +46,7 @@ const VocabularyDay2 = () => {
     { id: 2, spanish: "Pedir", english: "Ask", learned: false },
     { id: 3, spanish: "Próximo", english: "Next", learned: false },
     { id: 4, spanish: "Fin de semana", english: "Weekend", learned: false },
-    { id: 5, spanish: "Visita", english: "Visit", learned: false },
+    { id: 5, spanish: "Visitar", english: "Visit", learned: false },
     { id: 6, spanish: "Mi", english: "My", learned: false },
     { id: 7, spanish: "Familia", english: "Family", learned: false },
     { id: 8, spanish: "Necesitar", english: "Need", learned: false },

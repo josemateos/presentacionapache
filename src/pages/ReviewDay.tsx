@@ -45,7 +45,7 @@ const vocabularyByDay: Record<number, Word[]> = {
     { spanish: "Tú", english: "You" },
     { spanish: "Tener", english: "Have" },
     { spanish: "Ir", english: "Go" },
-    { spanish: "Visita", english: "Visit" },
+    { spanish: "Visitar", english: "Visit" },
     { spanish: "Nos", english: "Us" },
     { spanish: "Nosotros", english: "We" },
     { spanish: "Invitar", english: "Invite" },
@@ -162,7 +162,7 @@ const [verified, setVerified] = useState(false);
       you: "tu",
       have: "tener",
       go: "ir",
-      visit: "visita",
+      visit: "visitar",
       us: "nos",
       we: "nosotros",
       invite: "invitar",
@@ -240,6 +240,10 @@ const [verified, setVerified] = useState(false);
     if (step === "apache-translation") {
       setApacheInputValues(new Array(apacheExpectedWords.length).fill(""));
       setApacheInputErrors(new Array(apacheExpectedWords.length).fill(false));
+      // Auto-focus en el primer input
+      setTimeout(() => {
+        apacheInputsRef.current[0]?.focus();
+      }, 100);
     }
   }, [step, apacheExpectedWords.length]);
 
@@ -351,8 +355,10 @@ const [verified, setVerified] = useState(false);
     const normalizedCorrectAnswer = normalizeText(currentPhrase.spanish, false);
     
     // Permitir "una" como alternativa a "un" para AN
-    const userAnswerWithUna = normalizedUserAnswer.replace(/\buna\b/g, "un");
-    const isCorrect = userAnswerWithUna === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
+    // También permitir "visitar" como alternativa a "visita" para Visit
+    let userAnswerNormalized = normalizedUserAnswer.replace(/\buna\b/g, "un");
+    userAnswerNormalized = userAnswerNormalized.replace(/\bvisitar\b/g, "visita");
+    const isCorrect = userAnswerNormalized === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
     
     if (isCorrect) {
       setPhraseTranslationCorrect(true);
@@ -366,6 +372,7 @@ const [verified, setVerified] = useState(false);
       setTimeout(() => {
         setStep("phrase-ordering");
         setUserAnswers({});
+        setPhraseTranslationCorrect(false);
         window.scrollTo(0, 0);
         t.dismiss();
       }, 2000);
@@ -533,6 +540,9 @@ const [verified, setVerified] = useState(false);
   };
 
   const addWordToSelection = (word: string) => {
+    // Reproducir audio de la palabra
+    speakPhrase(word);
+    
     // Si la palabra termina con "ING", fusionarla con la última palabra
     if (word === "ING" && wordBankSelection.length > 0) {
       const lastWord = wordBankSelection[wordBankSelection.length - 1];
@@ -751,49 +761,78 @@ const [verified, setVerified] = useState(false);
 
                 {step === "apache-translation" ? (
                   <>
-                    <div className="flex flex-wrap gap-3 mb-6 justify-center">
+                    <div className="flex flex-wrap gap-3 mb-6 justify-center items-end">
                       {apacheExpectedWords.map((expectedWord, index) => {
-                        const width = Math.max(50, expectedWord.length * 12 + 24);
+                        const underscoreCount = expectedWord.length;
                         
                         return (
-                          <input
-                            key={index}
-                            ref={(el) => (apacheInputsRef.current[index] = el)}
-                            type="text"
-                            value={apacheInputValues[index] || ""}
-                            onChange={(e) => handleApacheInputChange(index, e.target.value)}
-                            placeholder={`Palabra ${index + 1}`}
-                            style={{ width: `${width}px` }}
-                            className={`p-2 text-base text-center rounded-lg border ${
-                              apacheInputValues[index] && !apacheInputErrors[index]
-                                ? "border-green-500 bg-green-500/10 text-green-600"
-                                : apacheInputErrors[index]
-                                ? "border-destructive bg-destructive/10 text-destructive"
-                                : "border-border"
-                            } bg-background transition-colors`}
-                          />
+                          <div key={index} className="flex flex-col items-center gap-1">
+                            <input
+                              ref={(el) => (apacheInputsRef.current[index] = el)}
+                              type="text"
+                              value={apacheInputValues[index] || ""}
+                              onChange={(e) => handleApacheInputChange(index, e.target.value)}
+                              style={{ width: `${Math.max(60, underscoreCount * 14)}px` }}
+                              className={`p-1 text-base text-center bg-transparent border-0 border-b-2 ${
+                                apacheInputValues[index] && !apacheInputErrors[index]
+                                  ? "border-green-500 text-green-600"
+                                  : apacheInputErrors[index]
+                                  ? "border-destructive text-destructive"
+                                  : "border-border text-foreground"
+                              } focus:outline-none focus:border-primary transition-colors`}
+                            />
+                            <div className="flex gap-0.5">
+                              {Array.from({ length: underscoreCount }).map((_, i) => (
+                                <div key={i} className="w-2 h-0.5 bg-muted-foreground/30"></div>
+                              ))}
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
                   </>
                 ) : (
                   <>
-                    <textarea
-                      value={userAnswers[0] || ""}
-                      onChange={(e) => setUserAnswers({ 0: e.target.value })}
-                      onFocus={() => {
-                        if (errors[0]) {
-                          setErrors({ ...errors, 0: false });
-                        }
-                      }}
-                      placeholder="Escribe la traducción en español..."
-                      className={`w-full min-h-[100px] p-4 text-lg rounded-lg border ${
-                        errors[0] ? "border-destructive" : "border-border"
-                      } bg-background resize-none`}
-                    />
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap gap-3 justify-center items-end">
+                        {reviewPhrases[currentPhraseIndex].spanish.split(" ").map((word, index) => {
+                          const underscoreCount = word.length;
+                          
+                          return (
+                            <div key={index} className="flex flex-col items-center gap-1">
+                              <input
+                                type="text"
+                                value={userAnswers[index] || ""}
+                                onChange={(e) => {
+                                  const newAnswers = { ...userAnswers };
+                                  newAnswers[index] = e.target.value;
+                                  setUserAnswers(newAnswers);
+                                }}
+                                onFocus={() => {
+                                  if (errors[index]) {
+                                    const newErrors = { ...errors };
+                                    delete newErrors[index];
+                                    setErrors(newErrors);
+                                  }
+                                }}
+                                style={{ width: `${Math.max(60, underscoreCount * 14)}px` }}
+                                className={`p-1 text-base text-center bg-transparent border-0 border-b-2 ${
+                                  errors[0] ? "border-destructive text-destructive" : "border-border text-foreground"
+                                } focus:outline-none focus:border-primary transition-colors`}
+                              />
+                              <div className="flex gap-0.5">
+                                {Array.from({ length: underscoreCount }).map((_, i) => (
+                                  <div key={i} className="w-2 h-0.5 bg-muted-foreground/30"></div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                     
                     {errors[0] && (
-                      <p className="text-sm text-destructive flex items-center gap-1 mt-2">
+                      <p className="text-sm text-destructive flex items-center gap-1 mt-2 justify-center">
                         <AlertCircle className="w-4 h-4" />
                         Incorrecto. Intenta de nuevo.
                       </p>
@@ -821,7 +860,7 @@ const [verified, setVerified] = useState(false);
             >
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-4 text-center text-foreground">
-                  Forma la frase en Ingles Perfecto utilizando los auxiliares clave
+                  Forma la frase en <span className="text-primary">Ingles Perfecto</span> utilizando los auxiliares clave
                 </h3>
 
                 <div className="text-center mb-6">

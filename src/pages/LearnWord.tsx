@@ -482,10 +482,11 @@ const LearnWord = () => {
 
       recognition.onresult = (event: any) => {
         resultReceived = true;
-        const transcript = event.results[0][0].transcript.toLowerCase().trim();
-        const targetWord = english.toLowerCase().trim();
+        const transcript = event.results[0][0].transcript.trim();
+        const targetWord = english.trim();
 
-        if (transcript === targetWord || transcript.includes(targetWord)) {
+        // Comparación exacta case-sensitive para palabras como "I"
+        if (transcript === targetWord || transcript.toLowerCase() === targetWord.toLowerCase()) {
           playSuccessSound();
           toast({
             title: "¡Excelente pronunciación!",
@@ -731,6 +732,7 @@ const LearnWord = () => {
         'your': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
         'my': { slug: 'mi', fallbacks: [mi1, mi2, mi3, mi4] },
         'i': { slug: 'yo', fallbacks: [yo1, yo2, yo3, yo4] },
+        'I': { slug: 'yo', fallbacks: [yo1, yo2, yo3, yo4] },
         'us': { slug: 'nos', fallbacks: [nos1, nos2, nos3, nos4] },
         'in': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
         'on': { slug: 'en', fallbacks: [en1, en2, en3, en4] },

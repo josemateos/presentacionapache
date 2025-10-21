@@ -496,19 +496,20 @@ const LearnWord = () => {
             m.id === 5 ? { ...m, completed: true } : m
           ));
 
+          // Avanzar automáticamente al siguiente módulo después del mensaje
           setTimeout(() => {
             clearVerifyTimeout();
             setCurrentModule(6);
             setRecordedAudio(null);
             setIsVerifying(false);
             setIsRecording(false);
-          }, 1000);
+          }, 1500);
         } else {
           toast({
             title: "Intentar nuevamente",
             description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
             variant: "destructive",
-            duration: 2000,
+            duration: 3000,
           });
           clearVerifyTimeout();
           setRecordedAudio(null);
@@ -1572,6 +1573,17 @@ const LearnWord = () => {
                   ? 'Detener grabación' 
                   : 'Practica tu pronunciación'}
               </Button>
+
+              {recordedAudio && !isVerifying && (
+                <Button
+                  variant="outline"
+                  onClick={handlePlayRecording}
+                  className="w-full h-12 mt-2"
+                >
+                  <Volume2 className="w-5 h-5 mr-2" />
+                  Escuchar mi grabación
+                </Button>
+              )}
               
               <Button
                 variant="outline"

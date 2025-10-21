@@ -454,12 +454,24 @@ const LearnWord = () => {
 
       recognition.onerror = (event: any) => {
         console.error("Recognition error:", event.error);
-        toast({
-          title: "Error",
-          description: "No se pudo verificar la pronunciación. Intenta de nuevo",
-          variant: "destructive",
-          duration: 2000,
-        });
+        
+        // Solo mostrar error si no es un error de "no-speech" o "aborted"
+        if (event.error !== 'no-speech' && event.error !== 'aborted') {
+          toast({
+            title: "Error",
+            description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+            variant: "destructive",
+            duration: 2000,
+          });
+        } else if (event.error === 'no-speech') {
+          toast({
+            title: "No se escuchó nada",
+            description: "Por favor, habla más cerca del micrófono",
+            variant: "destructive",
+            duration: 2000,
+          });
+        }
+        
         clearVerifyTimeout();
         setRecordedAudio(null);
         setIsVerifying(false);
@@ -485,6 +497,7 @@ const LearnWord = () => {
           ));
 
           setTimeout(() => {
+            clearVerifyTimeout();
             setCurrentModule(6);
             setRecordedAudio(null);
             setIsVerifying(false);
@@ -505,12 +518,15 @@ const LearnWord = () => {
       };
 
       recognition.onend = () => {
-        // Si después de 3 segundos no se recibió resultado
-        setTimeout(() => {
+        // Limpiar timeout anterior si existe
+        clearVerifyTimeout();
+        
+        // Si después de medio segundo no se recibió resultado
+        verifyTimeoutRef.current = window.setTimeout(() => {
           if (!resultReceived) {
             toast({
               title: "Inténtalo nuevamente",
-              description: "No se detectó la grabación",
+              description: "No se detectó audio claro. Habla más fuerte",
               variant: "destructive",
               duration: 2000,
             });
@@ -559,6 +575,14 @@ const LearnWord = () => {
           recorder.stop();
           setIsRecording(false);
           setIsVerifying(true);
+          
+          // Timeout de seguridad: si después de 6 segundos no hay respuesta, desbloquear
+          clearVerifyTimeout();
+          verifyTimeoutRef.current = window.setTimeout(() => {
+            console.log("Timeout de seguridad: desbloqueando botón");
+            setIsVerifying(false);
+            setIsRecording(false);
+          }, 6000);
         }
       }, 3000);
 

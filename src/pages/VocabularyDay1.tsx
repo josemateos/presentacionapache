@@ -63,14 +63,13 @@ const VocabularyDay1 = () => {
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 
-  // Función para mezclar array
-  const shuffleArray = (array: Word[]) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
+  // Función para ordenar array: aprendidas primero
+  const sortWords = (array: Word[]) => {
+    return [...array].sort((a, b) => {
+      // Aprendidas primero (true = 1, false = 0, queremos descendente)
+      if (a.learned === b.learned) return 0;
+      return a.learned ? -1 : 1;
+    });
   };
 
   useEffect(() => {
@@ -87,7 +86,7 @@ const VocabularyDay1 = () => {
             return savedWord || currentWord;
           });
           setWords(syncedWords);
-          setShuffledWords(shuffleArray(syncedWords));
+          setShuffledWords(sortWords(syncedWords));
         } catch (error) {
           console.error("Error loading saved progress:", error);
         }
@@ -108,9 +107,9 @@ const VocabularyDay1 = () => {
   }, []);
 
   useEffect(() => {
-    // Guardar progreso en localStorage y actualizar shuffled
+    // Guardar progreso en localStorage y actualizar sorted
     localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
-    setShuffledWords(shuffleArray(words));
+    setShuffledWords(sortWords(words));
   }, [words]);
 
   const handleLearnWord = (word: Word) => {

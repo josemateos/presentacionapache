@@ -428,6 +428,8 @@ const LearnWord = () => {
   // Funciones de grabación
   const handleStartRecording = async () => {
     try {
+      // Limpiar la grabación previa para permitir un nuevo intento
+      setRecordedAudio(null);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       const audioChunks: BlobPart[] = [];
@@ -723,11 +725,12 @@ const LearnWord = () => {
         'days': { slug: 'dias', fallbacks: [dias1, dias2, dias3, dias4] },
         'she': { slug: 'ella', fallbacks: [ella1, ella2, ella3, ella4] },
         'they': { slug: 'ellos', fallbacks: [ellos1, ellos2, ellos3, ellos4] },
-        'we': { slug: 'nosotros', fallbacks: [nosotros1, nosotros2, nosotros4, nosotros4] },
+        'we': { slug: 'nosotros', fallbacks: [nosotros1, nosotros2, nosotros3, nosotros4] },
         'the': { slug: 'el', fallbacks: [el1, el2, el3, el4] },
         'you': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
         'your': { slug: 'tu', fallbacks: [tu1, tu2, tu3, tu4] },
         'my': { slug: 'mi', fallbacks: [mi1, mi2, mi3, mi4] },
+        'i': { slug: 'yo', fallbacks: [yo1, yo2, yo3, yo4] },
         'us': { slug: 'nos', fallbacks: [nos1, nos2, nos3, nos4] },
         'in': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
         'on': { slug: 'en', fallbacks: [en1, en2, en3, en4] },
@@ -1008,9 +1011,8 @@ const LearnWord = () => {
   const handlePronunciationButton = () => {
     if (isRecording) {
       handleStopRecording();
-    } else if (recordedAudio) {
-      handlePlayRecording();
     } else {
+      // Siempre iniciar una nueva grabación; la reproducción se maneja en el botón separado
       handleStartRecording();
     }
   };

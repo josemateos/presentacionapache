@@ -485,8 +485,12 @@ const LearnWord = () => {
         const transcript = event.results[0][0].transcript.trim();
         const targetWord = english.trim();
 
-        // Comparación exacta case-sensitive (solo acepta coincidencia exacta)
-        if (transcript === targetWord) {
+        // Comparación case-sensitive estricta para "I", flexible para otras palabras
+        const isMatch = targetWord === "I" 
+          ? transcript === "I"
+          : transcript.toLowerCase() === targetWord.toLowerCase();
+        
+        if (isMatch) {
           playSuccessSound();
           toast({
             title: "¡Excelente pronunciación!",
@@ -775,8 +779,7 @@ const LearnWord = () => {
           .toLowerCase()
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
           .replace(/\s+/g, '-');
-        // Usar imágenes de 'yo' como fallback por defecto en lugar de 'fresca'
-        images = await loadWordImages(slugFromSpanish, [yo1, yo2, yo3, yo4]);
+        images = await loadWordImages(slugFromSpanish, [fresca1, fresca2, fresca3, fresca4]);
       }
       
       const options: ImageOption[] = images.map((url, index) => ({

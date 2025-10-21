@@ -18,13 +18,9 @@ interface Word {
   audioFileName?: string;
 }
 
-const VocabularyDay1 = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  // Vocabulario del día 1 - Palabras de las frases 1-5
-  const [words, setWords] = useState<Word[]>([
-    { id: 1, spanish: "Yo", english: "I", learned: false },
+// Vocabulario inicial del día 1 - Palabras de las frases 1-5
+const INITIAL_WORDS: Word[] = [
+  { id: 1, spanish: "Yo", english: "I", learned: false },
     { id: 2, spanish: "Querer", english: "Want", learned: false },
     { id: 3, spanish: "Comprar", english: "Buy", learned: false },
     { id: 4, spanish: "Fresca", english: "Fresh", learned: false },
@@ -55,9 +51,14 @@ const VocabularyDay1 = () => {
     { id: 29, spanish: "De (de algo)", english: "Of", learned: false },
     { id: 30, spanish: "A (lugar/dirección)", english: "To", learned: false },
     { id: 31, spanish: "Tener que (obligación)", english: "Have to", learned: false },
-    { id: 32, spanish: "Venir", english: "Come", learned: false },
-  ]);
+  { id: 32, spanish: "Venir", english: "Come", learned: false },
+];
 
+const VocabularyDay1 = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [words, setWords] = useState<Word[]>(INITIAL_WORDS);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const learnedCount = words.filter(w => w.learned).length;
@@ -79,17 +80,18 @@ const VocabularyDay1 = () => {
       if (saved) {
         try {
           const savedWords: Word[] = JSON.parse(saved);
-          // Sincronizar con la lista actual: agregar palabras nuevas que no están en el progreso guardado
-          const currentWords = words;
-          const syncedWords = currentWords.map(currentWord => {
-            const savedWord = savedWords.find(sw => sw.id === currentWord.id);
-            return savedWord || currentWord;
+          // Sincronizar con la lista inicial: agregar palabras nuevas que no están en el progreso guardado
+          const syncedWords = INITIAL_WORDS.map(initialWord => {
+            const savedWord = savedWords.find(sw => sw.id === initialWord.id);
+            return savedWord || initialWord;
           });
           setWords(syncedWords);
-          setShuffledWords(sortWords(syncedWords));
         } catch (error) {
           console.error("Error loading saved progress:", error);
         }
+      } else {
+        // Si no hay progreso guardado, inicializar con la lista inicial
+        setWords(INITIAL_WORDS);
       }
     };
 

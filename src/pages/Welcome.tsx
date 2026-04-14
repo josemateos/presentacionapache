@@ -47,7 +47,7 @@ const Welcome = ({
     <div
       className="min-h-screen flex flex-col"
       style={{
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Manrope', sans-serif",
         background: "linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 30%, #0d1b2a 60%, #0a0a1a 100%)",
       }}
     >

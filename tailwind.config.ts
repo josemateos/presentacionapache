@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        headline: ["Manrope", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,6 +51,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary, 187 90% 57%))",
+          foreground: "hsl(var(--on-tertiary, 187 100% 10%))",
+        },
+        surface: {
+          DEFAULT: "hsl(var(--surface, 230 60% 11%))",
+          container: "hsl(var(--surface-container, 230 40% 16%))",
+          "container-low": "hsl(var(--surface-container-low, 230 43% 14%))",
+          "container-high": "hsl(var(--surface-container-high, 230 33% 20%))",
+          "container-highest": "hsl(var(--surface-container-highest, 230 27% 25%))",
+        },
+        "on-surface": "hsl(var(--on-surface, 234 100% 94%))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

@@ -22,6 +22,7 @@ import ConectoresIng from "./pages/ConectoresIng";
 import LearnConnector from "./pages/LearnConnector";
 import ReviewDay from "./pages/ReviewDay";
 import Invitation2 from "./pages/Invitation2";
+import Invitation3 from "./pages/Invitation3";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/invitacion-2" element={<Invitation2 />} />
+            <Route path="/invitacion-3" element={<Invitation3 />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/login" element={<Login />} />
             <Route path="/bienvenida" element={<Welcome />} />

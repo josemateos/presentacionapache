@@ -153,7 +153,7 @@ const Registro = () => {
               <Label htmlFor="nombre" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Nombre Completo
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <User className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="nombre"
@@ -176,7 +176,7 @@ const Registro = () => {
               <Label htmlFor="email" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Correo Electrónico
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.email ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.email ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <Mail className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="email"
@@ -199,7 +199,7 @@ const Registro = () => {
               <Label htmlFor="password" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Contraseña
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.password ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.password ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <Lock className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="password"

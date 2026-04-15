@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Mail, Moon, Sun, Lock, User, Sparkles } from "lucide-react";
+import { ArrowLeft, Mail, Lock, User } from "lucide-react";
+import logoApache from "@/assets/logo_apache.png";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
-import { useTheme } from "next-themes";
+
 
 const registroSchema = z.object({
   nombre: z.string()
@@ -33,7 +34,7 @@ type RegistroForm = z.infer<typeof registroSchema>;
 const Registro = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { theme, setTheme } = useTheme();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<RegistroForm>({
     nombre: "",
@@ -99,19 +100,6 @@ const Registro = () => {
 
   return (
     <div className="min-h-screen bg-background text-on-background font-body flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Theme Toggle */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="fixed top-8 right-8 z-50 bg-surface-container-high border-outline-variant/30"
-      >
-        {theme === "dark" ? (
-          <Sun className="h-5 w-5 text-secondary" />
-        ) : (
-          <Moon className="h-5 w-5 text-secondary" />
-        )}
-      </Button>
 
       {/* Background Accents */}
       <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -132,8 +120,8 @@ const Registro = () => {
         {/* Header Section */}
         <header className="text-center mb-8">
           <div className="flex flex-col items-center mb-4">
-            <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
-              <Sparkles className="w-10 h-10 text-primary" />
+            <div className="w-20 h-20 rounded-2xl overflow-hidden border border-primary/30 mb-4 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
+              <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
           </div>

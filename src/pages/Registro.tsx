@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
 import logoApache from "@/assets/logo_apache.png";
+import logoApacheAlt from "@/assets/logo_apache_alt.png";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";

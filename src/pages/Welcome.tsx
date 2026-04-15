@@ -92,9 +92,11 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
             {/* Center Avatar */}
             <div className="relative w-56 h-56 rounded-full glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10">
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center">
-                <MaterialIcon name="psychology_alt" className="text-primary text-7xl" />
-              </div>
+              <img
+                src="/src/assets/apache-warrior.png"
+                alt="Guerrero Apache"
+                className="w-full h-full object-cover scale-110 hover:scale-125 transition-transform duration-700"
+              />
             </div>
 
             {/* Floating Milestone Badge */}

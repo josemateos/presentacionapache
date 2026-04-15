@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import apacheWarrior from "@/assets/apache-warrior.png";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -88,7 +89,7 @@ const Index = () => {
                   <img
                     alt="Jefe Apache"
                     className="w-full h-full object-cover"
-                    src="/src/assets/apache-warrior.png"
+                    src={apacheWarrior}
                   />
                 </div>
                 <div>

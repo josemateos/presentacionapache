@@ -95,7 +95,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               <img
                 src="/src/assets/apache-warrior.png"
                 alt="Guerrero Apache"
-                className="w-full h-full object-cover scale-110 hover:scale-125 transition-transform duration-700"
+                className="w-full h-full object-cover scale-150 hover:scale-125 transition-transform duration-700"
               />
             </div>
 

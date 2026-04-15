@@ -153,7 +153,7 @@ const Registro = () => {
               <Label htmlFor="nombre" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Nombre Completo
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.nombre ? 'border-red-500' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
                 <User className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="nombre"
@@ -167,7 +167,7 @@ const Registro = () => {
                 />
               </div>
               {errors.nombre && (
-                <p className="text-xs text-red-400 mt-1">{errors.nombre}</p>
+                <p className="text-xs text-destructive mt-1">{errors.nombre}</p>
               )}
             </div>
 
@@ -176,7 +176,7 @@ const Registro = () => {
               <Label htmlFor="email" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Correo Electrónico
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.email ? 'border-red-500' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.email ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
                 <Mail className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="email"
@@ -190,7 +190,7 @@ const Registro = () => {
                 />
               </div>
               {errors.email && (
-                <p className="text-xs text-red-400 mt-1">{errors.email}</p>
+                <p className="text-xs text-destructive mt-1">{errors.email}</p>
               )}
             </div>
 
@@ -199,7 +199,7 @@ const Registro = () => {
               <Label htmlFor="password" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Contraseña
               </Label>
-              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.password ? 'border-red-500' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.password ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
                 <Lock className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="password"
@@ -213,7 +213,7 @@ const Registro = () => {
                 />
               </div>
               {errors.password && (
-                <p className="text-xs text-red-400 mt-1">{errors.password}</p>
+                <p className="text-xs text-destructive mt-1">{errors.password}</p>
               )}
             </div>
 
@@ -236,7 +236,7 @@ const Registro = () => {
               </div>
             </div>
             {errors.terms && (
-              <p className="text-xs text-red-400 -mt-3">{errors.terms}</p>
+              <p className="text-xs text-destructive -mt-3">{errors.terms}</p>
             )}
 
             {/* CTA Button */}

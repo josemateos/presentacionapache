@@ -1,4 +1,4 @@
-import { Calendar, BookOpen, Book, Mic, LayoutList, Bot } from "lucide-react";
+import { Flame, Compass, BookText, Target, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
@@ -9,40 +9,38 @@ interface BottomNavProps {
 
 export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps) => {
   const tabs = [
-    { id: "today", label: "Hoy", icon: Calendar, locked: false },
-    { id: "plan", label: "Plan", icon: LayoutList, locked: false },
-    { id: "vocabulary", label: "Vocabulario", icon: Book, locked: false },
-    { id: "ai", label: "IA", icon: Bot, locked: false },
-    { id: "auxiliaries", label: "Auxiliares", icon: BookOpen, locked: !isPremium },
-    { id: "practice", label: "Práctica", icon: Mic, locked: true },
+    { id: "today", icon: Flame, locked: false },
+    { id: "plan", icon: Compass, locked: false },
+    { id: "vocabulary", icon: BookText, locked: false },
+    { id: "ai", icon: Target, locked: false },
+    { id: "practice", icon: ChefHat, locked: true },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-2xl z-50">
-      <div className="flex justify-around max-w-xl mx-auto">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          const isLocked = tab.locked;
+    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-background/95 backdrop-blur-2xl border-t border-white/5 rounded-t-[2.5rem] shadow-[0_-15px_40px_rgba(0,0,0,0.8)]">
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        const isLocked = tab.locked;
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => !isLocked && onTabChange(tab.id)}
-              disabled={isLocked}
-              className={cn(
-                "flex-1 py-3 px-2 text-center transition-all duration-200",
-                isActive && "text-primary",
-                !isActive && !isLocked && "text-muted-foreground hover:text-foreground",
-                isLocked && "opacity-50 cursor-not-allowed"
-              )}
-            >
-              <Icon className={cn("w-5 h-5 mx-auto mb-1", isActive && "animate-pulse-subtle")} />
-              <span className="text-xs font-medium block">{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
+        return (
+          <button
+            key={tab.id}
+            onClick={() => !isLocked && onTabChange(tab.id)}
+            disabled={isLocked}
+            className={cn(
+              "flex flex-col items-center justify-center transition-all cursor-pointer",
+              isActive && tab.id === "today" && "text-accent",
+              isActive && tab.id === "vocabulary" && "text-secondary",
+              isActive && tab.id !== "today" && tab.id !== "vocabulary" && "text-primary",
+              !isActive && !isLocked && "text-on-surface/40 hover:text-primary",
+              isLocked && "opacity-30 cursor-not-allowed text-on-surface/40"
+            )}
+          >
+            <Icon className={cn("w-7 h-7", isActive && tab.id === "today" && "w-8 h-8")} />
+          </button>
+        );
+      })}
     </nav>
   );
 };

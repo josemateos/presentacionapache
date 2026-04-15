@@ -185,11 +185,11 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
       {/* BottomNavBar */}
       <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-2xl flex justify-around px-6 pb-8 pt-4 border-t border-white/5 shadow-[0_-15px_40px_rgba(0,0,0,0.5)] items-center">
-        <NavTab icon="local_fire_department" label="HOY" />
-        <NavTab icon="handyman" label="REPASOS" />
-        <NavTab icon="flare" label="IA" center filled />
-        <NavTab icon="architecture" label="PERFIL" />
-        <NavTab icon="colorize" label="PRÁCTICA" />
+        <NavTab icon="flame" label="HOY" />
+        <NavTab icon="axe" label="REPASOS" />
+        <NavTab icon="target" label="IA" center filled />
+        <NavTab icon="feather" label="PERFIL" />
+        <NavTab icon="sword" label="PRÁCTICA" />
       </nav>
     </div>
   );

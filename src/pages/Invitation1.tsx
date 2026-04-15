@@ -17,8 +17,8 @@ const Invitation1 = () => {
         {/* Badge + Title */}
         <header className="mb-8 relative">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
-          <h1 className="font-headline text-3xl font-extrabold tracking-tighter leading-tight">
-            ¿Has intentado aprender inglés de <span className="text-primary italic">muchas maneras</span>... pero sigues sin obtener resultados?
+          <h1 className="font-headline text-3xl font-extrabold tracking-tighter leading-tight text-center">
+            ¿Has intentado aprender inglés de muchas maneras... <span className="text-primary italic">pero sigues sin obtener resultados?</span>
           </h1>
         </header>
 

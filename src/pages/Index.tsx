@@ -1,389 +1,125 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Brain, Zap, Target, ArrowRight, CheckCircle2, Users, Clock, Sparkles, Feather, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useNavigate } from "react-router-dom";
+
+const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
+  <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
+    {name}
+  </span>
+);
 
 const Index = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { theme, setTheme } = useTheme();
-  const [currentScreen, setCurrentScreen] = useState(0);
-  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (location.state?.screen !== undefined) {
-      setCurrentScreen(location.state.screen);
-    }
-  }, [location.state]);
-  
-  const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
-
-  const screens = [
-    {
-      id: 0,
-      icon: Brain,
-      title: "¿Has intentado aprender inglés de muchas maneras...",
-      subtitle: "pero sigues sin ver los resultados que deseas?",
-      problem: "El problema es que nunca te han enseñado a comprender el funcionamiento lógico del inglés.",
-      painPoints: [
-        "📚 Memorizaste miles de palabras que no sabes usar",
-        "📖 Estudiaste reglas gramaticales que nunca aplicas",
-        "🔄 Repites ejercicios pero no mejoras tu fluidez"
-      ],
-      buttonText: "Conocer la solución"
-    },
-    {
-      id: 1,
-      icon: Feather,
-      title: "Sistema Apache",
-      subtitle: "5 pasos que definitivamente te enseñaran a comunicarte en Inglés",
-      steps: [
-        { 
-          number: "1", 
-          label: "Vocabulario Base", 
-          content: "Las palabras esenciales que necesitas",
-          example: {
-            words: [
-              { spanish: "Eficiente", english: "Efficient" },
-              { spanish: "Yo", english: "I" },
-              { spanish: "Sistema", english: "System" },
-              { spanish: "Rápido", english: "Fast" },
-              { spanish: "Encontrar", english: "Find" },
-              { spanish: "Necesitar", english: "Need" },
-              { spanish: "Inglés", english: "English" },
-              { spanish: "Aprendizaje", english: "Learning" }
-            ]
-          }
-        },
-        { 
-          number: "2", 
-          label: "Tu Frase en Español", 
-          content: "Lo que quieres comunicar",
-          example: {
-            phrase: "Necesito encontrar un sistema eficiente en el rápido aprendizaje del Ingles."
-          }
-        },
-        { 
-          number: "3", 
-          label: "Orden Apache", 
-          content: "El secreto: reorganizar en el orden del inglés",
-          example: {
-            phrase: "Yo necesitar encontrar sistema eficiente rápido aprendizaje Inglés"
-          }
-        },
-        { 
-          number: "4", 
-          label: "Ingles entendible", 
-          content: "Palabra por palabra al inglés",
-          example: {
-            phrase: "I need find efficient system fast English learning"
-          }
-        },
-        { 
-          number: "5", 
-          label: "Ingles Perfecto", 
-          content: "Agrega los Auxiliares Clave",
-          example: {
-            phrase: "I need to find an efficient system for fast English learning",
-            highlights: ["to", "an", "for"]
-          }
-        }
-      ],
-      promise: "En 90 días estarás hablando con confianza",
-      buttonText: "Continuar"
-    },
-    {
-      id: 2,
-      icon: Target,
-      title: "Por qué Apache funciona",
-      features: [
-        { 
-          icon: Users, 
-          title: "+10,000 Estudiantes", 
-          description: "Obteniendo resultados con nuestro sistema",
-          stat: "10K+"
-        },
-        { 
-          icon: Clock, 
-          title: "Solo 90 Días", 
-          description: "De no poder decir nada, a comunicarse con fluidez",
-          stat: "90"
-        },
-        { 
-          icon: Brain, 
-          title: "Sin Memorizar", 
-          description: "Comprendes la lógica, no memorizas reglas",
-          stat: "0"
-        }
-      ],
-      finalCall: "Únete a los miles que lo están logrando",
-      guarantee: "Empieza gratis hoy mismo",
-      showActions: true
-    }
-  ];
-
-  const handleNext = () => {
-    if (currentScreen < screens.length - 1) {
-      setCurrentScreen(currentScreen + 1);
-      setExpandedSteps([]);
-      setVisibleSteps([]);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-  
-  const handleStepOk = (currentIndex: number) => {
-    if (!visibleSteps.includes(currentIndex)) {
-      setVisibleSteps([...visibleSteps, currentIndex]);
-      // Scroll up to show the next step
-      setTimeout(() => {
-        const mainElement = document.querySelector('main');
-        if (mainElement) {
-          mainElement.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentScreen > 0) {
-      setCurrentScreen(currentScreen - 1);
-    }
-  };
-
-  const currentScreenData = screens[currentScreen];
 
   return (
-    <div className="min-h-screen gradient-hero text-white flex flex-col">
-      {/* Theme Toggle Button */}
-      <div className="absolute top-8 right-8 z-50">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm border-border hover:bg-background"
-        >
-          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </div>
-      
-      {/* Content Area */}
-      <main className="flex-1 flex flex-col px-4 py-8 overflow-y-auto">
-        <div className="container mx-auto max-w-md flex-1 flex flex-col">
-          {/* Screen 0: El Dolor */}
-          {currentScreen === 0 && (
-            <div className="flex-1 flex flex-col justify-center animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-destructive/20 border-2 border-destructive mb-6 animate-float">
-                  <Brain className="w-10 h-10 text-destructive" />
-                </div>
-                <h1 className="text-2xl font-bold mb-3 leading-tight text-white">
-                  {currentScreenData.title}
-                </h1>
-                <p className="text-lg text-muted-foreground mb-6">
-                  {currentScreenData.subtitle}
+    <div className="bg-background text-on-surface font-body min-h-screen selection:bg-tertiary selection:text-on-tertiary">
+      {/* TopAppBar */}
+      <header className="bg-background fixed top-0 left-0 right-0 z-50">
+        <div className="bg-gradient-to-b from-surface-container-low to-transparent">
+          <div className="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+            <div className="flex items-center gap-2">
+              <MaterialIcon name="auto_awesome" className="text-primary text-2xl" />
+              <h1 className="text-xl font-black text-primary tracking-widest font-headline uppercase">Apache System</h1>
+            </div>
+            <button className="hover:text-tertiary transition-colors duration-300 active:scale-95 text-on-surface">
+              <MaterialIcon name="account_circle" className="text-2xl" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="min-h-screen pt-24 pb-12 px-6 flex flex-col max-w-screen-xl mx-auto overflow-x-hidden">
+        {/* Hero Section */}
+        <section className="mb-12 relative">
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
+          <div className="absolute top-40 -right-20 w-80 h-80 bg-tertiary/10 blur-[120px] rounded-full" />
+
+          <h2 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight mb-8 relative z-10">
+            ¿Has intentado aprender inglés de{" "}
+            <span className="text-primary italic">muchas maneras</span>... pero sigues sin obtener resultados?
+          </h2>
+
+          {/* Bento Grid of Reality Cards */}
+          <div className="grid grid-cols-1 gap-4 mb-12">
+            {/* Card 1 */}
+            <div className="bg-surface-container-high p-8 rounded-xl relative group hover:scale-[1.02] transition-transform duration-500">
+              <div className="flex flex-col h-full justify-between gap-6">
+                <MaterialIcon name="psychology" className="text-tertiary text-4xl" />
+                <p className="font-headline text-xl font-bold leading-snug">
+                  Memorizaste palabras que no sabes usar.
                 </p>
               </div>
-              
-              <div className="space-y-3 mb-6">
-                {currentScreenData.painPoints?.map((point, index) => (
-                  <Card key={index} className="bg-card border-2 border-border p-4">
-                    <p className="text-sm leading-relaxed text-card-foreground">{point}</p>
-                  </Card>
-                ))}
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                <MaterialIcon name="spellcheck" className="text-5xl" />
               </div>
-              
-              <Card className="bg-card border-2 border-destructive/40 p-6">
-                <p className="text-lg font-bold text-card-foreground text-center">
-                  {currentScreenData.problem}
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-surface-container-high p-8 rounded-xl relative group hover:scale-[1.02] transition-transform duration-500">
+              <div className="flex flex-col h-full justify-between gap-6">
+                <MaterialIcon name="history_edu" className="text-primary text-4xl" />
+                <p className="font-headline text-xl font-bold leading-snug">
+                  Estudiaste reglas que nunca aplicas.
                 </p>
-              </Card>
+              </div>
+              <div className="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                <MaterialIcon name="rule" className="text-5xl" />
+              </div>
             </div>
-          )}
 
-          {/* Screen 1: El Método */}
-          {currentScreen === 1 && (
-            <div className="flex-1 flex flex-col animate-fade-in py-4">
-            <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 border-2 border-primary mb-4 animate-float">
-                  <Feather className="w-10 h-10 text-primary" />
-                </div>
-                <h1 className="text-2xl font-bold mb-2 text-white">{currentScreenData.title}</h1>
-                <p className="text-sm text-muted-foreground">{currentScreenData.subtitle}</p>
+            {/* Card 3 */}
+            <div className="bg-surface-container-high p-8 rounded-xl relative group hover:scale-[1.02] transition-transform duration-500">
+              <div className="flex flex-col h-full justify-between gap-6">
+                <MaterialIcon name="sync_problem" className="text-secondary text-4xl" filled />
+                <p className="font-headline text-xl font-bold leading-snug">
+                  Repites ejercicios sin aprender.
+                </p>
               </div>
-              
-              <div className="space-y-3 flex-1 overflow-y-auto mb-6">
-                {currentScreenData.steps?.map((step, index) => {
-                  const isVisible = index === 0 || visibleSteps.includes(index - 1);
-                  
-                  if (!isVisible) return null;
-                  
-                  return (
-                    <Card key={index} className="bg-card border-2 border-primary/30 p-4 relative overflow-hidden animate-fade-in">
-                      <div className="absolute top-2 right-2 w-9 h-9 rounded-full bg-yellow-400/40 border border-yellow-500/50 flex items-center justify-center">
-                        <span className="text-base font-bold text-white">{step.number}</span>
-                      </div>
-                      <div className="pr-12 mb-2">
-                        <h3 className="text-sm font-bold text-primary mb-1">{step.label}</h3>
-                        <p className="text-xs text-card-foreground">{step.content}</p>
-                      </div>
-                      <div className="flex gap-2 justify-between items-center">
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            if (expandedSteps.includes(index)) {
-                              setExpandedSteps(expandedSteps.filter(i => i !== index));
-                            } else {
-                              setExpandedSteps([...expandedSteps, index]);
-                            }
-                          }}
-                          className="text-xs bg-primary hover:bg-primary/90 text-white w-24"
-                        >
-                          {expandedSteps.includes(index) ? "Ocultar" : "Ver"}
-                        </Button>
-                        {expandedSteps.includes(index) && index < currentScreenData.steps!.length - 1 && !visibleSteps.includes(index) && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleStepOk(index)}
-                            className="text-xs bg-accent hover:bg-accent/90 text-white font-semibold w-24"
-                          >
-                            Continuar
-                          </Button>
-                        )}
-                      </div>
-                      
-                      {expandedSteps.includes(index) && step.example && (
-                        <div className="mt-4 pt-4 border-t border-border space-y-2 animate-fade-in">
-                          {step.example.words && (
-                            <div className="space-y-1">
-                              {step.example.words.map((word: any, i: number) => (
-                                <div key={i} className="flex justify-between text-xs">
-                                  <span className="text-muted-foreground">{word.spanish}</span>
-                                  <span className="text-card-foreground font-medium">{word.english}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {step.example.phrase && !step.example.highlights && (
-                            <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
-                              {step.example.phrase}
-                            </p>
-                          )}
-                          {step.example.phrase && step.example.highlights && (
-                            <p className="text-sm font-medium text-card-foreground bg-muted/50 p-3 rounded">
-                              {step.example.phrase.split(' ').map((word: string, i: number) => {
-                                const cleanWord = word.replace(/[.,!?]/, '');
-                                const isHighlight = step.example.highlights.includes(cleanWord);
-                                return (
-                                  <span key={i}>
-                                    <span className={isHighlight ? "text-accent font-bold" : ""}>
-                                      {word}
-                                    </span>
-                                    {i < step.example.phrase.split(' ').length - 1 ? ' ' : ''}
-                                  </span>
-                                );
-                              })}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </Card>
-                  );
-                })}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-5 pointer-events-none">
+                <span className="text-8xl font-black">LOOP</span>
               </div>
-              
-              {expandedSteps.includes(4) && (
-                <Card className="relative overflow-hidden border-2 border-accent p-5 animate-fade-in">
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
-                  <p className="relative text-base font-bold text-center text-card-foreground">
-                    {currentScreenData.promise}
-                  </p>
-                </Card>
-              )}
             </div>
-          )}
+          </div>
 
-          {/* Screen 2: Prueba Social & CTA */}
-          {currentScreen === 2 && (
-            <div className="flex-1 flex flex-col justify-center animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/20 border-2 border-accent mb-6 animate-float">
-                  <Target className="w-10 h-10 text-accent" />
+          {/* Revelation Panel */}
+          <div className="relative mt-16 group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-tertiary/20 blur-2xl rounded-3xl opacity-50 group-hover:opacity-80 transition-opacity" />
+            <div className="relative bg-surface-container-lowest/60 backdrop-blur-3xl border border-outline-variant/20 p-8 rounded-3xl">
+              <div className="flex flex-col items-center text-center gap-10">
+                <div className="w-48 h-48 shrink-0 rounded-full overflow-hidden border-4 border-primary shadow-[0_0_30px_rgba(210,188,250,0.4)]">
+                  <img
+                    alt="Jefe Apache"
+                    className="w-full h-full object-cover"
+                    src="/src/assets/apache-warrior.png"
+                  />
                 </div>
-                <h1 className="text-2xl font-bold mb-3 text-white">{currentScreenData.title}</h1>
-              </div>
-              
-              <div className="space-y-4 mb-8">
-                {currentScreenData.features?.map((feature, index) => {
-                  const Icon = feature.icon;
-                  return (
-                    <Card key={index} className="bg-card border-2 border-primary/30 p-5 relative overflow-hidden">
-                      <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
-                      <div className="relative flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-baseline gap-2 mb-1">
-                            <h3 className="font-bold text-lg text-card-foreground">{feature.title}</h3>
-                            <span className="text-2xl font-bold text-accent">{feature.stat}</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{feature.description}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-              
-              <div className="space-y-4">
-                <Card className="relative overflow-hidden border-2 border-accent p-6">
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent/50 via-primary/50 to-accent/50 animate-[gradient_3s_ease_infinite] bg-[length:200%_100%]"></div>
-                  <p className="relative text-xl font-bold text-center mb-2 text-card-foreground">
-                    {currentScreenData.finalCall}
-                  </p>
-                  <p className="relative text-lg font-bold text-center text-gray-900">
-                    Empieza <span className="text-accent underline decoration-2">gratis</span> hoy mismo
-                  </p>
-                </Card>
+                <div>
+                  <span
+                    className="inline-block px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-xs font-bold tracking-widest uppercase mb-4"
+                    style={{ textShadow: "0 0 12px rgba(47, 217, 244, 0.6)" }}
+                  >
+                    Revelación
+                  </span>
+                  <h3 className="font-headline text-2xl font-extrabold text-on-surface leading-tight">
+                    El problema es que nunca te han enseñado, que{" "}
+                    <span className="text-secondary">tu Español es la base</span> para aprender Inglés.
+                  </h3>
+                </div>
               </div>
             </div>
-          )}
+          </div>
+        </section>
+
+        {/* Primary CTA */}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => navigate("/registro")}
+            className="w-full max-w-md py-5 rounded-xl text-on-primary font-headline font-extrabold text-lg tracking-wider flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20"
+            style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #ff00ff 100%)" }}
+          >
+            CONOCER LA SOLUCIÓN
+            <MaterialIcon name="arrow_forward" />
+          </button>
         </div>
       </main>
-
-      {/* Footer with Action Button */}
-      <footer className="p-4">
-        <div className="container mx-auto max-w-md">
-          {currentScreen < screens.length - 1 ? (
-            <Button
-              onClick={handleNext}
-              className="w-full bg-primary hover:bg-primary/90 py-6 text-base font-semibold"
-            >
-              {currentScreenData.buttonText}
-            </Button>
-          ) : (
-            <div className="space-y-2.5">
-              <Button
-                onClick={() => navigate("/registro")}
-                className="w-full bg-primary hover:bg-primary/90 py-6 text-base font-semibold"
-              >
-                Acceder Gratis
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-              <Button
-                onClick={() => navigate("/login")}
-                className="w-full py-6 text-base bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold border-2 border-yellow-300"
-              >
-                Iniciar Sesión
-              </Button>
-            </div>
-          )}
-        </div>
-      </footer>
     </div>
   );
 };

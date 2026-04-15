@@ -12,22 +12,8 @@ const Index = () => {
 
   return (
     <div className="bg-background text-on-surface font-body min-h-screen selection:bg-tertiary selection:text-on-tertiary">
-      {/* TopAppBar */}
-      <header className="bg-background fixed top-0 left-0 right-0 z-50">
-        <div className="bg-gradient-to-b from-surface-container-low to-transparent">
-          <div className="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
-            <div className="flex items-center gap-2">
-              <MaterialIcon name="auto_awesome" className="text-primary text-2xl" />
-              <h1 className="text-xl font-black text-primary tracking-widest font-headline uppercase">Apache System</h1>
-            </div>
-            <button className="hover:text-tertiary transition-colors duration-300 active:scale-95 text-on-surface">
-              <MaterialIcon name="account_circle" className="text-2xl" />
-            </button>
-          </div>
-        </div>
-      </header>
 
-      <main className="min-h-screen pt-24 pb-12 px-6 flex flex-col max-w-screen-xl mx-auto overflow-x-hidden">
+      <main className="min-h-screen pt-8 pb-12 px-6 flex flex-col max-w-screen-xl mx-auto overflow-x-hidden">
         {/* Hero Section */}
         <section className="mb-12 relative">
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />

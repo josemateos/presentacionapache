@@ -11,17 +11,6 @@ const Invitation2 = () => {
 
   return (
     <div className="bg-background text-on-surface font-body min-h-screen flex flex-col selection:bg-tertiary/30 selection:text-tertiary overflow-x-hidden">
-      {/* Top Navigation */}
-      <header className="bg-background bg-gradient-to-b from-surface-container-low to-transparent sticky top-0 z-50">
-        <nav className="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
-          <div className="flex items-center gap-2">
-            <MaterialIcon name="auto_awesome" className="text-primary text-2xl" filled />
-            <span className="font-headline tracking-widest font-black uppercase text-xl text-primary">Apache System</span>
-          </div>
-          <MaterialIcon name="account_circle" className="text-on-surface text-2xl" />
-        </nav>
-      </header>
-
       <main className="flex-grow px-6 pt-8 pb-12 max-w-md mx-auto w-full relative">
         {/* Hero Section */}
         <header className="mb-12 relative">

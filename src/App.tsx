@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import Index from "./pages/Index";
+import Invitation1 from "./pages/Invitation1";
 import Registro from "./pages/Registro";
 import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
@@ -35,7 +35,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Invitation1 />} />
             <Route path="/invitacion-2" element={<Invitation2 />} />
             <Route path="/invitacion-3" element={<Invitation3 />} />
             <Route path="/registro" element={<Registro />} />

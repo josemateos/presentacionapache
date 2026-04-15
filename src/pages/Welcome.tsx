@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Flame, Axe, Target, Feather, Sword } from "lucide-react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -185,22 +186,32 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
       {/* BottomNavBar */}
       <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-2xl flex justify-around px-6 pb-8 pt-4 border-t border-white/5 shadow-[0_-15px_40px_rgba(0,0,0,0.5)] items-center">
-        <NavTab icon="local_fire_department" label="HOY" />
-        <NavTab icon="handyman" label="REPASOS" />
-        <NavTab icon="flare" label="IA" center filled />
-        <NavTab icon="architecture" label="PERFIL" />
-        <NavTab icon="colorize" label="PRÁCTICA" />
+        <NavTab icon="flame" label="HOY" />
+        <NavTab icon="axe" label="REPASOS" />
+        <NavTab icon="target" label="IA" center filled />
+        <NavTab icon="feather" label="PERFIL" />
+        <NavTab icon="sword" label="PRÁCTICA" />
       </nav>
     </div>
   );
 };
 
 const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; center?: boolean; filled?: boolean }) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    flame: <Flame className="w-6 h-6" />,
+    axe: <Axe className="w-6 h-6" />,
+    target: <Target className="w-6 h-6" />,
+    feather: <Feather className="w-6 h-6" />,
+    sword: <Sword className="w-6 h-6" />,
+  };
+
+  const IconComponent = iconMap[icon] || <span className="material-symbols-outlined">{icon}</span>;
+
   if (center) {
     return (
       <a className="flex flex-col items-center justify-center group relative -top-4" href="#">
         <div className="bg-secondary/20 text-secondary p-4 rounded-full mb-1 shadow-[0_0_20px_hsl(42_100%_63%/0.3)] group-active:scale-95 transition-all border border-secondary/30">
-          <MaterialIcon name={icon} className="text-3xl" filled={filled} />
+          {IconComponent}
         </div>
         <span className="font-body text-[10px] font-black tracking-widest uppercase text-secondary">{label}</span>
       </a>
@@ -208,8 +219,8 @@ const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; 
   }
   return (
     <a className="flex flex-col items-center justify-center group opacity-60 hover:opacity-100 transition-opacity mb-1" href="#">
-      <div className="p-2 mb-1 group-active:scale-90 transition-transform">
-        <MaterialIcon name={icon} className="text-2xl" />
+      <div className="p-2 mb-1 group-active:scale-90 transition-transform text-on-surface">
+        {IconComponent}
       </div>
       <span className="font-body text-[10px] font-semibold tracking-widest uppercase">{label}</span>
     </a>

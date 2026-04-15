@@ -87,7 +87,7 @@ const Invitation2 = () => {
         {/* Primary CTA */}
         <div className="mt-12 mb-8">
           <button
-            onClick={() => navigate("/registro")}
+            onClick={() => navigate("/invitacion-3")}}
             className="w-full py-5 text-white font-headline font-extrabold text-lg rounded-2xl active:scale-[0.98] transition-all duration-200 uppercase tracking-[0.2em]"
             style={{ background: "linear-gradient(90deg, #e91e63 0%, #9c27b0 100%)", boxShadow: "0 8px 32px rgba(233, 30, 99, 0.4)" }}
           >

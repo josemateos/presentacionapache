@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
 import logoApache from "@/assets/logo_apache.png";
+import logoApacheAlt from "@/assets/logo_apache_alt.png";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
@@ -120,8 +121,13 @@ const Registro = () => {
         {/* Header Section */}
         <header className="text-center mb-8">
           <div className="flex flex-col items-center mb-4">
-            <div className="w-20 h-20 rounded-2xl overflow-hidden border border-primary/30 mb-4 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
-              <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
+                <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-20 h-20 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
+                <img src={logoApacheAlt} alt="Logo Apache Alt" className="w-full h-full object-cover" />
+              </div>
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
           </div>

@@ -70,19 +70,22 @@ const Invitation1 = () => {
 
         {/* Revelation Section */}
         <section className="relative mb-10">
-          <div className="bg-surface-container/80 backdrop-blur-xl border border-outline-variant/15 rounded-3xl p-6 relative overflow-hidden">
+          <div className="bg-surface-container/80 backdrop-blur-xl border border-outline-variant/15 rounded-3xl relative overflow-hidden">
             {/* Decorative glow */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-tertiary/10 rounded-full blur-3xl" />
 
-            {/* Image */}
-            <div className="w-full aspect-[4/3] rounded-2xl mb-5 overflow-hidden relative mx-auto">
+            {/* Image - flush to top and sides, no padding */}
+            <div className="w-full aspect-[4/3] overflow-hidden relative">
               <img 
                 src={granJefeBw} 
                 alt="Gran Jefe Apache" 
-                className="w-full h-full object-cover opacity-70"
-                style={{ maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' }}
+                className="w-full h-full object-cover rounded-t-3xl"
+                style={{ opacity: 0.6, maskImage: 'linear-gradient(to top, transparent 0%, black 60%)', WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 60%)' }}
               />
             </div>
+
+            {/* Content below image with padding */}
+            <div className="px-6 pb-6">
 
             {/* La Gran Revelación label */}
             <div className="flex items-center gap-3 mb-5 justify-center">
@@ -102,6 +105,7 @@ const Invitation1 = () => {
               <p className="text-primary-fixed-dim text-[13px] italic font-medium leading-relaxed">
                 "El conocimiento aislado es una ilusión. La estructura es el verdadero poder."
               </p>
+            </div>
             </div>
           </div>
         </section>

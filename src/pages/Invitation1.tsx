@@ -106,6 +106,7 @@ const Invitation1 = () => {
                 "El conocimiento aislado es una ilusión. La estructura es el verdadero poder."
               </p>
             </div>
+            </div>
           </div>
         </section>
 

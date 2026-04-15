@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Mail, Moon, Sun, Lock, User } from "lucide-react";
+import { ArrowLeft, Mail, Moon, Sun, Lock, User, Sparkles } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
@@ -133,7 +133,7 @@ const Registro = () => {
         <header className="text-center mb-8">
           <div className="flex flex-col items-center mb-4">
             <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
-              <span className="material-symbols-outlined text-5xl text-primary">theater_comedy</span>
+              <Sparkles className="w-10 h-10 text-primary" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
           </div>

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, Mail, Moon, Sun } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowLeft, Mail, Moon, Sun, Lock, User, Sparkles } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +20,12 @@ const registroSchema = z.object({
     .trim()
     .email({ message: "Por favor ingresa un email válido" })
     .max(255, { message: "El email no puede exceder 255 caracteres" }),
+  password: z.string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+    .max(100, { message: "La contraseña no puede exceder 100 caracteres" }),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "Debes aceptar los términos y condiciones",
+  }),
 });
 
 type RegistroForm = z.infer<typeof registroSchema>;
@@ -32,6 +38,8 @@ const Registro = () => {
   const [formData, setFormData] = useState<RegistroForm>({
     nombre: "",
     email: "",
+    password: "",
+    terms: false,
   });
   const [errors, setErrors] = useState<Partial<Record<keyof RegistroForm, string>>>({});
 
@@ -41,6 +49,13 @@ const Registro = () => {
     
     if (errors[name as keyof RegistroForm]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData(prev => ({ ...prev, terms: checked }));
+    if (errors.terms) {
+      setErrors(prev => ({ ...prev, terms: undefined }));
     }
   };
 
@@ -83,139 +98,207 @@ const Registro = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background text-on-background font-body flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Theme Toggle */}
       <Button
         variant="outline"
         size="icon"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="fixed top-8 right-8 z-50"
+        className="fixed top-8 right-8 z-50 bg-surface-container-high border-outline-variant/30"
       >
         {theme === "dark" ? (
-          <Sun className="h-5 w-5" />
+          <Sun className="h-5 w-5 text-secondary" />
         ) : (
-          <Moon className="h-5 w-5" />
+          <Moon className="h-5 w-5 text-secondary" />
         )}
       </Button>
-      <div className="w-full max-w-md">
-        <Card className="bg-card border-2 border-border p-6 md:p-8">
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/", { state: { screen: 2 } })}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-2xl md:text-3xl font-bold">Crear Cuenta</h1>
-          </div>
 
-          <div className="mb-6 text-center">
-            <p className="text-muted-foreground text-sm">
-              Comienza tu viaje para dominar el inglés
-            </p>
-          </div>
+      {/* Background Accents */}
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-tertiary/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-          <div className="space-y-3 mb-6">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full py-6 text-base flex items-center justify-center gap-3"
-              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
-            >
-              <FcGoogle className="w-5 h-5" />
-              Crear Cuenta con Google
-            </Button>
-            
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full py-6 text-base flex items-center justify-center gap-3"
-              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
-            >
-              <FaApple className="w-5 h-5" />
-              Crear Cuenta con Apple
-            </Button>
-            
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full py-6 text-base flex items-center justify-center gap-3"
-              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
-            >
-              <FaFacebook className="w-5 h-5 text-blue-600" />
-              Crear Cuenta con Facebook
-            </Button>
-          </div>
+      {/* Main Container */}
+      <main className="w-full max-w-md z-10">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="absolute top-6 left-6 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
+        {/* Header Section */}
+        <header className="text-center mb-8">
+          <div className="flex flex-col items-center mb-4">
+            <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
+              <Sparkles className="w-10 h-10 text-primary" />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">O</span>
-            </div>
+            <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
+          </div>
+          <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px]">Descifra el lenguaje del futuro</p>
+        </header>
+
+        {/* Registration Card */}
+        <div className="glass-card p-8 rounded-[2rem] shadow-2xl border border-outline-variant/20">
+          <div className="mb-8">
+            <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Crea tu cuenta</h2>
+            <p className="text-on-surface-variant text-sm mt-1">Comienza tu viaje místico hoy.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="nombre">Nombre Completo</Label>
-              <Input
-                id="nombre"
-                name="nombre"
-                type="text"
-                placeholder="Tu nombre completo"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.nombre ? "border-destructive" : ""}`}
-                disabled={isLoading}
-              />
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Field */}
+            <div className="space-y-1">
+              <Label htmlFor="nombre" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
+                Nombre Completo
+              </Label>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+                <User className="absolute left-4 h-5 w-5 text-on-surface-variant" />
+                <Input
+                  id="nombre"
+                  name="nombre"
+                  type="text"
+                  placeholder="Tu nombre"
+                  value={formData.nombre}
+                  onChange={handleInputChange}
+                  className="w-full bg-transparent border-none focus:ring-0 text-on-surface py-4 pl-12 pr-4 placeholder:text-on-surface-variant/40 h-auto"
+                  disabled={isLoading}
+                />
+              </div>
               {errors.nombre && (
                 <p className="text-xs text-destructive mt-1">{errors.nombre}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="email">Correo Electrónico</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="tu@correo.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.email ? "border-destructive" : ""}`}
-                disabled={isLoading}
-              />
+            {/* Email Field */}
+            <div className="space-y-1">
+              <Label htmlFor="email" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
+                Correo Electrónico
+              </Label>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.email ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+                <Mail className="absolute left-4 h-5 w-5 text-on-surface-variant" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email@ejemplo.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full bg-transparent border-none focus:ring-0 text-on-surface py-4 pl-12 pr-4 placeholder:text-on-surface-variant/40 h-auto"
+                  disabled={isLoading}
+                />
+              </div>
               {errors.email && (
                 <p className="text-xs text-destructive mt-1">{errors.email}</p>
               )}
             </div>
 
+            {/* Password Field */}
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
+                Contraseña
+              </Label>
+              <div className={`relative flex items-center bg-surface-container-lowest rounded-xl border border-transparent transition-all duration-300 ${errors.password ? 'border-destructive' : 'focus-within:shadow-[0_0_10px_rgba(47,217,244,0.4)] focus-within:border-tertiary'}`}>
+                <Lock className="absolute left-4 h-5 w-5 text-on-surface-variant" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="w-full bg-transparent border-none focus:ring-0 text-on-surface py-4 pl-12 pr-4 placeholder:text-on-surface-variant/40 h-auto"
+                  disabled={isLoading}
+                />
+              </div>
+              {errors.password && (
+                <p className="text-xs text-destructive mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Terms Checkbox */}
+            <div className="flex items-start space-x-3 py-2">
+              <div className="flex items-center h-5">
+                <Checkbox
+                  id="terms"
+                  name="terms"
+                  checked={formData.terms}
+                  onCheckedChange={handleCheckboxChange}
+                  className="w-4 h-4 rounded border-outline-variant/30 bg-surface-container-lowest text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer"
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="text-xs">
+                <Label htmlFor="terms" className="text-on-surface-variant cursor-pointer">
+                  Acepto los <a className="text-tertiary hover:underline" href="#">términos y condiciones</a> y la <a className="text-tertiary hover:underline" href="#">política de privacidad</a>
+                </Label>
+              </div>
+            </div>
+            {errors.terms && (
+              <p className="text-xs text-destructive -mt-3">{errors.terms}</p>
+            )}
+
+            {/* CTA Button */}
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 py-6 text-base flex items-center justify-center gap-3"
+              className="w-full bg-gradient-to-r from-primary to-[#ff00ff] text-on-primary font-headline font-extrabold py-4 rounded-xl shadow-[0_8px_20px_rgba(210,188,250,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 tracking-wider mt-4 h-auto"
               disabled={isLoading}
             >
-              <Mail className="w-5 h-5" />
-              {isLoading ? "Creando cuenta..." : "Crear Cuenta con Correo"}
+              {isLoading ? "Creando cuenta..." : "UNIRSE A LA TRIBU"}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              ¿Ya tienes cuenta?{" "}
-              <button
-                onClick={() => navigate("/login")}
-                className="text-primary hover:underline font-medium"
-                disabled={isLoading}
-              >
-                Inicia Sesión
-              </button>
-            </p>
+          {/* Social Divider */}
+          <div className="flex items-center my-8">
+            <div className="flex-grow h-[1px] bg-outline-variant/30"></div>
+            <span className="mx-4 text-xs font-medium text-on-surface-variant uppercase tracking-widest">O únete con</span>
+            <div className="flex-grow h-[1px] bg-outline-variant/30"></div>
           </div>
-        </Card>
-      </div>
+
+          {/* Social Buttons */}
+          <div className="flex justify-between gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
+            >
+              <FcGoogle className="w-5 h-5" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
+            >
+              <FaApple className="w-5 h-5 text-on-surface" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
+            >
+              <FaFacebook className="w-5 h-5 text-[#1877F2]" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-8 text-center">
+          <p className="text-on-surface-variant text-sm">
+            ¿Ya eres parte de la tribu?{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="text-primary font-bold hover:underline ml-1"
+              disabled={isLoading}
+            >
+              Inicia Sesión
+            </button>
+          </p>
+        </footer>
+      </main>
     </div>
   );
 };

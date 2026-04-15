@@ -74,19 +74,20 @@ const Invitation1 = () => {
             {/* Decorative glow */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-tertiary/10 rounded-full blur-3xl" />
 
-            <div className="flex items-center gap-2 mb-5">
-              <MaterialIcon name="auto_awesome" className="text-tertiary text-lg" filled />
-              <span className="text-tertiary font-headline font-bold text-[11px] uppercase tracking-[0.2em]">La Gran Revelación</span>
-            </div>
-
-            {/* Image placeholder - replace src later */}
-            <div className="w-full aspect-[4/3] rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative">
+            {/* Image */}
+            <div className="w-full aspect-[4/3] rounded-2xl mb-5 overflow-hidden relative mx-auto">
               <img 
                 src={granJefeBw} 
                 alt="Gran Jefe Apache" 
-                className="w-full h-full object-cover opacity-40"
-                style={{ maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)', WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)' }}
+                className="w-full h-full object-cover opacity-70"
+                style={{ maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' }}
               />
+            </div>
+
+            {/* La Gran Revelación label */}
+            <div className="flex items-center gap-3 mb-5 justify-center">
+              <div className="w-8 h-[2px] bg-yellow-500" />
+              <span className="text-yellow-500 font-headline font-bold text-[11px] uppercase tracking-[0.25em]">La Gran Revelación</span>
             </div>
 
             <h3 className="font-headline text-xl font-extrabold text-on-surface leading-tight mb-3">

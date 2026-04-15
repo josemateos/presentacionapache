@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import granJefeBw from "@/assets/gran_jefe_bw.png";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -79,12 +80,13 @@ const Invitation1 = () => {
             </div>
 
             {/* Image placeholder - replace src later */}
-            <div className="w-full aspect-[4/3] rounded-2xl bg-surface-container-high border border-outline-variant/20 mb-5 flex items-center justify-center overflow-hidden">
-              {/* TODO: Replace with actual image */}
-              <div className="text-on-surface-variant/30 flex flex-col items-center gap-2">
-                <MaterialIcon name="image" className="text-5xl" />
-                <span className="text-xs tracking-wider uppercase">Imagen próximamente</span>
-              </div>
+            <div className="w-full aspect-[4/3] rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative">
+              <img 
+                src={granJefeBw} 
+                alt="Gran Jefe Apache" 
+                className="w-full h-full object-cover opacity-40"
+                style={{ maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)', WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)' }}
+              />
             </div>
 
             <h3 className="font-headline text-xl font-extrabold text-on-surface leading-tight mb-3">

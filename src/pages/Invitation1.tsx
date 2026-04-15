@@ -86,8 +86,8 @@ const Invitation1 = () => {
 
             {/* La Gran Revelación label */}
             <div className="flex items-center gap-3 mb-5 justify-center">
-              <div className="w-8 h-[2px] bg-yellow-500" />
-              <span className="text-yellow-500 font-headline font-bold text-[11px] uppercase tracking-[0.25em]">La Gran Revelación</span>
+              <div className="w-8 h-[2px]" style={{ backgroundColor: 'hsl(45, 90%, 55%)' }} />
+              <span className="font-headline font-bold text-[11px] uppercase tracking-[0.25em]" style={{ color: 'hsl(45, 90%, 55%)' }}>La Gran Revelación</span>
             </div>
 
             <h3 className="font-headline text-xl font-extrabold text-on-surface leading-tight mb-3">

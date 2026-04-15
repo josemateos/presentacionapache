@@ -17,10 +17,6 @@ const Invitation1 = () => {
         {/* Badge + Title */}
         <header className="mb-8 relative">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-error/10 border border-error/20 mb-5">
-            <MaterialIcon name="error" className="text-error text-base" filled />
-            <span className="text-error font-headline font-bold text-[11px] uppercase tracking-widest">El Círculo Vicioso</span>
-          </div>
           <h1 className="font-headline text-3xl font-extrabold tracking-tighter leading-tight">
             ¿Has intentado aprender inglés de <span className="text-primary italic">muchas maneras</span>... pero sigues sin obtener resultados?
           </h1>

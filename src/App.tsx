@@ -35,7 +35,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Invitation1 />} />
+            <Route path="/invitacion-1" element={<Invitation1 />} />
             <Route path="/invitacion-2" element={<Invitation2 />} />
             <Route path="/invitacion-3" element={<Invitation3 />} />
             <Route path="/registro" element={<Registro />} />

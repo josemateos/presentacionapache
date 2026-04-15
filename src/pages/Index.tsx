@@ -112,7 +112,7 @@ const Index = () => {
         {/* Primary CTA */}
         <div className="mt-8 flex justify-center">
           <button
-            onClick={() => navigate("/registro")}
+            onClick={() => navigate("/invitacion-2")}
             className="w-full max-w-md py-5 rounded-xl text-on-primary font-headline font-extrabold text-lg tracking-wider flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20"
             style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #ff00ff 100%)" }}
           >

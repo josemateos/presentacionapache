@@ -21,6 +21,7 @@ import AuxiliariesHub from "./pages/AuxiliariesHub";
 import ConectoresIng from "./pages/ConectoresIng";
 import LearnConnector from "./pages/LearnConnector";
 import ReviewDay from "./pages/ReviewDay";
+import Invitation2 from "./pages/Invitation2";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/invitacion-2" element={<Invitation2 />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/login" element={<Login />} />
             <Route path="/bienvenida" element={<Welcome />} />

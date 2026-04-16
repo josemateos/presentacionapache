@@ -1,4 +1,4 @@
-import { Flame, Compass, BookText, Target, ChefHat } from "lucide-react";
+import { Home, Compass, BookText, Target, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
@@ -9,7 +9,7 @@ interface BottomNavProps {
 
 export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps) => {
   const tabs = [
-    { id: "today", icon: Flame, locked: false },
+    { id: "today", icon: Home, locked: false },
     { id: "plan", icon: Compass, locked: false },
     { id: "vocabulary", icon: BookText, locked: false },
     { id: "ai", icon: Target, locked: false },

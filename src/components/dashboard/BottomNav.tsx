@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Compass, BookText, Target, ChefHat } from "lucide-react";
+import { Compass, BookText, Target } from "lucide-react";
 import TeepeeIcon from "@/components/icons/TeepeeIcon";
+import RepasoIcon from "@/components/icons/RepasoIcon";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
     { id: "plan", icon: Compass, label: "PLAN", locked: false },
     { id: "vocabulary", icon: BookText, label: "VOCAB", locked: false },
     { id: "ai", icon: Target, label: "IA", locked: false },
-    { id: "practice", icon: ChefHat, label: "PRÁCTICA", locked: true },
+    { id: "practice", icon: RepasoIcon, label: "REPASO", locked: true },
   ];
 
   return (

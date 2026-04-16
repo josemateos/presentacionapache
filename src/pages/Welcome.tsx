@@ -25,7 +25,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   return (
     <div className="min-h-screen pb-32 overflow-x-hidden bg-surface text-on-surface font-body">
       {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-6 py-4 border-b border-white/5">
+      <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-6 py-2 border-b border-white/5">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -45,7 +45,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
       {/* Profile Menu Dropdown */}
       {showProfileMenu && (
-        <div className="fixed top-[72px] left-4 right-4 z-50 bg-surface-container-high border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl max-w-sm">
+        <div className="fixed top-[64px] left-4 right-4 z-50 bg-surface-container-high border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl max-w-sm">
           <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
             <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/10">
               <User className="w-6 h-6 text-muted-foreground" />
@@ -239,7 +239,7 @@ const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; 
 
   if (center) {
     return (
-      <a className="flex flex-col items-center justify-center group relative -top-3" href="#">
+      <a className="flex flex-col items-center justify-center group" href="#">
         <div className="bg-secondary/20 text-secondary p-3 rounded-full mb-1 shadow-[0_0_15px_hsl(42_100%_63%/0.3)] group-active:scale-95 transition-all border border-secondary/30">
           {IconComponent}
         </div>

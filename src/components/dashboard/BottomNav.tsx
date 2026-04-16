@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Compass, BookText, Target, ChefHat } from "lucide-react";
 import TeepeeIcon from "@/components/icons/TeepeeIcon";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,19 @@ interface BottomNavProps {
 
 export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps) => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setVisible(currentY <= 10 || currentY < lastScrollY.current);
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const tabs = [
     { id: "today", icon: TeepeeIcon, label: "INICIO", locked: false },
@@ -21,7 +35,12 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface/95 backdrop-blur-2xl border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+    <nav
+      className={cn(
+        "fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface/95 backdrop-blur-2xl border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)] transition-transform duration-300",
+        !visible && "translate-y-full"
+      )}
+    >
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;

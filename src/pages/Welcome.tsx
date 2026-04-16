@@ -215,46 +215,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
         </section>
       </main>
 
-      {/* BottomNavBar */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-2xl flex justify-around px-4 pb-6 pt-2 border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)] items-center">
-        <NavTab icon="home" label="INICIO" />
-        <NavTab icon="compass" label="PLAN" />
-        <NavTab icon="booktext" label="VOCAB" />
-        <NavTab icon="target" label="IA" center filled />
-        <NavTab icon="chefhat" label="PRÁCTICA" />
-      </nav>
+      <BottomNav activeTab="today" onTabChange={() => {}} isPremium={true} />
     </div>
-  );
-};
-
-const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; center?: boolean; filled?: boolean }) => {
-  const iconMap: Record<string, React.ReactNode> = {
-    home: <TeepeeIcon className="w-5 h-5" />,
-    compass: <Compass className="w-5 h-5" />,
-    booktext: <BookText className="w-5 h-5" />,
-    target: <Target className="w-5 h-5" />,
-    chefhat: <ChefHat className="w-5 h-5" />,
-  };
-
-  const IconComponent = iconMap[icon] || <span className="material-symbols-outlined">{icon}</span>;
-
-  if (center) {
-    return (
-      <a className="flex flex-col items-center justify-center group" href="#">
-        <div className="bg-secondary/20 text-secondary p-1.5 rounded-full mb-1 shadow-[0_0_15px_hsl(42_100%_63%/0.3)] group-active:scale-95 transition-all border border-secondary/30">
-          {IconComponent}
-        </div>
-        <span className="font-body text-[9px] font-black tracking-widest uppercase text-secondary">{label}</span>
-      </a>
-    );
-  }
-  return (
-    <a className="flex flex-col items-center justify-center group opacity-60 hover:opacity-100 transition-opacity mb-1" href="#">
-      <div className="p-1.5 mb-1 group-active:scale-90 transition-transform text-on-surface">
-        {IconComponent}
-      </div>
-      <span className="font-body text-[9px] font-semibold tracking-widest uppercase">{label}</span>
-    </a>
   );
 };
 

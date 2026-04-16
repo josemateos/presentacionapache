@@ -1,4 +1,5 @@
-import { Home, Compass, BookText, Target, ChefHat } from "lucide-react";
+import { Compass, BookText, Target, ChefHat } from "lucide-react";
+import TeepeeIcon from "@/components/icons/TeepeeIcon";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {

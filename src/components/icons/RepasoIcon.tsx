@@ -6,21 +6,19 @@ interface RepasoIconProps {
 
 const RepasoIcon = ({ className }: RepasoIconProps) => (
   <svg
-    viewBox="10 15 80 75"
+    viewBox="0 0 100 100"
     fill="currentColor"
     className={cn("w-5 h-5", className)}
     xmlns="http://www.w3.org/2000/svg"
   >
     {/* Handle */}
-    <line x1="30" y1="80" x2="65" y2="25" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+    <rect x="18" y="38" width="58" height="10" rx="3" transform="rotate(-55 47 43)" />
+    {/* Handle base */}
+    <rect x="8" y="72" width="14" height="6" rx="2" transform="rotate(-55 15 75)" />
+    {/* Axe head connector */}
+    <rect x="52" y="18" width="8" height="5" rx="1" transform="rotate(-55 56 20)" />
     {/* Axe blade */}
-    <path d="M58 22 C58 22 78 16 82 30 C84 40 74 44 65 38 L58 22Z" fill="currentColor" />
-    {/* Leaf 1 */}
-    <path d="M38 58 C32 48 22 50 18 42 C28 42 36 46 40 54Z" fill="currentColor" />
-    {/* Leaf 2 */}
-    <path d="M42 62 C38 54 28 52 22 44 C32 46 42 52 44 60Z" fill="currentColor" opacity="0.7" />
-    {/* Leaf 3 */}
-    <path d="M34 68 C28 60 20 60 16 52 C26 54 34 58 36 66Z" fill="currentColor" opacity="0.5" />
+    <path d="M55 28 L72 18 Q82 14 86 24 L90 40 Q92 52 82 56 L62 48 Z" />
   </svg>
 );
 

@@ -11,14 +11,14 @@ const RepasoIcon = ({ className }: RepasoIconProps) => (
     className={cn("w-5 h-5", className)}
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Handle */}
-    <rect x="18" y="38" width="58" height="10" rx="3" transform="rotate(-55 47 43)" />
-    {/* Handle base */}
-    <rect x="8" y="72" width="14" height="6" rx="2" transform="rotate(-55 15 75)" />
-    {/* Axe head connector */}
-    <rect x="52" y="18" width="8" height="5" rx="1" transform="rotate(-55 56 20)" />
-    {/* Axe blade */}
-    <path d="M55 28 L72 18 Q82 14 86 24 L90 40 Q92 52 82 56 L62 48 Z" />
+    {/* Handle - diagonal bar */}
+    <rect x="10" y="42" width="65" height="10" rx="3" transform="rotate(-50 42 47)" />
+    {/* Handle base cap */}
+    <rect x="4" y="78" width="12" height="7" rx="2" transform="rotate(-50 10 82)" />
+    {/* Axe head top piece */}
+    <rect x="54" y="12" width="12" height="5" rx="1.5" transform="rotate(-50 60 14)" />
+    {/* Axe blade - large curved blade */}
+    <path d="M52 30 L68 16 Q78 10 86 18 L92 34 Q96 50 86 58 L68 52 Z" />
   </svg>
 );
 

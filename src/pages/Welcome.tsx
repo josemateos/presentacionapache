@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Flame, Axe, Target, Feather, Sword } from "lucide-react";
+import { Flame, Axe, Target, Feather, Sword, User, Sparkles } from "lucide-react";
+import { useState } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -14,6 +15,8 @@ interface WelcomeProps {
 
 const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const navigate = useNavigate();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const userPoints = 0;
 
   const handleStart = () => navigate("/dashboard");
   const handleContinue = () => navigate("/vocabulario-dia-1");
@@ -24,19 +27,50 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-6 py-4 border-b border-white/5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden shadow-[0_0_10px_hsl(42_100%_63%/0.3)]">
-            <div className="w-full h-full bg-gradient-to-br from-primary/60 to-primary/30 flex items-center justify-center">
-              <MaterialIcon name="shield" className="text-primary text-xl" filled />
-            </div>
-          </div>
+          <button
+            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden bg-surface-container-highest flex items-center justify-center hover:border-primary/50 transition-colors active:scale-95"
+          >
+            <User className="w-5 h-5 text-muted-foreground" />
+          </button>
           <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
-            JEFE APACHE
+            INICIADO
           </h1>
         </div>
-        <div className="text-primary p-2 rounded-full hover:bg-white/5 transition-colors active:scale-90 duration-200">
-          <MaterialIcon name="military_tech" className="text-2xl" />
+        <div className="flex items-center gap-1.5 bg-surface-container-highest/80 border border-white/10 rounded-full px-4 py-1.5">
+          <Sparkles className="w-4 h-4 text-accent" />
+          <span className="text-sm font-bold text-on-surface font-headline">{userPoints.toLocaleString()}</span>
         </div>
       </header>
+
+      {/* Profile Menu Dropdown */}
+      {showProfileMenu && (
+        <div className="fixed top-[72px] left-4 right-4 z-50 bg-surface-container-high border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl max-w-sm">
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+            <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/10">
+              <User className="w-6 h-6 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-headline font-bold text-on-surface">{userName}</p>
+              <p className="text-xs text-muted-foreground">Rango: Iniciado</p>
+            </div>
+          </div>
+          <div className="space-y-1">
+            <button className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-on-surface hover:bg-white/5 transition-colors font-body">
+              Mi Perfil
+            </button>
+            <button className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-on-surface hover:bg-white/5 transition-colors font-body">
+              Configuración
+            </button>
+            <button className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors font-body">
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      )}
+      {showProfileMenu && (
+        <div className="fixed inset-0 z-40" onClick={() => setShowProfileMenu(false)} />
+      )}
 
       {/* Content */}
       <main className="pt-24 px-6 max-w-md mx-auto space-y-8">

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Flame, Axe, Target, Feather, Sword, User, Sparkles } from "lucide-react";
+import { Home, Compass, Target, BookText, ChefHat, User, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
@@ -216,11 +216,11 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
       {/* BottomNavBar */}
       <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-2xl flex justify-around px-4 pb-6 pt-2 border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)] items-center">
-        <NavTab icon="flame" label="HOY" />
-        <NavTab icon="axe" label="PRÁCTICA" />
+        <NavTab icon="home" label="HOY" />
+        <NavTab icon="compass" label="PLAN" />
+        <NavTab icon="booktext" label="VOCAB" />
         <NavTab icon="target" label="IA" center filled />
-        <NavTab icon="feather" label="PERFIL" />
-        <NavTab icon="sword" label="RETOS" />
+        <NavTab icon="chefhat" label="PRÁCTICA" />
       </nav>
     </div>
   );
@@ -228,11 +228,11 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
 const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; center?: boolean; filled?: boolean }) => {
   const iconMap: Record<string, React.ReactNode> = {
-    flame: <Flame className="w-5 h-5" />,
-    axe: <Axe className="w-5 h-5" />,
+    home: <Home className="w-5 h-5" />,
+    compass: <Compass className="w-5 h-5" />,
+    booktext: <BookText className="w-5 h-5" />,
     target: <Target className="w-5 h-5" />,
-    feather: <Feather className="w-5 h-5" />,
-    sword: <Sword className="w-5 h-5" />,
+    chefhat: <ChefHat className="w-5 h-5" />,
   };
 
   const IconComponent = iconMap[icon] || <span className="material-symbols-outlined">{icon}</span>;

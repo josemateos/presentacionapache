@@ -126,12 +126,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
             </svg>
 
             {/* Center Avatar */}
-            <div className="relative w-56 h-56 rounded-full glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10">
-              <img
-                src="/src/assets/apache-warrior.png"
-                alt="Guerrero Apache"
-                className="w-full h-full object-cover object-top scale-[1.4] hover:scale-[1.3] transition-transform duration-700"
-              />
+            <div className="relative w-56 h-56 rounded-full glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
+              <User className="w-24 h-24 text-muted-foreground/60" />
             </div>
 
             {/* Floating Milestone Badge */}
@@ -140,7 +136,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
                 className="bg-secondary text-surface px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20"
                 style={{ boxShadow: "0 4px 20px hsl(42 100% 63% / 0.5)" }}
               >
-                Próximo Atuendo: 65%
+                Próximo Rango: 65%
               </div>
             </div>
           </div>

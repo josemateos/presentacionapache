@@ -217,7 +217,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
       {/* BottomNavBar */}
       <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-2xl flex justify-around px-4 pb-6 pt-2 border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)] items-center">
-        <NavTab icon="home" label="HOY" />
+        <NavTab icon="home" label="INICIO" />
         <NavTab icon="compass" label="PLAN" />
         <NavTab icon="booktext" label="VOCAB" />
         <NavTab icon="target" label="IA" center filled />

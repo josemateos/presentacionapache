@@ -229,7 +229,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
 const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; center?: boolean; filled?: boolean }) => {
   const iconMap: Record<string, React.ReactNode> = {
-    home: <Home className="w-5 h-5" />,
+    home: <TeepeeIcon className="w-5 h-5" />,
     compass: <Compass className="w-5 h-5" />,
     booktext: <BookText className="w-5 h-5" />,
     target: <Target className="w-5 h-5" />,

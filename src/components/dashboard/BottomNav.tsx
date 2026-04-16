@@ -10,7 +10,7 @@ interface BottomNavProps {
 
 export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps) => {
   const tabs = [
-    { id: "today", icon: Home, locked: false },
+    { id: "today", icon: TeepeeIcon, locked: false },
     { id: "plan", icon: Compass, locked: false },
     { id: "vocabulary", icon: BookText, locked: false },
     { id: "ai", icon: Target, locked: false },

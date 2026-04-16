@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Home, Compass, Target, BookText, ChefHat, User, Sparkles } from "lucide-react";
+import { Compass, Target, BookText, ChefHat, User, Sparkles } from "lucide-react";
+import TeepeeIcon from "@/components/icons/TeepeeIcon";
 import { useState } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
@@ -228,7 +229,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
 const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; center?: boolean; filled?: boolean }) => {
   const iconMap: Record<string, React.ReactNode> = {
-    home: <Home className="w-5 h-5" />,
+    home: <TeepeeIcon className="w-5 h-5" />,
     compass: <Compass className="w-5 h-5" />,
     booktext: <BookText className="w-5 h-5" />,
     target: <Target className="w-5 h-5" />,

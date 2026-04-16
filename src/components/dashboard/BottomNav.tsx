@@ -69,7 +69,7 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
               isLocked && "opacity-30 cursor-not-allowed text-on-surface/40"
             )}
           >
-            <Icon className={cn("w-5 h-5", isActive && tab.id === "today" && "w-6 h-6")} />
+            <Icon className="w-5 h-5" />
             <span className="text-[9px] font-bold tracking-widest uppercase mt-1">{tab.label}</span>
           </button>
         );

@@ -240,7 +240,7 @@ const NavTab = ({ icon, label, center, filled }: { icon: string; label: string; 
   if (center) {
     return (
       <a className="flex flex-col items-center justify-center group" href="#">
-        <div className="bg-secondary/20 text-secondary p-3 rounded-full mb-1 shadow-[0_0_15px_hsl(42_100%_63%/0.3)] group-active:scale-95 transition-all border border-secondary/30">
+        <div className="bg-secondary/20 text-secondary p-1.5 rounded-full mb-1 shadow-[0_0_15px_hsl(42_100%_63%/0.3)] group-active:scale-95 transition-all border border-secondary/30">
           {IconComponent}
         </div>
         <span className="font-body text-[9px] font-black tracking-widest uppercase text-secondary">{label}</span>

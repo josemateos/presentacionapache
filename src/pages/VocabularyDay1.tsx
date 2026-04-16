@@ -193,7 +193,7 @@ const VocabularyDay1 = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 py-6 pb-8 max-w-4xl">
+      <main className="flex-grow container mx-auto px-4 py-6 pb-24 max-w-4xl">
         {/* Progress Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

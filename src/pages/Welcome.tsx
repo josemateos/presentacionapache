@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Compass, Target, BookText, ChefHat, User, Sparkles } from "lucide-react";
-import TeepeeIcon from "@/components/icons/TeepeeIcon";
+import { User, Sparkles } from "lucide-react";
+import { BottomNav } from "@/components/dashboard/BottomNav";
 import { useState } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (

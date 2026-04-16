@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { BottomNav } from "@/components/dashboard/BottomNav";
 
 interface Word {
   id: number;
@@ -61,6 +62,7 @@ const VocabularyDay1 = () => {
   const [words, setWords] = useState<Word[]>(INITIAL_WORDS);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
+  const [activeTab, setActiveTab] = useState("vocabulary");
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 
@@ -296,6 +298,9 @@ const VocabularyDay1 = () => {
         </div>
 
       </main>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isPremium={true} />
     </div>
   );
 };

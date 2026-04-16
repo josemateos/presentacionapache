@@ -1,5 +1,6 @@
 import { Compass, BookText, Target, ChefHat } from "lucide-react";
 import TeepeeIcon from "@/components/icons/TeepeeIcon";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
@@ -9,16 +10,18 @@ interface BottomNavProps {
 }
 
 export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps) => {
+  const navigate = useNavigate();
+
   const tabs = [
-    { id: "today", icon: TeepeeIcon, locked: false },
-    { id: "plan", icon: Compass, locked: false },
-    { id: "vocabulary", icon: BookText, locked: false },
-    { id: "ai", icon: Target, locked: false },
-    { id: "practice", icon: ChefHat, locked: true },
+    { id: "today", icon: TeepeeIcon, label: "INICIO", locked: false },
+    { id: "plan", icon: Compass, label: "PLAN", locked: false },
+    { id: "vocabulary", icon: BookText, label: "VOCAB", locked: false },
+    { id: "ai", icon: Target, label: "IA", locked: false },
+    { id: "practice", icon: ChefHat, label: "PRÁCTICA", locked: true },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-background/95 backdrop-blur-2xl border-t border-white/5 rounded-t-[2.5rem] shadow-[0_-15px_40px_rgba(0,0,0,0.8)]">
+    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface/95 backdrop-blur-2xl border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;
@@ -27,7 +30,14 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
         return (
           <button
             key={tab.id}
-            onClick={() => !isLocked && onTabChange(tab.id)}
+            onClick={() => {
+              if (isLocked) return;
+              if (tab.id === "today") {
+                navigate("/bienvenida");
+                return;
+              }
+              onTabChange(tab.id);
+            }}
             disabled={isLocked}
             className={cn(
               "flex flex-col items-center justify-center transition-all cursor-pointer",
@@ -38,7 +48,8 @@ export const BottomNav = ({ activeTab, onTabChange, isPremium }: BottomNavProps)
               isLocked && "opacity-30 cursor-not-allowed text-on-surface/40"
             )}
           >
-            <Icon className={cn("w-7 h-7", isActive && tab.id === "today" && "w-8 h-8")} />
+            <Icon className={cn("w-5 h-5", isActive && tab.id === "today" && "w-6 h-6")} />
+            <span className="text-[9px] font-bold tracking-widest uppercase mt-1">{tab.label}</span>
           </button>
         );
       })}

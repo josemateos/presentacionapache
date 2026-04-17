@@ -250,7 +250,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
             >
               <FcGoogle className="w-5 h-5" />
@@ -258,7 +258,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
             >
               <FaApple className="w-5 h-5 text-on-surface" />
@@ -266,7 +266,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
             >
               <FaFacebook className="w-5 h-5 text-[#1877F2]" />

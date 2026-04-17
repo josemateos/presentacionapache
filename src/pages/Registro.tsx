@@ -121,7 +121,7 @@ const Registro = () => {
         {/* Header Section */}
         <header className="text-center mb-8">
           <div className="flex flex-col items-center mb-4">
-            <div className="w-24 h-24 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-4 bg-[#2a1854]">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-4 bg-[#2a1854]">
               <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>

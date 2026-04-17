@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Moon, Sun, Eye } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useTheme } from "next-themes";
+import logoApache from "@/assets/logo_apache.png";
 
 const loginSchema = z.object({
   email: z.string()
@@ -95,12 +96,11 @@ const Login = () => {
         {/* Mystic Branding */}
         <div className="relative flex flex-col items-center mb-8">
           <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full w-48 h-48 -translate-y-4"></div>
-          <div className="relative w-24 h-24 glass-card rounded-3xl flex items-center justify-center shadow-2xl border border-primary/10">
-            <Eye className="w-12 h-12 text-tertiary" fill="currentColor" strokeWidth={1.5} />
+          <div className="relative w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center shadow-2xl border border-primary/10">
+            <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
           </div>
           <div className="mt-6 text-center">
             <h2 className="font-headline text-3xl font-black tracking-tighter text-on-surface">Sistema Apache</h2>
-            <p className="text-on-surface-variant text-sm mt-1 tracking-widest font-light">THE MODERN ORACLE</p>
           </div>
         </div>
 

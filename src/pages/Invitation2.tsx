@@ -16,7 +16,7 @@ const Invitation2 = () => {
         <header className="mb-12 relative">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
           <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface leading-tight relative">
-            Una solución basada en tu <span className="text-secondary italic">idioma nativo</span>, el Español, no en la memoria.
+            Una solución basada en tu <span className="italic" style={{ color: '#2fd9f4' }}>idioma nativo</span>, el Español, no en la memoria.
           </h1>
         </header>
 
@@ -30,8 +30,8 @@ const Invitation2 = () => {
               <div className="w-1.5 h-1.5 rounded-full bg-on-surface" />
             </div>
             <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline mb-2 block">Español Perfecto</label>
-              <p className="text-xl font-medium tracking-tight">Me gusta ir a la playa en verano.</p>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: '#ff2d87' }}>Español Perfecto</label>
+              <p className="text-xl font-medium tracking-tight" style={{ color: '#ff2d87' }}>Me gusta ir a la playa en verano.</p>
             </div>
           </div>
 

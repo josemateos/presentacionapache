@@ -133,7 +133,7 @@ const Registro = () => {
         <div className="bg-surface-container-high p-8 rounded-[2rem] shadow-2xl border border-white/20">
           <div className="mb-8">
             <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Registro</h2>
-            <p className="text-on-surface-variant text-sm mt-1">Comienza tu viaje místico hoy.</p>
+            <p className="text-on-surface-variant text-sm mt-1">Comienza tu aprendizaje hoy.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">

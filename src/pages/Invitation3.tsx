@@ -111,7 +111,7 @@ const Invitation3 = () => {
             className="w-full py-5 rounded-xl text-on-primary font-headline font-extrabold text-lg flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(210,188,250,0.3)] active:scale-95 transition-transform"
             style={{ background: "linear-gradient(135deg, #d2bcfa 0%, #ff00ff 100%)" }}
           >
-            Conoce nuestro sistema, Gratis
+            Comenzar Gratis
             <MaterialIcon name="arrow_forward" />
           </button>
           <button

@@ -14,10 +14,10 @@ const Invitation3 = () => {
     <div className="bg-surface text-on-surface font-body min-h-screen flex flex-col items-center overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
       <main className="flex-1 w-full max-w-md px-6 pt-8 pb-32 flex flex-col gap-8">
         {/* Hero Section */}
-        <header className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-5 mb-2">
-            {/* Apache Logo in purple circle */}
-            <div className="w-20 h-20 rounded-full bg-[#2a1854] border border-secondary/30 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(210,188,250,0.25)] flex-shrink-0">
+        <header className="text-center space-y-6">
+          <div className="flex items-center justify-center gap-5 mb-6">
+            {/* Apache Logo in purple square */}
+            <div className="w-20 h-20 rounded-2xl bg-[#2a1854] border border-secondary/30 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(210,188,250,0.25)] flex-shrink-0">
               <img src={apacheLogo} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
 
@@ -33,12 +33,12 @@ const Invitation3 = () => {
               <path d="M94 4 L108 12 L94 20 Z" fill="currentColor" />
             </svg>
 
-            {/* Medal icon in circle */}
-            <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-secondary-container/10 border border-secondary/20 flex-shrink-0">
+            {/* Medal icon in square */}
+            <div className="w-20 h-20 inline-flex items-center justify-center rounded-2xl bg-secondary-container/10 border border-secondary/20 flex-shrink-0">
               <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
             </div>
           </div>
-          <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight">
+          <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight pt-2">
             Únete a los miles que lo <span className="text-tertiary italic">están logrando.</span>
           </h1>
         </header>

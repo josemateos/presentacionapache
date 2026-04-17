@@ -44,7 +44,7 @@ const Invitation3 = () => {
         </header>
 
         {/* Bento-style Confidence Cards */}
-        <section className="grid grid-cols-1 gap-4">
+        <section className="grid grid-cols-1 gap-4 mt-8">
           {/* Card 1: Students */}
           <div className="bg-surface-container-high/80 backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-outline-variant/20 shadow-lg">
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />

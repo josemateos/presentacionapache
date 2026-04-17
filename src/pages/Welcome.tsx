@@ -183,10 +183,26 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
         </motion.section>
 
         {/* Apache Oracle Visualizer */}
-        <section className="flex flex-col items-center justify-center py-4 relative">
-          <div className="relative w-72 h-72 flex items-center justify-center">
+        <motion.section
+          animate={{
+            opacity: showAvatarSection ? 1 : 0,
+            height: showAvatarSection ? "auto" : 0,
+            marginTop: showAvatarSection ? undefined : 0,
+            marginBottom: showAvatarSection ? undefined : 0,
+          }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
+          style={{ overflow: "hidden" }}
+          className="flex flex-col items-center justify-center py-4 relative"
+        >
+          <div
+            className="relative w-72 h-72 flex items-center justify-center rounded-3xl border border-white/10 p-4"
+            style={{
+              background: "linear-gradient(145deg, hsl(265 60% 22% / 0.85), hsl(260 70% 12% / 0.9))",
+              boxShadow: "0 10px 40px hsl(265 87% 30% / 0.35), inset 0 0 30px hsl(265 87% 50% / 0.1)",
+            }}
+          >
             {/* Outer Glow Aura */}
-            <div className="absolute inset-0 bg-secondary/10 rounded-full blur-3xl animate-pulse-subtle" />
+            <div className="absolute inset-0 bg-secondary/10 rounded-3xl blur-2xl animate-pulse-subtle" />
 
             {/* Circular Progress Track */}
             <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -215,8 +231,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               </defs>
             </svg>
 
-            {/* Center Avatar */}
-            <div className="relative w-56 h-56 rounded-full glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
+            {/* Center Avatar - Square */}
+            <div className="relative w-48 h-48 rounded-2xl glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
               <User className="w-24 h-24 text-muted-foreground/60" />
             </div>
 
@@ -239,7 +255,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               Guerrero Iniciado
             </h3>
           </div>
-        </section>
+        </motion.section>
 
         {/* Action Grid */}
         <section className="grid grid-cols-1 gap-5">

@@ -142,7 +142,7 @@ export const DashboardContent = ({
 
         {/* 4. Mi Repaso */}
         <AccordionButton
-          icon={<RotateCcw className={`w-5 h-5 ${userProgress.reviewPendingCount > 0 ? "text-[hsl(20_90%_55%)]" : "text-primary"}`} />}
+          icon={<RotateCcw className="w-5 h-5 text-primary" />}
           label="Mi Repaso"
           onClick={() => navigate("/review-day?day=1")}
           chevron="right"
@@ -151,7 +151,6 @@ export const DashboardContent = ({
               ? `${userProgress.reviewPendingCount} PENDIENTES`
               : undefined
           }
-          highlight={userProgress.reviewPendingCount > 0 ? "danger" : undefined}
         />
 
         {/* 5. Auxiliares Clave */}

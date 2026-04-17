@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, LogIn, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Moon, Sun, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
@@ -25,15 +24,12 @@ const Login = () => {
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<LoginForm>({
-    email: "",
-  });
+  const [formData, setFormData] = useState<LoginForm>({ email: "" });
   const [errors, setErrors] = useState<Partial<Record<keyof LoginForm, string>>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
     if (errors[name as keyof LoginForm]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
@@ -45,12 +41,8 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const validatedData = loginSchema.parse(formData);
-      
-      // Aquí se integrará con Supabase en el futuro
+      loginSchema.parse(formData);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      
       navigate("/bienvenida");
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -74,127 +66,132 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center p-4">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="fixed top-8 right-8 z-50"
-      >
-        {theme === "dark" ? (
-          <Sun className="h-5 w-5" />
-        ) : (
-          <Moon className="h-5 w-5" />
-        )}
-      </Button>
-      <div className="w-full max-w-md">
-        <Card className="bg-card border-2 border-border p-6 md:p-8">
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/", { state: { screen: 2 } })}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-2xl md:text-3xl font-bold">Iniciar Sesión</h1>
-          </div>
+    <div className="min-h-screen bg-background text-on-surface font-body flex flex-col items-center justify-center p-6 antialiased overflow-x-hidden relative">
+      {/* Decorative background accents */}
+      <div className="fixed -bottom-24 -left-24 w-64 h-64 bg-tertiary/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="fixed -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
 
-          <div className="mb-6 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 mb-4">
-              <LogIn className="w-8 h-8 text-primary" />
-            </div>
-            <p className="text-muted-foreground text-sm">
-              Continúa tu aprendizaje de inglés
-            </p>
-          </div>
+      {/* Top Navigation */}
+      <header className="fixed top-0 left-0 w-full px-6 flex justify-between items-center z-50 py-4">
+        <button
+          onClick={() => navigate("/", { state: { screen: 2 } })}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface hover:bg-primary-container transition-all active:scale-95"
+          aria-label="Volver"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h1 className="font-headline text-lg font-bold tracking-tight text-primary-fixed-dim">Iniciar Sesión</h1>
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-secondary-fixed hover:bg-primary-container transition-all active:scale-95"
+          aria-label="Cambiar tema"
+        >
+          {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
+      </header>
 
-          <div className="space-y-3 mb-6">
-            <Button
+      {/* Main Content */}
+      <main className="w-full max-w-md mt-16 flex flex-col items-center z-10">
+        {/* Mystic Branding */}
+        <div className="relative flex flex-col items-center mb-8">
+          <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full w-48 h-48 -translate-y-4"></div>
+          <div className="relative w-24 h-24 glass-card rounded-3xl flex items-center justify-center shadow-2xl border border-primary/10">
+            <Eye className="w-12 h-12 text-tertiary" fill="currentColor" strokeWidth={1.5} />
+          </div>
+          <div className="mt-6 text-center">
+            <h2 className="font-headline text-3xl font-black tracking-tighter text-on-surface">Sistema Apache</h2>
+            <p className="text-on-surface-variant text-sm mt-1 tracking-widest font-light">THE MODERN ORACLE</p>
+          </div>
+        </div>
+
+        {/* Glassmorphism Auth Card */}
+        <div className="w-full glass-card rounded-[2.5rem] p-8 shadow-2xl border border-outline-variant/10 space-y-6">
+          {/* Social Access */}
+          <div className="space-y-3">
+            <button
               type="button"
-              variant="outline"
-              className="w-full py-6 bg-background hover:bg-muted border-2"
               disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
             >
-              <FcGoogle className="w-5 h-5 mr-2" />
-              Ingresar con Google
-            </Button>
-
-            <Button
+              <FcGoogle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-semibold tracking-wide">Ingresar con Google</span>
+            </button>
+            <button
               type="button"
-              variant="outline"
-              className="w-full py-6 bg-background hover:bg-muted border-2"
               disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
             >
-              <FaApple className="w-5 h-5 mr-2" />
-              Ingresar con Apple
-            </Button>
-
-            <Button
+              <FaApple className="w-5 h-5 text-on-surface group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-semibold tracking-wide">Ingresar con Apple</span>
+            </button>
+            <button
               type="button"
-              variant="outline"
-              className="w-full py-6 bg-background hover:bg-muted border-2"
               disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
             >
-              <FaFacebook className="w-5 h-5 mr-2 text-[#1877F2]" />
-              Ingresar con Facebook
-            </Button>
+              <FaFacebook className="w-5 h-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-semibold tracking-wide">Ingresar con Facebook</span>
+            </button>
           </div>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                O ingresa con email
-              </span>
-            </div>
+          {/* Separator */}
+          <div className="relative flex items-center py-1">
+            <div className="flex-grow border-t border-outline-variant/20"></div>
+            <span className="flex-shrink mx-4 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+              O ingresa con email
+            </span>
+            <div className="flex-grow border-t border-outline-variant/20"></div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Correo Electrónico</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="tu@correo.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`mt-1 ${errors.email ? "border-destructive" : ""}`}
-                disabled={isLoading}
-                autoComplete="email"
-              />
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="block text-xs font-bold tracking-widest text-primary-fixed-dim uppercase ml-1">
+                Correo Electrónico
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="tu@correo.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  autoComplete="email"
+                  className={`w-full bg-surface-container-lowest border-0 rounded-2xl py-4 px-5 h-auto text-on-surface placeholder:text-on-surface-variant/30 focus-visible:ring-1 focus-visible:ring-tertiary focus-visible:ring-offset-0 transition-all ${errors.email ? "ring-1 ring-destructive" : ""}`}
+                />
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-tertiary scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 rounded-full shadow-[0_0_12px_#2fd9f4]"></div>
+              </div>
               {errors.email && (
-                <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                <p className="text-xs text-destructive mt-1 ml-1">{errors.email}</p>
               )}
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 py-6 text-base"
               disabled={isLoading}
+              className="w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-[#ff00ff] text-on-primary text-sm font-black tracking-widest shadow-[0_8px_24px_rgba(210,188,250,0.3)] hover:shadow-[0_12px_32px_rgba(210,188,250,0.5)] transition-all active:scale-95 uppercase disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Ingresando..." : "Ingresar con Email"}
-            </Button>
+              {isLoading ? "INGRESANDO..." : "INGRESAR CON EMAIL"}
+            </button>
           </form>
+        </div>
 
-          <div className="mt-6 text-center space-y-3">
-            <p className="text-sm text-muted-foreground">
-              ¿No tienes cuenta?{" "}
-              <button
-                onClick={() => navigate("/registro")}
-                className="text-primary hover:underline font-medium"
-                disabled={isLoading}
-              >
-                Regístrate
-              </button>
-            </p>
-          </div>
-        </Card>
-      </div>
+        {/* Footer Link */}
+        <div className="mt-10 text-center">
+          <p className="text-on-surface-variant text-sm">
+            ¿No tienes cuenta?{" "}
+            <button
+              onClick={() => navigate("/registro")}
+              disabled={isLoading}
+              className="font-bold text-tertiary hover:text-tertiary/80 transition-colors ml-1 underline underline-offset-4 decoration-tertiary/30"
+            >
+              Regístrate
+            </button>
+          </p>
+        </div>
+      </main>
     </div>
   );
 };

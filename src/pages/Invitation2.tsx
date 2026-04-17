@@ -16,7 +16,7 @@ const Invitation2 = () => {
         <header className="mb-12 relative">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
           <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface leading-tight relative">
-            Una solución basada en tu <span className="text-secondary italic">idioma nativo</span>, el Español, no en la memoria.
+            Una solución basada en tu <span className="italic" style={{ color: '#2fd9f4' }}>idioma nativo</span>, el Español, no en la memoria.
           </h1>
         </header>
 
@@ -41,8 +41,8 @@ const Invitation2 = () => {
               <MaterialIcon name="psychology" className="text-[10px] text-on-secondary font-black" />
             </div>
             <div className="bg-surface-container-high backdrop-blur-xl rounded-xl p-5 border border-white/20 border-l-4 border-l-secondary shadow-xl">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-2 block">Apache Simple</label>
-              <p className="text-xl font-headline font-bold text-secondary-fixed italic tracking-tight">Yo gustar ir la playa en verano.</p>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: '#ff2d87' }}>Apache Simple</label>
+              <p className="text-xl font-headline font-bold italic tracking-tight" style={{ color: '#ff2d87' }}>Yo gustar ir la playa en verano.</p>
             </div>
           </div>
 

@@ -31,7 +31,7 @@ const Invitation2 = () => {
             </div>
             <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
               <label className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: '#ff2d87' }}>Español Perfecto</label>
-              <p className="text-xl font-medium tracking-tight" style={{ color: '#ff2d87' }}>Me gusta ir a la playa en verano.</p>
+              <p className="text-xl font-medium tracking-tight">Me gusta ir a la playa en verano.</p>
             </div>
           </div>
 

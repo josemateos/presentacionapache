@@ -14,10 +14,33 @@ interface WelcomeProps {
   userName?: string;
 }
 
+const hasAnyProgress = (): boolean => {
+  const keys = [
+    "vocabulary_day1_progress",
+    "vocabulary_day2_progress",
+    "vocabulary_day3_progress",
+    "phrases_day1_progress",
+    "phrases_day2_progress",
+    "phrases_day3_progress",
+  ];
+  for (const k of keys) {
+    try {
+      const raw = localStorage.getItem(k);
+      if (!raw) continue;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.some((it: any) => it?.learned || it?.completed)) {
+        return true;
+      }
+    } catch {}
+  }
+  return false;
+};
+
 const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userPoints = 0;
+  const [hasProgress] = useState<boolean>(() => hasAnyProgress());
 
   const handleStart = () => navigate("/dashboard");
   const handleContinue = () => navigate("/vocabulario-dia-1");

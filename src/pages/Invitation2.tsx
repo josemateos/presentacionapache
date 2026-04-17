@@ -16,7 +16,7 @@ const Invitation2 = () => {
         <header className="mb-12 relative">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
           <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface leading-tight relative">
-            Una solución basada en tu <span className="text-primary italic">idioma nativo</span>, el Español, no en la memoria.
+            Una solución basada en tu <span className="text-secondary italic">idioma nativo</span>, el Español, no en la memoria.
           </h1>
         </header>
 

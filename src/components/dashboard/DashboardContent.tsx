@@ -177,12 +177,61 @@ export const DashboardContent = ({
         </div>
 
         {/* 3. Mi Progreso Detallado */}
-        <AccordionButton
-          icon={<TrendingUp className="w-5 h-5 text-accent" />}
-          label="Mi Progreso Detallado"
-          onClick={() => toggleSection("progress")}
-          chevron="right"
-        />
+        <div className="space-y-3">
+          <button
+            onClick={() => toggleSection("progress")}
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-white/5 text-on-surface/80 font-headline font-semibold text-sm hover:bg-surface-container-high transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <TrendingUp className="w-5 h-5 text-accent" />
+              <span className="uppercase tracking-wide">Mi Progreso Detallado</span>
+            </div>
+            {openSection === "progress" ? (
+              <ChevronUp className="w-5 h-5 opacity-40" />
+            ) : (
+              <ChevronDown className="w-5 h-5 opacity-40" />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {openSection === "progress" && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="bg-surface-container-low border border-white/5 rounded-2xl p-4 space-y-3">
+                  {[
+                    { label: "Días del Plan", current: userProgress.currentDay ?? 0, total: 90 },
+                    { label: "Frases Completadas", current: userProgress.phrasesCompleted ?? 0, total: 270 },
+                    { label: "Palabras Dominadas", current: userProgress.wordsMastered ?? 0, total: 900 },
+                    { label: "Auxiliares Clave", current: userProgress.auxLearned ?? 0, total: 30 },
+                  ].map((item, idx) => {
+                    const pct = Math.min(100, Math.round((item.current / item.total) * 100));
+                    return (
+                      <div key={idx} className="bg-surface-container-high rounded-xl p-3 border border-white/5">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-on-surface/80 text-sm font-semibold">{item.label}</span>
+                          <span className="text-on-surface text-sm font-bold">{item.current}/{item.total}</span>
+                        </div>
+                        <div className="h-2 bg-surface rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            transition={{ duration: 0.6, delay: idx * 0.08 }}
+                            className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* 4. Mi Repaso */}
         <AccordionButton

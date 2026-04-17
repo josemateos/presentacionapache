@@ -102,8 +102,7 @@ const Login = () => {
             <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
           </div>
           <div className="mt-6 text-center">
-            <h2 className="font-headline font-black text-3xl tracking-tighter text-primary whitespace-nowrap">SISTEMA APACHE</h2>
-            <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px] mt-1">Habla Inglés utilizando tu Español</p>
+            <h2 className="font-headline text-3xl font-black tracking-tighter text-on-surface">Sistema Apache</h2>
           </div>
         </div>
 

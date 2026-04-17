@@ -30,8 +30,8 @@ const Invitation2 = () => {
               <div className="w-1.5 h-1.5 rounded-full bg-on-surface" />
             </div>
             <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline mb-2 block">Español Perfecto</label>
-              <p className="text-xl font-medium tracking-tight">Me gusta ir a la playa en verano.</p>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: '#ff2d87' }}>Español Perfecto</label>
+              <p className="text-xl font-medium tracking-tight" style={{ color: '#ff2d87' }}>Me gusta ir a la playa en verano.</p>
             </div>
           </div>
 
@@ -41,8 +41,8 @@ const Invitation2 = () => {
               <MaterialIcon name="psychology" className="text-[10px] text-on-secondary font-black" />
             </div>
             <div className="bg-surface-container-high backdrop-blur-xl rounded-xl p-5 border border-white/20 border-l-4 border-l-secondary shadow-xl">
-              <label className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: '#ff2d87' }}>Apache Simple</label>
-              <p className="text-xl font-headline font-bold italic tracking-tight" style={{ color: '#ff2d87' }}>Yo gustar ir la playa en verano.</p>
+              <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-2 block">Apache Simple</label>
+              <p className="text-xl font-headline font-bold text-secondary-fixed italic tracking-tight">Yo gustar ir la playa en verano.</p>
             </div>
           </div>
 

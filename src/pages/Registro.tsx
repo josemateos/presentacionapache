@@ -119,7 +119,7 @@ const Registro = () => {
         </Button>
 
         {/* Header Section */}
-        <header className="text-center mb-8 -mt-4">
+        <header className="text-center mb-8 mt-8">
           <div className="flex flex-col items-center mb-2">
             <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-3 bg-[#2a1854]">
               <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />

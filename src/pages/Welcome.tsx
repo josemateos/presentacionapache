@@ -41,17 +41,18 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userPoints = 0;
   const [hasProgress] = useState<boolean>(() => hasAnyProgress());
-  const [showAvatarSection, setShowAvatarSection] = useState(true);
+  const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      if (y < lastY - 4 && y > 40) {
-        // scrolling up
-        setShowAvatarSection(false);
-      } else if (y <= 20) {
-        setShowAvatarSection(true);
+      if (y > lastY + 4 && y > 40) {
+        // scrolling down → hide
+        setShowHeader(false);
+      } else if (y < lastY - 4 || y <= 20) {
+        // scrolling up or near top → show
+        setShowHeader(true);
       }
       lastY = y;
     };
@@ -112,7 +113,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   return (
     <div className="min-h-screen pb-32 overflow-x-hidden bg-surface text-on-surface font-body">
       {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-6 py-2 border-b border-white/5">
+      <header className={`fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-6 py-2 border-b border-white/5 transition-transform duration-300 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -184,14 +185,9 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
 
         {/* Apache Oracle Visualizer */}
         <motion.section
-          animate={{
-            opacity: showAvatarSection ? 1 : 0,
-            height: showAvatarSection ? "auto" : 0,
-            marginTop: showAvatarSection ? undefined : 0,
-            marginBottom: showAvatarSection ? undefined : 0,
-          }}
-          transition={{ duration: 0.35, ease: "easeInOut" }}
-          style={{ overflow: "hidden" }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center py-4 relative"
         >
           <div

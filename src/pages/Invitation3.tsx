@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import apacheLogo from "@/assets/apache-logo.jpg";
+import apacheLogo from "@/assets/apache-logo-v2.jpg";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>

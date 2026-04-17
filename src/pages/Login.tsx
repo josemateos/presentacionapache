@@ -72,39 +72,38 @@ const Login = () => {
       <div className="fixed -bottom-24 -left-24 w-64 h-64 bg-tertiary/10 blur-[100px] rounded-full pointer-events-none"></div>
       <div className="fixed -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
 
-      {/* Top Navigation */}
-      <header className="fixed top-0 left-0 w-full px-6 flex justify-between items-center z-50 py-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate("/registro")}
-          className="text-muted-foreground hover:text-foreground"
-          aria-label="Volver"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="font-headline text-lg font-bold tracking-tight text-primary-fixed-dim">Iniciar Sesión</h1>
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-secondary-fixed hover:bg-primary-container transition-all active:scale-95"
-          aria-label="Cambiar tema"
-        >
-          {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
-      </header>
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => navigate("/registro")}
+        className="absolute top-6 left-6 text-muted-foreground hover:text-foreground z-50"
+        aria-label="Volver"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </Button>
+
+      {/* Theme Toggle */}
+      <button
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-secondary-fixed hover:bg-primary-container transition-all active:scale-95 z-50"
+        aria-label="Cambiar tema"
+      >
+        {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </button>
 
       {/* Main Content */}
-      <main className="w-full max-w-md mt-16 flex flex-col items-center z-10">
-        {/* Mystic Branding */}
-        <div className="relative flex flex-col items-center mb-8">
-          <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full w-48 h-48 -translate-y-4"></div>
-          <div className="relative w-24 h-24 rounded-3xl overflow-hidden flex items-center justify-center shadow-2xl border border-primary/10">
-            <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
+      <main className="w-full max-w-md flex flex-col items-center z-10">
+        {/* Header Section - matches Registro */}
+        <header className="text-center mb-8 mt-8 w-full">
+          <div className="flex flex-col items-center mb-2">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-3 bg-[#2a1854]">
+              <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
+            </div>
+            <h1 className="font-headline text-3xl font-black tracking-tighter text-on-surface whitespace-nowrap">Sistema Apache</h1>
+            <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px] mt-1">Habla Inglés utilizando tu Español</p>
           </div>
-          <div className="mt-6 text-center">
-            <h2 className="font-headline text-3xl font-black tracking-tighter text-on-surface">Sistema Apache</h2>
-          </div>
-        </div>
+        </header>
 
         {/* Glassmorphism Auth Card */}
         <div className="w-full bg-surface-container-high rounded-[2.5rem] p-8 shadow-2xl border border-white/20 space-y-6">

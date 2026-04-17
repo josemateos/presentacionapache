@@ -107,6 +107,10 @@ const Login = () => {
 
         {/* Glassmorphism Auth Card */}
         <div className="w-full bg-surface-container-high rounded-[2.5rem] p-8 shadow-2xl border border-white/20 space-y-6">
+          <div>
+            <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Iniciar Sesión</h2>
+            <p className="text-on-surface-variant text-sm mt-1">Bienvenido de vuelta a la tribu.</p>
+          </div>
           {/* Social Access */}
           <div className="space-y-3">
             <button

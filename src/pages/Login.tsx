@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Moon, Sun, Eye } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useTheme } from "next-themes";
+import logoApache from "@/assets/logo_apache.png";
 
 const loginSchema = z.object({
   email: z.string()

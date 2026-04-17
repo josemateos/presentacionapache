@@ -41,17 +41,18 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userPoints = 0;
   const [hasProgress] = useState<boolean>(() => hasAnyProgress());
-  const [showAvatarSection, setShowAvatarSection] = useState(true);
+  const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      if (y < lastY - 4 && y > 40) {
-        // scrolling up
-        setShowAvatarSection(false);
-      } else if (y <= 20) {
-        setShowAvatarSection(true);
+      if (y > lastY + 4 && y > 40) {
+        // scrolling down → hide
+        setShowHeader(false);
+      } else if (y < lastY - 4 || y <= 20) {
+        // scrolling up or near top → show
+        setShowHeader(true);
       }
       lastY = y;
     };

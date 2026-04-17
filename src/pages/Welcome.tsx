@@ -120,9 +120,12 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
           >
             <User className="w-5 h-5 text-muted-foreground" />
           </button>
-          <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
-            INICIADO
-          </h1>
+          <div className="flex flex-col leading-none">
+            <span className="text-[9px] font-bold text-accent tracking-[0.25em] uppercase opacity-80">Rank</span>
+            <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase mt-0.5" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
+              INICIADO
+            </h1>
+          </div>
         </div>
         <div className="flex items-center gap-1.5 bg-surface-container-highest/80 border border-white/10 rounded-full px-4 py-1.5">
           <Sparkles className="w-4 h-4 text-accent" />

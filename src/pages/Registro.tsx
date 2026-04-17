@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
-import logoApache from "@/assets/apache-logo-v2.jpg";
+import logoApache from "@/assets/logo_apache.png";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";

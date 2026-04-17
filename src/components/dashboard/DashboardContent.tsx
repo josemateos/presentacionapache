@@ -125,12 +125,56 @@ export const DashboardContent = ({
         </div>
 
         {/* 2. Frases del Día */}
-        <AccordionButton
-          icon={<BookOpen className="w-5 h-5 text-primary" />}
-          label="MIS FRASES DEL DÍA"
-          onClick={() => navigate(`/phrases-day?day=${userProgress.currentDay}`)}
-          chevron="down"
-        />
+        <div className="space-y-4">
+          <button
+            onClick={() => toggleSection("phrases")}
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-white/5 text-on-surface/80 font-headline font-semibold text-sm hover:bg-surface-container-high transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <BookOpen className="w-5 h-5 text-primary" />
+              <span className="uppercase tracking-wide">MIS FRASES DEL DÍA</span>
+            </div>
+            {openSection === "phrases" ? (
+              <ChevronUp className="w-5 h-5 opacity-40" />
+            ) : (
+              <ChevronDown className="w-5 h-5 opacity-40" />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {openSection === "phrases" && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-3 gap-3">
+                  {vocabDays.map((vd) => {
+                    const Icon = vd.icon;
+                    return (
+                      <button
+                        key={vd.day}
+                        onClick={() => navigate(`/phrases-day?day=${vd.day}`)}
+                        className={`aspect-square rounded-2xl flex flex-col items-center justify-center transition-all ${
+                          vd.active
+                            ? "bg-surface-container-highest border-2 border-primary shadow-[0_0_15px_hsl(265_87%_86%/0.3)]"
+                            : "bg-surface-container-low border border-white/5 opacity-60 hover:opacity-80"
+                        }`}
+                      >
+                        <Icon className={`w-6 h-6 mb-1 ${vd.active ? "text-primary" : "text-on-surface/40"}`} />
+                        <span className={`text-[10px] font-bold ${vd.active ? "text-on-surface" : "text-on-surface/40"}`}>
+                          {vd.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* 3. Mi Progreso Detallado */}
         <AccordionButton

@@ -33,9 +33,9 @@ const Invitation3 = () => {
               <path d="M94 4 L108 12 L94 20 Z" fill="currentColor" />
             </svg>
 
-            {/* New Apache Logo v2 in purple circle */}
-            <div className="w-20 h-20 rounded-full bg-[#2a1854] border border-secondary/30 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(210,188,250,0.25)] flex-shrink-0">
-              <img src={apacheLogoV2} alt="Logo Apache nuevo" className="w-full h-full object-cover" />
+            {/* Medal icon in circle */}
+            <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-secondary-container/10 border border-secondary/20 flex-shrink-0">
+              <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
             </div>
           </div>
           <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight">

@@ -125,8 +125,8 @@ const Registro = () => {
               <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
+            <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px] mt-1">Habla Inglés utilizando tu Español</p>
           </div>
-          <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px]">Transforma tu Español a Inglés</p>
         </header>
 
         {/* Registration Card */}

@@ -24,6 +24,7 @@ import ReviewDay from "./pages/ReviewDay";
 import Invitation2 from "./pages/Invitation2";
 import Invitation3 from "./pages/Invitation3";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/invitacion-1" element={<Invitation1 />} />
             <Route path="/invitacion-2" element={<Invitation2 />} />

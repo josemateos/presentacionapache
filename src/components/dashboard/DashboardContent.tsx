@@ -179,6 +179,38 @@ interface AccordionButtonProps {
   chevron: "down" | "right";
   badge?: string;
   trailingIcon?: React.ReactNode;
+}
+
+const AccordionButton = ({ icon, label, onClick, chevron, badge, trailingIcon }: AccordionButtonProps) => (
+  <button
+    onClick={onClick}
+    className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-white/5 text-on-surface/80 font-headline font-semibold text-sm hover:bg-surface-container-high transition-all"
+  >
+    <div className="flex items-center gap-3">
+      {icon}
+      <span className="uppercase tracking-wide">{label}</span>
+    </div>
+    <div className="flex items-center gap-2">
+      {badge && (
+        <span className="bg-[hsl(20_90%_55%)] text-white text-[9px] font-bold px-2 py-1 rounded-full tracking-widest shadow-[0_0_10px_hsl(20_90%_55%/0.5)]">
+          {badge}
+        </span>
+      )}
+      {trailingIcon}
+      {chevron === "right" ? (
+        <ChevronRight className="w-5 h-5 opacity-40" />
+      ) : (
+        <ChevronDown className="w-5 h-5 opacity-40" />
+      )}
+    </div>
+  </button>
+);
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  chevron: "down" | "right";
+  badge?: string;
+  trailingIcon?: React.ReactNode;
   highlight?: "danger";
 }
 

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import apacheLogo from "@/assets/apache-logo.jpg";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -14,8 +15,24 @@ const Invitation3 = () => {
       <main className="flex-1 w-full max-w-md px-6 pt-8 pb-32 flex flex-col gap-8">
         {/* Hero Section */}
         <header className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center p-4 rounded-full bg-secondary-container/10 mb-2 border border-secondary/20">
-            <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
+          <div className="flex items-center justify-center gap-3 mb-2">
+            {/* Apache Logo in purple circle */}
+            <div className="w-20 h-20 rounded-full bg-[#2a1854] border border-secondary/30 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(210,188,250,0.25)]">
+              <img src={apacheLogo} alt="Logo Apache" className="w-full h-full object-cover" />
+            </div>
+
+            {/* Apache Arrow pointing right */}
+            <svg viewBox="0 0 80 24" className="w-16 h-6 text-secondary flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12 L10 6 M2 12 L10 18 M6 12 L14 6 M6 12 L14 18" />
+              <line x1="10" y1="12" x2="64" y2="12" />
+              <path d="M64 4 L78 12 L64 20 Z" fill="currentColor" />
+              <line x1="58" y1="9" x2="60" y2="15" />
+            </svg>
+
+            {/* Medal icon in circle */}
+            <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-secondary-container/10 border border-secondary/20">
+              <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
+            </div>
           </div>
           <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight">
             Únete a los miles que lo <span className="text-tertiary italic">están logrando.</span>

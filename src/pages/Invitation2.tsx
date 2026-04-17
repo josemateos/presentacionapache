@@ -29,7 +29,7 @@ const Invitation2 = () => {
             <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-on-surface/20 border border-on-surface/40 flex items-center justify-center">
               <div className="w-1.5 h-1.5 rounded-full bg-on-surface" />
             </div>
-            <div className="bg-surface-container-low rounded-xl p-5">
+            <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
               <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline mb-2 block">Español Perfecto</label>
               <p className="text-xl font-medium tracking-tight">Me gusta ir a la playa en verano.</p>
             </div>
@@ -40,7 +40,7 @@ const Invitation2 = () => {
             <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary shadow-[0_0_10px_rgba(251,191,36,0.5)] flex items-center justify-center">
               <MaterialIcon name="psychology" className="text-[10px] text-on-secondary font-black" />
             </div>
-            <div className="bg-surface-container-high/40 backdrop-blur-xl rounded-xl p-5 border-l-4 border-secondary/50 shadow-xl">
+            <div className="bg-surface-container-high backdrop-blur-xl rounded-xl p-5 border border-white/20 border-l-4 border-l-secondary shadow-xl">
               <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-2 block">Apache Simple</label>
               <p className="text-xl font-headline font-bold text-secondary-fixed italic tracking-tight">Yo gustar ir la playa en verano.</p>
             </div>
@@ -51,7 +51,7 @@ const Invitation2 = () => {
             <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
               <MaterialIcon name="translate" className="text-[10px] text-on-primary-fixed" />
             </div>
-            <div className="bg-surface-container-low rounded-xl p-5 border border-primary/10">
+            <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
               <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Inglés Apache</label>
               <p className="text-xl font-medium text-primary-fixed tracking-tight">I like go the beach in summer.</p>
             </div>
@@ -62,7 +62,7 @@ const Invitation2 = () => {
             <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-tertiary flex items-center justify-center">
               <MaterialIcon name="auto_stories" className="text-[10px] text-on-tertiary" filled />
             </div>
-            <div className="bg-surface-container-low rounded-xl p-5 border border-tertiary/10">
+            <div className="bg-surface-container-high rounded-xl p-5 border border-white/20 shadow-lg">
               <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-tertiary mb-2 block">Inglés Perfecto</label>
               <p className="text-xl font-medium text-tertiary-fixed tracking-tight">I like to go to the beach in summer.</p>
             </div>
@@ -70,7 +70,7 @@ const Invitation2 = () => {
         </section>
 
         {/* Explanatory Panel */}
-        <section className="mt-12 bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 relative overflow-hidden">
+        <section className="mt-12 bg-surface-container-high rounded-2xl p-6 border border-white/20 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10">
             <MaterialIcon name="architecture" className="text-6xl" />
           </div>

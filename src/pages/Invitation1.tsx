@@ -38,7 +38,7 @@ const Invitation1 = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-surface-container-high/50 backdrop-blur-xl rounded-2xl p-5 border border-outline-variant/10">
+          <div className="bg-surface-container-high backdrop-blur-xl rounded-2xl p-5 border border-white/20 shadow-lg">
             <div className="flex items-start gap-4">
               <div className="p-2.5 bg-primary/10 rounded-xl shrink-0">
                 <MaterialIcon name="history_edu" className="text-primary text-2xl" />
@@ -51,7 +51,7 @@ const Invitation1 = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-surface-container-high/50 backdrop-blur-xl rounded-2xl p-5 border border-outline-variant/10">
+          <div className="bg-surface-container-high backdrop-blur-xl rounded-2xl p-5 border border-white/20 shadow-lg">
             <div className="flex items-start gap-4">
               <div className="p-2.5 bg-secondary/10 rounded-xl shrink-0">
                 <MaterialIcon name="sync_problem" className="text-secondary text-2xl" filled />
@@ -66,7 +66,7 @@ const Invitation1 = () => {
 
         {/* Revelation Section */}
         <section className="relative mb-10">
-          <div className="bg-surface-container/80 backdrop-blur-xl border border-outline-variant/15 rounded-3xl relative overflow-hidden">
+          <div className="bg-surface-container backdrop-blur-xl border border-white/20 rounded-3xl relative overflow-hidden shadow-xl">
             {/* Decorative glow */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-tertiary/10 rounded-full blur-3xl" />
 
@@ -125,9 +125,9 @@ const Invitation1 = () => {
 
         {/* Tags */}
         <div className="flex flex-wrap justify-center gap-2 mt-6">
-          <span className="px-3 py-1 rounded-full bg-surface-container-high/60 text-on-surface-variant/60 text-[10px] font-bold uppercase tracking-widest border border-outline-variant/10">Metodología Probada</span>
-          <span className="px-3 py-1 rounded-full bg-surface-container-high/60 text-on-surface-variant/60 text-[10px] font-bold uppercase tracking-widest border border-outline-variant/10">Transferencia Lingüística</span>
-          <span className="px-3 py-1 rounded-full bg-surface-container-high/60 text-on-surface-variant/60 text-[10px] font-bold uppercase tracking-widest border border-outline-variant/10">Aprendizaje Inmersivo</span>
+          <span className="px-3 py-1 rounded-full bg-surface-container-high text-on-surface/80 text-[10px] font-bold uppercase tracking-widest border border-white/20">Metodología Probada</span>
+          <span className="px-3 py-1 rounded-full bg-surface-container-high text-on-surface/80 text-[10px] font-bold uppercase tracking-widest border border-white/20">Transferencia Lingüística</span>
+          <span className="px-3 py-1 rounded-full bg-surface-container-high text-on-surface/80 text-[10px] font-bold uppercase tracking-widest border border-white/20">Aprendizaje Inmersivo</span>
         </div>
       </main>
     </div>

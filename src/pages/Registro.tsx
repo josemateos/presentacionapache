@@ -112,7 +112,7 @@ const Registro = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/invitacion-3")}
           className="absolute top-6 left-6 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-5 h-5" />

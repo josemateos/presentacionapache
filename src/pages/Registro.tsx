@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Mail, Lock, User } from "lucide-react";
-import logoApache from "@/assets/logo_apache.png";
-import logoApacheV2 from "@/assets/apache-logo-v2.jpg";
+import logoApache from "@/assets/apache-logo-v2.jpg";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
@@ -122,19 +121,8 @@ const Registro = () => {
         {/* Header Section */}
         <header className="text-center mb-8">
           <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_20px_rgba(210,188,250,0.2)]">
-                  <img src={logoApache} alt="Logo Apache actual" className="w-full h-full object-cover" />
-                </div>
-                <span className="text-[9px] uppercase tracking-widest text-on-surface-variant">Actual</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-tertiary/40 shadow-[0_0_20px_rgba(47,217,244,0.25)]">
-                  <img src={logoApacheV2} alt="Logo Apache nuevo" className="w-full h-full object-cover" />
-                </div>
-                <span className="text-[9px] uppercase tracking-widest text-tertiary">Nuevo</span>
-              </div>
+            <div className="w-24 h-24 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-4 bg-[#2a1854]">
+              <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
           </div>

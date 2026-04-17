@@ -180,7 +180,7 @@ export const DashboardContent = ({
         <div className="space-y-3">
           <button
             onClick={() => toggleSection("progress")}
-            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-white/5 text-on-surface/80 font-headline font-semibold text-sm hover:bg-surface-container-high transition-all"
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-high border border-white/20 text-on-surface font-headline font-semibold text-sm hover:bg-surface-container-highest hover:border-white/30 transition-all shadow-lg"
           >
             <div className="flex items-center gap-3">
               <TrendingUp className="w-5 h-5 text-accent" />

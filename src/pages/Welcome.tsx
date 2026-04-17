@@ -190,15 +190,9 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center py-4 relative"
         >
-          <div
-            className="relative w-72 h-72 flex items-center justify-center rounded-3xl border border-white/10 p-4"
-            style={{
-              background: "linear-gradient(145deg, hsl(265 60% 22% / 0.85), hsl(260 70% 12% / 0.9))",
-              boxShadow: "0 10px 40px hsl(265 87% 30% / 0.35), inset 0 0 30px hsl(265 87% 50% / 0.1)",
-            }}
-          >
+          <div className="relative w-72 h-72 flex items-center justify-center rounded-full border border-white/10 p-4 bg-surface-container-high/60 shadow-2xl">
             {/* Outer Glow Aura */}
-            <div className="absolute inset-0 bg-secondary/10 rounded-3xl blur-2xl animate-pulse-subtle" />
+            <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl animate-pulse-subtle" />
 
             {/* Circular Progress Track */}
             <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -227,8 +221,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               </defs>
             </svg>
 
-            {/* Center Avatar - Square */}
-            <div className="relative w-48 h-48 rounded-2xl glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
+            {/* Center Avatar - Circular */}
+            <div className="relative z-10 flex h-48 w-48 items-center justify-center overflow-hidden rounded-full border-4 border-surface-container-highest bg-surface-container-highest shadow-2xl">
               <User className="w-24 h-24 text-muted-foreground/60" />
             </div>
 

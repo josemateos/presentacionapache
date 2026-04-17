@@ -25,7 +25,7 @@ const Invitation1 = () => {
         {/* Problem Cards */}
         <section className="space-y-3 mb-10">
           {/* Card 1 */}
-          <div className="bg-surface-container-high/50 backdrop-blur-xl rounded-2xl p-5 border border-outline-variant/10">
+          <div className="bg-surface-container-high backdrop-blur-xl rounded-2xl p-5 border border-white/20 shadow-lg">
             <div className="flex items-start gap-4">
               <div className="p-2.5 bg-tertiary/10 rounded-xl shrink-0">
                 <MaterialIcon name="psychology" className="text-tertiary text-2xl" />

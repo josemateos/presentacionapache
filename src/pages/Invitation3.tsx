@@ -46,7 +46,7 @@ const Invitation3 = () => {
         {/* Bento-style Confidence Cards */}
         <section className="grid grid-cols-1 gap-4 mt-8">
           {/* Card 1: Students */}
-          <div className="bg-surface-container-high/80 backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-outline-variant/20 shadow-lg">
+          <div className="bg-surface-container-high backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-white/20 shadow-xl">
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
             <div className="flex items-start gap-4 relative z-10">
               <div className="p-3 bg-surface-container-lowest rounded-lg">
@@ -60,7 +60,7 @@ const Invitation3 = () => {
           </div>
 
           {/* Card 2: 90 Days */}
-          <div className="bg-surface-container-high/80 backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-outline-variant/20 border-l-2 border-l-secondary/50 shadow-lg">
+          <div className="bg-surface-container-high backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-white/20 border-l-4 border-l-secondary shadow-xl">
             <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-all" />
             <div className="flex items-start gap-4 relative z-10">
               <div className="p-3 bg-surface-container-lowest rounded-lg">
@@ -74,7 +74,7 @@ const Invitation3 = () => {
           </div>
 
           {/* Card 3: Practical Levels */}
-          <div className="bg-surface-container-high/80 backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-outline-variant/20 shadow-lg">
+          <div className="bg-surface-container-high backdrop-blur-xl p-6 rounded-xl relative overflow-hidden group border border-white/20 shadow-xl">
             <div className="absolute right-0 bottom-0 w-32 h-1 bg-tertiary/20 group-hover:w-full transition-all duration-700" />
             <div className="flex items-start gap-4 relative z-10">
               <div className="p-3 bg-surface-container-lowest rounded-lg">
@@ -116,7 +116,7 @@ const Invitation3 = () => {
           </button>
           <button
             onClick={() => navigate("/login")}
-            className="w-full py-4 rounded-xl border border-outline-variant/30 text-on-surface font-headline font-bold text-md hover:bg-surface-container-high transition-colors"
+            className="w-full py-4 rounded-xl border border-white/20 bg-surface-container-high text-on-surface font-headline font-bold text-md hover:bg-surface-container-highest transition-colors shadow-lg"
           >
             Iniciar Sesión
           </button>

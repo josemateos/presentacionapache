@@ -119,9 +119,9 @@ const Registro = () => {
         </Button>
 
         {/* Header Section */}
-        <header className="text-center mb-8">
-          <div className="flex flex-col items-center mb-4">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-4 bg-[#2a1854]">
+        <header className="text-center mb-8 -mt-4">
+          <div className="flex flex-col items-center mb-2">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-3 bg-[#2a1854]">
               <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
@@ -132,7 +132,7 @@ const Registro = () => {
         {/* Registration Card */}
         <div className="bg-surface-container-high p-8 rounded-[2rem] shadow-2xl border border-white/20">
           <div className="mb-8">
-            <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Crea tu cuenta</h2>
+            <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Registro</h2>
             <p className="text-on-surface-variant text-sm mt-1">Comienza tu viaje místico hoy.</p>
           </div>
 

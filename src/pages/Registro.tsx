@@ -126,7 +126,7 @@ const Registro = () => {
             </div>
             <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">APACHE</h1>
           </div>
-          <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px]">Descifra el lenguaje del futuro</p>
+          <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px]">Transforma tu Español a Inglés</p>
         </header>
 
         {/* Registration Card */}

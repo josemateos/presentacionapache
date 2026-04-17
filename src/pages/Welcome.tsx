@@ -42,9 +42,55 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const userPoints = 0;
   const [hasProgress] = useState<boolean>(() => hasAnyProgress());
 
-  const handleStart = () => navigate("/dashboard");
-  const handleContinue = () => navigate("/vocabulario-dia-1");
-  const handleReview = () => navigate("/dashboard");
+  const isAllLearned = (key: string): boolean => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return false;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length > 0 && arr.every((it: any) => it?.learned || it?.completed);
+    } catch {
+      return false;
+    }
+  };
+
+  const findNextRoute = (): string => {
+    // Orden: vocab1 → frases1 → vocab2 → frases2 → vocab3 → frases3
+    const sequence: Array<{ key: string; route: string }> = [
+      { key: "vocabulary_day1_progress", route: "/vocabulario-dia-1" },
+      { key: "phrases_day1_progress", route: "/phrases-day?day=1" },
+      { key: "vocabulary_day2_progress", route: "/vocabulario-dia-2" },
+      { key: "phrases_day2_progress", route: "/phrases-day?day=2" },
+      { key: "vocabulary_day3_progress", route: "/vocabulario-dia-3" },
+      { key: "phrases_day3_progress", route: "/phrases-day?day=3" },
+    ];
+    for (const step of sequence) {
+      if (!isAllLearned(step.key)) return step.route;
+    }
+    return "/dashboard";
+  };
+
+  const findReviewRoute = (): string => {
+    // Busca el primer día con algún progreso pendiente o completado para repasar
+    for (let day = 1; day <= 3; day++) {
+      const vocab = localStorage.getItem(`vocabulary_day${day}_progress`);
+      const phrases = localStorage.getItem(`phrases_day${day}_progress`);
+      const hasAny = [vocab, phrases].some((raw) => {
+        if (!raw) return false;
+        try {
+          const arr = JSON.parse(raw);
+          return Array.isArray(arr) && arr.some((it: any) => it?.learned || it?.completed);
+        } catch {
+          return false;
+        }
+      });
+      if (hasAny) return `/review-day?day=${day}`;
+    }
+    return "/review-day?day=1";
+  };
+
+  const handleStart = () => navigate(hasProgress ? findNextRoute() : "/dashboard");
+  const handleContinue = () => navigate(findNextRoute());
+  const handleReview = () => navigate(findReviewRoute());
 
   return (
     <div className="min-h-screen pb-32 overflow-x-hidden bg-surface text-on-surface font-body">

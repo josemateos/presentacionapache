@@ -124,7 +124,7 @@ const Registro = () => {
             <div className="w-24 h-24 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_24px_rgba(47,217,244,0.3)] mb-3 bg-[#2a1854]">
               <img src={logoApache} alt="Logo Apache" className="w-full h-full object-cover" />
             </div>
-            <h1 className="font-headline font-extrabold text-4xl tracking-[0.2em] text-primary">SISTEMA APACHE</h1>
+            <h1 className="font-headline font-black text-3xl tracking-tighter text-primary whitespace-nowrap">SISTEMA APACHE</h1>
             <p className="text-on-surface-variant font-light tracking-[0.3em] uppercase text-[10px] mt-1">Habla Inglés utilizando tu Español</p>
           </div>
         </header>

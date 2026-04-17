@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { User, Sparkles } from "lucide-react";
 import { BottomNav } from "@/components/dashboard/BottomNav";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
   <span className={`material-symbols-outlined ${className}`} style={filled ? { fontVariationSettings: "'FILL' 1" } : {}}>
@@ -41,6 +41,23 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userPoints = 0;
   const [hasProgress] = useState<boolean>(() => hasAnyProgress());
+  const [showAvatarSection, setShowAvatarSection] = useState(true);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y < lastY - 4 && y > 40) {
+        // scrolling up
+        setShowAvatarSection(false);
+      } else if (y <= 20) {
+        setShowAvatarSection(true);
+      }
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const isAllLearned = (key: string): boolean => {
     try {
@@ -103,9 +120,12 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
           >
             <User className="w-5 h-5 text-muted-foreground" />
           </button>
-          <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
-            INICIADO
-          </h1>
+          <div className="flex flex-col leading-none">
+            <span className="text-[9px] font-bold text-accent tracking-[0.25em] uppercase opacity-80">Rank</span>
+            <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase mt-0.5" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
+              INICIADO
+            </h1>
+          </div>
         </div>
         <div className="flex items-center gap-1.5 bg-surface-container-highest/80 border border-white/10 rounded-full px-4 py-1.5">
           <Sparkles className="w-4 h-4 text-accent" />
@@ -163,10 +183,26 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
         </motion.section>
 
         {/* Apache Oracle Visualizer */}
-        <section className="flex flex-col items-center justify-center py-4 relative">
-          <div className="relative w-72 h-72 flex items-center justify-center">
+        <motion.section
+          animate={{
+            opacity: showAvatarSection ? 1 : 0,
+            height: showAvatarSection ? "auto" : 0,
+            marginTop: showAvatarSection ? undefined : 0,
+            marginBottom: showAvatarSection ? undefined : 0,
+          }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
+          style={{ overflow: "hidden" }}
+          className="flex flex-col items-center justify-center py-4 relative"
+        >
+          <div
+            className="relative w-72 h-72 flex items-center justify-center rounded-3xl border border-white/10 p-4"
+            style={{
+              background: "linear-gradient(145deg, hsl(265 60% 22% / 0.85), hsl(260 70% 12% / 0.9))",
+              boxShadow: "0 10px 40px hsl(265 87% 30% / 0.35), inset 0 0 30px hsl(265 87% 50% / 0.1)",
+            }}
+          >
             {/* Outer Glow Aura */}
-            <div className="absolute inset-0 bg-secondary/10 rounded-full blur-3xl animate-pulse-subtle" />
+            <div className="absolute inset-0 bg-secondary/10 rounded-3xl blur-2xl animate-pulse-subtle" />
 
             {/* Circular Progress Track */}
             <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -195,8 +231,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               </defs>
             </svg>
 
-            {/* Center Avatar */}
-            <div className="relative w-56 h-56 rounded-full glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
+            {/* Center Avatar - Square */}
+            <div className="relative w-48 h-48 rounded-2xl glass-card flex items-center justify-center overflow-hidden border-4 border-surface-container-highest shadow-2xl z-10 bg-surface-container-highest">
               <User className="w-24 h-24 text-muted-foreground/60" />
             </div>
 
@@ -219,7 +255,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               Guerrero Iniciado
             </h3>
           </div>
-        </section>
+        </motion.section>
 
         {/* Action Grid */}
         <section className="grid grid-cols-1 gap-5">

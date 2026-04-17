@@ -74,13 +74,15 @@ const Login = () => {
 
       {/* Top Navigation */}
       <header className="fixed top-0 left-0 w-full px-6 flex justify-between items-center z-50 py-4">
-        <button
-          onClick={() => navigate("/", { state: { screen: 2 } })}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface hover:bg-primary-container transition-all active:scale-95"
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/registro")}
+          className="text-muted-foreground hover:text-foreground"
           aria-label="Volver"
         >
           <ArrowLeft className="w-5 h-5" />
-        </button>
+        </Button>
         <h1 className="font-headline text-lg font-bold tracking-tight text-primary-fixed-dim">Iniciar Sesión</h1>
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

@@ -105,13 +105,13 @@ const Login = () => {
         </div>
 
         {/* Glassmorphism Auth Card */}
-        <div className="w-full glass-card rounded-[2.5rem] p-8 shadow-2xl border border-outline-variant/10 space-y-6">
+        <div className="w-full bg-surface-container-high rounded-[2.5rem] p-8 shadow-2xl border border-white/20 space-y-6">
           {/* Social Access */}
           <div className="space-y-3">
             <button
               type="button"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-white/20 hover:bg-surface-container-high hover:border-white/30 transition-all active:scale-[0.98] group disabled:opacity-50 shadow-lg"
             >
               <FcGoogle className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span className="text-sm font-semibold tracking-wide">Ingresar con Google</span>
@@ -119,7 +119,7 @@ const Login = () => {
             <button
               type="button"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-white/20 hover:bg-surface-container-high hover:border-white/30 transition-all active:scale-[0.98] group disabled:opacity-50 shadow-lg"
             >
               <FaApple className="w-5 h-5 text-on-surface group-hover:scale-110 transition-transform" />
               <span className="text-sm font-semibold tracking-wide">Ingresar con Apple</span>
@@ -127,7 +127,7 @@ const Login = () => {
             <button
               type="button"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-all active:scale-[0.98] group disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-highest rounded-2xl border border-white/20 hover:bg-surface-container-high hover:border-white/30 transition-all active:scale-[0.98] group disabled:opacity-50 shadow-lg"
             >
               <FaFacebook className="w-5 h-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
               <span className="text-sm font-semibold tracking-wide">Ingresar con Facebook</span>

@@ -130,7 +130,7 @@ const Registro = () => {
         </header>
 
         {/* Registration Card */}
-        <div className="glass-card p-8 rounded-[2rem] shadow-2xl border border-outline-variant/20">
+        <div className="bg-surface-container-high p-8 rounded-[2rem] shadow-2xl border border-white/20">
           <div className="mb-8">
             <h2 className="font-headline font-bold text-2xl text-on-surface leading-tight">Crea tu cuenta</h2>
             <p className="text-on-surface-variant text-sm mt-1">Comienza tu viaje místico hoy.</p>
@@ -142,7 +142,7 @@ const Registro = () => {
               <Label htmlFor="nombre" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Nombre Completo
               </Label>
-              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
+              <div className={`relative flex items-center bg-surface-container-highest rounded-xl border shadow-lg transition-all duration-300 ${errors.nombre ? 'border-destructive' : 'border-white/20 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <User className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="nombre"
@@ -165,7 +165,7 @@ const Registro = () => {
               <Label htmlFor="email" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Correo Electrónico
               </Label>
-              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.email ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
+              <div className={`relative flex items-center bg-surface-container-highest rounded-xl border shadow-lg transition-all duration-300 ${errors.email ? 'border-destructive' : 'border-white/20 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <Mail className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="email"
@@ -188,7 +188,7 @@ const Registro = () => {
               <Label htmlFor="password" className="text-xs font-semibold text-tertiary ml-1 uppercase tracking-widest">
                 Contraseña
               </Label>
-              <div className={`relative flex items-center bg-surface-container rounded-xl border transition-all duration-300 ${errors.password ? 'border-destructive' : 'border-outline-variant/50 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
+              <div className={`relative flex items-center bg-surface-container-highest rounded-xl border shadow-lg transition-all duration-300 ${errors.password ? 'border-destructive' : 'border-white/20 focus-within:border-tertiary focus-within:shadow-[0_0_15px_rgba(47,217,244,0.3)]'}`}>
                 <Lock className="absolute left-4 h-5 w-5 text-on-surface-variant" />
                 <Input
                   id="password"
@@ -250,7 +250,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Google estará disponible pronto." })}
             >
               <FcGoogle className="w-5 h-5" />
@@ -258,7 +258,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Apple estará disponible pronto." })}
             >
               <FaApple className="w-5 h-5 text-on-surface" />
@@ -266,7 +266,7 @@ const Registro = () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors py-3 rounded-xl border border-outline-variant/10 h-auto"
+              className="flex-1 flex items-center justify-center bg-surface-container-highest hover:bg-surface-container-high transition-colors py-3 rounded-xl border border-white/20 hover:border-white/30 h-auto shadow-lg"
               onClick={() => toast({ title: "Próximamente", description: "Inicio de sesión con Facebook estará disponible pronto." })}
             >
               <FaFacebook className="w-5 h-5 text-[#1877F2]" />

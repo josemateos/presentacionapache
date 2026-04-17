@@ -67,7 +67,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-surface font-body flex flex-col items-center justify-center p-6 antialiased overflow-x-hidden relative">
+    <div className="min-h-screen bg-background text-on-surface font-body flex flex-col items-center justify-center p-4 antialiased overflow-x-hidden relative">
       {/* Decorative background accents */}
       <div className="fixed -bottom-24 -left-24 w-64 h-64 bg-tertiary/10 blur-[100px] rounded-full pointer-events-none"></div>
       <div className="fixed -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>

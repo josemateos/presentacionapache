@@ -122,8 +122,8 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
             <User className="w-5 h-5 text-muted-foreground" />
           </button>
           <div className="flex flex-col leading-none">
-            <span className="text-[9px] font-bold text-accent tracking-[0.25em] uppercase opacity-80">Rank</span>
-            <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase mt-0.5" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
+            <span className="text-[9px] font-bold text-accent tracking-[0.25em] uppercase opacity-80 mb-[-2px]">Rank</span>
+            <h1 className="text-xl font-black text-secondary font-headline tracking-tighter uppercase" style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}>
               INICIADO
             </h1>
           </div>

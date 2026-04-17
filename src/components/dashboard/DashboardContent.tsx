@@ -142,7 +142,7 @@ export const DashboardContent = ({
 
         {/* 4. Mi Repaso */}
         <AccordionButton
-          icon={<RotateCcw className={`w-5 h-5 ${userProgress.reviewPendingCount > 0 ? "text-[hsl(20_90%_55%)]" : "text-primary"}`} />}
+          icon={<RotateCcw className="w-5 h-5 text-primary" />}
           label="Mi Repaso"
           onClick={() => navigate("/review-day?day=1")}
           chevron="right"
@@ -151,7 +151,6 @@ export const DashboardContent = ({
               ? `${userProgress.reviewPendingCount} PENDIENTES`
               : undefined
           }
-          highlight={userProgress.reviewPendingCount > 0 ? "danger" : undefined}
         />
 
         {/* 5. Auxiliares Clave */}
@@ -180,17 +179,12 @@ interface AccordionButtonProps {
   chevron: "down" | "right";
   badge?: string;
   trailingIcon?: React.ReactNode;
-  highlight?: "danger";
 }
 
-const AccordionButton = ({ icon, label, onClick, chevron, badge, trailingIcon, highlight }: AccordionButtonProps) => (
+const AccordionButton = ({ icon, label, onClick, chevron, badge, trailingIcon }: AccordionButtonProps) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center justify-between p-5 rounded-2xl border font-headline font-semibold text-sm transition-all ${
-      highlight === "danger"
-        ? "bg-[hsl(20_90%_55%/0.15)] border-[hsl(20_90%_55%/0.5)] text-[hsl(20_95%_70%)] hover:bg-[hsl(20_90%_55%/0.22)] shadow-[0_0_18px_hsl(20_90%_55%/0.25)]"
-        : "bg-surface-container-low border-white/5 text-on-surface/80 hover:bg-surface-container-high"
-    }`}
+    className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-white/5 text-on-surface/80 font-headline font-semibold text-sm hover:bg-surface-container-high transition-all"
   >
     <div className="flex items-center gap-3">
       {icon}
@@ -198,11 +192,7 @@ const AccordionButton = ({ icon, label, onClick, chevron, badge, trailingIcon, h
     </div>
     <div className="flex items-center gap-2">
       {badge && (
-        <span className={`text-[9px] font-bold px-2 py-1 rounded-full tracking-widest ${
-          highlight === "danger"
-            ? "bg-[hsl(20_90%_55%)] text-white"
-            : "bg-primary/20 text-primary"
-        }`}>
+        <span className="bg-[hsl(20_90%_55%)] text-white text-[9px] font-bold px-2 py-1 rounded-full tracking-widest shadow-[0_0_10px_hsl(20_90%_55%/0.5)]">
           {badge}
         </span>
       )}

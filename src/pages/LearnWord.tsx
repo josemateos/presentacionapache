@@ -1858,7 +1858,7 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            {currentModule === 5 && moduleProgress.every(m => m.completed) ? "Palabra Aprendida" : `Módulo ${currentModule + 1} de ${modules.length}`}
+            {currentModule >= modules.length ? "Excelente" : `Módulo ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button

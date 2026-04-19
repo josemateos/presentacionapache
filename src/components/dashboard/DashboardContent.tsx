@@ -23,7 +23,7 @@ export const DashboardContent = ({
   onAlertOpen,
 }: DashboardContentProps) => {
   const navigate = useNavigate();
-  const [openSection, setOpenSection] = useState<string | null>("vocabulary");
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
   const today = new Date();
   const daysSinceRegistration = Math.floor(

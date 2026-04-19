@@ -15,24 +15,24 @@ interface WelcomeProps {
 }
 
 const hasAnyProgress = (): boolean => {
-  const keys = [
-    "vocabulary_day1_progress",
-    "vocabulary_day2_progress",
-    "vocabulary_day3_progress",
-    "phrases_day1_progress",
-    "phrases_day2_progress",
-    "phrases_day3_progress",
-  ];
-  for (const k of keys) {
-    try {
-      const raw = localStorage.getItem(k);
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key) continue;
+      // Considera cualquier clave de progreso de vocabulario o frases
+      if (!/^(vocabulary|phrases)_day\d+_progress$/.test(key)) continue;
+      const raw = localStorage.getItem(key);
       if (!raw) continue;
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr) && arr.some((it: any) => it?.learned || it?.completed)) {
-        return true;
-      }
-    } catch {}
-  }
+      try {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.some((it: any) => it?.learned || it?.completed)) {
+          console.log("[Welcome] Progreso detectado en", key);
+          return true;
+        }
+      } catch {}
+    }
+  } catch {}
+  console.log("[Welcome] Sin progreso detectado");
   return false;
 };
 

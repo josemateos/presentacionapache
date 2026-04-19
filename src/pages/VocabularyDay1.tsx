@@ -280,7 +280,7 @@ const VocabularyDay1 = () => {
                         word.learned
                           ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                           : word.inProgress
-                          ? "bg-amber-500 text-white hover:bg-amber-600"
+                          ? "bg-green-500/80 hover:bg-green-500 text-white animate-pulse-subtle shadow-[0_0_12px_rgba(34,197,94,0.45)]"
                           : "gradient-animated"
                       }`}
                       onClick={(e) => {
@@ -288,7 +288,7 @@ const VocabularyDay1 = () => {
                         handleLearnWord(word);
                       }}
                     >
-                      {word.learned ? "Repasar" : word.inProgress ? "Continuar" : "Aprender"}
+                      {word.learned ? "Repasar" : word.inProgress ? "Concluir" : "Aprender"}
                     </Button>
                   </div>
                 </Card>

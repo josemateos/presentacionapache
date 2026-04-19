@@ -14,25 +14,36 @@ interface WelcomeProps {
   userName?: string;
 }
 
+const hasProgressItem = (item: any): boolean => {
+  return Boolean(
+    item?.learned ||
+    item?.completed ||
+    item?.inProgress ||
+    (typeof item?.progress === "number" && item.progress > 0)
+  );
+};
+
 const hasAnyProgress = (): boolean => {
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (!key) continue;
-      // Considera cualquier clave de progreso de vocabulario o frases
-      if (!/^(vocabulary|phrases)_day\d+_progress$/.test(key)) continue;
+  const keys = [
+    "vocabulary_day1_progress",
+    "vocabulary_day2_progress",
+    "vocabulary_day3_progress",
+    "phrases_day1_progress",
+    "phrases_day2_progress",
+    "phrases_day3_progress",
+  ];
+
+  for (const key of keys) {
+    try {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
-      try {
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr) && arr.some((it: any) => it?.learned || it?.completed)) {
-          console.log("[Welcome] Progreso detectado en", key);
-          return true;
-        }
-      } catch {}
-    }
-  } catch {}
-  console.log("[Welcome] Sin progreso detectado");
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.some(hasProgressItem)) {
+        return true;
+      }
+    } catch {}
+  }
+
   return false;
 };
 
@@ -40,24 +51,36 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const userPoints = 0;
-  const [hasProgress] = useState<boolean>(() => hasAnyProgress());
+  const [hasProgress, setHasProgress] = useState<boolean>(() => hasAnyProgress());
   const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
+    const refreshProgress = () => setHasProgress(hasAnyProgress());
+
+    refreshProgress();
+    window.addEventListener("focus", refreshProgress);
+    window.addEventListener("pageshow", refreshProgress);
+    document.addEventListener("visibilitychange", refreshProgress);
+
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
       if (y > lastY + 4 && y > 40) {
-        // scrolling down → hide
         setShowHeader(false);
       } else if (y < lastY - 4 || y <= 20) {
-        // scrolling up or near top → show
         setShowHeader(true);
       }
       lastY = y;
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("focus", refreshProgress);
+      window.removeEventListener("pageshow", refreshProgress);
+      document.removeEventListener("visibilitychange", refreshProgress);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const isAllLearned = (key: string): boolean => {

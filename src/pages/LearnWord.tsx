@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import confetti from "canvas-confetti";
 import { ArrowLeft, Volume2, Check, CheckCircle2, Circle, RotateCcw, Sparkles, Mic, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";

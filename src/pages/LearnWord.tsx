@@ -396,22 +396,36 @@ const LearnWord = () => {
     }
   };
 
-  // Sonido de éxito
+  // Sonido de éxito (reutiliza un único AudioContext y lo reanuda si está suspendido)
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const playSuccessSound = () => {
-    const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
-    
-    oscillator.frequency.value = 523.25; // C5
-    oscillator.type = 'sine';
-    gainNode.gain.setValueAtTime(0.3, context.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
-    
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.5);
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!Ctx) return;
+        audioCtxRef.current = new Ctx();
+      }
+      const context = audioCtxRef.current!;
+      const playTone = () => {
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        oscillator.frequency.value = 523.25; // C5
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, context.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+        oscillator.start(context.currentTime);
+        oscillator.stop(context.currentTime + 0.5);
+      };
+      if (context.state === 'suspended') {
+        context.resume().then(playTone).catch((e) => console.error('AudioContext resume failed:', e));
+      } else {
+        playTone();
+      }
+    } catch (e) {
+      console.error('Error playing success sound:', e);
+    }
   };
 
   const handlePlayAudio = () => {

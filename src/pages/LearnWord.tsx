@@ -621,12 +621,22 @@ const LearnWord = () => {
         }
       }, 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error starting recording:", error);
+      const name = error?.name || "";
+      let description = "No se pudo acceder al micrófono. Intenta de nuevo.";
+      if (name === "NotAllowedError" || name === "SecurityError") {
+        description = "Permiso de micrófono bloqueado. Habilítalo en los ajustes del navegador y recarga la página.";
+      } else if (name === "NotFoundError" || name === "OverconstrainedError") {
+        description = "No se encontró un micrófono conectado.";
+      } else if (name === "NotReadableError") {
+        description = "El micrófono está siendo usado por otra aplicación.";
+      }
       toast({
-        title: "Error",
-        description: "No se pudo acceder al micrófono",
+        title: "Micrófono no disponible",
+        description,
         variant: "destructive",
+        duration: 4000,
       });
       setIsRecording(false);
       setIsVerifying(false);

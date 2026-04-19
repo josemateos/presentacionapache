@@ -475,7 +475,7 @@ const LearnWord = () => {
     }
   };
 
-  // Funciones de grabación
+  // Funciones de grabación / reconocimiento de voz
   const handleStartRecording = async () => {
     try {
       // Limpiar la grabación previa para permitir un nuevo intento
@@ -494,29 +494,31 @@ const LearnWord = () => {
         console.warn('No se pudo inicializar AudioContext:', e);
       }
 
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        toast({
-          title: "Micrófono no disponible",
-          description: "Tu navegador no soporta acceso al micrófono. Usa Chrome o Safari actualizado.",
-          variant: "destructive",
-          duration: 3500,
-        });
-        setIsRecording(false);
-        setIsVerifying(false);
-        return;
-      }
+      // Verificar permiso de micrófono proactivamente (no soportado en Safari)
+      try {
+        if ((navigator as any).permissions?.query) {
+          const status = await (navigator as any).permissions.query({ name: "microphone" as PermissionName });
+          if (status.state === "denied") {
+            toast({
+              title: "Micrófono bloqueado",
+              description: "Habilita el micrófono en los ajustes del navegador y recarga la página.",
+              variant: "destructive",
+              duration: 4000,
+            });
+            setIsRecording(false);
+            setIsVerifying(false);
+            return;
+          }
+        }
+      } catch { /* Safari no soporta permissions.query para micrófono */ }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      const audioChunks: BlobPart[] = [];
-
-      // Configurar reconocimiento de voz en paralelo a la grabación
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         toast({
           title: "No soportado",
-          description: "Tu navegador no soporta reconocimiento de voz",
+          description: "Usa Chrome, Edge o Safari actualizado para el reconocimiento de voz.",
           variant: "destructive",
+          duration: 3500,
         });
         setIsRecording(false);
         setIsVerifying(false);
@@ -527,45 +529,77 @@ const LearnWord = () => {
       recognition.lang = 'en-US';
       recognition.continuous = false;
       recognition.interimResults = false;
+      recognition.maxAlternatives = 5;
 
       let resultReceived = false;
+      let safetyTimer: number | null = null;
+
+      recognition.onstart = () => {
+        setIsRecording(true);
+        // Tiempo máximo de escucha: 6s
+        safetyTimer = window.setTimeout(() => {
+          try { recognition.stop(); } catch {}
+        }, 6000);
+      };
 
       recognition.onerror = (event: any) => {
         console.error("Recognition error:", event.error);
-        
-        // Solo mostrar error si no es un error de "no-speech" o "aborted"
-        if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           toast({
-            title: "Error",
-            description: "No se pudo verificar la pronunciación. Intenta de nuevo",
+            title: "Micrófono bloqueado",
+            description: "Habilita el micrófono en los ajustes del navegador y recarga la página.",
             variant: "destructive",
-            duration: 2000,
+            duration: 4000,
           });
         } else if (event.error === 'no-speech') {
           toast({
             title: "No se escuchó nada",
-            description: "Por favor, habla más cerca del micrófono",
+            description: "Acércate al micrófono y vuelve a intentarlo.",
             variant: "destructive",
-            duration: 2000,
+            duration: 2500,
+          });
+        } else if (event.error === 'audio-capture') {
+          toast({
+            title: "Sin micrófono",
+            description: "No se detectó un micrófono disponible.",
+            variant: "destructive",
+            duration: 3000,
+          });
+        } else if (event.error !== 'aborted') {
+          toast({
+            title: "Error",
+            description: "No se pudo verificar la pronunciación. Intenta de nuevo.",
+            variant: "destructive",
+            duration: 2500,
           });
         }
-        
+
         clearVerifyTimeout();
-        setRecordedAudio(null);
         setIsVerifying(false);
         setIsRecording(false);
       };
 
       recognition.onresult = (event: any) => {
         resultReceived = true;
-        const transcript = event.results[0][0].transcript.trim();
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+
+        // Recoger todas las alternativas (mayor tolerancia)
+        const alternatives: string[] = [];
+        for (let i = 0; i < event.results[0].length; i++) {
+          alternatives.push(String(event.results[0][i].transcript || "").trim());
+        }
+        const transcript = alternatives[0] || "";
         const targetWord = english.trim();
 
-        // Comparación case-sensitive estricta para "I", flexible para otras palabras
-        const isMatch = targetWord === "I" 
-          ? transcript === "I"
-          : transcript.toLowerCase() === targetWord.toLowerCase();
-        
+        // Para "I" aceptamos variantes comunes que el motor suele devolver: "i", "I", "eye", "aye", "I."
+        const normalize = (s: string) => s.toLowerCase().replace(/[^a-záéíóúñü ]/gi, "").trim();
+        const target = normalize(targetWord);
+        const isMatch = targetWord === "I"
+          ? alternatives.some(a => ["i", "eye", "aye"].includes(normalize(a)))
+          : alternatives.some(a => normalize(a) === target);
+
         if (isMatch) {
           playSuccessSound();
           toast({
@@ -579,11 +613,9 @@ const LearnWord = () => {
             m.id === 5 ? { ...m, completed: true } : m
           ));
 
-          // Avanzar automáticamente al siguiente módulo después del mensaje
           setTimeout(() => {
             clearVerifyTimeout();
             setCurrentModule(6);
-            setRecordedAudio(null);
             setIsVerifying(false);
             setIsRecording(false);
           }, 1500);
@@ -595,81 +627,36 @@ const LearnWord = () => {
             duration: 3000,
           });
           clearVerifyTimeout();
-          setRecordedAudio(null);
           setIsVerifying(false);
           setIsRecording(false);
         }
       };
 
       recognition.onend = () => {
-        // Limpiar timeout anterior si existe
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
         clearVerifyTimeout();
-        
-        // Si después de medio segundo no se recibió resultado
-        verifyTimeoutRef.current = window.setTimeout(() => {
-          if (!resultReceived) {
-            toast({
-              title: "Inténtalo nuevamente",
-              description: "No se detectó audio claro. Habla más fuerte",
-              variant: "destructive",
-              duration: 2000,
-            });
-            setRecordedAudio(null);
-            setIsVerifying(false);
-            setIsRecording(false);
-          }
-        }, 500);
-      };
-
-      recognitionRef.current = recognition;
-
-      recorder.ondataavailable = (event) => {
-        audioChunks.push(event.data);
-      };
-
-      recorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        setRecordedAudio(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
-        
-        // Detener el reconocimiento de voz
-        if (recognitionRef.current) {
-          try { 
-            recognitionRef.current.stop(); 
-          } catch (e) {
-            console.log("Recognition already stopped");
-          }
+        if (!resultReceived) {
+          // onerror ya manejó los casos relevantes; aquí solo desbloqueamos
+          setIsVerifying(false);
+          setIsRecording(false);
         }
       };
 
-      recorder.start();
-      setMediaRecorder(recorder);
-      setIsRecording(true);
-      
-      // Iniciar reconocimiento de voz
+      recognitionRef.current = recognition;
+      setIsVerifying(true);
       try {
         recognition.start();
       } catch (e) {
         console.error("Error starting recognition:", e);
+        toast({
+          title: "Micrófono no disponible",
+          description: "No se pudo iniciar el reconocimiento. Intenta de nuevo.",
+          variant: "destructive",
+          duration: 3000,
+        });
+        setIsVerifying(false);
+        setIsRecording(false);
       }
-
-      // Auto-detener después de 3 segundos
-      setTimeout(() => {
-        if (recorder.state === 'recording') {
-          recorder.stop();
-          setIsRecording(false);
-          setIsVerifying(true);
-          
-          // Timeout de seguridad: si después de 6 segundos no hay respuesta, desbloquear
-          clearVerifyTimeout();
-          verifyTimeoutRef.current = window.setTimeout(() => {
-            console.log("Timeout de seguridad: desbloqueando botón");
-            setIsVerifying(false);
-            setIsRecording(false);
-          }, 6000);
-        }
-      }, 3000);
-
     } catch (error: any) {
       console.error("Error starting recording:", error);
       const name = error?.name || "";
@@ -693,24 +680,10 @@ const LearnWord = () => {
   };
 
   const handleStopRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      setIsVerifying(true);
-      mediaRecorder.stop();
-      setIsRecording(false);
-      
-      if (recognitionRef.current) {
-        try { recognitionRef.current.stop(); } catch (e) {
-          console.log("Recognition already stopped");
-        }
-      }
-      
-      // Timeout de seguridad para evitar que el botón quede bloqueado
-      clearVerifyTimeout();
-      verifyTimeoutRef.current = window.setTimeout(() => {
-        setIsVerifying(false);
-        setIsRecording(false);
-      }, 5000);
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch {}
     }
+    setIsRecording(false);
   };
 
   const handlePlayRecording = () => {

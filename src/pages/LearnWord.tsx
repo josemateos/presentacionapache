@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Volume2, Check, RotateCcw, Sparkles, Mic, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -1379,7 +1379,7 @@ const LearnWord = () => {
                         onClick={() => handleLetterClick(letter, index)}
                         disabled={usedLetterIndices.includes(index)}
                       >
-                        {letter.toUpperCase()}
+                        {letter}
                       </Button>
                     ))}
                   </div>
@@ -1424,7 +1424,7 @@ const LearnWord = () => {
                         onClick={() => handleLetterClick(letter, index)}
                         disabled={usedLetterIndices.includes(index)}
                       >
-                        {letter.toUpperCase()}
+                        {letter}
                       </Button>
                     ))}
                   </div>
@@ -1774,9 +1774,10 @@ const LearnWord = () => {
             size="sm"
             onClick={() => navigate("/vocabulario-dia-1")}
             className="hover:bg-primary/10"
+            title="Volver a la lista de palabras"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Volver</span>
+            <List className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Lista</span>
           </Button>
           
           <Badge variant="secondary" className="text-sm">
@@ -1787,6 +1788,7 @@ const LearnWord = () => {
             variant="ghost"
             size="sm"
             className="hover:bg-primary/10"
+            title="Módulo anterior"
             onClick={() => {
               if (currentModule > 0) {
                 setCurrentModule(currentModule - 1);
@@ -1799,8 +1801,8 @@ const LearnWord = () => {
             }}
             disabled={currentModule === 0}
           >
-            <ChevronLeft className="w-4 h-4" />
-            <span className="hidden sm:inline ml-2">Anterior</span>
+            <Undo2 className="w-4 h-4" />
+            <span className="hidden sm:inline ml-2">Módulo anterior</span>
           </Button>
         </div>
       </header>

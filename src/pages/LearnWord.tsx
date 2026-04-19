@@ -411,12 +411,14 @@ const LearnWord = () => {
     if (saved && wordId) {
       try {
         const savedWords = JSON.parse(saved);
-        const updatedWords = savedWords.map((w: any) => 
-          w.id === parseInt(wordId) 
-            ? { ...w, learned: true, inProgress: false } 
+        const updatedWords = savedWords.map((w: any) =>
+          w.id === parseInt(wordId)
+            ? { ...w, learned: true, inProgress: false }
             : w
         );
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+        // Limpiar progreso por módulo: la palabra está completada
+        localStorage.removeItem(`word_modules_${wordId}`);
       } catch (error) {
         console.error("Error updating progress:", error);
       }

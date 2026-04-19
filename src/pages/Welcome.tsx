@@ -227,14 +227,16 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
             </div>
 
             {/* Floating Milestone Badge */}
-            <div className="absolute -bottom-2 z-20 animate-float">
-              <div
-                className="bg-secondary text-surface px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20"
-                style={{ boxShadow: "0 4px 20px hsl(42 100% 63% / 0.5)" }}
-              >
-                Próximo Rango: 65%
+            {hasProgress && (
+              <div className="absolute -bottom-2 z-20 animate-float">
+                <div
+                  className="bg-secondary text-surface px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20"
+                  style={{ boxShadow: "0 4px 20px hsl(42 100% 63% / 0.5)" }}
+                >
+                  Próximo Rango: 65%
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="mt-8 text-center space-y-1">

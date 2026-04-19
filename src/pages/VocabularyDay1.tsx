@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Settings, Check, Sparkles, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, Sparkles, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -178,15 +178,6 @@ const VocabularyDay1 = () => {
               title="Reiniciar progreso"
             >
               <RotateCcw className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:bg-primary/10"
-              onClick={() => toast({ title: "Ajustes", description: "Próximamente" })}
-            >
-              <span className="hidden sm:inline mr-2">Ajustes</span>
-              <Settings className="w-4 h-4" />
             </Button>
           </div>
         </div>

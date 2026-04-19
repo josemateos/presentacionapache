@@ -401,27 +401,43 @@ const LearnWord = () => {
     }
   }, [moduleProgress, wordId]);
 
-  // Disparar confeti de logro al llegar al resumen final con todos los módulos completados
+  // Efecto de fuegos artificiales al llegar al resumen final con todos los módulos completados
   useEffect(() => {
     if (currentModule >= modules.length && moduleProgress.every(m => m.completed)) {
-      const fire = (origin: { x: number; y: number }, particleCount = 80) => {
-        confetti({
-          particleCount,
-          spread: 70,
-          startVelocity: 45,
-          origin,
-          colors: ["#22c55e", "#facc15", "#a78bfa", "#fb7185", "#38bdf8"],
-          zIndex: 9999,
-        });
-      };
-      // Ráfagas desde ambos lados + centro
-      fire({ x: 0.2, y: 0.6 });
-      fire({ x: 0.8, y: 0.6 });
-      setTimeout(() => fire({ x: 0.5, y: 0.4 }, 120), 200);
-      setTimeout(() => {
-        fire({ x: 0.1, y: 0.7 }, 60);
-        fire({ x: 0.9, y: 0.7 }, 60);
-      }, 500);
+      const duration = 3500;
+      const animationEnd = Date.now() + duration;
+      const colors = ["#22c55e", "#facc15", "#a78bfa", "#fb7185", "#38bdf8", "#f97316"];
+
+      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+      const interval = window.setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          return;
+        }
+        // Cada ráfaga simula un fuego artificial: una explosión radial desde un punto aleatorio
+        const burst = (origin: { x: number; y: number }) => {
+          confetti({
+            particleCount: 80,
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            origin,
+            colors,
+            shapes: ["circle"],
+            scalar: 0.9,
+            zIndex: 9999,
+            gravity: 0.8,
+          });
+        };
+        burst({ x: randomInRange(0.1, 0.9), y: randomInRange(0.15, 0.5) });
+        if (Math.random() > 0.5) {
+          burst({ x: randomInRange(0.1, 0.9), y: randomInRange(0.15, 0.5) });
+        }
+      }, 350);
+
+      return () => clearInterval(interval);
     }
   }, [currentModule, moduleProgress]);
 

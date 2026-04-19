@@ -1107,7 +1107,10 @@ const LearnWord = () => {
       return;
     }
     
-    const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase();
+    const targetSp = english.trim();
+    const isCorrect = targetSp === "I"
+      ? spellingAttempt.trim() === "I"
+      : spellingAttempt.toLowerCase() === targetSp.toLowerCase();
     
     if (isCorrect) {
       playSuccessSound();

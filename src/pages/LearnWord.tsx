@@ -1906,7 +1906,7 @@ const LearnWord = () => {
             variant="ghost"
             size="sm"
             className="hover:bg-primary/10"
-            title="Módulo anterior"
+            title="Ejercicio anterior"
             onClick={() => {
               if (currentModule > 0) {
                 setCurrentModule(currentModule - 1);
@@ -1920,7 +1920,7 @@ const LearnWord = () => {
             disabled={currentModule === 0}
           >
             <Undo2 className="w-4 h-4" />
-            <span className="hidden sm:inline ml-2">Módulo anterior</span>
+            <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
           </Button>
         </div>
       </header>

@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { User, Sparkles } from "lucide-react";
+import { User } from "lucide-react";
 import { BottomNav } from "@/components/dashboard/BottomNav";
+import { AppHeader } from "@/components/AppHeader";
 import { useState, useEffect } from "react";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (

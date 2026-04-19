@@ -1899,14 +1899,14 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            {currentModule >= modules.length ? "Excelente" : `Módulo ${currentModule + 1} de ${modules.length}`}
+            {currentModule >= modules.length ? "Excelente" : `Ejercicio ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button
             variant="ghost"
             size="sm"
             className="hover:bg-primary/10"
-            title="Módulo anterior"
+            title="Ejercicio anterior"
             onClick={() => {
               if (currentModule > 0) {
                 setCurrentModule(currentModule - 1);
@@ -1920,7 +1920,7 @@ const LearnWord = () => {
             disabled={currentModule === 0}
           >
             <Undo2 className="w-4 h-4" />
-            <span className="hidden sm:inline ml-2">Módulo anterior</span>
+            <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
           </Button>
         </div>
       </header>
@@ -1935,7 +1935,7 @@ const LearnWord = () => {
         >
           <Progress value={progress} className="h-3 mb-2" />
           <p className="text-sm text-muted-foreground text-center">
-            {Math.min(currentModule + 1, modules.length)} de {modules.length} módulos
+            {Math.min(currentModule + 1, modules.length)} de {modules.length} ejercicios
           </p>
         </motion.div>
 

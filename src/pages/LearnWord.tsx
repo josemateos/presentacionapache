@@ -396,22 +396,36 @@ const LearnWord = () => {
     }
   };
 
-  // Sonido de éxito
+  // Sonido de éxito (reutiliza un único AudioContext y lo reanuda si está suspendido)
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const playSuccessSound = () => {
-    const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
-    
-    oscillator.frequency.value = 523.25; // C5
-    oscillator.type = 'sine';
-    gainNode.gain.setValueAtTime(0.3, context.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
-    
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.5);
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!Ctx) return;
+        audioCtxRef.current = new Ctx();
+      }
+      const context = audioCtxRef.current!;
+      const playTone = () => {
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        oscillator.frequency.value = 523.25; // C5
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, context.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+        oscillator.start(context.currentTime);
+        oscillator.stop(context.currentTime + 0.5);
+      };
+      if (context.state === 'suspended') {
+        context.resume().then(playTone).catch((e) => console.error('AudioContext resume failed:', e));
+      } else {
+        playTone();
+      }
+    } catch (e) {
+      console.error('Error playing success sound:', e);
+    }
   };
 
   const handlePlayAudio = () => {
@@ -430,6 +444,19 @@ const LearnWord = () => {
     try {
       // Limpiar la grabación previa para permitir un nuevo intento
       setRecordedAudio(null);
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        toast({
+          title: "Micrófono no disponible",
+          description: "Tu navegador no soporta acceso al micrófono. Usa Chrome o Safari actualizado.",
+          variant: "destructive",
+          duration: 3500,
+        });
+        setIsRecording(false);
+        setIsVerifying(false);
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       const audioChunks: BlobPart[] = [];
@@ -594,12 +621,22 @@ const LearnWord = () => {
         }
       }, 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error starting recording:", error);
+      const name = error?.name || "";
+      let description = "No se pudo acceder al micrófono. Intenta de nuevo.";
+      if (name === "NotAllowedError" || name === "SecurityError") {
+        description = "Permiso de micrófono bloqueado. Habilítalo en los ajustes del navegador y recarga la página.";
+      } else if (name === "NotFoundError" || name === "OverconstrainedError") {
+        description = "No se encontró un micrófono conectado.";
+      } else if (name === "NotReadableError") {
+        description = "El micrófono está siendo usado por otra aplicación.";
+      }
       toast({
-        title: "Error",
-        description: "No se pudo acceder al micrófono",
+        title: "Micrófono no disponible",
+        description,
         variant: "destructive",
+        duration: 4000,
       });
       setIsRecording(false);
       setIsVerifying(false);

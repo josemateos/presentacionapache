@@ -444,6 +444,19 @@ const LearnWord = () => {
     try {
       // Limpiar la grabación previa para permitir un nuevo intento
       setRecordedAudio(null);
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        toast({
+          title: "Micrófono no disponible",
+          description: "Tu navegador no soporta acceso al micrófono. Usa Chrome o Safari actualizado.",
+          variant: "destructive",
+          duration: 3500,
+        });
+        setIsRecording(false);
+        setIsVerifying(false);
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       const audioChunks: BlobPart[] = [];

@@ -322,20 +322,24 @@ const LearnWord = () => {
     loadAllImages();
   }, []);
 
-  // Detectar el primer módulo no completado al cargar
+  // Detectar el primer módulo no completado al cargar (basado en progreso por módulo guardado)
   useEffect(() => {
-    const saved = localStorage.getItem("vocabulary_day1_progress");
-    if (saved && wordId) {
-      try {
-        const savedWords = JSON.parse(saved);
-        const currentWord = savedWords.find((w: any) => w.id === parseInt(wordId));
-        if (currentWord?.inProgress) {
-          // Si está en progreso, ir al módulo 5 (pronunciación - ahora al final)
-          setCurrentModule(5);
+    if (!wordId) return;
+    try {
+      const savedModules = localStorage.getItem(`word_modules_${wordId}`);
+      if (savedModules) {
+        const completedIds: number[] = JSON.parse(savedModules);
+        setModuleProgress(prev => prev.map(m => ({ ...m, completed: completedIds.includes(m.id) })));
+        // Saltar al primer módulo no completado
+        const firstPending = modules.findIndex(m => !completedIds.includes(m.id));
+        if (firstPending >= 0) {
+          setCurrentModule(firstPending);
+        } else {
+          setCurrentModule(6); // todos completados → resumen
         }
-      } catch (error) {
-        console.error("Error loading progress:", error);
       }
+    } catch (error) {
+      console.error("Error loading module progress:", error);
     }
   }, [wordId]);
   const [userInput, setUserInput] = useState("");

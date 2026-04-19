@@ -678,13 +678,14 @@ const LearnWord = () => {
       return [...letters, ...distractors].sort(() => Math.random() - 0.5);
     }
     
-    const letters = word.toLowerCase().split('');
+    const letters = word.split('');
+    const normalizedLetters = letters.map((letter) => letter.toLowerCase());
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     const distractors: string[] = [];
     
     while (distractors.length < 3) {
       const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-      if (!letters.includes(randomLetter) && randomLetter !== ' ') {
+      if (!normalizedLetters.includes(randomLetter) && randomLetter !== ' ') {
         distractors.push(randomLetter);
       }
     }

@@ -459,7 +459,14 @@ const LearnWord = () => {
 
   const handlePlayAudio = () => {
     try {
-      const utterance = new SpeechSynthesisUtterance(english);
+      // Reanudar AudioContext si está suspendido (gesto de usuario) — ayuda a desbloquear el tono de éxito posterior
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      // Para la palabra "I" sola, varios motores TTS dicen "capital I". Forzamos pronunciación natural.
+      const trimmed = english.trim();
+      const textToSpeak = trimmed === "I" ? "I." : english;
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = "en-US";
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
@@ -473,6 +480,19 @@ const LearnWord = () => {
     try {
       // Limpiar la grabación previa para permitir un nuevo intento
       setRecordedAudio(null);
+
+      // Pre-crear y reanudar AudioContext en el gesto del usuario para que el tono de éxito pueda sonar luego
+      try {
+        if (!audioCtxRef.current) {
+          const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+          if (Ctx) audioCtxRef.current = new Ctx();
+        }
+        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+          await audioCtxRef.current.resume();
+        }
+      } catch (e) {
+        console.warn('No se pudo inicializar AudioContext:', e);
+      }
 
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         toast({

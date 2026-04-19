@@ -38,7 +38,7 @@ const hasAnyProgress = (): boolean => {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
       const arr = JSON.parse(raw);
-      if (Array.isArray(arr) && arr.some(hasProgressItem)) {
+      if (Array.isArray(arr) && (arr.length > 0 || arr.some(hasProgressItem))) {
         return true;
       }
     } catch {}

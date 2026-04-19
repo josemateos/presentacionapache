@@ -1892,20 +1892,29 @@ const LearnWord = () => {
           {renderModule()}
         </AnimatePresence>
 
-        {/* Module Navigation */}
-        <div className="mt-8 flex justify-center gap-2">
-          {modules.map((module, index) => (
-            <div
-              key={module.id}
-              className={`w-3 h-3 rounded-full transition-all ${
-                module.completed
-                  ? "bg-primary"
-                  : index === currentModule
-                  ? "bg-primary/50 scale-125"
-                  : "bg-secondary"
-              }`}
-            />
-          ))}
+        {/* Module Navigation - íconos de palomita por módulo */}
+        <div className="mt-8 flex justify-center gap-3">
+          {moduleProgress.map((module, index) => {
+            const isCompleted = module.completed;
+            const isCurrent = index === currentModule;
+            return (
+              <div
+                key={module.id}
+                className={`transition-all ${isCurrent ? "scale-125" : ""}`}
+                title={module.title}
+                aria-label={`${module.title}${isCompleted ? " completado" : ""}`}
+              >
+                {isCompleted ? (
+                  <CheckCircle2 className="w-6 h-6 text-green-500" strokeWidth={2.5} />
+                ) : (
+                  <Circle
+                    className={`w-6 h-6 ${isCurrent ? "text-primary" : "text-muted-foreground/40"}`}
+                    strokeWidth={2}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </main>
     </div>

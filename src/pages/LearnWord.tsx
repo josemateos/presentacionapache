@@ -377,6 +377,29 @@ const LearnWord = () => {
   const [moduleProgress, setModuleProgress] = useState(modules);
   const progress = (moduleProgress.filter(m => m.completed).length / modules.length) * 100;
 
+  // Persistir progreso por módulo de la palabra y marcar inProgress en la lista
+  useEffect(() => {
+    if (!wordId) return;
+    const completedIds = moduleProgress.filter(m => m.completed).map(m => m.id);
+    if (completedIds.length === 0) return; // nada que guardar aún
+    try {
+      localStorage.setItem(`word_modules_${wordId}`, JSON.stringify(completedIds));
+      const allDone = completedIds.length === modules.length;
+      const saved = localStorage.getItem("vocabulary_day1_progress");
+      if (saved) {
+        const savedWords = JSON.parse(saved);
+        const updatedWords = savedWords.map((w: any) =>
+          w.id === parseInt(wordId)
+            ? { ...w, inProgress: !allDone && !w.learned }
+            : w
+        );
+        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+      }
+    } catch (error) {
+      console.error("Error saving module progress:", error);
+    }
+  }, [moduleProgress, wordId]);
+
   // Verificar si todos los módulos están completados
   const checkIfAllModulesCompleted = (updatedProgress: LearningModule[]) => {
     return updatedProgress.every(m => m.completed);

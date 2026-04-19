@@ -978,7 +978,12 @@ const LearnWord = () => {
       return;
     }
     
-    const isCorrect = userInput.toLowerCase().trim() === english.toLowerCase().trim();
+    const target = english.trim();
+    const userTrimmed = userInput.trim();
+    // Case-sensitive estricto para "I", flexible para el resto
+    const isCorrect = target === "I"
+      ? userTrimmed === "I"
+      : userTrimmed.toLowerCase() === target.toLowerCase();
     
     if (isCorrect) {
       playSuccessSound();
@@ -1102,7 +1107,10 @@ const LearnWord = () => {
       return;
     }
     
-    const isCorrect = spellingAttempt.toLowerCase() === english.toLowerCase();
+    const targetSp = english.trim();
+    const isCorrect = targetSp === "I"
+      ? spellingAttempt.trim() === "I"
+      : spellingAttempt.toLowerCase() === targetSp.toLowerCase();
     
     if (isCorrect) {
       playSuccessSound();

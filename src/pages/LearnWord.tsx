@@ -481,6 +481,19 @@ const LearnWord = () => {
       // Limpiar la grabación previa para permitir un nuevo intento
       setRecordedAudio(null);
 
+      // Pre-crear y reanudar AudioContext en el gesto del usuario para que el tono de éxito pueda sonar luego
+      try {
+        if (!audioCtxRef.current) {
+          const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+          if (Ctx) audioCtxRef.current = new Ctx();
+        }
+        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+          await audioCtxRef.current.resume();
+        }
+      } catch (e) {
+        console.warn('No se pudo inicializar AudioContext:', e);
+      }
+
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         toast({
           title: "Micrófono no disponible",

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import confetti from "canvas-confetti";
 import { ArrowLeft, Volume2, Check, CheckCircle2, Circle, RotateCcw, Sparkles, Mic, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -399,6 +400,30 @@ const LearnWord = () => {
       console.error("Error saving module progress:", error);
     }
   }, [moduleProgress, wordId]);
+
+  // Disparar confeti de logro al llegar al resumen final con todos los módulos completados
+  useEffect(() => {
+    if (currentModule >= modules.length && moduleProgress.every(m => m.completed)) {
+      const fire = (origin: { x: number; y: number }, particleCount = 80) => {
+        confetti({
+          particleCount,
+          spread: 70,
+          startVelocity: 45,
+          origin,
+          colors: ["#22c55e", "#facc15", "#a78bfa", "#fb7185", "#38bdf8"],
+          zIndex: 9999,
+        });
+      };
+      // Ráfagas desde ambos lados + centro
+      fire({ x: 0.2, y: 0.6 });
+      fire({ x: 0.8, y: 0.6 });
+      setTimeout(() => fire({ x: 0.5, y: 0.4 }, 120), 200);
+      setTimeout(() => {
+        fire({ x: 0.1, y: 0.7 }, 60);
+        fire({ x: 0.9, y: 0.7 }, 60);
+      }, 500);
+    }
+  }, [currentModule, moduleProgress]);
 
   // Verificar si todos los módulos están completados
   const checkIfAllModulesCompleted = (updatedProgress: LearningModule[]) => {
@@ -1857,7 +1882,7 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            {currentModule === 5 && moduleProgress.every(m => m.completed) ? "Palabra Aprendida" : `Módulo ${currentModule + 1} de ${modules.length}`}
+            {currentModule >= modules.length ? "Excelente" : `Módulo ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button

@@ -261,7 +261,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
               boxShadow: "0 0 25px hsl(265 87% 86% / 0.3)",
             }}
           >
-            {hasProgress ? "CONTINUAR AVENTURA" : "EMPEZAR AVENTURA"}
+            CONTINUAR AVENTURA
           </motion.button>
 
           <div className="grid grid-cols-2 gap-4">

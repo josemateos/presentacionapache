@@ -1899,7 +1899,7 @@ const LearnWord = () => {
           </Button>
           
           <Badge variant="secondary" className="text-sm">
-            {currentModule >= modules.length ? "Excelente" : `Módulo ${currentModule + 1} de ${modules.length}`}
+            {currentModule >= modules.length ? "Excelente" : `Ejercicio ${currentModule + 1} de ${modules.length}`}
           </Badge>
           
           <Button

@@ -1626,7 +1626,7 @@ const LearnWord = () => {
                   <Button
                     key={index}
                     variant="outline"
-                    className={`w-full h-14 text-lg ${
+                    className={`w-full h-14 text-lg focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${
                       selectedMeaningOption === option
                         ? option.toLowerCase() === spanish.toLowerCase()
                           ? "bg-green-500/20 border-green-500 hover:bg-green-500/30"
@@ -1635,6 +1635,7 @@ const LearnWord = () => {
                     }`}
                     onClick={() => handleReverseMeaningSelection(option)}
                     disabled={selectedMeaningOption !== null}
+                    onMouseDown={(e) => e.preventDefault()}
                   >
                     {option}
                   </Button>

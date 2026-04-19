@@ -459,7 +459,14 @@ const LearnWord = () => {
 
   const handlePlayAudio = () => {
     try {
-      const utterance = new SpeechSynthesisUtterance(english);
+      // Reanudar AudioContext si está suspendido (gesto de usuario) — ayuda a desbloquear el tono de éxito posterior
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      // Para la palabra "I" sola, varios motores TTS dicen "capital I". Forzamos pronunciación natural.
+      const trimmed = english.trim();
+      const textToSpeak = trimmed === "I" ? "I." : english;
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = "en-US";
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);

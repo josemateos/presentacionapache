@@ -1815,7 +1815,7 @@ const LearnWord = () => {
         >
           <Progress value={progress} className="h-3 mb-2" />
           <p className="text-sm text-muted-foreground text-center">
-            {moduleProgress.filter(m => m.completed).length} de {modules.length} módulos completados
+            {Math.min(currentModule + 1, modules.length)} de {modules.length} módulos
           </p>
         </motion.div>
 

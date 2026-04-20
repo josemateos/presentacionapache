@@ -917,14 +917,21 @@ const LearnWord = () => {
     }
   }, [currentModule]);
 
-  // Manejar selección de significado (Español -> Inglés)
+  // Manejar selección de significado (solo marca, no valida)
   const handleMeaningSelection = (option: string) => {
+    if (meaningVerified) return;
     setSelectedMeaningOption(option);
-    // Special case for "En" word (id=26)
-    const isCorrect = wordId === "26" 
-      ? option === "In/At" 
+  };
+
+  // Verificar la opción seleccionada al pulsar VERIFICAR
+  const handleVerifyMeaning = () => {
+    if (!selectedMeaningOption || meaningVerified) return;
+    const option = selectedMeaningOption;
+    setMeaningVerified(true);
+    const isCorrect = wordId === "26"
+      ? option === "In/At"
       : option.toLowerCase() === english.toLowerCase();
-    
+
     if (isCorrect) {
       playSuccessSound();
       toast({
@@ -933,20 +940,21 @@ const LearnWord = () => {
         duration: 1500,
         className: "bg-green-500 text-white border-green-600",
       });
-      
+
       setTimeout(() => {
-        const updatedProgress = moduleProgress.map(m => 
+        const updatedProgress = moduleProgress.map(m =>
           m.id === currentModule ? { ...m, completed: true } : m
         );
         setModuleProgress(updatedProgress);
-        
+
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
-          setCurrentModule(6); // Ir al resumen
+          setCurrentModule(6);
         } else {
           setCurrentModule(currentModule + 1);
         }
         setSelectedMeaningOption(null);
+        setMeaningVerified(false);
       }, 1000);
     } else {
       toast({
@@ -955,7 +963,10 @@ const LearnWord = () => {
         variant: "destructive",
         duration: 1500,
       });
-      setTimeout(() => setSelectedMeaningOption(null), 1000);
+      setTimeout(() => {
+        setSelectedMeaningOption(null);
+        setMeaningVerified(false);
+      }, 1000);
     }
   };
 

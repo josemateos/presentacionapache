@@ -313,14 +313,14 @@ const VocabularyDay1 = () => {
                       </Button>
                     ) : (
                       <Button
-                        className="w-full flex items-center justify-center gap-2 text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
-                        style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
+                        className="w-full flex items-center justify-center gap-2 text-white font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        style={{ background: "linear-gradient(135deg, hsl(285 55% 45%) 0%, hsl(330 70% 50%) 100%)" }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleLearnWord(word);
                         }}
                       >
-                        <Sparkles className="w-4 h-4" />
+                        <GraduationCap className="w-5 h-5" />
                         Aprender
                       </Button>
                     )}

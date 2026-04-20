@@ -277,7 +277,7 @@ const VocabularyDay1 = () => {
                     )}
                     {status === "inProgress" && (
                       <div className="flex items-center gap-1.5 bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold border border-secondary/20 shrink-0">
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <LoaderCircle className="w-3.5 h-3.5" />
                         En curso
                       </div>
                     )}

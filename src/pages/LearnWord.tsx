@@ -1338,12 +1338,12 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={selectedMeaningOption !== null}
-                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
+                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border ${
                         showCorrect
-                          ? "bg-tertiary/10 border-2 border-tertiary shadow-[0_0_20px_hsl(var(--tertiary)/0.3)]"
+                          ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_25px_hsl(142_76%_45%/0.15)]"
                           : showWrong
-                          ? "bg-destructive/10 border-2 border-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.3)]"
-                          : "bg-surface-container/40 ring-1 ring-tertiary/15 hover:bg-surface-container-high"
+                          ? "bg-destructive/10 border-destructive/40 shadow-[0_0_25px_hsl(var(--destructive)/0.15)]"
+                          : "bg-surface-container-low hover:bg-surface-container-high border-white/5"
                       }`}
                     >
                       <span className="font-headline text-xl font-bold text-on-surface">{option}</span>

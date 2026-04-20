@@ -348,6 +348,7 @@ const LearnWord = () => {
   const [userInput2, setUserInput2] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [selectedMeaningOption, setSelectedMeaningOption] = useState<string | null>(null);
+  const [meaningVerified, setMeaningVerified] = useState(false);
   const [spellingAttempt, setSpellingAttempt] = useState("");
   const [jumbledLetters, setJumbledLetters] = useState<string[]>([]);
   const [usedLetterIndices, setUsedLetterIndices] = useState<number[]>([]);

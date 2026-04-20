@@ -1696,7 +1696,7 @@ const LearnWord = () => {
 
               <Button
                 onClick={handlePronunciationButton}
-                disabled={isVerifying}
+                disabled={isVerifying && !isRecording}
                 className={`w-full h-12 ${
                   isRecording
                     ? 'bg-red-500 hover:bg-red-600 animate-pulse-subtle'

@@ -1300,21 +1300,21 @@ const LearnWord = () => {
 
             <div className="flex flex-col items-center px-2 py-4">
               {/* Instructional header */}
-              <div className="text-center mb-10">
-                <h2 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight text-on-surface uppercase italic opacity-90">
+              <div className="text-center mb-6">
+                <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
                   ¿Cómo se dice?
                 </h2>
               </div>
 
               {/* Central highlight word */}
-              <div className="relative group mb-14">
+              <div className="relative group mb-10">
                 <div className="absolute -inset-8 bg-tertiary/10 blur-3xl rounded-full opacity-60" />
-                <div className="relative bg-surface-container-low/40 backdrop-blur-md rounded-3xl py-10 px-12 md:px-20 border border-tertiary/20 shadow-2xl">
-                  <h1 className="font-headline font-black text-6xl md:text-7xl text-on-surface text-shadow-glow text-center">
+                <div className="relative bg-background rounded-3xl py-6 px-10 md:px-16 border border-tertiary/20">
+                  <h1 className="font-headline font-black text-4xl md:text-5xl text-on-surface text-shadow-glow text-center">
                     {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
                   </h1>
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-surface-container-highest px-4 py-1 rounded-full border border-tertiary/30 whitespace-nowrap">
-                    <span className="text-xs font-bold text-on-surface tracking-tighter">ORIGEN: ESP</span>
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-background px-3 py-0.5 rounded-full border border-tertiary/30 whitespace-nowrap">
+                    <span className="text-[10px] font-bold text-on-surface tracking-tighter">ORIGEN: ESP</span>
                   </div>
                 </div>
               </div>
@@ -1338,7 +1338,7 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={selectedMeaningOption !== null}
-                      className={`group relative flex items-center justify-between p-6 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
+                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
                         showCorrect
                           ? "bg-tertiary/10 border-2 border-tertiary shadow-[0_0_20px_hsl(var(--tertiary)/0.3)]"
                           : showWrong
@@ -1346,9 +1346,9 @@ const LearnWord = () => {
                           : "bg-surface-container/40 ring-1 ring-tertiary/15 hover:bg-surface-container-high"
                       }`}
                     >
-                      <span className="font-headline text-2xl font-bold text-on-surface">{option}</span>
+                      <span className="font-headline text-xl font-bold text-on-surface">{option}</span>
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                           showCorrect
                             ? "bg-tertiary"
                             : showWrong

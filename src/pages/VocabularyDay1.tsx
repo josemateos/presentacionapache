@@ -327,7 +327,7 @@ const VocabularyDay1 = () => {
                             handleLearnWord(word);
                           }}
                         >
-                          <Sparkles className="w-4 h-4" />
+                          <Rocket className="w-4 h-4" />
                           Concluir
                         </Button>
                       </>

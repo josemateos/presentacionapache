@@ -1345,19 +1345,22 @@ const LearnWord = () => {
                   const letter = String.fromCharCode(65 + index);
                   const isSelected = selectedMeaningOption === option;
                   const isCorrect = wordId === "26" ? option === "In/At" : option.toLowerCase() === english.toLowerCase();
-                  const showCorrect = isSelected && isCorrect;
-                  const showWrong = isSelected && !isCorrect;
+                  const showCorrect = meaningVerified && isSelected && isCorrect;
+                  const showWrong = meaningVerified && isSelected && !isCorrect;
+                  const isPicked = !meaningVerified && isSelected;
                   return (
                     <button
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
-                      disabled={selectedMeaningOption !== null}
-                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border ${
+                      disabled={meaningVerified}
+                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border-2 ${
                         showCorrect
-                          ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_25px_hsl(142_76%_45%/0.15)]"
+                          ? "bg-emerald-500/15 border-emerald-500/60 shadow-[0_0_25px_hsl(142_76%_45%/0.2)]"
                           : showWrong
-                          ? "bg-destructive/10 border-destructive/40 shadow-[0_0_25px_hsl(var(--destructive)/0.15)]"
-                          : "bg-surface-container-low hover:bg-surface-container-high border-white/5"
+                          ? "bg-destructive/15 border-destructive/60 shadow-[0_0_25px_hsl(var(--destructive)/0.2)]"
+                          : isPicked
+                          ? "bg-cyan-500/10 border-cyan-400"
+                          : "bg-surface-container-high hover:border-cyan-400 border-white/15"
                       }`}
                     >
                       <span className="font-headline text-xl font-bold text-on-surface">{option}</span>
@@ -1367,7 +1370,9 @@ const LearnWord = () => {
                             ? "bg-tertiary"
                             : showWrong
                             ? "bg-destructive"
-                            : "border border-muted-foreground/40 group-hover:border-tertiary"
+                            : isPicked
+                            ? "border border-cyan-400"
+                            : "border border-muted-foreground/40 group-hover:border-cyan-400"
                         }`}
                       >
                         {showCorrect ? (
@@ -1375,7 +1380,7 @@ const LearnWord = () => {
                         ) : showWrong ? (
                           <span className="text-base font-black text-destructive-foreground">✕</span>
                         ) : (
-                          <span className="text-xs font-bold text-muted-foreground group-hover:text-tertiary">{letter}</span>
+                          <span className={`text-xs font-bold ${isPicked ? 'text-cyan-400' : 'text-muted-foreground group-hover:text-cyan-400'}`}>{letter}</span>
                         )}
                       </div>
                       {showCorrect && (
@@ -1388,12 +1393,13 @@ const LearnWord = () => {
                 })}
               </div>
 
-              {/* CTA: CONFIRMAR DESCIFRADO */}
+              {/* CTA: VERIFICAR */}
               <button
-                disabled={selectedMeaningOption === null}
-                className="w-full max-w-2xl relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-accent to-primary text-primary-foreground shadow-[0_0_30px_hsl(var(--primary)/0.3)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+                onClick={handleVerifyMeaning}
+                disabled={selectedMeaningOption === null || meaningVerified}
+                className="w-full max-w-2xl relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
               >
-                Confirmar Descifrado
+                Verificar
               </button>
             </div>
           </motion.div>

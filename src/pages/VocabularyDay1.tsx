@@ -301,16 +301,36 @@ const VocabularyDay1 = () => {
                         Repasar
                       </Button>
                     ) : status === "inProgress" ? (
-                      <Button
-                        className="flex items-center gap-2 bg-secondary text-secondary-foreground font-bold py-3 px-6 rounded-xl active:scale-95 transition-all hover:brightness-110 shadow-lg shadow-secondary/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLearnWord(word);
-                        }}
-                      >
-                        <Sparkles className="w-4 h-4" />
-                        Concluir
-                      </Button>
+                      <>
+                        <div className="flex-1 h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                          {(() => {
+                            let pct = 0;
+                            try {
+                              const saved = localStorage.getItem(`word_modules_${word.id}`);
+                              if (saved) {
+                                const ids: number[] = JSON.parse(saved);
+                                pct = Math.min(100, Math.round((ids.length / 6) * 100));
+                              }
+                            } catch {}
+                            return (
+                              <div
+                                className="h-full bg-secondary rounded-full shadow-[0_0_8px_hsl(var(--secondary)/0.5)] transition-all"
+                                style={{ width: `${pct}%` }}
+                              />
+                            );
+                          })()}
+                        </div>
+                        <Button
+                          className="flex items-center gap-2 bg-secondary text-secondary-foreground font-bold py-3 px-6 rounded-xl active:scale-95 transition-all hover:brightness-110 shadow-lg shadow-secondary/20 shrink-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLearnWord(word);
+                          }}
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          Concluir
+                        </Button>
+                      </>
                     ) : (
                       <Button
                         className="w-full flex items-center justify-center gap-2 text-white font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"

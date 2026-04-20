@@ -1412,37 +1412,21 @@ const LearnWord = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative"
+            className="relative space-y-6"
           >
-            {/* Decorative glows (igual que ejercicio 1) */}
+            {/* Decorative glows (mismos colores del ejercicio 1) */}
             <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
             <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
 
-            <div className="flex flex-col items-center px-2 pt-1 pb-4">
-              {/* Instructional header */}
-              <div className="flex items-center gap-2 mb-5">
-                <Sparkles className="w-5 h-5 text-tertiary" />
-                <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
-                  Escribe en Inglés
-                </h2>
-              </div>
-
-              {/* Central highlight word */}
-              <div className="relative group mb-9">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20" />
-                <div className="relative glass-card rounded-3xl py-4 px-8 md:px-12 border border-white/10">
-                  <h1 className="font-headline font-black text-3xl md:text-4xl text-on-surface text-shadow-glow text-center">
-                    {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
-                  </h1>
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
-                    <span className="material-symbols-outlined text-[10px] text-cyan-400" style={{ fontSize: '12px' }}>language</span>
-                    <span className="text-[10px] font-bold text-on-surface/70 tracking-tighter">ORIGEN: ESP</span>
-                  </div>
-                </div>
-              </div>
+            <div className="relative glass-card border border-white/10 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold mb-6 text-center text-on-surface">
+                <span className="gradient-text-primary">Escribe </span>
+                <span className="text-on-surface font-bold text-3xl">{spanish}</span>
+                <span className="gradient-text-primary"> en Inglés</span>
+              </h3>
 
               {wordId === "26" ? (
-                <div className="w-full max-w-2xl space-y-4">
+                <div className="space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <div className="flex flex-col items-center">
                       <p className="text-xs text-on-surface/70 mb-2">Ubicación del objeto</p>
@@ -1478,7 +1462,7 @@ const LearnWord = () => {
                   </button>
                 </div>
               ) : english.toLowerCase() === "a/an" ? (
-                <div className="w-full max-w-2xl space-y-4">
+                <div className="space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <Input
                       value={userInput1}
@@ -1508,7 +1492,7 @@ const LearnWord = () => {
                   </button>
                 </div>
               ) : (
-                <div className="w-full max-w-2xl">
+                <>
                   <Input
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
@@ -1525,7 +1509,7 @@ const LearnWord = () => {
                   >
                     Verificar
                   </button>
-                </div>
+                </>
               )}
             </div>
           </motion.div>

@@ -1451,7 +1451,7 @@ const LearnWord = () => {
                   
                   <Button
                     onClick={handleCheckWriting}
-                    className="w-full h-12 gradient-animated"
+                    className="w-full h-12 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-500 hover:to-pink-600 text-white font-headline font-black uppercase tracking-wider shadow-[0_0_30px_hsl(330_85%_55%/0.4)]"
                     disabled={!userInput1.trim() || !userInput2.trim()}
                   >
                     Verificar

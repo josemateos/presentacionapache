@@ -302,7 +302,7 @@ const VocabularyDay1 = () => {
                       </Button>
                     ) : status === "inProgress" ? (
                       <>
-                        <div className="flex-1 h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-black rounded-full overflow-hidden">
                           {(() => {
                             let pct = 0;
                             try {

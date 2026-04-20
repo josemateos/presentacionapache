@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { BottomNav } from "@/components/dashboard/BottomNav";
@@ -63,6 +73,7 @@ const VocabularyDay1 = () => {
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const [activeTab, setActiveTab] = useState("vocabulary");
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 
@@ -168,7 +179,7 @@ const VocabularyDay1 = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleResetProgress}
+            onClick={() => setResetDialogOpen(true)}
             title="Reiniciar progreso"
             className="absolute right-4 text-on-surface/70 hover:bg-surface-container-high rounded-full"
           >
@@ -362,6 +373,27 @@ const VocabularyDay1 = () => {
 
       {/* Bottom Navigation */}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isPremium={true} />
+
+      {/* Reset Confirmation Dialog */}
+      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Borrar todos los avances?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Se reiniciará el progreso de todas las palabras del Día 1. Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, conservar avances</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetProgress}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Sí, borrar avances
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

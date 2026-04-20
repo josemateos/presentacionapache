@@ -1346,9 +1346,9 @@ const LearnWord = () => {
                           : "bg-surface-container/40 ring-1 ring-tertiary/15 hover:bg-surface-container-high"
                       }`}
                     >
-                      <span className="font-headline text-2xl font-bold text-on-surface">{option}</span>
+                      <span className="font-headline text-xl font-bold text-on-surface">{option}</span>
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                           showCorrect
                             ? "bg-tertiary"
                             : showWrong

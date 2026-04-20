@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, Sparkles, RotateCcw, GraduationCap, LoaderCircle } from "lucide-react";
+import { ArrowLeft, Check, Sparkles, RotateCcw, GraduationCap, LoaderCircle, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -302,7 +302,7 @@ const VocabularyDay1 = () => {
                       </Button>
                     ) : status === "inProgress" ? (
                       <>
-                        <div className="flex-1 h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-black rounded-full overflow-hidden">
                           {(() => {
                             let pct = 0;
                             try {
@@ -327,7 +327,7 @@ const VocabularyDay1 = () => {
                             handleLearnWord(word);
                           }}
                         >
-                          <Sparkles className="w-4 h-4" />
+                          <Rocket className="w-4 h-4" />
                           Concluir
                         </Button>
                       </>

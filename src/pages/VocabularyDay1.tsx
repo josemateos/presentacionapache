@@ -315,7 +315,8 @@ const VocabularyDay1 = () => {
                       </Button>
                     ) : (
                       <Button
-                        className="w-full flex items-center justify-center gap-2 gradient-animated text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        className="w-full flex items-center justify-center gap-2 text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleLearnWord(word);

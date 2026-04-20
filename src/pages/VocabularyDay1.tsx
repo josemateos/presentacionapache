@@ -179,7 +179,7 @@ const VocabularyDay1 = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleResetProgress}
+            onClick={() => setResetDialogOpen(true)}
             title="Reiniciar progreso"
             className="absolute right-4 text-on-surface/70 hover:bg-surface-container-high rounded-full"
           >

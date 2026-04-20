@@ -1299,8 +1299,9 @@ const LearnWord = () => {
             <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
 
             <div className="flex flex-col items-center px-2 py-4">
-              {/* Instructional header */}
-              <div className="text-center mb-6">
+              {/* Instructional header con icono lightbulb */}
+              <div className="flex items-center gap-2 mb-6">
+                <Sparkles className="w-5 h-5 text-tertiary" />
                 <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
                   ¿Cómo se dice?
                 </h2>
@@ -1313,7 +1314,8 @@ const LearnWord = () => {
                   <h1 className="font-headline font-black text-4xl md:text-5xl text-on-surface text-shadow-glow text-center">
                     {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
                   </h1>
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[10px] text-on-surface/60" style={{ fontSize: '12px' }}>language</span>
                     <span className="text-[10px] font-bold text-on-surface/70 tracking-tighter">ORIGEN: ESP</span>
                   </div>
                 </div>
@@ -1326,7 +1328,7 @@ const LearnWord = () => {
               )}
 
               {/* Options bento grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mb-8">
                 {getMeaningOptions().map((option, index) => {
                   const letter = String.fromCharCode(65 + index);
                   const isSelected = selectedMeaningOption === option;
@@ -1373,6 +1375,14 @@ const LearnWord = () => {
                   );
                 })}
               </div>
+
+              {/* CTA: CONFIRMAR DESCIFRADO */}
+              <button
+                disabled={selectedMeaningOption === null}
+                className="w-full max-w-2xl relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-accent to-primary text-primary-foreground shadow-[0_0_30px_hsl(var(--primary)/0.3)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+              >
+                Confirmar Descifrado
+              </button>
             </div>
           </motion.div>
         );

@@ -1292,42 +1292,88 @@ const LearnWord = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="relative"
           >
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
-                ¿Qué significa?
-              </h3>
-              <p className="text-center text-3xl font-bold text-primary mb-8">
-                {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
-              </p>
-              
+            {/* Decorative glows */}
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="flex flex-col items-center px-2 py-4">
+              {/* Instructional header */}
+              <div className="text-center mb-10">
+                <h2 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight text-on-surface uppercase italic opacity-90">
+                  ¿Cómo se dice?
+                </h2>
+              </div>
+
+              {/* Central highlight word */}
+              <div className="relative group mb-14">
+                <div className="absolute -inset-8 bg-tertiary/10 blur-3xl rounded-full opacity-60" />
+                <div className="relative bg-surface-container-low/40 backdrop-blur-md rounded-3xl py-10 px-12 md:px-20 border border-tertiary/20 shadow-2xl">
+                  <h1 className="font-headline font-black text-6xl md:text-7xl text-on-surface text-shadow-glow text-center">
+                    {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
+                  </h1>
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-surface-container-highest px-4 py-1 rounded-full border border-tertiary/30 whitespace-nowrap">
+                    <span className="text-xs font-bold text-on-surface tracking-tighter">ORIGEN: ESP</span>
+                  </div>
+                </div>
+              </div>
+
               {displayNote && (
-                <p className="text-sm text-center text-muted-foreground italic mb-6 bg-primary/5 p-3 rounded-lg">
+                <p className="text-sm text-center text-muted-foreground italic mb-6 bg-primary/5 p-3 rounded-lg max-w-xl">
                   {displayNote}
                 </p>
               )}
-              
-              <div className="space-y-3">
-                {getMeaningOptions().map((option, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className={`w-full h-14 text-lg ${
-                      selectedMeaningOption === option
-                        ? (wordId === "26" ? option === "In/At" : option.toLowerCase() === english.toLowerCase())
-                          ? "bg-green-500/20 border-green-500 hover:bg-green-500/30"
-                          : "bg-red-500/20 border-red-500 hover:bg-red-500/30"
-                        : "hover:bg-accent"
-                    }`}
-                    onClick={() => handleMeaningSelection(option)}
-                    disabled={selectedMeaningOption !== null}
-                  >
-                    {option}
-                  </Button>
-                ))}
+
+              {/* Options bento grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+                {getMeaningOptions().map((option, index) => {
+                  const letter = String.fromCharCode(65 + index);
+                  const isSelected = selectedMeaningOption === option;
+                  const isCorrect = wordId === "26" ? option === "In/At" : option.toLowerCase() === english.toLowerCase();
+                  const showCorrect = isSelected && isCorrect;
+                  const showWrong = isSelected && !isCorrect;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleMeaningSelection(option)}
+                      disabled={selectedMeaningOption !== null}
+                      className={`group relative flex items-center justify-between p-6 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
+                        showCorrect
+                          ? "bg-tertiary/10 border-2 border-tertiary shadow-[0_0_20px_hsl(var(--tertiary)/0.3)]"
+                          : showWrong
+                          ? "bg-destructive/10 border-2 border-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.3)]"
+                          : "bg-surface-container/40 ring-1 ring-tertiary/15 hover:bg-surface-container-high"
+                      }`}
+                    >
+                      <span className="font-headline text-2xl font-bold text-on-surface">{option}</span>
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                          showCorrect
+                            ? "bg-tertiary"
+                            : showWrong
+                            ? "bg-destructive"
+                            : "border border-muted-foreground/40 group-hover:border-tertiary"
+                        }`}
+                      >
+                        {showCorrect ? (
+                          <Check className="w-5 h-5 text-surface" strokeWidth={3} />
+                        ) : showWrong ? (
+                          <span className="text-base font-black text-destructive-foreground">✕</span>
+                        ) : (
+                          <span className="text-xs font-bold text-muted-foreground group-hover:text-tertiary">{letter}</span>
+                        )}
+                      </div>
+                      {showCorrect && (
+                        <div className="absolute top-0 right-0 px-2 py-0.5 bg-tertiary/15 rounded-bl-lg">
+                          <span className="text-[8px] font-black text-tertiary uppercase tracking-wider">Validado</span>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-            </Card>
+            </div>
           </motion.div>
         );
 

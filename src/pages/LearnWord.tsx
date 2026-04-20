@@ -1412,102 +1412,122 @@ const LearnWord = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="relative"
           >
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-6 text-center">
-                <span className="gradient-text-primary">Escribe </span>
-                <span className="text-foreground font-bold text-3xl">{spanish}</span>
-                <span className="gradient-text-primary"> en Inglés</span>
-              </h3>
-              
+            {/* Decorative glows (igual que ejercicio 1) */}
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="flex flex-col items-center px-2 pt-1 pb-4">
+              {/* Instructional header */}
+              <div className="flex items-center gap-2 mb-5">
+                <Sparkles className="w-5 h-5 text-tertiary" />
+                <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
+                  Escribe en Inglés
+                </h2>
+              </div>
+
+              {/* Central highlight word */}
+              <div className="relative group mb-9">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20" />
+                <div className="relative glass-card rounded-3xl py-4 px-8 md:px-12 border border-white/10">
+                  <h1 className="font-headline font-black text-3xl md:text-4xl text-on-surface text-shadow-glow text-center">
+                    {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
+                  </h1>
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[10px] text-cyan-400" style={{ fontSize: '12px' }}>language</span>
+                    <span className="text-[10px] font-bold text-on-surface/70 tracking-tighter">ORIGEN: ESP</span>
+                  </div>
+                </div>
+              </div>
+
               {wordId === "26" ? (
-                <div className="space-y-4">
+                <div className="w-full max-w-2xl space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <div className="flex flex-col items-center">
-                      <p className="text-xs text-muted-foreground mb-2">Ubicación del objeto</p>
+                      <p className="text-xs text-on-surface/70 mb-2">Ubicación del objeto</p>
                       <Input
                         value={userInput1}
                         onChange={(e) => setUserInput1(e.target.value)}
                         placeholder="..."
-                        className="text-center text-xl h-14 w-32"
+                        className="text-center text-xl h-14 w-32 bg-surface-container-high border-2 border-white/15 focus-visible:border-cyan-400 text-on-surface"
                         onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                         autoComplete="off"
                       />
                     </div>
-                    <span className="text-2xl font-bold text-muted-foreground mt-6">o</span>
+                    <span className="text-2xl font-bold text-on-surface/60 mt-6">o</span>
                     <div className="flex flex-col items-center">
-                      <p className="text-xs text-muted-foreground mb-2">Ubicación de la acción</p>
+                      <p className="text-xs text-on-surface/70 mb-2">Ubicación de la acción</p>
                       <Input
                         value={userInput2}
                         onChange={(e) => setUserInput2(e.target.value)}
                         placeholder="..."
-                        className="text-center text-xl h-14 w-32"
+                        className="text-center text-xl h-14 w-32 bg-surface-container-high border-2 border-white/15 focus-visible:border-cyan-400 text-on-surface"
                         onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                         autoComplete="off"
                       />
                     </div>
                   </div>
-                  
-                  <Button
+
+                  <button
                     onClick={handleCheckWriting}
-                    className="w-full h-12 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-500 hover:to-pink-600 text-white font-headline font-black uppercase tracking-wider shadow-[0_0_30px_hsl(330_85%_55%/0.4)]"
                     disabled={!userInput1.trim() || !userInput2.trim()}
+                    className="w-full relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
                   >
                     Verificar
-                  </Button>
+                  </button>
                 </div>
               ) : english.toLowerCase() === "a/an" ? (
-                <div className="space-y-4">
+                <div className="w-full max-w-2xl space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <Input
                       value={userInput1}
                       onChange={(e) => setUserInput1(e.target.value)}
                       placeholder="..."
-                      className="text-center text-xl h-14 w-32"
+                      className="text-center text-xl h-14 w-32 bg-surface-container-high border-2 border-white/15 focus-visible:border-cyan-400 text-on-surface"
                       onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                       autoComplete="off"
                     />
-                    <span className="text-2xl font-bold text-muted-foreground">o</span>
+                    <span className="text-2xl font-bold text-on-surface/60">o</span>
                     <Input
                       value={userInput2}
                       onChange={(e) => setUserInput2(e.target.value)}
                       placeholder="..."
-                      className="text-center text-xl h-14 w-32"
+                      className="text-center text-xl h-14 w-32 bg-surface-container-high border-2 border-white/15 focus-visible:border-cyan-400 text-on-surface"
                       onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                       autoComplete="off"
                     />
                   </div>
-                  
-                  <Button
+
+                  <button
                     onClick={handleCheckWriting}
-                    className="w-full h-12 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-500 hover:to-pink-600 text-white font-headline font-black uppercase tracking-wider shadow-[0_0_30px_hsl(330_85%_55%/0.4)]"
                     disabled={!userInput1.trim() || !userInput2.trim()}
+                    className="w-full relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
                   >
                     Verificar
-                  </Button>
+                  </button>
                 </div>
               ) : (
-                <>
+                <div className="w-full max-w-2xl">
                   <Input
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
                     placeholder="Escribe aquí..."
-                    className="text-center text-xl h-14 mb-4"
+                    className="text-center text-xl h-14 mb-4 bg-surface-container-high border-2 border-white/15 focus-visible:border-cyan-400 text-on-surface"
                     onKeyDown={(e) => e.key === "Enter" && handleCheckWriting()}
                     autoComplete="off"
                   />
-                  
-                  <Button
+
+                  <button
                     onClick={handleCheckWriting}
-                    className="w-full h-12 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-500 hover:to-pink-600 text-white font-headline font-black uppercase tracking-wider shadow-[0_0_30px_hsl(330_85%_55%/0.4)]"
                     disabled={!userInput.trim()}
+                    className="w-full relative overflow-hidden rounded-2xl py-4 px-6 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
                   >
                     Verificar
-                  </Button>
-                </>
+                  </button>
+                </div>
               )}
-            </Card>
+            </div>
           </motion.div>
         );
 

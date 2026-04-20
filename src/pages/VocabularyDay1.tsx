@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, Sparkles, RotateCcw, GraduationCap } from "lucide-react";
+import { ArrowLeft, Check, Sparkles, RotateCcw, GraduationCap, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";

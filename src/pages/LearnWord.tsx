@@ -1338,7 +1338,7 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={selectedMeaningOption !== null}
-                      className={`group relative flex items-center justify-between p-6 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
+                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
                         showCorrect
                           ? "bg-tertiary/10 border-2 border-tertiary shadow-[0_0_20px_hsl(var(--tertiary)/0.3)]"
                           : showWrong

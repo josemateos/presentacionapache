@@ -210,18 +210,16 @@ const VocabularyDay1 = () => {
                 style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
               />
             </div>
-            <div className="mt-4 flex justify-between items-center text-[10px] font-semibold uppercase tracking-tighter">
-              <div className="flex gap-3 text-on-surface/60">
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> {inProgressCount} EN PROCESO
-                </span>
-              </div>
-              <div className="text-on-surface/60 flex items-center gap-1">
+            <div className="mt-4 grid grid-cols-3 items-center text-[10px] font-semibold uppercase tracking-tighter text-on-surface/60">
+              <span className="flex items-center gap-1 justify-start">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
+              </span>
+              <span className="flex items-center gap-1 justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> {inProgressCount} EN PROCESO
+              </span>
+              <span className="flex items-center gap-1 justify-end">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {pendingCount} PENDIENTES
-              </div>
+              </span>
             </div>
           </div>
         </motion.section>

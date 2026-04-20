@@ -1520,40 +1520,42 @@ const LearnWord = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="relative space-y-6"
           >
-            <Card className="p-8">
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="relative glass-card border border-white/10 rounded-3xl p-8">
               <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
                 Deletrea la palabra
               </h3>
-              <p className="text-center text-lg text-muted-foreground mb-6">
-                <span className="text-primary font-semibold">{spanish}</span> en Inglés
+              <p className="text-center text-lg text-on-surface/70 mb-6">
+                <span className="text-on-surface font-bold text-4xl md:text-5xl">{spanish.charAt(0).toUpperCase() + spanish.slice(1)}</span>
+                <span className="block text-base mt-1">en Inglés</span>
               </p>
-              
+
               {wordId === "26" ? (
                 <>
-                  {/* Área de respuesta para "In" y "At" */}
                   <div className="flex items-center justify-center gap-4 mb-6">
-                    <div className="min-h-[80px] w-32 bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 flex items-center justify-center">
-                      <p className="text-2xl font-bold tracking-wider text-primary">
+                    <div className="min-h-[80px] w-32 bg-surface-container-high border-2 border-dashed border-white/20 rounded-lg p-4 flex items-center justify-center">
+                      <p className="text-2xl font-bold tracking-wider text-on-surface">
                         {userInput1 || " "}
                       </p>
                     </div>
-                    <span className="text-2xl font-bold text-muted-foreground">o</span>
-                    <div className="min-h-[80px] w-32 bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 flex items-center justify-center">
-                      <p className="text-2xl font-bold tracking-wider text-primary">
+                    <span className="text-2xl font-bold text-on-surface/60">o</span>
+                    <div className="min-h-[80px] w-32 bg-surface-container-high border-2 border-dashed border-white/20 rounded-lg p-4 flex items-center justify-center">
+                      <p className="text-2xl font-bold tracking-wider text-on-surface">
                         {userInput2 || " "}
                       </p>
                     </div>
                   </div>
-                  
-                  {/* Botones de letras */}
+
                   <div className="flex flex-wrap justify-center gap-2 mb-6">
                     {jumbledLetters.map((letter, index) => (
                       <Button
                         key={index}
                         variant="outline"
-                        className={`w-12 h-12 text-xl font-bold ${
+                        className={`w-12 h-12 text-xl font-bold bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high ${
                           usedLetterIndices.includes(index) ? "opacity-30" : ""
                         }`}
                         onClick={() => handleLetterClick(letter, index)}
@@ -1563,42 +1565,40 @@ const LearnWord = () => {
                       </Button>
                     ))}
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high"
                       onClick={handleRemoveLastLetter}
                       disabled={userInput1.length === 0 && userInput2.length === 0}
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />
                       Borrar Última
                     </Button>
-                    <Button
-                      className="flex-1 gradient-animated"
+                    <button
+                      className="flex-1 relative overflow-hidden rounded-md py-2 px-4 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
                       onClick={handleCheckSpelling}
                       disabled={userInput1.length === 0 || userInput2.length === 0}
                     >
                       Verificar
-                    </Button>
+                    </button>
                   </div>
                 </>
               ) : (
                 <>
-                  {/* Área de respuesta */}
-                  <div className="min-h-[80px] bg-secondary/30 border-2 border-dashed border-border rounded-lg p-4 mb-6 flex items-center justify-center">
-                    <p className="text-2xl font-bold tracking-wider text-primary">
+                  <div className="min-h-[80px] bg-surface-container-high border-2 border-dashed border-white/20 rounded-lg p-4 mb-6 flex items-center justify-center">
+                    <p className="text-2xl font-bold tracking-wider text-on-surface">
                       {spellingAttempt || " "}
                     </p>
                   </div>
-                  
-                  {/* Botones de letras */}
+
                   <div className="flex flex-wrap justify-center gap-2 mb-6">
                     {jumbledLetters.map((letter, index) => (
                       <Button
                         key={index}
                         variant="outline"
-                        className={`w-12 h-12 text-xl font-bold ${
+                        className={`w-12 h-12 text-xl font-bold bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high ${
                           usedLetterIndices.includes(index) ? "opacity-30" : ""
                         }`}
                         onClick={() => handleLetterClick(letter, index)}
@@ -1608,28 +1608,240 @@ const LearnWord = () => {
                       </Button>
                     ))}
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high"
                       onClick={handleRemoveLastLetter}
                       disabled={spellingAttempt.length === 0}
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />
                       Borrar Última
                     </Button>
-                    <Button
-                      className="flex-1 gradient-animated"
+                    <button
+                      className="flex-1 relative overflow-hidden rounded-md py-2 px-4 font-headline font-black tracking-wider uppercase text-base bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-[0_0_30px_hsl(330_85%_55%/0.4)] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
                       onClick={handleCheckSpelling}
                       disabled={spellingAttempt.length === 0}
                     >
                       Verificar
-                    </Button>
+                    </button>
                   </div>
                 </>
               )}
-            </Card>
+            </div>
+          </motion.div>
+        );
+
+      case 3: // Selección de imagen
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative space-y-6"
+          >
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="relative glass-card border border-white/10 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Selecciona la imagen correcta
+              </h3>
+              <p className="text-center text-lg text-on-surface/70 mb-6">
+                ¿Cuál imagen representa: <span className="text-on-surface font-semibold">{wordId === "26" ? "In/At" : english}</span>?
+              </p>
+
+              {isLoadingImages ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="aspect-square bg-surface-container-high rounded-lg animate-pulse" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {imageOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleImageSelection(option.id)}
+                      disabled={selectedImageId !== null}
+                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all bg-surface-container-high ${
+                        selectedImageId === option.id
+                          ? option.isCorrect
+                            ? "border-emerald-500 ring-4 ring-emerald-500/20"
+                            : "border-destructive ring-4 ring-destructive/20"
+                          : "border-white/15 hover:border-cyan-400"
+                      }`}
+                    >
+                      <img
+                        src={option.url}
+                        alt={`Opción ${option.id + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        );
+
+      case 4: // Traducción inversa (Inglés -> Español)
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative space-y-6"
+          >
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="relative glass-card border border-white/10 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
+                Elige el significado correcto
+              </h3>
+              <p className="text-center text-3xl font-bold text-on-surface mb-8">
+                {wordId === "26" ? "In/At" : english.charAt(0).toUpperCase() + english.slice(1)}
+              </p>
+
+              <p className="text-sm text-center text-on-surface/70 mb-6">
+                ¿Cuál es el significado en español?
+              </p>
+
+              <div className="space-y-3">
+                {getReverseMeaningOptions().map((option, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className={`w-full h-14 text-lg bg-surface-container-high border-2 text-on-surface focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${
+                      selectedMeaningOption === option
+                        ? option.toLowerCase() === spanish.toLowerCase()
+                          ? "bg-emerald-500/15 border-emerald-500/60 hover:bg-emerald-500/15"
+                          : "bg-destructive/15 border-destructive/60 hover:bg-destructive/15"
+                        : "border-white/15 hover:border-cyan-400 hover:bg-surface-container-high"
+                    }`}
+                    onClick={() => handleReverseMeaningSelection(option)}
+                    disabled={selectedMeaningOption !== null}
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        );
+
+      case 5: // Pronunciación
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative space-y-6"
+          >
+            <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
+            <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
+
+            <div className="relative glass-card border border-white/10 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold mb-4 text-center gradient-text-primary">
+                Escucha y Pronuncia
+              </h3>
+
+              <div className="flex justify-center items-center gap-4 mb-8">
+                <p className="text-3xl font-bold text-on-surface">
+                  {english.charAt(0).toUpperCase() + english.slice(1)}
+                </p>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="w-14 h-14 rounded-full hover:bg-cyan-400/10"
+                  onClick={handlePlayAudio}
+                >
+                  <Volume2 className="w-6 h-6 text-cyan-400" />
+                </Button>
+              </div>
+
+              <p className="text-center text-on-surface/70 mb-6">
+                {isVerifying
+                  ? "Verificando tu pronunciación..."
+                  : isRecording
+                  ? "Habla ahora, te estamos escuchando"
+                  : "Escucha la palabra y practica tu pronunciación"}
+              </p>
+
+              {isRecording && (
+                <div
+                  className="flex items-center justify-center gap-3 mb-4 py-3 px-4 rounded-lg bg-destructive/10 border border-destructive/40"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75 animate-ping" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" />
+                  </span>
+                  <span className="text-sm font-medium text-destructive">Capturando audio…</span>
+                </div>
+              )}
+
+              <button
+                onClick={handlePronunciationButton}
+                disabled={isVerifying && !isRecording}
+                className={`w-full h-12 rounded-md font-headline font-black tracking-wider uppercase text-base text-white flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed ${
+                  isRecording
+                    ? 'bg-destructive hover:bg-destructive animate-pulse-subtle'
+                    : 'bg-gradient-to-r from-pink-500 to-pink-600 shadow-[0_0_30px_hsl(330_85%_55%/0.4)]'
+                }`}
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                {isRecording
+                  ? 'Terminar grabación'
+                  : 'Practica tu pronunciación'}
+              </button>
+
+              {recordedAudio && !isVerifying && (
+                <Button
+                  variant="outline"
+                  onClick={handlePlayRecording}
+                  className="w-full h-12 mt-2 bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high"
+                >
+                  <Volume2 className="w-5 h-5 mr-2" />
+                  Escuchar mi grabación
+                </Button>
+              )}
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const visitKey = `module5_visits_word_${wordId}`;
+                  const visits = parseInt(localStorage.getItem(visitKey) || "0");
+                  const newVisits = visits + 1;
+                  localStorage.setItem(visitKey, newVisits.toString());
+
+                  const saved = localStorage.getItem("vocabulary_day1_progress");
+                  if (saved) {
+                    try {
+                      const savedWords = JSON.parse(saved);
+                      const updatedWords = savedWords.map((w: any) =>
+                        w.id === parseInt(wordId || "0")
+                          ? { ...w, inProgress: true, learned: false }
+                          : w
+                      );
+                      localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+                    } catch (error) {
+                      console.error("Error updating progress:", error);
+                    }
+                  }
+
+                  if (newVisits >= 2) {
+                    navigate("/vocabulario-dia-1");
+                  } else {
+                    setCurrentModule(6);
+                  }
+                }}
+                className="w-full h-12 mt-4 bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high"
+              >
+                Hacer después, continuar
+              </Button>
+            </div>
           </motion.div>
         );
 

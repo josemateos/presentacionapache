@@ -1327,7 +1327,7 @@ const LearnWord = () => {
                     {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
                   </h1>
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
-                    <span className="material-symbols-outlined text-[10px] text-on-surface/60" style={{ fontSize: '12px' }}>language</span>
+                    <span className="material-symbols-outlined text-[10px] text-cyan-400" style={{ fontSize: '12px' }}>language</span>
                     <span className="text-[10px] font-bold text-on-surface/70 tracking-tighter">ORIGEN: ESP</span>
                   </div>
                 </div>

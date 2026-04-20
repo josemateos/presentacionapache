@@ -941,12 +941,14 @@ const LearnWord = () => {
         className: "bg-green-500 text-white border-green-600",
       });
 
-      setTimeout(() => {
-        const updatedProgress = moduleProgress.map(m =>
-          m.id === currentModule ? { ...m, completed: true } : m
-        );
-        setModuleProgress(updatedProgress);
+      // Marcar la palomita inmediatamente para feedback visual
+      const updatedProgress = moduleProgress.map(m =>
+        m.id === currentModule ? { ...m, completed: true } : m
+      );
+      setModuleProgress(updatedProgress);
 
+      // Esperar antes de avanzar para que el usuario vea la palomita verde
+      setTimeout(() => {
         if (checkIfAllModulesCompleted(updatedProgress)) {
           markWordAsLearned();
           setCurrentModule(6);
@@ -955,7 +957,7 @@ const LearnWord = () => {
         }
         setSelectedMeaningOption(null);
         setMeaningVerified(false);
-      }, 1000);
+      }, 1200);
     } else {
       toast({
         title: "Incorrecto",

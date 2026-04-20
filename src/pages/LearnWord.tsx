@@ -1308,13 +1308,13 @@ const LearnWord = () => {
 
               {/* Central highlight word */}
               <div className="relative group mb-10">
-                <div className="absolute -inset-8 bg-tertiary/10 blur-3xl rounded-full opacity-60" />
-                <div className="relative bg-background rounded-3xl py-6 px-10 md:px-16 border border-tertiary/20">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20" />
+                <div className="relative glass-card rounded-3xl py-6 px-10 md:px-16 border border-white/10">
                   <h1 className="font-headline font-black text-4xl md:text-5xl text-on-surface text-shadow-glow text-center">
                     {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
                   </h1>
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-background px-3 py-0.5 rounded-full border border-tertiary/30 whitespace-nowrap">
-                    <span className="text-[10px] font-bold text-on-surface tracking-tighter">ORIGEN: ESP</span>
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                    <span className="text-[10px] font-bold text-on-surface/70 tracking-tighter">ORIGEN: ESP</span>
                   </div>
                 </div>
               </div>
@@ -1338,12 +1338,12 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={selectedMeaningOption !== null}
-                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 backdrop-blur-xl ${
+                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border ${
                         showCorrect
-                          ? "bg-tertiary/10 border-2 border-tertiary shadow-[0_0_20px_hsl(var(--tertiary)/0.3)]"
+                          ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_25px_hsl(142_76%_45%/0.15)]"
                           : showWrong
-                          ? "bg-destructive/10 border-2 border-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.3)]"
-                          : "bg-surface-container/40 ring-1 ring-tertiary/15 hover:bg-surface-container-high"
+                          ? "bg-destructive/10 border-destructive/40 shadow-[0_0_25px_hsl(var(--destructive)/0.15)]"
+                          : "bg-surface-container-low hover:bg-surface-container-high border-white/5"
                       }`}
                     >
                       <span className="font-headline text-xl font-bold text-on-surface">{option}</span>

@@ -134,160 +134,210 @@ const VocabularyDay1 = () => {
 
 
 
+  const inProgressCount = words.filter(w => w.inProgress && !w.learned).length;
+  const pendingCount = words.length - learnedCount - inProgressCount;
+
   const completionMessage = learnedCount === words.length ? (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="text-center py-6 px-4 bg-card border border-border rounded-2xl"
+      className="text-center py-6 px-4 glass-card border border-white/10 rounded-2xl"
     >
       <Sparkles className="w-12 h-12 mx-auto mb-3 text-primary animate-pulse-subtle" />
-      <h3 className="text-xl font-bold mb-2 text-primary">
-        ¡Felicitaciones!
-      </h3>
-      <p className="text-muted-foreground">
-        Has completado el vocabulario del Día 1
-      </p>
+      <h3 className="text-xl font-bold mb-2 text-primary">¡Felicitaciones!</h3>
+      <p className="text-on-surface/70">Has completado el vocabulario del Día 1</p>
     </motion.div>
   ) : null;
 
   return (
-    <div className="min-h-screen bg-background dark flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center max-w-4xl">
+    <div className="min-h-screen bg-surface text-on-surface font-body flex flex-col selection:bg-accent/30">
+      {/* TopAppBar */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-low/90 backdrop-blur-xl shadow-2xl border-b border-white/5">
+        <div className="flex items-center px-6 py-5 w-full relative max-w-2xl mx-auto">
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={() => navigate("/dashboard")}
-            className="hover:bg-primary/10"
+            className="absolute left-4 text-primary hover:bg-surface-container-high rounded-full"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Inicio</span>
+            <ArrowLeft className="w-5 h-5" />
           </Button>
-          
-          <h1 className="text-lg md:text-xl font-bold text-foreground">
+          <h1 className="mx-auto font-headline text-xl md:text-2xl font-extrabold tracking-tight text-primary">
             Vocabulario del Día 1
           </h1>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:bg-primary/10"
-              onClick={handleResetProgress}
-              title="Reiniciar progreso"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleResetProgress}
+            title="Reiniciar progreso"
+            className="absolute right-4 text-on-surface/70 hover:bg-surface-container-high rounded-full"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </Button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 py-6 pb-24 max-w-4xl">
-        {/* Progress Section */}
-        <motion.div
+      <main className="flex-grow pt-28 pb-32 px-6 max-w-2xl mx-auto w-full space-y-8">
+        {/* Progreso General */}
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border rounded-2xl p-6 shadow-md"
+          className="relative group"
         >
-          <h2 className="text-base font-semibold mb-4 text-center text-primary flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" />
-            Progreso General
-          </h2>
-          <Progress value={progress} className="h-2 mb-2" />
-          <p className="text-center text-xs text-muted-foreground mt-2">
-            {learnedCount} de {words.length} palabras aprendidas
-          </p>
-        </motion.div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000" />
+          <div className="relative glass-card rounded-3xl p-6 border border-white/10">
+            <div className="flex justify-between items-end mb-4">
+              <div>
+                <p className="text-accent text-xs uppercase tracking-widest mb-1 font-semibold">
+                  Estado de la Misión
+                </p>
+                <h2 className="font-headline text-2xl font-extrabold tracking-tight">
+                  Progreso General
+                </h2>
+              </div>
+              <div className="text-right">
+                <span className="text-3xl font-black gradient-text-primary">{learnedCount}</span>
+                <span className="text-on-surface/60 font-bold"> / {words.length}</span>
+              </div>
+            </div>
+            <div className="w-full h-3 bg-surface-container-lowest rounded-full overflow-hidden p-[2px]">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="h-full gradient-primary rounded-full shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+              />
+            </div>
+            <div className="mt-4 flex justify-between items-center text-[10px] font-semibold uppercase tracking-tighter">
+              <div className="flex gap-3 text-on-surface/60">
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> {inProgressCount} EN PROCESO
+                </span>
+              </div>
+              <div className="text-on-surface/60 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {pendingCount} PENDIENTES
+              </div>
+            </div>
+          </div>
+        </motion.section>
 
-        {/* Completion Message */}
         {completionMessage}
 
         {/* Word List */}
-        <div className="space-y-3 mt-6">
+        <div className="space-y-5">
           <AnimatePresence mode="popLayout">
-            {shuffledWords.map((word, index) => (
-              <motion.div
-                key={word.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Card
-                  className={`p-5 transition-all duration-200 cursor-pointer hover:shadow-xl bg-card border-border ${
-                    !word.learned 
-                      ? "hover:border-primary/50" 
-                      : "opacity-90"
-                  }`}
+            {shuffledWords.map((word, index) => {
+              const status: "learned" | "inProgress" | "pending" = word.learned
+                ? "learned"
+                : word.inProgress
+                ? "inProgress"
+                : "pending";
+
+              const text = word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1);
+              const parenMatch = text.match(/^(.*?)(\([^)]+\))(.*)$/);
+
+              return (
+                <motion.div
+                  key={word.id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ delay: index * 0.03 }}
+                  className={`bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 rounded-[2rem] p-6 group border ${
+                    status === "inProgress"
+                      ? "border-secondary/30 shadow-[0_0_25px_hsl(var(--secondary)/0.15)]"
+                      : "border-white/5"
+                  } cursor-pointer`}
                   onClick={() => handleLearnWord(word)}
                 >
-                  {/* Word Info */}
-                  <div className="text-center mb-4">
-                    <h3 className="text-xl md:text-2xl text-foreground mb-2">
-                      {(() => {
-                        const text = word.spanish.charAt(0).toUpperCase() + word.spanish.slice(1);
-                        const parenMatch = text.match(/^(.*?)(\([^)]+\))(.*)$/);
-                        
-                        if (parenMatch) {
-                          return (
-                            <>
-                              <span className="font-bold">{parenMatch[1]}</span>
-                              <span className="text-base font-normal">{parenMatch[2]}</span>
-                              <span className="font-bold">{parenMatch[3]}</span>
-                            </>
-                          );
-                        }
-                        return <span className="font-bold">{text}</span>;
-                      })()}
-                    </h3>
-                  </div>
-
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-3 items-center justify-center">
-                    <Badge
-                      variant={word.learned ? "default" : "secondary"}
-                      className={`min-w-[110px] py-2 justify-center text-sm font-medium ${
-                        word.learned 
-                          ? "bg-green-600 text-white hover:bg-green-700" 
-                          : "bg-secondary text-secondary-foreground border border-border"
-                      }`}
-                    >
-                      {word.learned ? (
+                  <div className="flex justify-between items-start mb-6 gap-3">
+                    <h4 className="font-headline text-2xl md:text-3xl font-bold tracking-tight group-hover:text-primary transition-colors">
+                      {parenMatch ? (
                         <>
-                          <Check className="w-4 h-4 mr-1" />
-                          Aprendida
+                          <span>{parenMatch[1]}</span>
+                          <span className="text-base font-normal text-on-surface/60">
+                            {parenMatch[2]}
+                          </span>
+                          <span>{parenMatch[3]}</span>
                         </>
                       ) : (
-                        "Pendiente"
+                        text
                       )}
-                    </Badge>
+                    </h4>
 
-                    <Button
-                      size="sm"
-                      className={`min-w-[110px] ${
-                        word.learned
-                          ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                          : word.inProgress
-                          ? "bg-green-500/80 hover:bg-green-500 text-white animate-pulse-subtle shadow-[0_0_12px_rgba(34,197,94,0.45)]"
-                          : "gradient-animated"
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLearnWord(word);
-                      }}
-                    >
-                      {word.learned ? "Repasar" : word.inProgress ? "Concluir" : "Aprender"}
-                    </Button>
+                    {status === "learned" && (
+                      <div className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/20 shrink-0">
+                        <Check className="w-3.5 h-3.5" />
+                        Aprendida
+                      </div>
+                    )}
+                    {status === "inProgress" && (
+                      <div className="flex items-center gap-1.5 bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold border border-secondary/20 shrink-0">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        En curso
+                      </div>
+                    )}
+                    {status === "pending" && (
+                      <div className="flex items-center gap-1.5 bg-surface-container-highest text-on-surface/70 px-3 py-1 rounded-full text-xs font-bold border border-white/5 shrink-0">
+                        Pendiente
+                      </div>
+                    )}
                   </div>
-                </Card>
-              </motion.div>
-            ))}
+
+                  <div className="flex items-center justify-end gap-4">
+                    {status === "learned" ? (
+                      <Button
+                        className="flex items-center gap-2 bg-surface-container-highest text-on-surface font-bold py-3 px-6 rounded-xl active:scale-95 transition-all hover:bg-surface-bright"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLearnWord(word);
+                        }}
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                        Repasar
+                      </Button>
+                    ) : status === "inProgress" ? (
+                      <Button
+                        className="flex items-center gap-2 bg-secondary text-secondary-foreground font-bold py-3 px-6 rounded-xl active:scale-95 transition-all hover:brightness-110 shadow-lg shadow-secondary/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLearnWord(word);
+                        }}
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Concluir
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full flex items-center justify-center gap-2 gradient-animated text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLearnWord(word);
+                        }}
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Aprender
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
 
+        {/* Decorative footer */}
+        <div className="py-8 flex flex-col items-center justify-center text-center space-y-3 opacity-40">
+          <Sparkles className="w-8 h-8 text-primary" />
+          <p className="text-xs uppercase tracking-[0.3em] text-on-surface/60">
+            Sigue descodificando el camino
+          </p>
+        </div>
       </main>
 
       {/* Bottom Navigation */}

@@ -1317,7 +1317,7 @@ const LearnWord = () => {
               <div className="flex items-center gap-2 mb-6">
                 <Sparkles className="w-5 h-5 text-tertiary" />
                 <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
-                  ¿Cómo se dice?
+                  ¿Cómo se traduce?
                 </h2>
               </div>
 

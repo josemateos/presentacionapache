@@ -201,12 +201,13 @@ const VocabularyDay1 = () => {
                 <span className="text-on-surface/60 font-bold"> / {words.length}</span>
               </div>
             </div>
-            <div className="w-full h-3 bg-surface-container-lowest rounded-full overflow-hidden p-[2px]">
+            <div className="w-full h-3 bg-black rounded-full overflow-hidden p-[2px]">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="h-full gradient-primary rounded-full shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                className="h-full rounded-full shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
               />
             </div>
             <div className="mt-4 flex justify-between items-center text-[10px] font-semibold uppercase tracking-tighter">
@@ -314,7 +315,8 @@ const VocabularyDay1 = () => {
                       </Button>
                     ) : (
                       <Button
-                        className="w-full flex items-center justify-center gap-2 gradient-animated text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        className="w-full flex items-center justify-center gap-2 text-on-primary font-black py-4 px-8 rounded-2xl active:scale-95 transition-all shadow-xl shadow-primary/20"
+                        style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleLearnWord(word);

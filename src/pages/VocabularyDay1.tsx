@@ -73,6 +73,7 @@ const VocabularyDay1 = () => {
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const [activeTab, setActiveTab] = useState("vocabulary");
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 

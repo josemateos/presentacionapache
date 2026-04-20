@@ -373,6 +373,27 @@ const VocabularyDay1 = () => {
 
       {/* Bottom Navigation */}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isPremium={true} />
+
+      {/* Reset Confirmation Dialog */}
+      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Borrar todos los avances?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Se reiniciará el progreso de todas las palabras del Día 1. Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, conservar avances</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetProgress}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Sí, borrar avances
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

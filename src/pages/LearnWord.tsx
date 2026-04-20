@@ -1312,9 +1312,9 @@ const LearnWord = () => {
             <div className="pointer-events-none fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[100px]" />
             <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
 
-            <div className="flex flex-col items-center px-2 py-4">
+            <div className="flex flex-col items-center px-2 pt-1 pb-4">
               {/* Instructional header con icono lightbulb */}
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-5">
                 <Sparkles className="w-5 h-5 text-tertiary" />
                 <h2 className="font-headline font-extrabold text-xl md:text-2xl tracking-tight text-on-surface uppercase italic opacity-90">
                   ¿Cómo se traduce?
@@ -1322,10 +1322,10 @@ const LearnWord = () => {
               </div>
 
               {/* Central highlight word */}
-              <div className="relative group mb-10">
+              <div className="relative group mb-9">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20" />
-                <div className="relative glass-card rounded-3xl py-6 px-10 md:px-16 border border-white/10">
-                  <h1 className="font-headline font-black text-4xl md:text-5xl text-on-surface text-shadow-glow text-center">
+                <div className="relative glass-card rounded-3xl py-4 px-8 md:px-12 border border-white/10">
+                  <h1 className="font-headline font-black text-3xl md:text-4xl text-on-surface text-shadow-glow text-center">
                     {spanish.charAt(0).toUpperCase() + spanish.slice(1)}
                   </h1>
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container-low px-3 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
@@ -1355,7 +1355,7 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={meaningVerified}
-                      className={`group relative flex items-center justify-between px-5 py-3 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border-2 ${
+                      className={`group relative flex items-center justify-between px-5 py-2 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border-2 ${
                         showCorrect
                           ? "bg-emerald-500/15 border-emerald-500/60 shadow-[0_0_25px_hsl(142_76%_45%/0.2)]"
                           : showWrong

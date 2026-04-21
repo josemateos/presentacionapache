@@ -33,6 +33,10 @@ const Invitation3 = () => {
               <path d="M94 4 L108 12 L94 20 Z" fill="currentColor" />
             </svg>
 
+            {/* Medal icon in square */}
+            <div className="w-20 h-20 inline-flex items-center justify-center rounded-2xl bg-secondary-container/10 border border-secondary/20 flex-shrink-0">
+              <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
+            </div>
           </div>
           <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight pt-2">
             Únete a los miles que lo <span className="text-tertiary italic">están logrando.</span>

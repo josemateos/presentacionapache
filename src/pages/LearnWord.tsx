@@ -360,6 +360,22 @@ const LearnWord = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+  const audioAnalyserRef = useRef<AnalyserNode | null>(null);
+  const audioRafRef = useRef<number | null>(null);
+  const stopAudioMeter = () => {
+    if (audioRafRef.current) {
+      cancelAnimationFrame(audioRafRef.current);
+      audioRafRef.current = null;
+    }
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach(t => t.stop());
+      audioStreamRef.current = null;
+    }
+    audioAnalyserRef.current = null;
+    setAudioLevel(0);
+  };
   const verifyTimeoutRef = useRef<number | null>(null);
   const clearVerifyTimeout = () => {
     if (verifyTimeoutRef.current) {
@@ -555,11 +571,44 @@ const LearnWord = () => {
       } catch { /* Safari no soporta permissions.query para micrófono */ }
 
       // Solicitar acceso al micrófono explícitamente para disparar el prompt de permisos
-      // (necesario sobre todo dentro de iframes, donde SpeechRecognition puede fallar en silencio)
+      // y usar el stream para el visualizador de nivel de audio en tiempo real.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Cerramos el stream inmediatamente: SpeechRecognition abre el suyo propio.
-        stream.getTracks().forEach(t => t.stop());
+        audioStreamRef.current = stream;
+
+        try {
+          if (!audioCtxRef.current) {
+            const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+            if (Ctx) audioCtxRef.current = new Ctx();
+          }
+          if (audioCtxRef.current) {
+            if (audioCtxRef.current.state === 'suspended') {
+              await audioCtxRef.current.resume();
+            }
+            const source = audioCtxRef.current.createMediaStreamSource(stream);
+            const analyser = audioCtxRef.current.createAnalyser();
+            analyser.fftSize = 512;
+            source.connect(analyser);
+            audioAnalyserRef.current = analyser;
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const tick = () => {
+              if (!audioAnalyserRef.current) return;
+              audioAnalyserRef.current.getByteTimeDomainData(data);
+              // RMS normalizado a 0..1
+              let sum = 0;
+              for (let i = 0; i < data.length; i++) {
+                const v = (data[i] - 128) / 128;
+                sum += v * v;
+              }
+              const rms = Math.sqrt(sum / data.length);
+              setAudioLevel(Math.min(1, rms * 2.5));
+              audioRafRef.current = requestAnimationFrame(tick);
+            };
+            audioRafRef.current = requestAnimationFrame(tick);
+          }
+        } catch (e) {
+          console.warn('No se pudo iniciar visualizador de audio:', e);
+        }
       } catch (err: any) {
         const name = err?.name || "";
         let description = "No se pudo acceder al micrófono. Intenta de nuevo.";
@@ -578,6 +627,7 @@ const LearnWord = () => {
         });
         setIsRecording(false);
         setIsVerifying(false);
+        stopAudioMeter();
         return;
       }
 
@@ -704,6 +754,7 @@ const LearnWord = () => {
       recognition.onend = () => {
         if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
         clearVerifyTimeout();
+        stopAudioMeter();
         if (!resultReceived) {
           // onerror ya manejó los casos relevantes; aquí solo desbloqueamos
           setIsVerifying(false);
@@ -1797,15 +1848,35 @@ const LearnWord = () => {
 
               {isRecording && (
                 <div
-                  className="flex items-center justify-center gap-3 mb-4 py-3 px-4 rounded-lg bg-destructive/10 border border-destructive/40"
+                  className="flex flex-col items-center justify-center gap-3 mb-4 py-4 px-4 rounded-lg bg-destructive/10 border border-destructive/40"
                   role="status"
                   aria-live="polite"
                 >
-                  <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75 animate-ping" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" />
-                  </span>
-                  <span className="text-sm font-medium text-destructive">Capturando audio…</span>
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75 animate-ping" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" />
+                    </span>
+                    <span className="text-sm font-medium text-destructive">Capturando audio…</span>
+                  </div>
+                  <div className="flex items-end justify-center gap-1 h-10 w-full max-w-[220px]">
+                    {Array.from({ length: 16 }).map((_, i) => {
+                      // Curva tipo "ecualizador": las barras del centro reaccionan más
+                      const center = 7.5;
+                      const distance = Math.abs(i - center) / center;
+                      const factor = 1 - distance * 0.55;
+                      const base = 14;
+                      const max = 36;
+                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
+                      return (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-gradient-to-t from-pink-500 to-cyan-400 transition-all duration-75 ease-out"
+                          style={{ height: `${height}px` }}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 

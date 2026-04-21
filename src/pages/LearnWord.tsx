@@ -515,6 +515,41 @@ const LearnWord = () => {
     }
   };
 
+  // Sonido de error: dos tonos descendentes
+  const playErrorSound = () => {
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!Ctx) return;
+        audioCtxRef.current = new Ctx();
+      }
+      const context = audioCtxRef.current!;
+      const playTones = () => {
+        const playOne = (freq: number, startOffset: number) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.connect(gain);
+          gain.connect(context.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.25, context.currentTime + startOffset);
+          gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + startOffset + 0.25);
+          osc.start(context.currentTime + startOffset);
+          osc.stop(context.currentTime + startOffset + 0.25);
+        };
+        playOne(330, 0);    // E4
+        playOne(247, 0.18); // B3
+      };
+      if (context.state === 'suspended') {
+        context.resume().then(playTones).catch((e) => console.error('AudioContext resume failed:', e));
+      } else {
+        playTones();
+      }
+    } catch (e) {
+      console.error('Error playing error sound:', e);
+    }
+  };
+
   const handlePlayAudio = () => {
     try {
       // Reanudar AudioContext si está suspendido (gesto de usuario) — ayuda a desbloquear el tono de éxito posterior
@@ -742,11 +777,13 @@ const LearnWord = () => {
             setIsRecording(false);
           }, 1500);
         } else {
+          playErrorSound();
           toast({
-            title: "Intentar nuevamente",
-            description: `Escuchamos: "${transcript}". Intenta pronunciar: "${english}"`,
+            title: "❌ Pronunciación incorrecta",
+            description: `Escuchamos: "${transcript || "(nada)"}". Debes pronunciar: "${english}"`,
             variant: "destructive",
-            duration: 3000,
+            duration: 3500,
+            className: "bg-red-600 text-white border-red-700",
           });
           clearVerifyTimeout();
           setIsVerifying(false);

@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import apacheLogo from "@/assets/logo_apache.png";
 import chiefImage from "@/assets/native-american-chief.jpeg";
 
 const MaterialIcon = ({ name, className = "", filled = false }: { name: string; className?: string; filled?: boolean }) => (
@@ -17,9 +16,9 @@ const Invitation3 = () => {
         {/* Hero Section */}
         <header className="text-center space-y-6">
           <div className="flex items-center justify-center gap-5 mb-6">
-            {/* Apache Logo in purple square */}
+            {/* Native American chief logo in purple square */}
             <div className="w-20 h-20 rounded-2xl bg-[#2a1854] border border-secondary/30 flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(210,188,250,0.25)] flex-shrink-0">
-              <img src={apacheLogo} alt="Logo Apache" className="w-full h-full object-cover" />
+              <img src={chiefImage} alt="Jefe nativo americano" className="w-full h-full object-cover" />
             </div>
 
             {/* Apache Arrow pointing right */}

@@ -35,8 +35,9 @@ const Invitation3 = () => {
             </svg>
 
             {/* Medal icon in square */}
-            <div className="w-20 h-20 inline-flex items-center justify-center rounded-2xl bg-secondary-container/10 border border-secondary/20 flex-shrink-0">
-              <MaterialIcon name="military_tech" className="text-secondary text-5xl" filled />
+            {/* Native American chief image in square */}
+            <div className="w-20 h-20 inline-flex items-center justify-center rounded-2xl bg-secondary-container/10 border border-secondary/20 flex-shrink-0 overflow-hidden">
+              <img src={chiefImage} alt="Jefe nativo americano" className="w-full h-full object-cover" />
             </div>
           </div>
           <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight pt-2">

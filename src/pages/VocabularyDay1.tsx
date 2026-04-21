@@ -77,13 +77,15 @@ const VocabularyDay1 = () => {
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 
-  // Función para ordenar array: aprendidas primero
+  // Aprendidas primero, resto en orden aleatorio
   const sortWords = (array: Word[]) => {
-    return [...array].sort((a, b) => {
-      // Aprendidas primero (true = 1, false = 0, queremos descendente)
-      if (a.learned === b.learned) return 0;
-      return a.learned ? -1 : 1;
-    });
+    const learned = array.filter(w => w.learned);
+    const rest = array.filter(w => !w.learned);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    return [...learned, ...rest];
   };
 
   useEffect(() => {

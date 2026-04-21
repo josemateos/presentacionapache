@@ -754,6 +754,7 @@ const LearnWord = () => {
       recognition.onend = () => {
         if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
         clearVerifyTimeout();
+        stopAudioMeter();
         if (!resultReceived) {
           // onerror ya manejó los casos relevantes; aquí solo desbloqueamos
           setIsVerifying(false);

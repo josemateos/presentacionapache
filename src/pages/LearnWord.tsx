@@ -1794,7 +1794,7 @@ const LearnWord = () => {
                 <Mic className="w-5 h-5 mr-2" />
                 {isRecording
                   ? 'Terminar grabación'
-                  : 'Practica tu pronunciación'}
+                  : 'GRABAR'}
               </button>
 
               {recordedAudio && !isVerifying && (

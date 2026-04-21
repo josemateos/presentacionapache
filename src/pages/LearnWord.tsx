@@ -1712,7 +1712,7 @@ const LearnWord = () => {
                   <Button
                     key={index}
                     variant="outline"
-                    className={`w-full h-14 text-lg bg-surface-container-high border-2 text-on-surface focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${
+                    className={`w-full h-14 text-lg bg-surface-container-high border-2 text-on-surface hover:text-on-surface focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${
                       selectedMeaningOption === option
                         ? option.toLowerCase() === spanish.toLowerCase()
                           ? "bg-emerald-500/15 border-emerald-500/60 hover:bg-emerald-500/15"

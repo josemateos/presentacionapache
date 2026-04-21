@@ -45,7 +45,7 @@ export const AppHeader = ({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="w-10 h-10 rounded-full border-2 border-accent/40 overflow-hidden bg-surface-container-highest flex items-center justify-center hover:border-accent transition-colors active:scale-95"
+            className="w-10 h-10 rounded-lg border-2 border-accent/40 overflow-hidden bg-surface-container-highest flex items-center justify-center hover:border-accent transition-colors active:scale-95"
           >
             <User className="w-5 h-5 text-muted-foreground" />
           </button>
@@ -72,7 +72,7 @@ export const AppHeader = ({
       {showProfileMenu && (
         <div className="fixed top-[64px] left-4 right-4 z-50 bg-surface-container-high border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl max-w-sm">
           <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-            <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/10">
+            <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center border border-white/10">
               <User className="w-6 h-6 text-muted-foreground" />
             </div>
             <div>

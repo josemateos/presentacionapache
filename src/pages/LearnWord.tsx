@@ -554,6 +554,33 @@ const LearnWord = () => {
         }
       } catch { /* Safari no soporta permissions.query para micrófono */ }
 
+      // Solicitar acceso al micrófono explícitamente para disparar el prompt de permisos
+      // (necesario sobre todo dentro de iframes, donde SpeechRecognition puede fallar en silencio)
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Cerramos el stream inmediatamente: SpeechRecognition abre el suyo propio.
+        stream.getTracks().forEach(t => t.stop());
+      } catch (err: any) {
+        const name = err?.name || "";
+        let description = "No se pudo acceder al micrófono. Intenta de nuevo.";
+        if (name === "NotAllowedError" || name === "SecurityError") {
+          description = "Permiso de micrófono bloqueado. Permite el micrófono en el navegador y recarga.";
+        } else if (name === "NotFoundError" || name === "OverconstrainedError") {
+          description = "No se encontró un micrófono conectado.";
+        } else if (name === "NotReadableError") {
+          description = "El micrófono está siendo usado por otra aplicación.";
+        }
+        toast({
+          title: "Micrófono no disponible",
+          description,
+          variant: "destructive",
+          duration: 4000,
+        });
+        setIsRecording(false);
+        setIsVerifying(false);
+        return;
+      }
+
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         toast({

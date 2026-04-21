@@ -9,7 +9,7 @@ import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { useTheme } from "next-themes";
-import logoApache from "@/assets/logo_apache.png";
+import logoApache from "@/assets/native-american-chief.jpeg";
 
 const loginSchema = z.object({
   email: z.string()

@@ -575,6 +575,9 @@ const LearnWord = () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         audioStreamRef.current = stream;
+        // Mostrar el ecualizador en cuanto el micrófono está activo,
+        // sin esperar a que SpeechRecognition dispare onstart (puede no hacerlo en iframes).
+        setIsRecording(true);
 
         try {
           if (!audioCtxRef.current) {

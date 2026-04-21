@@ -1644,12 +1644,9 @@ const LearnWord = () => {
             <div className="pointer-events-none fixed bottom-1/4 -right-20 w-64 h-64 bg-tertiary/10 blur-[100px]" />
 
             <div className="relative glass-card border border-white/10 rounded-3xl p-8">
-              <h3 className="text-2xl font-bold mb-2 text-center gradient-text-primary">
-                Selecciona la imagen correcta
+              <h3 className="text-2xl font-bold mb-6 text-center gradient-text-primary">
+                Selecciona la imagen que representa {wordId === "26" ? "In/At" : english}
               </h3>
-              <p className="text-center text-lg text-on-surface/70 mb-6">
-                ¿Cuál imagen representa: <span className="text-on-surface font-semibold">{wordId === "26" ? "In/At" : english}</span>?
-              </p>
 
               {isLoadingImages ? (
                 <div className="grid grid-cols-2 gap-4">

@@ -65,8 +65,30 @@ const VocabularyDay2 = () => {
   ]);
 
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
+
+  useEffect(() => {
+    setShuffledWords(prev => {
+      if (prev.length === 0) {
+        const learned = words.filter(w => w.learned);
+        const rest = words.filter(w => !w.learned);
+        for (let i = rest.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [rest[i], rest[j]] = [rest[j], rest[i]];
+        }
+        return [...learned, ...rest];
+      }
+      const wordsById = new Map(words.map(w => [w.id, w]));
+      const updated = prev.map(p => wordsById.get(p.id)).filter(Boolean) as Word[];
+      const knownIds = new Set(updated.map(w => w.id));
+      words.forEach(w => { if (!knownIds.has(w.id)) updated.push(w); });
+      const learned = updated.filter(w => w.learned);
+      const rest = updated.filter(w => !w.learned);
+      return [...learned, ...rest];
+    });
+  }, [words]);
 
   useEffect(() => {
     const saved = localStorage.getItem("vocabulary_day2_progress");
@@ -180,7 +202,7 @@ const VocabularyDay2 = () => {
 
         <div className="space-y-3 mt-6">
           <AnimatePresence mode="popLayout">
-            {words.map((word, index) => (
+            {(shuffledWords.length ? shuffledWords : words).map((word, index) => (
               <motion.div
                 key={word.id}
                 initial={{ opacity: 0, x: -20 }}

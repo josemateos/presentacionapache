@@ -77,13 +77,15 @@ const VocabularyDay1 = () => {
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
 
-  // Función para ordenar array: aprendidas primero
+  // Aprendidas primero, resto en orden aleatorio
   const sortWords = (array: Word[]) => {
-    return [...array].sort((a, b) => {
-      // Aprendidas primero (true = 1, false = 0, queremos descendente)
-      if (a.learned === b.learned) return 0;
-      return a.learned ? -1 : 1;
-    });
+    const learned = array.filter(w => w.learned);
+    const rest = array.filter(w => !w.learned);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    return [...learned, ...rest];
   };
 
   useEffect(() => {
@@ -122,9 +124,21 @@ const VocabularyDay1 = () => {
   }, []);
 
   useEffect(() => {
-    // Guardar progreso en localStorage y actualizar sorted
+    // Guardar progreso en localStorage
     localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
-    setShuffledWords(sortWords(words));
+    // Mantener orden actual: aprendidas primero, resto conserva su orden previo (aleatorio inicial)
+    setShuffledWords(prev => {
+      if (prev.length === 0) return sortWords(words);
+      const wordsById = new Map(words.map(w => [w.id, w]));
+      const updated = prev.map(p => wordsById.get(p.id)).filter(Boolean) as Word[];
+      // Agregar nuevas palabras que no estaban antes (al final)
+      const knownIds = new Set(updated.map(w => w.id));
+      words.forEach(w => { if (!knownIds.has(w.id)) updated.push(w); });
+      // Reordenar: aprendidas primero, resto conserva orden
+      const learned = updated.filter(w => w.learned);
+      const rest = updated.filter(w => !w.learned);
+      return [...learned, ...rest];
+    });
   }, [words]);
 
   const handleLearnWord = (word: Word) => {

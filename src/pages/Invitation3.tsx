@@ -33,11 +33,6 @@ const Invitation3 = () => {
               <path d="M94 4 L108 12 L94 20 Z" fill="currentColor" />
             </svg>
 
-            {/* Medal icon in square */}
-            {/* Native American chief image in square */}
-            <div className="w-20 h-20 inline-flex items-center justify-center rounded-2xl bg-secondary-container/10 border border-secondary/20 flex-shrink-0 overflow-hidden">
-              <img src={chiefImage} alt="Jefe nativo americano" className="w-full h-full object-cover" />
-            </div>
           </div>
           <h1 className="font-headline text-4xl font-extrabold tracking-tighter leading-tight pt-2">
             Únete a los miles que lo <span className="text-tertiary italic">están logrando.</span>

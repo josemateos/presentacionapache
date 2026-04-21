@@ -1839,7 +1839,7 @@ const LearnWord = () => {
                 }}
                 className="w-full h-12 mt-4 bg-surface-container-high border-white/15 text-on-surface hover:border-cyan-400 hover:bg-surface-container-high"
               >
-                Hacer después, continuar
+                Dejar para más tarde
               </Button>
             </div>
           </motion.div>

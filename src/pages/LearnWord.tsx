@@ -1784,8 +1784,7 @@ const LearnWord = () => {
 
               <button
                 onClick={handlePronunciationButton}
-                disabled={isVerifying && !isRecording}
-                className={`w-full h-12 rounded-md font-headline font-black tracking-wider uppercase text-base text-white flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`w-full h-12 rounded-md font-headline font-black tracking-wider uppercase text-base text-white flex items-center justify-center transition-all active:scale-[0.98] ${
                   isRecording
                     ? 'bg-destructive hover:bg-destructive animate-pulse-subtle'
                     : 'bg-gradient-to-r from-pink-500 to-pink-600 shadow-[0_0_30px_hsl(330_85%_55%/0.4)]'

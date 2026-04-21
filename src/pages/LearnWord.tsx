@@ -360,6 +360,22 @@ const LearnWord = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+  const audioAnalyserRef = useRef<AnalyserNode | null>(null);
+  const audioRafRef = useRef<number | null>(null);
+  const stopAudioMeter = () => {
+    if (audioRafRef.current) {
+      cancelAnimationFrame(audioRafRef.current);
+      audioRafRef.current = null;
+    }
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach(t => t.stop());
+      audioStreamRef.current = null;
+    }
+    audioAnalyserRef.current = null;
+    setAudioLevel(0);
+  };
   const verifyTimeoutRef = useRef<number | null>(null);
   const clearVerifyTimeout = () => {
     if (verifyTimeoutRef.current) {
@@ -555,11 +571,44 @@ const LearnWord = () => {
       } catch { /* Safari no soporta permissions.query para micrófono */ }
 
       // Solicitar acceso al micrófono explícitamente para disparar el prompt de permisos
-      // (necesario sobre todo dentro de iframes, donde SpeechRecognition puede fallar en silencio)
+      // y usar el stream para el visualizador de nivel de audio en tiempo real.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Cerramos el stream inmediatamente: SpeechRecognition abre el suyo propio.
-        stream.getTracks().forEach(t => t.stop());
+        audioStreamRef.current = stream;
+
+        try {
+          if (!audioCtxRef.current) {
+            const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+            if (Ctx) audioCtxRef.current = new Ctx();
+          }
+          if (audioCtxRef.current) {
+            if (audioCtxRef.current.state === 'suspended') {
+              await audioCtxRef.current.resume();
+            }
+            const source = audioCtxRef.current.createMediaStreamSource(stream);
+            const analyser = audioCtxRef.current.createAnalyser();
+            analyser.fftSize = 512;
+            source.connect(analyser);
+            audioAnalyserRef.current = analyser;
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const tick = () => {
+              if (!audioAnalyserRef.current) return;
+              audioAnalyserRef.current.getByteTimeDomainData(data);
+              // RMS normalizado a 0..1
+              let sum = 0;
+              for (let i = 0; i < data.length; i++) {
+                const v = (data[i] - 128) / 128;
+                sum += v * v;
+              }
+              const rms = Math.sqrt(sum / data.length);
+              setAudioLevel(Math.min(1, rms * 2.5));
+              audioRafRef.current = requestAnimationFrame(tick);
+            };
+            audioRafRef.current = requestAnimationFrame(tick);
+          }
+        } catch (e) {
+          console.warn('No se pudo iniciar visualizador de audio:', e);
+        }
       } catch (err: any) {
         const name = err?.name || "";
         let description = "No se pudo acceder al micrófono. Intenta de nuevo.";
@@ -578,6 +627,7 @@ const LearnWord = () => {
         });
         setIsRecording(false);
         setIsVerifying(false);
+        stopAudioMeter();
         return;
       }
 

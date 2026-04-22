@@ -10,6 +10,7 @@ interface Phrase {
   english: string;
   spanish: string;
   learned: boolean;
+  inProgress?: boolean;
 }
 
 const phrasesData: Record<number, Phrase[]> = {

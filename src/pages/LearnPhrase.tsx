@@ -450,6 +450,23 @@ const LearnPhrase = () => {
     }
   };
 
+  // Marcar la frase como "En Progreso" cuando el usuario avanza más allá del paso 1
+  useEffect(() => {
+    if (currentStep > 1) {
+      const savedKey = `phrases_day${day}_progress`;
+      const saved = localStorage.getItem(savedKey);
+      if (saved) {
+        try {
+          const phrasesArr = JSON.parse(saved);
+          const updated = phrasesArr.map((p: any) =>
+            p.id === phraseId && !p.learned ? { ...p, inProgress: true } : p
+          );
+          localStorage.setItem(savedKey, JSON.stringify(updated));
+        } catch {}
+      }
+    }
+  }, [currentStep, day, phraseId]);
+
   const goToNextStep = () => {
     if (currentStep < 6) {
       setCurrentStep(currentStep + 1);
@@ -478,6 +495,23 @@ const LearnPhrase = () => {
     } else {
       navigate(`/phrases-day?day=${day}`);
     }
+  };
+
+  const goToPreviousStep = () => {
+    if (currentStep <= 1) return;
+    const prev = currentStep - 1;
+    setCurrentStep(prev);
+    setIsStepComplete(false);
+    setFeedback("");
+    if (prev <= 1) setUserAttemptSpanish([]);
+    if (prev <= 2) setUserAttemptEnglish([]);
+    if (prev <= 3) setUserAuxiliary("");
+    if (prev <= 4) setFinalPhrase("");
+    setTimeout(() => {
+      const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref, step6Ref];
+      const r = refs[prev];
+      if (r?.current) r.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
   };
 
   const goToPreviousSteps = () => {

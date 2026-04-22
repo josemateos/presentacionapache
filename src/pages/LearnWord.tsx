@@ -889,6 +889,18 @@ const LearnWord = () => {
 
     recognitionRef.current = recognition;
 
+    // Permite que "Terminar grabación" entregue feedback inmediato sin esperar onend.
+    stopWithFeedbackRef.current = () => {
+      if (resultReceived) return;
+      try { recognition.stop(); } catch {}
+      if (collectedAlternatives.length === 0) {
+        finalizeNoSpeech();
+      } else {
+        const matched = collectedAlternatives.some(isCloseMatch);
+        finalize(matched, collectedAlternatives[0] || "");
+      }
+    };
+
     // Iniciar el reconocedor INMEDIATAMENTE dentro del gesto del usuario.
     setIsVerifying(true);
     setIsRecording(true);

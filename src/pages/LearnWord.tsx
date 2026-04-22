@@ -906,6 +906,23 @@ const LearnWord = () => {
       return;
     }
 
+    // Watchdog: si en laptop el reconocedor termina silenciosamente (sin onresult,
+    // onerror u onend visibles), garantizamos feedback al usuario.
+    const watchdogMs = (isShortTarget ? 4500 : 10000) + 1500;
+    window.setTimeout(() => {
+      if (resultReceived) return;
+      try { recognition.stop(); } catch {}
+      window.setTimeout(() => {
+        if (resultReceived) return;
+        if (collectedAlternatives.length === 0) {
+          finalizeNoSpeech();
+        } else {
+          const matched = collectedAlternatives.some(isCloseMatch);
+          finalize(matched, collectedAlternatives[0] || "");
+        }
+      }, 800);
+    }, watchdogMs);
+
     // Tareas auxiliares (no bloquean la grabación):
     // - Reanudar AudioContext para sonidos de feedback
     // - Iniciar visualizador de nivel de audio

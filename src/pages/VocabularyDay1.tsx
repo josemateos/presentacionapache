@@ -241,7 +241,7 @@ const VocabularyDay1 = () => {
         {/* Word List */}
         <div className="space-y-5">
           <AnimatePresence mode="popLayout">
-            {shuffledWords.map((word, index) => {
+            {words.map((word, index) => {
               const status: "learned" | "inProgress" | "pending" = word.learned
                 ? "learned"
                 : word.inProgress

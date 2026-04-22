@@ -538,8 +538,18 @@ const LearnPhrase = () => {
               <ArrowLeft className="w-4 h-4" />
               Volver
             </Button>
-            <h1 className="text-lg font-semibold text-foreground">Frase {phraseId}</h1>
-            <div className="w-20"></div>
+            <h1 className="text-lg font-semibold text-foreground">Frase {phraseId} · Paso {currentStep}</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goToPreviousStep}
+              disabled={currentStep <= 1}
+              className="gap-2 text-white hover:text-white/80 disabled:opacity-30"
+              title="Ejercicio anterior"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Anterior
+            </Button>
           </div>
         </div>
       </header>

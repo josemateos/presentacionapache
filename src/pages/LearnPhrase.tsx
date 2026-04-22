@@ -437,7 +437,7 @@ const LearnPhrase = () => {
       const saved = localStorage.getItem(savedKey);
       if (saved) {
         const phrases = JSON.parse(saved);
-        const updated = phrases.map((p: any) => (p.id === phraseId ? { ...p, learned: true } : p));
+        const updated = phrases.map((p: any) => (p.id === phraseId ? { ...p, learned: true, inProgress: false } : p));
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
     } else {

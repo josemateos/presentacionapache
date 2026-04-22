@@ -1,11 +1,23 @@
-// tts-elevenlabs v2
-import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+// tts-elevenlabs v3 - with persistent storage cache
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+const BUCKET = "tts-cache";
+
+function slugify(text: string, voice: string): string {
+  const clean = text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .slice(0, 60);
+  return `${voice}/${clean || "audio"}.mp3`;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -22,6 +34,28 @@ Deno.serve(async (req) => {
       );
     }
 
+    const voice = voiceId || "EXAVITQu4vr4xnSDxMaL";
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const filePath = slugify(text, voice);
+    const publicUrl = `${supabaseUrl}/storage/v1/object/public/${BUCKET}/${filePath}`;
+
+    // 1) Check cache via HEAD
+    try {
+      const head = await fetch(publicUrl, { method: "HEAD" });
+      if (head.ok) {
+        return new Response(
+          JSON.stringify({ audioUrl: publicUrl, cached: true }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+    } catch (_) {
+      // ignore, will generate
+    }
+
+    // 2) Generate via ElevenLabs
     const apiKey = Deno.env.get("ELEVENLABS_API_KEY");
     if (!apiKey) {
       return new Response(
@@ -29,9 +63,6 @@ Deno.serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
-
-    // Default voice: Sarah (clear, natural English female)
-    const voice = voiceId || "EXAVITQu4vr4xnSDxMaL";
 
     const ttsResponse = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`,
@@ -65,10 +96,24 @@ Deno.serve(async (req) => {
     }
 
     const audioBuffer = await ttsResponse.arrayBuffer();
-    const audioContent = base64Encode(new Uint8Array(audioBuffer));
+
+    // 3) Upload to storage cache (best-effort)
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET)
+        .upload(filePath, audioBuffer, {
+          contentType: "audio/mpeg",
+          upsert: true,
+        });
+      if (uploadError) {
+        console.error("Cache upload error:", uploadError);
+      }
+    } catch (e) {
+      console.error("Cache upload exception:", e);
+    }
 
     return new Response(
-      JSON.stringify({ audioContent }),
+      JSON.stringify({ audioUrl: publicUrl, cached: false }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {

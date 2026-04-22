@@ -666,7 +666,7 @@ const LearnWord = () => {
         toast({
           title: "¡Excelente pronunciación!",
           description: "Pronunciación correcta. Avanzando...",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
 
@@ -994,7 +994,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
 
@@ -1020,7 +1020,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       setTimeout(() => {
         setSelectedMeaningOption(null);
@@ -1039,7 +1039,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1062,7 +1062,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       setTimeout(() => setSelectedMeaningOption(null), 1000);
     }
@@ -1080,7 +1080,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1104,7 +1104,7 @@ const LearnWord = () => {
           title: "Incorrecto",
           description: "Escribe 'In' en el primer campo y 'At' en el segundo",
           variant: "destructive",
-          duration: 2000,
+          duration: 1000,
         });
       }
       return;
@@ -1120,7 +1120,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1144,7 +1144,7 @@ const LearnWord = () => {
           title: "Incorrecto",
           description: "Escribe 'a' en el primer campo y 'an' en el segundo",
           variant: "destructive",
-          duration: 2000,
+          duration: 1000,
         });
       }
       return;
@@ -1162,7 +1162,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1185,7 +1185,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
     }
   };
@@ -1248,7 +1248,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1273,7 +1273,7 @@ const LearnWord = () => {
           title: "Incorrecto",
           description: "Forma 'In' y 'At' con las letras disponibles",
           variant: "destructive",
-          duration: 2000,
+          duration: 1000,
         });
       }
       return;
@@ -1289,7 +1289,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1313,7 +1313,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
     }
   };
@@ -1328,7 +1328,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Has identificado la imagen correcta",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1350,7 +1350,7 @@ const LearnWord = () => {
         title: "Incorrecto",
         description: "Intenta de nuevo",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       setTimeout(() => setSelectedImageId(null), 1000);
     }

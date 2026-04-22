@@ -957,9 +957,10 @@ const LearnWord = () => {
       }, 800);
     }, watchdogMs);
 
-    // Tareas auxiliares (no bloquean la grabación):
+    // Tareas auxiliares:
     // - Reanudar AudioContext para sonidos de feedback
-    // - Iniciar visualizador de nivel de audio
+    // Nota: no abrimos un segundo getUserMedia para el visualizador porque en
+    // algunos laptops interfiere con SpeechRecognition y degrada el reconocimiento.
     (async () => {
       try {
         if (!audioCtxRef.current) {
@@ -972,35 +973,10 @@ const LearnWord = () => {
       } catch (e) {
         console.warn('No se pudo inicializar AudioContext:', e);
       }
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioStreamRef.current = stream;
-        if (audioCtxRef.current) {
-          const source = audioCtxRef.current.createMediaStreamSource(stream);
-          const analyser = audioCtxRef.current.createAnalyser();
-          analyser.fftSize = 512;
-          source.connect(analyser);
-          audioAnalyserRef.current = analyser;
-          const data = new Uint8Array(analyser.frequencyBinCount);
-          const tick = () => {
-            if (!audioAnalyserRef.current) return;
-            audioAnalyserRef.current.getByteTimeDomainData(data);
-            let sum = 0;
-            for (let i = 0; i < data.length; i++) {
-              const v = (data[i] - 128) / 128;
-              sum += v * v;
-            }
-            const rms = Math.sqrt(sum / data.length);
-            setAudioLevel(Math.min(1, rms * 2.5));
-            audioRafRef.current = requestAnimationFrame(tick);
-          };
-          audioRafRef.current = requestAnimationFrame(tick);
-        }
-      } catch (e) {
-        console.warn('No se pudo iniciar visualizador de audio:', e);
-      }
     })();
+
+    // Indicador visual simple mientras el navegador escucha.
+    setAudioLevel(0.65);
   };
 
   const handleStopRecording = () => {

@@ -591,13 +591,13 @@ const LearnWord = () => {
         body: { text: textToSpeak },
       });
 
-      if (error || !data?.audioContent) {
+      if (error || !data?.audioUrl) {
         console.error("ElevenLabs TTS error, falling back:", error);
         fallbackBrowserTTS(textToSpeak);
         return;
       }
 
-      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+      const audioUrl = data.audioUrl as string;
       ttsCacheRef.current.set(textToSpeak, audioUrl);
       const audio = new Audio(audioUrl);
       currentAudioRef.current = audio;

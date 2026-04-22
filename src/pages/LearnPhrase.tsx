@@ -740,7 +740,7 @@ const LearnPhrase = () => {
                       key={index}
                       onClick={() => handleWordClick(word)}
                       disabled={isStepComplete || isUsed}
-                      className="px-3 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       {word}
                     </button>

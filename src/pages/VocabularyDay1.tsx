@@ -50,7 +50,7 @@ const INITIAL_WORDS: Word[] = [
     { id: 17, spanish: "Nosotros", english: "We", learned: false },
     { id: 18, spanish: "Invitar", english: "Invite", learned: false },
     { id: 19, spanish: "Comer", english: "Eat", learned: false },
-    { id: 20, spanish: "Mañana (parte del día)", english: "Tomorrow", learned: false },
+    { id: 20, spanish: "Mañana", english: "Tomorrow", learned: false },
     { id: 21, spanish: "Importante", english: "Important", learned: false },
     { id: 22, spanish: "Reunión", english: "Meeting", learned: false },
     { id: 23, spanish: "Trabajo", english: "Work", learned: false },

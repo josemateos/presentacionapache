@@ -571,6 +571,32 @@ const LearnWord = () => {
   const ttsCacheRef = useRef<Map<string, string>>(new Map());
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Prefetch del audio TTS para que el primer clic en la bocina reproduzca al instante
+  useEffect(() => {
+    if (!english) return;
+    const trimmed = english.trim();
+    const textToSpeak = trimmed === "I" ? "I." : english;
+    if (ttsCacheRef.current.has(textToSpeak)) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("tts-elevenlabs", {
+          body: { text: textToSpeak },
+        });
+        if (cancelled) return;
+        if (!error && data?.audioUrl) {
+          ttsCacheRef.current.set(textToSpeak, data.audioUrl as string);
+          const a = new Audio(data.audioUrl as string);
+          a.preload = "auto";
+          a.load();
+        }
+      } catch (e) {
+        console.warn("Prefetch TTS failed:", e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [english]);
+
   const fallbackBrowserTTS = (text: string) => {
     try {
       const utterance = new SpeechSynthesisUtterance(text);

@@ -1051,7 +1051,7 @@ const LearnPhrase = () => {
 
       {/* Modal de Resultado (Correcto / Incorrecto) */}
       <Dialog open={resultModal.open} onOpenChange={(open) => setResultModal((prev) => ({ ...prev, open }))}>
-        <DialogContent className="bg-card text-foreground sm:max-w-sm">
+        <DialogContent className="bg-card text-foreground max-w-[280px] sm:max-w-xs rounded-2xl">
           <DialogHeader>
             <DialogTitle className={resultModal.success ? "text-green-500" : "text-red-500"}>
               {resultModal.success ? "✓ " : "✗ "}{resultModal.title}

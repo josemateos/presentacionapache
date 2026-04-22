@@ -8,6 +8,7 @@ const corsHeaders = {
 };
 
 const BUCKET = "tts-cache";
+const CACHE_VERSION = "v2"; // bump to invalidate old cached audio
 
 function slugify(text: string, voice: string): string {
   const clean = text
@@ -16,7 +17,7 @@ function slugify(text: string, voice: string): string {
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .slice(0, 60);
-  return `${voice}/${clean || "audio"}.mp3`;
+  return `${CACHE_VERSION}/${voice}/${clean || "audio"}.mp3`;
 }
 
 Deno.serve(async (req) => {
@@ -34,7 +35,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const voice = voiceId || "EXAVITQu4vr4xnSDxMaL";
+    // Default voice: Brian (clear American English male, excellent diction)
+    const voice = voiceId || "nPczCjzI2devNBz1zQrb";
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
@@ -74,13 +76,13 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           text,
-          model_id: "eleven_multilingual_v2",
+          model_id: "eleven_turbo_v2_5",
           voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-            style: 0.3,
+            stability: 0.75,
+            similarity_boost: 0.85,
+            style: 0.0,
             use_speaker_boost: true,
-            speed: 0.95,
+            speed: 0.9,
           },
         }),
       },

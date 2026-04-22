@@ -173,7 +173,14 @@ const LearnPhrase = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedTranscript, setRecordedTranscript] = useState<string[]>([]);
   const [recordingTime, setRecordingTime] = useState(0);
-  
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [resultModal, setResultModal] = useState<{ open: boolean; success: boolean; title: string; message: string }>({
+    open: false,
+    success: false,
+    title: "",
+    message: "",
+  });
+
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
@@ -182,6 +189,28 @@ const LearnPhrase = () => {
   const step6Ref = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const audioAnalyserRef = useRef<AnalyserNode | null>(null);
+  const audioRafRef = useRef<number | null>(null);
+  const recordingIntervalRef = useRef<number | null>(null);
+
+  const showResult = (success: boolean, title: string, message: string) => {
+    setResultModal({ open: true, success, title, message });
+  };
+
+  const stopAudioMeter = () => {
+    if (audioRafRef.current) {
+      cancelAnimationFrame(audioRafRef.current);
+      audioRafRef.current = null;
+    }
+    audioAnalyserRef.current = null;
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach((t) => t.stop());
+      audioStreamRef.current = null;
+    }
+    setAudioLevel(0);
+  };
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
 

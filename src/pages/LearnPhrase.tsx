@@ -513,9 +513,9 @@ const LearnPhrase = () => {
       clearInterval(recordingIntervalRef.current);
       recordingIntervalRef.current = null;
     }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      try { mediaRecorderRef.current.stop(); } catch {}
-      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    if (audioStreamRef.current) {
+      try { audioStreamRef.current.getTracks().forEach(t => t.stop()); } catch {}
+      audioStreamRef.current = null;
     }
     if (recognitionRef.current) {
       // Usar stop() para que los resultados pendientes se entreguen antes de onend

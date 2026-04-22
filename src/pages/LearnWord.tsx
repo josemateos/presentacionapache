@@ -786,10 +786,33 @@ const LearnWord = () => {
       }, isShortTarget ? 4500 : 10000);
     };
 
+    const finalizeNoSpeech = () => {
+      if (resultReceived) return;
+      resultReceived = true;
+      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+      clearVerifyTimeout();
+      stopAudioMeter();
+      setIsVerifying(false);
+      setIsRecording(false);
+      playErrorSound();
+      toast({
+        title: "No se escuchó nada",
+        description: `Acércate al micrófono y pronuncia: "${english}"`,
+        variant: "destructive",
+        duration: 3000,
+      });
+    };
+
     recognition.onerror = (event: any) => {
       console.error("Recognition error:", event.error);
-      if (event.error === 'no-speech' || event.error === 'aborted') {
-        // No tratar como error fatal; onend manejará
+      if (event.error === 'no-speech') {
+        // En laptop, 'no-speech' suele dispararse y onend puede no mostrar feedback.
+        // Forzamos el mensaje aquí.
+        finalizeNoSpeech();
+        return;
+      }
+      if (event.error === 'aborted') {
+        // Aborted ocurre al stop() manual; dejamos que onend maneje.
         return;
       }
       if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }

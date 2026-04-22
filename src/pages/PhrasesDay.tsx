@@ -152,10 +152,10 @@ const PhrasesDay = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
               </span>
               <span className="flex items-center gap-1 justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> 0 EN PROCESO
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> {inProgressCount} EN PROCESO
               </span>
               <span className="flex items-center gap-1 justify-end">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {phrases.length - learnedCount} PENDIENTES
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {pendingCount} PENDIENTES
               </span>
             </div>
           </div>

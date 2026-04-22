@@ -199,8 +199,35 @@ const LearnPhrase = () => {
   const audioRafRef = useRef<number | null>(null);
   const recordingIntervalRef = useRef<number | null>(null);
 
+  const playSuccessSound = () => {
+    try {
+      const AC = (window.AudioContext || (window as any).webkitAudioContext);
+      if (!AC) return;
+      const ctx = new AC();
+      const now = ctx.currentTime;
+      // Arpegio alegre: C5 - E5 - G5
+      const notes = [523.25, 659.25, 783.99];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const start = now + i * 0.12;
+        const end = start + 0.22;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, end);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(end + 0.02);
+      });
+      setTimeout(() => ctx.close().catch(() => {}), 800);
+    } catch {}
+  };
+
   const showResult = (success: boolean, title: string, message: string) => {
     setResultModal({ open: true, success, title, message });
+    if (success) playSuccessSound();
   };
 
   const stopAudioMeter = () => {
@@ -1035,7 +1062,7 @@ const LearnPhrase = () => {
                   <li>El orden correcto es: Persona, Verbo, Objeto</li>
                   <li>En Ingles no existe "quiero, juego, aprendo" siempre se utiliza "querer, jugar, aprender"</li>
                   <li>Frutas frescas, suéter rojo, mesa grande siempre se invierte por "Frescas frutas, rojo sueter, grande mesa"</li>
-                  <li>En Ingles nunca se utiliza fresca<span className="text-yellow-500">s</span>, rojo<span className="text-yellow-500">s</span>, grande<span className="text-yellow-500">s</span> solo se dice "fresca, rojo, grande"</li>
+                  <li>En Ingles nunca se utiliza fresca<span className="text-cyan-400 font-bold">s</span>, rojo<span className="text-cyan-400 font-bold">s</span>, grande<span className="text-cyan-400 font-bold">s</span> solo se dice "fresca, rojo, grande"</li>
                 </ul>
               ) : (
                 <div className="mt-4 space-y-3">

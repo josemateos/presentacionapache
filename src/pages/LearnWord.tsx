@@ -681,11 +681,16 @@ const LearnWord = () => {
       return;
     }
 
+    const targetLen = english.trim().length;
+    const isShortTarget = targetLen <= 3;
+
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    recognition.continuous = true;        // mantener abierto más tiempo
+    // Para palabras cortas (como "I") usamos modo single-shot para que onend dispare
+    // pronto tras la primera utterance y se entregue feedback inmediato.
+    recognition.continuous = !isShortTarget;
     recognition.interimResults = true;    // recoger resultados parciales
-    recognition.maxAlternatives = 8;
+    recognition.maxAlternatives = 10;
 
     let resultReceived = false;
     let safetyTimer: number | null = null;
@@ -718,7 +723,7 @@ const LearnWord = () => {
     const isCloseMatch = (candidate: string): boolean => {
       const c = normalize(candidate);
       if (!c) return false;
-      if (targetWord === "I") return ["i", "eye", "aye", "ay"].includes(c);
+      if (targetWord === "I") return ["i", "eye", "aye", "ay", "hi", "high", "ai", "ie", "eyes"].includes(c) || c.split(/\s+/).some(w => ["i","eye","aye","ay","hi","high","ai","ie"].includes(w));
       if (c === target) return true;
       if (c.includes(target) || target.includes(c)) return true;
       // Comparar cada palabra del transcript contra la palabra objetivo
@@ -774,10 +779,11 @@ const LearnWord = () => {
 
     recognition.onstart = () => {
       setIsRecording(true);
-      // Más tiempo para que el usuario hable (10s)
+      // Tiempo máximo de escucha. Para palabras cortas usamos una ventana más breve
+      // para entregar feedback rápidamente si el reconocedor no devuelve nada.
       safetyTimer = window.setTimeout(() => {
         try { recognition.stop(); } catch {}
-      }, 10000);
+      }, isShortTarget ? 4500 : 10000);
     };
 
     recognition.onerror = (event: any) => {

@@ -687,10 +687,10 @@ const LearnWord = () => {
 
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    // Para palabras cortas (como "I") usamos modo single-shot para que onend dispare
-    // pronto tras la primera utterance y se entregue feedback inmediato.
-    recognition.continuous = !isShortTarget;
-    recognition.interimResults = true;    // recoger resultados parciales
+    // Este ejercicio siempre evalúa una sola palabra/frase breve.
+    // En desktop, continuous=true tiende a retrasar o degradar el resultado final.
+    recognition.continuous = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 10;
 
     let resultReceived = false;
@@ -889,32 +889,36 @@ const LearnWord = () => {
 
     recognitionRef.current = recognition;
 
-    // Permite que "Terminar grabación" entregue feedback rápido sin esperar onend.
-    // Damos al navegador una breve ventana para que entregue resultados finales
-    // (Chrome desktop suele despachar onresult justo antes de onend).
+    // Al tocar "Terminar grabación" no marcamos incorrecto enseguida.
+    // En laptop el resultado final suele llegar justo después de stop()/onend.
     stopWithFeedbackRef.current = () => {
       if (resultReceived) return;
+      setIsRecording(false);
       try { recognition.stop(); } catch {}
-      // Esperamos hasta 1.2s a que llegue onresult/onend con resultados reales.
+
       const start = Date.now();
       const poll = () => {
         if (resultReceived) return;
-        const elapsed = Date.now() - start;
-        // Si ya hay un match en alternativas, finalizamos como correcto de inmediato
+
         if (collectedAlternatives.some(isCloseMatch)) {
           finalize(true, collectedAlternatives.find(isCloseMatch) || "");
           return;
         }
-        if (elapsed >= 1200) {
+
+        const elapsed = Date.now() - start;
+        if (elapsed >= 2600) {
           if (collectedAlternatives.length === 0) {
             finalizeNoSpeech();
           } else {
-            finalize(false, collectedAlternatives[0] || "");
+            const matched = collectedAlternatives.some(isCloseMatch);
+            finalize(matched, collectedAlternatives[0] || "");
           }
           return;
         }
-        window.setTimeout(poll, 120);
+
+        window.setTimeout(poll, 150);
       };
+
       poll();
     };
 

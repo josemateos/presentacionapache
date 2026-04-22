@@ -597,12 +597,13 @@ const LearnWord = () => {
     return () => { cancelled = true; };
   }, [english]);
 
-  const fallbackBrowserTTS = (text: string) => {
+  const fallbackBrowserTTS = (text: string, utterance?: SpeechSynthesisUtterance) => {
     try {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US";
+      const speechUtterance = utterance ?? new SpeechSynthesisUtterance("");
+      speechUtterance.text = text.trim() === "I" || text.trim() === "I." ? "eye" : text;
+      speechUtterance.lang = "en-US";
       window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+      window.speechSynthesis.speak(speechUtterance);
     } catch (e) {
       console.error("Fallback TTS failed:", e);
     }
@@ -610,6 +611,9 @@ const LearnWord = () => {
 
   const handlePlayAudio = async () => {
     try {
+      const fallbackUtterance = new SpeechSynthesisUtterance("");
+      fallbackUtterance.lang = "en-US";
+
       if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
         audioCtxRef.current.resume().catch(() => {});
       }
@@ -620,6 +624,11 @@ const LearnWord = () => {
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
         currentAudioRef.current = null;
+      }
+
+      if (trimmed === "I") {
+        fallbackBrowserTTS(trimmed, fallbackUtterance);
+        return;
       }
 
       // Check cache
@@ -637,7 +646,7 @@ const LearnWord = () => {
 
       if (error || !data?.audioUrl) {
         console.error("ElevenLabs TTS error, falling back:", error);
-        fallbackBrowserTTS(textToSpeak);
+        fallbackBrowserTTS(textToSpeak, fallbackUtterance);
         return;
       }
 

@@ -83,6 +83,8 @@ const PhrasesDay = () => {
   }, [phrases, day]);
 
   const learnedCount = phrases.filter((p) => p.learned).length;
+  const inProgressCount = phrases.filter((p) => p.inProgress && !p.learned).length;
+  const pendingCount = phrases.length - learnedCount - inProgressCount;
   const progress = phrases.length > 0 ? (learnedCount / phrases.length) * 100 : 0;
 
   const handleLearnPhrase = (phrase: Phrase) => {

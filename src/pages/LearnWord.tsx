@@ -630,78 +630,62 @@ const LearnWord = () => {
 
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 5;
+    recognition.continuous = true;        // mantener abierto más tiempo
+    recognition.interimResults = true;    // recoger resultados parciales
+    recognition.maxAlternatives = 8;
 
     let resultReceived = false;
     let safetyTimer: number | null = null;
+    const collectedAlternatives: string[] = [];
 
-    recognition.onstart = () => {
-      setIsRecording(true);
-      safetyTimer = window.setTimeout(() => {
-        try { recognition.stop(); } catch {}
-      }, 6000);
-    };
+    const normalize = (s: string) => s.toLowerCase().replace(/[^a-záéíóúñü ]/gi, "").trim();
 
-    recognition.onerror = (event: any) => {
-      console.error("Recognition error:", event.error);
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-        toast({
-          title: "Micrófono bloqueado",
-          description: "Habilita el micrófono en los ajustes del navegador y recarga la página.",
-          variant: "destructive",
-          duration: 4000,
-        });
-      } else if (event.error === 'no-speech') {
-        toast({
-          title: "No se escuchó nada",
-          description: "Acércate al micrófono y vuelve a intentarlo.",
-          variant: "destructive",
-          duration: 2500,
-        });
-      } else if (event.error === 'audio-capture') {
-        toast({
-          title: "Sin micrófono",
-          description: "No se detectó un micrófono disponible.",
-          variant: "destructive",
-          duration: 3000,
-        });
-      } else if (event.error !== 'aborted') {
-        toast({
-          title: "Error",
-          description: "No se pudo verificar la pronunciación. Intenta de nuevo.",
-          variant: "destructive",
-          duration: 2500,
-        });
+    // Distancia de Levenshtein para tolerancia fonética
+    const levenshtein = (a: string, b: string): number => {
+      if (a === b) return 0;
+      if (!a.length) return b.length;
+      if (!b.length) return a.length;
+      const m: number[][] = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) m[i][0] = i;
+      for (let j = 0; j <= b.length; j++) m[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          m[i][j] = Math.min(m[i - 1][j] + 1, m[i][j - 1] + 1, m[i - 1][j - 1] + cost);
+        }
       }
-
-      clearVerifyTimeout();
-      stopAudioMeter();
-      setIsVerifying(false);
-      setIsRecording(false);
+      return m[a.length][b.length];
     };
 
-    recognition.onresult = (event: any) => {
+    const targetWord = english.trim();
+    const target = normalize(targetWord);
+    // Palabras cortas: tolerancia 1; medianas: 2; largas: ~30%
+    const tolerance = target.length <= 3 ? 1 : target.length <= 6 ? 2 : Math.ceil(target.length * 0.3);
+
+    const isCloseMatch = (candidate: string): boolean => {
+      const c = normalize(candidate);
+      if (!c) return false;
+      if (targetWord === "I") return ["i", "eye", "aye", "ay"].includes(c);
+      if (c === target) return true;
+      if (c.includes(target) || target.includes(c)) return true;
+      // Comparar cada palabra del transcript contra la palabra objetivo
+      const words = c.split(/\s+/);
+      for (const w of words) {
+        if (w === target) return true;
+        if (levenshtein(w, target) <= tolerance) return true;
+      }
+      // Comparar transcript completo contra target
+      if (levenshtein(c, target) <= tolerance) return true;
+      return false;
+    };
+
+    const finalize = (matched: boolean, transcript: string) => {
+      if (resultReceived) return;
       resultReceived = true;
       if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+      try { recognition.stop(); } catch {}
 
-      const alternatives: string[] = [];
-      for (let i = 0; i < event.results[0].length; i++) {
-        alternatives.push(String(event.results[0][i].transcript || "").trim());
-      }
-      const transcript = alternatives[0] || "";
-      const targetWord = english.trim();
-
-      const normalize = (s: string) => s.toLowerCase().replace(/[^a-záéíóúñü ]/gi, "").trim();
-      const target = normalize(targetWord);
-      const isMatch = targetWord === "I"
-        ? alternatives.some(a => ["i", "eye", "aye"].includes(normalize(a)))
-        : alternatives.some(a => normalize(a) === target);
-
-      if (isMatch) {
+      if (matched) {
         playSuccessSound();
         toast({
           title: "¡Excelente pronunciación!",
@@ -735,11 +719,74 @@ const LearnWord = () => {
       }
     };
 
+    recognition.onstart = () => {
+      setIsRecording(true);
+      // Más tiempo para que el usuario hable (10s)
+      safetyTimer = window.setTimeout(() => {
+        try { recognition.stop(); } catch {}
+      }, 10000);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Recognition error:", event.error);
+      if (event.error === 'no-speech' || event.error === 'aborted') {
+        // No tratar como error fatal; onend manejará
+        return;
+      }
+      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        toast({
+          title: "Micrófono bloqueado",
+          description: "Habilita el micrófono en los ajustes del navegador y recarga la página.",
+          variant: "destructive",
+          duration: 4000,
+        });
+      } else if (event.error === 'audio-capture') {
+        toast({
+          title: "Sin micrófono",
+          description: "No se detectó un micrófono disponible.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "No se pudo verificar la pronunciación. Intenta de nuevo.",
+          variant: "destructive",
+          duration: 2500,
+        });
+      }
+
+      clearVerifyTimeout();
+      stopAudioMeter();
+      setIsVerifying(false);
+      setIsRecording(false);
+    };
+
+    recognition.onresult = (event: any) => {
+      // Recorrer todos los resultados (parciales y finales)
+      for (let r = event.resultIndex; r < event.results.length; r++) {
+        const result = event.results[r];
+        for (let i = 0; i < result.length; i++) {
+          const t = String(result[i].transcript || "").trim();
+          if (t) collectedAlternatives.push(t);
+          if (t && isCloseMatch(t)) {
+            finalize(true, t);
+            return;
+          }
+        }
+      }
+    };
+
     recognition.onend = () => {
       if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
       clearVerifyTimeout();
       stopAudioMeter();
-      if (!resultReceived) {
+
+      if (resultReceived) return;
+
+      if (collectedAlternatives.length === 0) {
         setIsVerifying(false);
         setIsRecording(false);
         playErrorSound();
@@ -749,7 +796,12 @@ const LearnWord = () => {
           variant: "destructive",
           duration: 3000,
         });
+        return;
       }
+
+      // Revisión final: probar match contra todas las alternativas recolectadas
+      const matched = collectedAlternatives.some(isCloseMatch);
+      finalize(matched, collectedAlternatives[0] || "");
     };
 
     recognitionRef.current = recognition;

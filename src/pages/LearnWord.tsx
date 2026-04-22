@@ -702,6 +702,13 @@ const LearnWord = () => {
       if (!resultReceived) {
         setIsVerifying(false);
         setIsRecording(false);
+        playErrorSound();
+        toast({
+          title: "No se escuchó nada",
+          description: `Acércate al micrófono y pronuncia: "${english}"`,
+          variant: "destructive",
+          duration: 3000,
+        });
       }
     };
 

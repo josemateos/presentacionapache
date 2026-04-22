@@ -753,11 +753,11 @@ const LearnPhrase = () => {
               <Button variant="outline" onClick={removeLastWord} disabled={isStepComplete || currentStep > 2}>
                 Borrar
               </Button>
-              <Button variant="outline" onClick={() => setShowTipsModal(true)}>
+              <Button onClick={() => setShowTipsModal(true)} className="gradient-yellow-animated border-0 font-semibold shadow-md hover:opacity-90">
                 <Lightbulb className="w-4 h-4 mr-2" />
                 Tips
               </Button>
-              <Button onClick={checkSpanishSolution} disabled={isStepComplete || currentStep > 2}>
+              <Button onClick={checkSpanishSolution} disabled={isStepComplete || currentStep > 2} className="gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar
               </Button>
             </div>
@@ -802,11 +802,11 @@ const LearnPhrase = () => {
             </div>
 
             <div className="flex gap-2 mb-4">
-              <Button variant="outline" onClick={() => setShowTipsModal(true)}>
+              <Button onClick={() => setShowTipsModal(true)} className="gradient-yellow-animated border-0 font-semibold shadow-md hover:opacity-90">
                 <Lightbulb className="w-4 h-4 mr-2" />
                 Tips
               </Button>
-              <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="flex-1">
+              <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar Frase
               </Button>
             </div>
@@ -884,7 +884,7 @@ const LearnPhrase = () => {
                 <Lock className="w-4 h-4 mr-2" />
                 Auxiliares clave
               </Button>
-              <Button onClick={checkAuxiliary} disabled={isStepComplete || currentStep > 4} className="flex-1">
+              <Button onClick={checkAuxiliary} disabled={isStepComplete || currentStep > 4} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar
               </Button>
             </div>
@@ -930,7 +930,7 @@ const LearnPhrase = () => {
               >
                 Repasar ejercicios
               </Button>
-              <Button onClick={checkFinalPhrase} disabled={isStepComplete} className="flex-1">
+              <Button onClick={checkFinalPhrase} disabled={isStepComplete} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar Frase
               </Button>
             </div>

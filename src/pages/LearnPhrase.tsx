@@ -191,6 +191,8 @@ const LearnPhrase = () => {
   const step6Ref = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const transcriptRef = useRef<string[]>([]);
+  const recordingStoppedRef = useRef<boolean>(false);
   const audioStreamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioAnalyserRef = useRef<AnalyserNode | null>(null);
@@ -375,32 +377,53 @@ const LearnPhrase = () => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
 
+      // Reset transcript state synchronously via refs
+      transcriptRef.current = [];
+      recordingStoppedRef.current = false;
+      setRecordedTranscript([]);
+
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.continuous = true;
-        recognition.interimResults = true;
+        // Solo resultados finales para evitar palabras que llegan tarde
+        recognition.interimResults = false;
 
         recognition.onresult = (event: any) => {
-          const transcript = Array.from(event.results)
-            .map((result: any) => result[0].transcript)
-            .join(' ');
-          const words = transcript.split(' ').filter(w => w.trim());
-          setRecordedTranscript(words);
+          // Ignorar cualquier resultado tardío que llegue después de finalizar grabación
+          if (recordingStoppedRef.current) return;
+
+          // Acumular SOLO resultados finales nuevos
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const res = event.results[i];
+            if (res.isFinal) {
+              const text = (res[0]?.transcript || '').trim();
+              if (text) {
+                const words = text.split(/\s+/).filter((w: string) => w.length > 0);
+                transcriptRef.current = [...transcriptRef.current, ...words];
+              }
+            }
+          }
+          setRecordedTranscript([...transcriptRef.current]);
         };
 
         recognition.onend = () => {
-          checkPronunciation();
+          // Disparar verificación con el transcript del ref (sincrónico, sin estado obsoleto)
+          checkPronunciation(transcriptRef.current);
         };
 
-        recognition.start();
+        recognition.onerror = () => {
+          // En caso de error, marcar como detenido para no procesar resultados tardíos
+          recordingStoppedRef.current = true;
+        };
+
+        try { recognition.start(); } catch {}
         recognitionRef.current = recognition;
       }
 
       setIsRecording(true);
       setRecordingTime(0);
-      setRecordedTranscript([]);
 
       setupAudioMeter(stream);
 
@@ -427,6 +450,9 @@ const LearnPhrase = () => {
   };
 
   const stopRecording = () => {
+    // Marcar como detenido ANTES de cualquier acción para descartar resultados tardíos
+    recordingStoppedRef.current = true;
+
     if (recordingIntervalRef.current) {
       clearInterval(recordingIntervalRef.current);
       recordingIntervalRef.current = null;
@@ -436,7 +462,9 @@ const LearnPhrase = () => {
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
     }
     if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
+      try { recognitionRef.current.abort(); } catch {
+        try { recognitionRef.current.stop(); } catch {}
+      }
     }
     stopAudioMeter();
     setIsRecording(false);
@@ -445,20 +473,25 @@ const LearnPhrase = () => {
   // Limpiar al desmontar
   useEffect(() => {
     return () => {
+      recordingStoppedRef.current = true;
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
         try { mediaRecorderRef.current.stop(); } catch {}
+      }
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch {}
       }
       stopAudioMeter();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkPronunciation = () => {
+  const checkPronunciation = (transcriptOverride?: string[]) => {
+    const transcript = transcriptOverride ?? transcriptRef.current;
     const correctPhrase = englishPhrase.toLowerCase().trim();
-    const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
+    const userPhrase = transcript.join(' ').toLowerCase().trim();
 
-    if (!userPhrase || recordedTranscript.length === 0) {
+    if (!userPhrase || transcript.length === 0) {
       showResult(false, "No se escuchó nada", "No detectamos audio. Intenta grabar de nuevo.");
       return;
     }

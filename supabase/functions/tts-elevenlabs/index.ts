@@ -24,10 +24,8 @@ Deno.serve(async (req) => {
 
     const apiKey = Deno.env.get("ELEVENLABS_API_KEY");
     if (!apiKey) {
-      const allKeys = Object.keys(Deno.env.toObject()).filter(k => !k.startsWith("SUPABASE_"));
-      console.error("Missing ELEVENLABS_API_KEY. Available env keys:", allKeys);
       return new Response(
-        JSON.stringify({ error: "ELEVENLABS_API_KEY not configured", availableKeys: allKeys }),
+        JSON.stringify({ error: "ELEVENLABS_API_KEY not configured" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }

@@ -408,7 +408,7 @@ const LearnWord = () => {
         const savedWords = JSON.parse(saved);
         const updatedWords = savedWords.map((w: any) =>
           w.id === parseInt(wordId)
-            ? { ...w, inProgress: !allDone && !w.learned }
+            ? { ...w, inProgress: !w.learned }
             : w
         );
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
@@ -463,7 +463,25 @@ const LearnWord = () => {
     return updatedProgress.every(m => m.completed);
   };
 
-  // Marcar palabra como aprendida automáticamente
+  // Marcar palabra como "En curso" cuando completa los 6 módulos pero aún no confirma
+  const markWordAsInProgress = () => {
+    const saved = localStorage.getItem("vocabulary_day1_progress");
+    if (saved && wordId) {
+      try {
+        const savedWords = JSON.parse(saved);
+        const updatedWords = savedWords.map((w: any) =>
+          w.id === parseInt(wordId)
+            ? { ...w, inProgress: !w.learned, learned: w.learned ?? false }
+            : w
+        );
+        localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));
+      } catch (error) {
+        console.error("Error updating in-progress state:", error);
+      }
+    }
+  };
+
+  // Marcar palabra como aprendida (solo al confirmar con "Agregar al Vocabulario")
   const markWordAsLearned = () => {
     const saved = localStorage.getItem("vocabulary_day1_progress");
     if (saved && wordId) {
@@ -1102,7 +1120,7 @@ const LearnWord = () => {
       // Esperar antes de avanzar para que el usuario vea la palomita verde
       setTimeout(() => {
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6);
         } else {
           setCurrentModule(currentModule + 1);
@@ -1145,7 +1163,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1186,7 +1204,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(6);
           } else {
             setCurrentModule(currentModule + 1);
@@ -1226,7 +1244,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(5); // Ir al resumen
           } else {
             setCurrentModule(currentModule + 1);
@@ -1268,7 +1286,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1354,7 +1372,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(6);
           } else {
             setCurrentModule(currentModule + 1);
@@ -1395,7 +1413,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1434,7 +1452,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);

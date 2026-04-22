@@ -779,10 +779,11 @@ const LearnWord = () => {
 
     recognition.onstart = () => {
       setIsRecording(true);
-      // Más tiempo para que el usuario hable (10s)
+      // Tiempo máximo de escucha. Para palabras cortas usamos una ventana más breve
+      // para entregar feedback rápidamente si el reconocedor no devuelve nada.
       safetyTimer = window.setTimeout(() => {
         try { recognition.stop(); } catch {}
-      }, 10000);
+      }, isShortTarget ? 4500 : 10000);
     };
 
     recognition.onerror = (event: any) => {

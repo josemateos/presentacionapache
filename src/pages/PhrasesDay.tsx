@@ -10,6 +10,7 @@ interface Phrase {
   english: string;
   spanish: string;
   learned: boolean;
+  inProgress?: boolean;
 }
 
 const phrasesData: Record<number, Phrase[]> = {
@@ -44,25 +45,34 @@ const PhrasesDay = () => {
 
   const [phrases, setPhrases] = useState<Phrase[]>([]);
 
-  useEffect(() => {
+  const loadProgress = () => {
     const savedKey = `phrases_day${day}_progress`;
     const saved = localStorage.getItem(savedKey);
-
+    const base = phrasesData[day] || [];
     if (saved) {
       try {
         const savedArr: Phrase[] = JSON.parse(saved);
-        const base = phrasesData[day] || [];
         const merged = base.map((b) => {
           const existing = savedArr.find((s) => s.id === b.id);
-          return existing ? { ...b, learned: !!existing.learned } : b;
+          return existing
+            ? { ...b, learned: !!existing.learned, inProgress: !!existing.inProgress }
+            : b;
         });
         setPhrases(merged);
       } catch {
-        setPhrases(phrasesData[day] || []);
+        setPhrases(base);
       }
     } else {
-      setPhrases(phrasesData[day] || []);
+      setPhrases(base);
     }
+  };
+
+  useEffect(() => {
+    loadProgress();
+    const onVis = () => { if (!document.hidden) loadProgress(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day]);
 
   useEffect(() => {
@@ -73,6 +83,8 @@ const PhrasesDay = () => {
   }, [phrases, day]);
 
   const learnedCount = phrases.filter((p) => p.learned).length;
+  const inProgressCount = phrases.filter((p) => p.inProgress && !p.learned).length;
+  const pendingCount = phrases.length - learnedCount - inProgressCount;
   const progress = phrases.length > 0 ? (learnedCount / phrases.length) * 100 : 0;
 
   const handleLearnPhrase = (phrase: Phrase) => {
@@ -140,10 +152,10 @@ const PhrasesDay = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
               </span>
               <span className="flex items-center gap-1 justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> 0 EN PROCESO
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> {inProgressCount} EN PROCESO
               </span>
               <span className="flex items-center gap-1 justify-end">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {phrases.length - learnedCount} PENDIENTES
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {pendingCount} PENDIENTES
               </span>
             </div>
           </div>
@@ -163,6 +175,8 @@ const PhrasesDay = () => {
                 className={`absolute -inset-0.5 rounded-3xl blur transition duration-700 ${
                   phrase.learned
                     ? "bg-gradient-to-r from-accent/60 to-primary/60 opacity-25"
+                    : phrase.inProgress
+                    ? "bg-gradient-to-r from-secondary/60 to-primary/60 opacity-25"
                     : "bg-gradient-to-r from-primary/40 to-accent/40 opacity-0 group-hover:opacity-20"
                 }`}
               />
@@ -177,6 +191,8 @@ const PhrasesDay = () => {
                       className={`w-11 h-11 rounded-2xl flex items-center justify-center font-headline font-extrabold text-base border ${
                         phrase.learned
                           ? "bg-gradient-to-br from-accent/30 to-primary/30 border-accent/50 text-accent"
+                          : phrase.inProgress
+                          ? "bg-gradient-to-br from-secondary/30 to-primary/30 border-secondary/50 text-secondary"
                           : "bg-white/5 border-white/10 text-muted-foreground"
                       }`}
                     >
@@ -190,8 +206,16 @@ const PhrasesDay = () => {
                       {phrase.learned && (
                         <CheckCircle2 className="w-4 h-4 text-accent" />
                       )}
-                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground/80">
-                        {phrase.learned ? "Practicada" : "Pendiente"}
+                      <span
+                        className={`text-[10px] uppercase tracking-widest ${
+                          phrase.learned
+                            ? "text-accent"
+                            : phrase.inProgress
+                            ? "text-secondary"
+                            : "text-muted-foreground/80"
+                        }`}
+                      >
+                        {phrase.learned ? "Aprendida" : phrase.inProgress ? "En Progreso" : "Pendiente"}
                       </span>
                     </div>
 
@@ -204,6 +228,8 @@ const PhrasesDay = () => {
                         className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide ${
                           phrase.learned
                             ? "bg-accent/15 text-accent border border-accent/30"
+                            : phrase.inProgress
+                            ? "bg-secondary/20 text-secondary border border-secondary/40"
                             : "bg-gradient-to-r from-primary to-accent text-primary-foreground"
                         }`}
                       >
@@ -211,6 +237,11 @@ const PhrasesDay = () => {
                           <>
                             <RotateCcw className="w-3.5 h-3.5" />
                             Repasar
+                          </>
+                        ) : phrase.inProgress ? (
+                          <>
+                            Continuar
+                            <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
                           </>
                         ) : (
                           <>

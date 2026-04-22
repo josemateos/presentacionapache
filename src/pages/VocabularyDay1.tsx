@@ -189,9 +189,6 @@ const VocabularyDay1 = () => {
           <div className="relative glass-card rounded-3xl p-6 border border-white/10">
             <div className="flex justify-between items-end mb-4">
               <div>
-                <p className="text-accent text-xs uppercase tracking-widest mb-1 font-semibold">
-                  Estado de la Misión
-                </p>
                 <h2 className="font-headline text-2xl font-extrabold tracking-tight">
                   Progreso General
                 </h2>

@@ -983,7 +983,11 @@ const LearnWord = () => {
   };
 
   const handleStopRecording = () => {
-    if (recognitionRef.current) {
+    // Feedback inmediato: evalúa lo recolectado sin esperar a que el navegador
+    // dispare onend (en laptop puede tardar varios segundos).
+    if (stopWithFeedbackRef.current) {
+      stopWithFeedbackRef.current();
+    } else if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch {}
     }
     setIsRecording(false);

@@ -1062,7 +1062,7 @@ const LearnPhrase = () => {
                   <li>El orden correcto es: Persona, Verbo, Objeto</li>
                   <li>En Ingles no existe "quiero, juego, aprendo" siempre se utiliza "querer, jugar, aprender"</li>
                   <li>Frutas frescas, suéter rojo, mesa grande siempre se invierte por "Frescas frutas, rojo sueter, grande mesa"</li>
-                  <li>En Ingles nunca se utiliza fresca<span className="text-yellow-500">s</span>, rojo<span className="text-yellow-500">s</span>, grande<span className="text-yellow-500">s</span> solo se dice "fresca, rojo, grande"</li>
+                  <li>En Ingles nunca se utiliza fresca<span className="text-cyan-400 font-bold">s</span>, rojo<span className="text-cyan-400 font-bold">s</span>, grande<span className="text-cyan-400 font-bold">s</span> solo se dice "fresca, rojo, grande"</li>
                 </ul>
               ) : (
                 <div className="mt-4 space-y-3">

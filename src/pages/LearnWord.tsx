@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import confetti from "canvas-confetti";
 import { ArrowLeft, Volume2, Check, CheckCircle2, Circle, RotateCcw, Sparkles, Mic, ChevronLeft, List, Undo2 } from "lucide-react";
@@ -910,6 +910,9 @@ const LearnWord = () => {
     return [spanish, ...randomDistractors].sort(() => Math.random() - 0.5);
   };
 
+  const meaningOptions = useMemo(() => getMeaningOptions(), [wordId, english]);
+  const reverseMeaningOptions = useMemo(() => getReverseMeaningOptions(), [wordId, spanish]);
+
   // Generar letras desordenadas para ortografía
   const generateJumbledLetters = (word: string) => {
     // Special case for "En" which needs letters for both "In" and "At"
@@ -1492,7 +1495,7 @@ const LearnWord = () => {
 
               {/* Options bento grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mb-8">
-                {getMeaningOptions().map((option, index) => {
+                {meaningOptions.map((option, index) => {
                   const letter = String.fromCharCode(65 + index);
                   const isSelected = selectedMeaningOption === option;
                   const isCorrect = wordId === "26" ? option === "In/At" : option.toLowerCase() === english.toLowerCase();
@@ -1861,7 +1864,7 @@ const LearnWord = () => {
               </p>
 
               <div className="space-y-3">
-                {getReverseMeaningOptions().map((option, index) => (
+                {reverseMeaningOptions.map((option, index) => (
                   <Button
                     key={index}
                     variant="outline"

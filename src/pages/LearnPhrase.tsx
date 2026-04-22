@@ -1030,6 +1030,26 @@ const LearnPhrase = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Modal de Resultado (Correcto / Incorrecto) */}
+      <Dialog open={resultModal.open} onOpenChange={(open) => setResultModal((prev) => ({ ...prev, open }))}>
+        <DialogContent className="bg-card text-foreground sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className={resultModal.success ? "text-green-500" : "text-red-500"}>
+              {resultModal.success ? "✓ " : "✗ "}{resultModal.title}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground pt-2">
+              {resultModal.message}
+            </DialogDescription>
+          </DialogHeader>
+          <Button
+            onClick={() => setResultModal((prev) => ({ ...prev, open: false }))}
+            className={resultModal.success ? "bg-green-600 hover:bg-green-700" : ""}
+          >
+            {resultModal.success ? "Continuar" : "Intentar de nuevo"}
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -802,11 +802,11 @@ const LearnPhrase = () => {
             </div>
 
             <div className="flex gap-2 mb-4">
-              <Button variant="outline" onClick={() => setShowTipsModal(true)}>
+              <Button onClick={() => setShowTipsModal(true)} className="gradient-yellow-animated border-0 font-semibold shadow-md hover:opacity-90">
                 <Lightbulb className="w-4 h-4 mr-2" />
                 Tips
               </Button>
-              <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="flex-1">
+              <Button onClick={checkEnglishSolution} disabled={isStepComplete || currentStep > 3} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar Frase
               </Button>
             </div>

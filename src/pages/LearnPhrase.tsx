@@ -857,11 +857,6 @@ const LearnPhrase = () => {
               </Button>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center mt-4 ${feedback.includes("Perfecto") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && currentStep === 5 && (
               <Button 

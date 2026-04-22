@@ -666,7 +666,7 @@ const LearnWord = () => {
         toast({
           title: "¡Excelente pronunciación!",
           description: "Pronunciación correcta. Avanzando...",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
 
@@ -994,7 +994,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
 
@@ -1039,7 +1039,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1080,7 +1080,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1120,7 +1120,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1162,7 +1162,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1248,7 +1248,7 @@ const LearnWord = () => {
         toast({
           title: "¡Correcto!",
           description: "Excelente trabajo",
-          duration: 2000,
+          duration: 1000,
           className: "bg-green-500 text-white border-green-600",
         });
         
@@ -1289,7 +1289,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Excelente trabajo",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       
@@ -1328,7 +1328,7 @@ const LearnWord = () => {
       toast({
         title: "¡Correcto!",
         description: "Has identificado la imagen correcta",
-        duration: 2000,
+        duration: 1000,
         className: "bg-green-500 text-white border-green-600",
       });
       

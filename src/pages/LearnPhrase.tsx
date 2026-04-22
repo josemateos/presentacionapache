@@ -499,8 +499,9 @@ const LearnPhrase = () => {
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
     }
     if (recognitionRef.current) {
-      try { recognitionRef.current.abort(); } catch {
-        try { recognitionRef.current.stop(); } catch {}
+      // Usar stop() para que los resultados pendientes se entreguen antes de onend
+      try { recognitionRef.current.stop(); } catch {
+        try { recognitionRef.current.abort(); } catch {}
       }
     }
     stopAudioMeter();

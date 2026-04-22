@@ -884,7 +884,7 @@ const LearnPhrase = () => {
                 <Lock className="w-4 h-4 mr-2" />
                 Auxiliares clave
               </Button>
-              <Button onClick={checkAuxiliary} disabled={isStepComplete || currentStep > 4} className="flex-1">
+              <Button onClick={checkAuxiliary} disabled={isStepComplete || currentStep > 4} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar
               </Button>
             </div>

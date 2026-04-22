@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, RotateCcw, Sparkles, Flame, Library, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 interface Phrase {
   id: number;
@@ -50,18 +48,17 @@ const PhrasesDay = () => {
   useEffect(() => {
     const savedKey = `phrases_day${day}_progress`;
     const saved = localStorage.getItem(savedKey);
-    
+
     if (saved) {
       try {
         const savedArr: Phrase[] = JSON.parse(saved);
         const base = phrasesData[day] || [];
-        // Merge saved learned flags with latest base content to fix outdated phrases
         const merged = base.map((b) => {
           const existing = savedArr.find((s) => s.id === b.id);
           return existing ? { ...b, learned: !!existing.learned } : b;
         });
         setPhrases(merged);
-      } catch (error) {
+      } catch {
         setPhrases(phrasesData[day] || []);
       }
     } else {
@@ -76,148 +73,165 @@ const PhrasesDay = () => {
     }
   }, [phrases, day]);
 
-  const learnedCount = phrases.filter(p => p.learned).length;
-  const progress = (learnedCount / phrases.length) * 100;
-
-
-  const toggleLearned = (id: number) => {
-    setPhrases(phrases.map(p => 
-      p.id === id ? { ...p, learned: !p.learned } : p
-    ));
-
-    const phrase = phrases.find(p => p.id === id);
-    if (phrase && !phrase.learned) {
-      toast({
-        title: "¡Frase aprendida!",
-        description: `"${phrase.english}" se ha agregado a tu progreso`,
-      });
-    }
-  };
+  const learnedCount = phrases.filter((p) => p.learned).length;
+  const progress = phrases.length > 0 ? (learnedCount / phrases.length) * 100 : 0;
 
   const handleLearnPhrase = (phrase: Phrase) => {
-    navigate(`/learn-phrase?id=${phrase.id}&day=${day}&english=${encodeURIComponent(phrase.english)}&spanish=${encodeURIComponent(phrase.spanish)}`);
-  };
-
-  const handleFinish = () => {
-    if (learnedCount === phrases.length) {
-      toast({
-        title: "¡Día completado!",
-        description: `Has completado todas las frases del Día ${day}`,
-      });
-      navigate("/dashboard");
-    } else {
-      toast({
-        title: "Frases pendientes",
-        description: `Te faltan ${phrases.length - learnedCount} frases por aprender`,
-        variant: "destructive",
-      });
-    }
+    navigate(
+      `/learn-phrase?id=${phrase.id}&day=${day}&english=${encodeURIComponent(phrase.english)}&spanish=${encodeURIComponent(phrase.spanish)}`
+    );
   };
 
   return (
-    <div className="min-h-screen bg-background dark flex flex-col">
-      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
+    <div className="min-h-screen bg-background dark flex flex-col relative overflow-hidden">
+      {/* Mystic background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-0">
+        <div className="absolute -top-32 -left-24 w-80 h-80 rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute top-1/3 -right-24 w-96 h-96 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
+      </div>
+
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-card/70 backdrop-blur-xl border-b border-white/10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center max-w-4xl">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/dashboard")}
-            className="hover:bg-primary/10"
+            className="hover:bg-primary/10 text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Inicio</span>
           </Button>
-          
-          <h1 className="text-lg md:text-xl font-bold text-foreground">
+
+          <h1 className="font-headline text-lg md:text-xl font-extrabold tracking-tight text-foreground">
             Frases del Día {day}
           </h1>
-          
-          <div className="w-20"></div>
+
+          <div className="w-20" />
         </div>
       </header>
 
-
-      <main className="flex-grow container mx-auto px-4 py-6 pb-8 max-w-4xl">
-        {/* Progress Section */}
+      <main className="relative flex-grow container mx-auto px-4 py-6 pb-24 max-w-4xl">
+        {/* Progress / Codex card */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border rounded-2xl p-6 shadow-md mb-6"
+          className="relative group mb-8"
         >
-          <h2 className="text-base font-semibold mb-4 text-center text-primary flex items-center justify-center gap-2">
-            <BookOpen className="w-4 h-4" />
-            Progreso General
-          </h2>
-          <p className="text-sm text-center text-muted-foreground mb-2">
-            {learnedCount} de {phrases.length} frases practicadas
-          </p>
-          <Progress value={progress} className="h-2 mb-2" />
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000" />
+          <div className="relative glass-card rounded-3xl p-6 border border-white/10">
+            <div className="flex items-center gap-2 mb-4 text-accent">
+              <BookOpen className="w-4 h-4" />
+              <h2 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
+                Progreso General
+              </h2>
+            </div>
+
+            <p className="text-sm text-muted-foreground mb-3">
+              <span className="text-foreground font-bold">{learnedCount}</span> de{" "}
+              <span className="text-foreground font-bold">{phrases.length}</span> frases practicadas
+            </p>
+
+            <Progress value={progress} className="h-2 mb-3" />
+
+            <div className="flex justify-between text-[11px] uppercase tracking-widest text-muted-foreground/80">
+              <span>Iniciando ritual</span>
+              <span>Maestría total</span>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Phrases List */}
-        <div className="space-y-3">
+        {/* Phrases list */}
+        <div className="space-y-4">
           {phrases.map((phrase, index) => (
             <motion.div
               key={phrase.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.06 }}
+              className="relative group"
             >
-              <Card
-                className={`p-5 transition-all duration-200 cursor-pointer hover:shadow-xl bg-card border-border ${
-                  phrase.learned 
-                    ? "opacity-90 border-primary/50" 
-                    : "hover:border-primary/50"
+              <div
+                className={`absolute -inset-0.5 rounded-3xl blur transition duration-700 ${
+                  phrase.learned
+                    ? "bg-gradient-to-r from-accent/60 to-primary/60 opacity-25"
+                    : "bg-gradient-to-r from-primary/40 to-accent/40 opacity-0 group-hover:opacity-20"
                 }`}
+              />
+              <button
                 onClick={() => handleLearnPhrase(phrase)}
+                className="relative w-full text-left glass-card rounded-3xl p-5 border border-white/10 hover:border-accent/40 transition-all"
               >
-                {/* Phrase Content */}
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <span className="text-sm font-semibold text-muted-foreground">
-                      {index + 1}.
-                    </span>
-                    {phrase.learned && (
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    )}
+                <div className="flex items-start gap-4">
+                  {/* Index badge */}
+                  <div className="shrink-0">
+                    <div
+                      className={`w-11 h-11 rounded-2xl flex items-center justify-center font-headline font-extrabold text-base border ${
+                        phrase.learned
+                          ? "bg-gradient-to-br from-accent/30 to-primary/30 border-accent/50 text-accent"
+                          : "bg-white/5 border-white/10 text-muted-foreground"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
                   </div>
-                  
-                  <p className="text-base md:text-lg font-medium text-foreground mb-2">
-                    {phrase.spanish}
-                  </p>
-                </div>
 
-                {/* Action Button */}
-                <div className="flex justify-center">
-                  <Button
-                    size="sm"
-                    className={`min-w-[140px] ${
-                      phrase.learned
-                        ? "bg-green-600 text-white hover:bg-green-700"
-                        : "gradient-animated"
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLearnPhrase(phrase);
-                    }}
-                  >
-                    {phrase.learned ? (
-                      <>
-                        Repasar
-                        <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-                      </>
-                    ) : (
-                      <>
-                        Ir a la Frase
-                        <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-                      </>
-                    )}
-                  </Button>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      {phrase.learned && (
+                        <CheckCircle2 className="w-4 h-4 text-accent" />
+                      )}
+                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground/80">
+                        {phrase.learned ? "Practicada" : "Pendiente"}
+                      </span>
+                    </div>
+
+                    <p className="text-base md:text-lg font-semibold text-foreground leading-snug mb-4">
+                      {phrase.spanish}
+                    </p>
+
+                    <div className="flex justify-end">
+                      <span
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide ${
+                          phrase.learned
+                            ? "bg-accent/15 text-accent border border-accent/30"
+                            : "bg-gradient-to-r from-primary to-accent text-primary-foreground"
+                        }`}
+                      >
+                        {phrase.learned ? (
+                          <>
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            Repasar
+                          </>
+                        ) : (
+                          <>
+                            Ir a la Frase
+                            <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </Card>
+              </button>
             </motion.div>
           ))}
         </div>
+
+        {/* End of codex */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-10 flex flex-col items-center gap-2 text-muted-foreground"
+        >
+          <Sparkles className="w-5 h-5 text-accent" />
+          <p className="font-headline text-sm uppercase tracking-[0.3em]">
+            Fin del Códice Diario
+          </p>
+        </motion.div>
       </main>
     </div>
   );

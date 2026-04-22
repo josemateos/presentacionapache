@@ -45,25 +45,34 @@ const PhrasesDay = () => {
 
   const [phrases, setPhrases] = useState<Phrase[]>([]);
 
-  useEffect(() => {
+  const loadProgress = () => {
     const savedKey = `phrases_day${day}_progress`;
     const saved = localStorage.getItem(savedKey);
-
+    const base = phrasesData[day] || [];
     if (saved) {
       try {
         const savedArr: Phrase[] = JSON.parse(saved);
-        const base = phrasesData[day] || [];
         const merged = base.map((b) => {
           const existing = savedArr.find((s) => s.id === b.id);
-          return existing ? { ...b, learned: !!existing.learned } : b;
+          return existing
+            ? { ...b, learned: !!existing.learned, inProgress: !!existing.inProgress }
+            : b;
         });
         setPhrases(merged);
       } catch {
-        setPhrases(phrasesData[day] || []);
+        setPhrases(base);
       }
     } else {
-      setPhrases(phrasesData[day] || []);
+      setPhrases(base);
     }
+  };
+
+  useEffect(() => {
+    loadProgress();
+    const onVis = () => { if (!document.hidden) loadProgress(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day]);
 
   useEffect(() => {

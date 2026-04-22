@@ -1810,10 +1810,10 @@ const LearnWord = () => {
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="w-14 h-14 rounded-full hover:bg-cyan-400/10"
+                  className="w-20 h-20 rounded-full hover:bg-cyan-400/10"
                   onClick={handlePlayAudio}
                 >
-                  <Volume2 className="w-6 h-6 text-cyan-400" />
+                  <Volume2 className="!w-9 !h-9 text-cyan-400" />
                 </Button>
               </div>
 
@@ -2032,10 +2032,10 @@ const LearnWord = () => {
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="w-14 h-14 rounded-full hover:bg-primary/10"
+                  className="w-20 h-20 rounded-full hover:bg-primary/10"
                   onClick={handlePlayAudio}
                 >
-                  <Volume2 className="w-6 h-6 text-primary" />
+                  <Volume2 className="!w-9 !h-9 text-primary" />
                 </Button>
               </div>
               

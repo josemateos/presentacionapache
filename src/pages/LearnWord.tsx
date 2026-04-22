@@ -1120,7 +1120,7 @@ const LearnWord = () => {
       // Esperar antes de avanzar para que el usuario vea la palomita verde
       setTimeout(() => {
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6);
         } else {
           setCurrentModule(currentModule + 1);
@@ -1163,7 +1163,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1204,7 +1204,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(6);
           } else {
             setCurrentModule(currentModule + 1);
@@ -1244,7 +1244,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(5); // Ir al resumen
           } else {
             setCurrentModule(currentModule + 1);
@@ -1286,7 +1286,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1372,7 +1372,7 @@ const LearnWord = () => {
           setModuleProgress(updatedProgress);
           
           if (checkIfAllModulesCompleted(updatedProgress)) {
-            markWordAsLearned();
+            markWordAsInProgress();
             setCurrentModule(6);
           } else {
             setCurrentModule(currentModule + 1);
@@ -1413,7 +1413,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);
@@ -1452,7 +1452,7 @@ const LearnWord = () => {
         setModuleProgress(updatedProgress);
         
         if (checkIfAllModulesCompleted(updatedProgress)) {
-          markWordAsLearned();
+          markWordAsInProgress();
           setCurrentModule(6); // Ir al resumen
         } else {
           setCurrentModule(currentModule + 1);

@@ -120,23 +120,36 @@ const PhrasesDay = () => {
         >
           <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-primary rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000" />
           <div className="relative glass-card rounded-3xl p-6 border border-white/10">
-            <div className="flex items-center gap-2 mb-4 text-accent">
-              <BookOpen className="w-4 h-4" />
+            <div className="flex justify-between items-end mb-4">
               <h2 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
                 Progreso General
               </h2>
+              <div className="text-right">
+                <span className="text-3xl font-black gradient-text-primary">{learnedCount}</span>
+                <span className="text-muted-foreground font-bold"> / {phrases.length}</span>
+              </div>
             </div>
 
-            <p className="text-sm text-muted-foreground mb-3">
-              <span className="text-foreground font-bold">{learnedCount}</span> de{" "}
-              <span className="text-foreground font-bold">{phrases.length}</span> frases practicadas
-            </p>
+            <div className="w-full h-3 bg-black rounded-full overflow-hidden p-[2px]">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="h-full rounded-full shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                style={{ background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(330 81% 70%) 100%)" }}
+              />
+            </div>
 
-            <Progress value={progress} className="h-2 mb-3" />
-
-            <div className="flex justify-between text-[11px] uppercase tracking-widest text-muted-foreground/80">
-              <span>Iniciando ritual</span>
-              <span>Maestría total</span>
+            <div className="mt-4 grid grid-cols-3 items-center text-[10px] font-semibold uppercase tracking-tighter text-muted-foreground">
+              <span className="flex items-center gap-1 justify-start">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {learnedCount} APRENDIDAS
+              </span>
+              <span className="flex items-center gap-1 justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> 0 EN PROCESO
+              </span>
+              <span className="flex items-center gap-1 justify-end">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {phrases.length - learnedCount} PENDIENTES
+              </span>
             </div>
           </div>
         </motion.div>

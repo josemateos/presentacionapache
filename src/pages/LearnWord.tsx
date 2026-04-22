@@ -889,16 +889,33 @@ const LearnWord = () => {
 
     recognitionRef.current = recognition;
 
-    // Permite que "Terminar grabación" entregue feedback inmediato sin esperar onend.
+    // Permite que "Terminar grabación" entregue feedback rápido sin esperar onend.
+    // Damos al navegador una breve ventana para que entregue resultados finales
+    // (Chrome desktop suele despachar onresult justo antes de onend).
     stopWithFeedbackRef.current = () => {
       if (resultReceived) return;
       try { recognition.stop(); } catch {}
-      if (collectedAlternatives.length === 0) {
-        finalizeNoSpeech();
-      } else {
-        const matched = collectedAlternatives.some(isCloseMatch);
-        finalize(matched, collectedAlternatives[0] || "");
-      }
+      // Esperamos hasta 1.2s a que llegue onresult/onend con resultados reales.
+      const start = Date.now();
+      const poll = () => {
+        if (resultReceived) return;
+        const elapsed = Date.now() - start;
+        // Si ya hay un match en alternativas, finalizamos como correcto de inmediato
+        if (collectedAlternatives.some(isCloseMatch)) {
+          finalize(true, collectedAlternatives.find(isCloseMatch) || "");
+          return;
+        }
+        if (elapsed >= 1200) {
+          if (collectedAlternatives.length === 0) {
+            finalizeNoSpeech();
+          } else {
+            finalize(false, collectedAlternatives[0] || "");
+          }
+          return;
+        }
+        window.setTimeout(poll, 120);
+      };
+      poll();
     };
 
     // Iniciar el reconocedor INMEDIATAMENTE dentro del gesto del usuario.

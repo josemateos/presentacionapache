@@ -939,40 +939,44 @@ const LearnPhrase = () => {
             {/* Controles de grabación */}
             <div className="flex flex-col gap-4">
               {isRecording && (
-                <div className="text-center">
-                  <p className="text-lg font-bold text-primary">
-                    Grabando... {recordingTime}s / 10s
-                  </p>
-                </div>
+                <>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-primary">
+                      Grabando... {recordingTime}s / 10s
+                    </p>
+                  </div>
+                  <div className="flex items-end justify-center gap-1 h-16 px-4 py-2 bg-background/40 rounded-xl border border-border">
+                    {Array.from({ length: 24 }).map((_, i) => {
+                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
+                      const base = 6;
+                      const max = 48;
+                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
+                      return (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
+                          style={{ height: `${height}px` }}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
               )}
 
               <div className="flex gap-2">
                 {!isRecording ? (
-                  <Button 
-                    onClick={startRecording} 
-                    disabled={false}
-                    className="flex-1"
-                  >
+                  <Button onClick={startRecording} className="flex-1">
                     <Volume2 className="w-4 h-4 mr-2" />
                     Iniciar Grabación
                   </Button>
                 ) : (
-                  <Button 
-                    onClick={stopRecording} 
-                    variant="destructive"
-                    className="flex-1"
-                  >
-                    Detener Grabación
+                  <Button onClick={stopRecording} variant="destructive" className="flex-1">
+                    Finalizar Grabación
                   </Button>
                 )}
               </div>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center mt-4 ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && (
               <Button 

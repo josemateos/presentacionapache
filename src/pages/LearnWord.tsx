@@ -359,6 +359,7 @@ const LearnWord = () => {
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const stopWithFeedbackRef = useRef<(() => void) | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const audioStreamRef = useRef<MediaStream | null>(null);

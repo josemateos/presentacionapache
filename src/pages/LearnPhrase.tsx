@@ -532,8 +532,8 @@ const LearnPhrase = () => {
     return () => {
       recordingStoppedRef.current = true;
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-        try { mediaRecorderRef.current.stop(); } catch {}
+      if (audioStreamRef.current) {
+        try { audioStreamRef.current.getTracks().forEach(t => t.stop()); } catch {}
       }
       if (recognitionRef.current) {
         try { recognitionRef.current.abort(); } catch {}

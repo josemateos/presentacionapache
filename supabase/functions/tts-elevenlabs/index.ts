@@ -8,7 +8,17 @@ const corsHeaders = {
 };
 
 const BUCKET = "tts-cache";
-const CACHE_VERSION = "v2"; // bump to invalidate old cached audio
+const CACHE_VERSION = "v3"; // bump to invalidate old cached audio
+
+// Phonetic respellings for short/ambiguous words that ElevenLabs reads as letter names.
+const PRONUNCIATION_FIXES: Record<string, string> = {
+  "i": "Eye.",
+};
+
+function fixPronunciation(text: string): string {
+  const key = text.trim().toLowerCase();
+  return PRONUNCIATION_FIXES[key] ?? text;
+}
 
 function slugify(text: string, voice: string): string {
   const clean = text
@@ -75,7 +85,7 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text,
+          text: fixPronunciation(text),
           model_id: "eleven_turbo_v2_5",
           voice_settings: {
             stability: 0.75,

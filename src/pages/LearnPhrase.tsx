@@ -612,8 +612,8 @@ const LearnPhrase = () => {
           </p>
         </div>
 
-      <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Paso 1: Frase en Español */}
+
         {currentStep >= 1 && currentStep < 5 && (
         <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">

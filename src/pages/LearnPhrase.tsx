@@ -173,7 +173,14 @@ const LearnPhrase = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedTranscript, setRecordedTranscript] = useState<string[]>([]);
   const [recordingTime, setRecordingTime] = useState(0);
-  
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [resultModal, setResultModal] = useState<{ open: boolean; success: boolean; title: string; message: string }>({
+    open: false,
+    success: false,
+    title: "",
+    message: "",
+  });
+
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
@@ -182,6 +189,28 @@ const LearnPhrase = () => {
   const step6Ref = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const audioAnalyserRef = useRef<AnalyserNode | null>(null);
+  const audioRafRef = useRef<number | null>(null);
+  const recordingIntervalRef = useRef<number | null>(null);
+
+  const showResult = (success: boolean, title: string, message: string) => {
+    setResultModal({ open: true, success, title, message });
+  };
+
+  const stopAudioMeter = () => {
+    if (audioRafRef.current) {
+      cancelAnimationFrame(audioRafRef.current);
+      audioRafRef.current = null;
+    }
+    audioAnalyserRef.current = null;
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach((t) => t.stop());
+      audioStreamRef.current = null;
+    }
+    setAudioLevel(0);
+  };
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
 
@@ -233,23 +262,13 @@ const LearnPhrase = () => {
   const checkSpanishSolution = () => {
     const userLower = userAttemptSpanish.map(w => w.toLowerCase());
     const isCorrect = JSON.stringify(userLower) === JSON.stringify(exerciseData.apacheSpanishSolution);
-    
+
     if (isCorrect) {
-      setFeedback("¡Correcto! Has ordenado la frase en Español Apache");
+      setFeedback("");
       setIsStepComplete(true);
-      // Scroll para mostrar el botón de continuar
-      setTimeout(() => {
-        if (step2Ref.current) {
-          step2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        }
-      }, 100);
+      showResult(true, "¡Correcto!", "Has ordenado la frase en Español Apache.");
     } else {
-      setFeedback("Intenta de nuevo. Revisa el orden de las palabras");
-      toast({
-        title: "Intenta nuevamente",
-        description: "El orden no es correcto",
-        variant: "destructive",
-      });
+      showResult(false, "Incorrecto", "El orden de las palabras no es correcto. Intenta nuevamente.");
     }
   };
 
@@ -278,70 +297,89 @@ const LearnPhrase = () => {
   const checkEnglishSolution = () => {
     const userTrimmed = userAttemptEnglish.map(w => (w ?? "").trim());
     const isCorrect = JSON.stringify(userTrimmed) === JSON.stringify(exerciseData.apacheEnglishSolution);
-    
+
     if (isCorrect) {
-      setFeedback("¡Perfecto! Has traducido correctamente al Inglés Apache");
+      setFeedback("");
       setIsStepComplete(true);
-      setTimeout(() => {
-        if (step3Ref.current) {
-          step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        }
-      }, 100);
+      showResult(true, "¡Perfecto!", "Has traducido correctamente al Inglés Apache.");
     } else {
-      setFeedback("Algunas palabras no son correctas. Revisa tu traducción");
-      toast({
-        title: "Revisa tu traducción",
-        description: "Hay algunas palabras incorrectas",
-        variant: "destructive",
-      });
+      showResult(false, "Incorrecto", "Algunas palabras no son correctas. Revisa tu traducción.");
     }
   };
   const checkAuxiliary = () => {
     const isCorrect = userAuxiliary.toLowerCase().trim() === exerciseData.auxiliary.toLowerCase();
-    
+
     if (isCorrect) {
-      setFeedback("¡Excelente! Has completado la frase en Inglés perfecto");
+      setFeedback("");
       setIsStepComplete(true);
-      setTimeout(() => {
-        setCurrentStep(5);
-        setIsStepComplete(false);
-        setFeedback("");
-      }, 500);
+      showResult(true, "¡Excelente!", "Has completado la frase en Inglés perfecto.");
     } else {
-      setFeedback("El auxiliar no es correcto. Intenta de nuevo");
+      showResult(false, "Incorrecto", "El auxiliar no es correcto. Intenta de nuevo.");
     }
   };
 
   const checkFinalPhrase = () => {
     const userTrimmed = finalPhrase.trim();
     const correctPhrase = exerciseData.finalEnglishSolution.join(" ");
-    
+
     if (userTrimmed === correctPhrase) {
-      setFeedback("¡Perfecto! Ahora practica tu pronunciación");
+      setFeedback("");
       setIsStepComplete(true);
+      showResult(true, "¡Perfecto!", "Ahora practica tu pronunciación.");
     } else {
-      setFeedback("No es correcto. Revisa tu respuesta o repasa los ejercicios");
-      toast({
-        title: "Respuesta incorrecta",
-        description: "Intenta nuevamente o repasa los pasos anteriores",
-        variant: "destructive",
-      });
+      showResult(false, "Incorrecto", "Revisa tu respuesta o repasa los ejercicios.");
     }
   };
+
+  const setupAudioMeter = (stream: MediaStream) => {
+    try {
+      const AC = (window.AudioContext || (window as any).webkitAudioContext);
+      if (!AC) return;
+      if (!audioCtxRef.current) audioCtxRef.current = new AC();
+      const context = audioCtxRef.current;
+      const source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.85;
+      source.connect(analyser);
+      audioAnalyserRef.current = analyser;
+      const data = new Uint8Array(analyser.fftSize);
+      const tick = () => {
+        if (audioAnalyserRef.current !== analyser) return;
+        analyser.getByteTimeDomainData(data);
+        let sumSquares = 0;
+        for (let i = 0; i < data.length; i++) {
+          const n = (data[i] - 128) / 128;
+          sumSquares += n * n;
+        }
+        const rms = Math.sqrt(sumSquares / data.length);
+        setAudioLevel(Math.min(1, Math.max(0.04, rms * 7)));
+        audioRafRef.current = window.requestAnimationFrame(tick);
+      };
+      if (context.state === "suspended") {
+        context.resume().then(tick).catch(() => tick());
+      } else {
+        tick();
+      }
+    } catch (e) {
+      console.warn("No se pudo iniciar medidor:", e);
+    }
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
-      
-      // Iniciar reconocimiento de voz
+
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.continuous = true;
         recognition.interimResults = true;
-        
+
         recognition.onresult = (event: any) => {
           const transcript = Array.from(event.results)
             .map((result: any) => result[0].transcript)
@@ -349,34 +387,33 @@ const LearnPhrase = () => {
           const words = transcript.split(' ').filter(w => w.trim());
           setRecordedTranscript(words);
         };
-        
+
         recognition.onend = () => {
-          // Evaluar pronunciación solo cuando finaliza el reconocimiento
           checkPronunciation();
         };
-        
+
         recognition.start();
         recognitionRef.current = recognition;
       }
-      
+
       setIsRecording(true);
       setRecordingTime(0);
       setRecordedTranscript([]);
-      
-      // Contador de tiempo
-      const interval = setInterval(() => {
+
+      setupAudioMeter(stream);
+
+      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
+      recordingIntervalRef.current = window.setInterval(() => {
         setRecordingTime(prev => {
           if (prev >= 10) {
             stopRecording();
-            clearInterval(interval);
             return prev;
           }
           return prev + 1;
         });
       }, 1000);
-      
+
       mediaRecorder.start();
-      
     } catch (error) {
       console.error('Error al acceder al micrófono:', error);
       toast({
@@ -388,31 +425,45 @@ const LearnPhrase = () => {
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    if (recordingIntervalRef.current) {
+      clearInterval(recordingIntervalRef.current);
+      recordingIntervalRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      try { mediaRecorderRef.current.stop(); } catch {}
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
     }
-    
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      try { recognitionRef.current.stop(); } catch {}
     }
-    
+    stopAudioMeter();
     setIsRecording(false);
   };
+
+  // Limpiar al desmontar
+  useEffect(() => {
+    return () => {
+      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        try { mediaRecorderRef.current.stop(); } catch {}
+      }
+      stopAudioMeter();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const checkPronunciation = () => {
     const correctPhrase = englishPhrase.toLowerCase().trim();
     const userPhrase = recordedTranscript.join(' ').toLowerCase().trim();
 
-    // Si no hay transcripción, no validar
     if (!userPhrase || recordedTranscript.length === 0) {
+      showResult(false, "No se escuchó nada", "No detectamos audio. Intenta grabar de nuevo.");
       return;
     }
 
     const userWords = userPhrase.split(/\s+/).filter((w) => w.length > 0);
     const correctWords = correctPhrase.split(/\s+/).filter((w) => w.length > 0);
 
-    // Mapear frecuencias para validar presencia y conteo
     const freq = (arr: string[]) => arr.reduce<Record<string, number>>((acc, w) => {
       acc[w] = (acc[w] || 0) + 1;
       return acc;
@@ -421,18 +472,13 @@ const LearnPhrase = () => {
     const correctFreq = freq(correctWords);
     const userFreq = freq(userWords);
 
-    // Verificar: todas las palabras requeridas presentes con el conteo correcto o mayor
     const missingRequired = Object.entries(correctFreq).some(([w, c]) => (userFreq[w] || 0) < c);
-    // Verificar: no haya palabras extra que no estén en la frase correcta
     const hasExtras = Object.keys(userFreq).some((w) => !correctFreq[w]);
-
     const isAllCorrect = !missingRequired && !hasExtras && userWords.length > 0;
 
     if (isAllCorrect) {
-      setFeedback("¡Excelente pronunciación! Has completado la frase");
       setIsStepComplete(true);
-
-      // Marcar como aprendida
+      showResult(true, "¡Excelente pronunciación!", "Has completado la frase.");
       const savedKey = `phrases_day${day}_progress`;
       const saved = localStorage.getItem(savedKey);
       if (saved) {
@@ -441,16 +487,10 @@ const LearnPhrase = () => {
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
     } else {
-      setFeedback("Aún hay palabras por corregir en la pronunciación.");
-      toast({
-        title: "Hay palabras por corregir",
-        description: "Revisa tu pronunciación y vuelve a intentar",
-        variant: "destructive",
-      });
+      showResult(false, "Pronunciación incorrecta", "Aún hay palabras por corregir. Vuelve a intentarlo.");
     }
   };
 
-  // Marcar la frase como "En Progreso" cuando el usuario avanza más allá del paso 1
   useEffect(() => {
     if (currentStep > 1) {
       const savedKey = `phrases_day${day}_progress`;
@@ -644,11 +684,6 @@ const LearnPhrase = () => {
               </Button>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center ${feedback.includes("Correcto") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && currentStep === 2 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
@@ -698,11 +733,6 @@ const LearnPhrase = () => {
               </Button>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center ${feedback.includes("Perfecto") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && currentStep === 3 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
@@ -781,11 +811,6 @@ const LearnPhrase = () => {
               </Button>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && currentStep === 4 && (
               <Button onClick={goToNextStep} className="w-full mt-4">
@@ -832,11 +857,6 @@ const LearnPhrase = () => {
               </Button>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center mt-4 ${feedback.includes("Perfecto") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && currentStep === 5 && (
               <Button 
@@ -899,40 +919,44 @@ const LearnPhrase = () => {
             {/* Controles de grabación */}
             <div className="flex flex-col gap-4">
               {isRecording && (
-                <div className="text-center">
-                  <p className="text-lg font-bold text-primary">
-                    Grabando... {recordingTime}s / 10s
-                  </p>
-                </div>
+                <>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-primary">
+                      Grabando... {recordingTime}s / 10s
+                    </p>
+                  </div>
+                  <div className="flex items-end justify-center gap-1 h-16 px-4 py-2 bg-background/40 rounded-xl border border-border">
+                    {Array.from({ length: 24 }).map((_, i) => {
+                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
+                      const base = 6;
+                      const max = 48;
+                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
+                      return (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
+                          style={{ height: `${height}px` }}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
               )}
 
               <div className="flex gap-2">
                 {!isRecording ? (
-                  <Button 
-                    onClick={startRecording} 
-                    disabled={false}
-                    className="flex-1"
-                  >
+                  <Button onClick={startRecording} className="flex-1">
                     <Volume2 className="w-4 h-4 mr-2" />
                     Iniciar Grabación
                   </Button>
                 ) : (
-                  <Button 
-                    onClick={stopRecording} 
-                    variant="destructive"
-                    className="flex-1"
-                  >
-                    Detener Grabación
+                  <Button onClick={stopRecording} variant="destructive" className="flex-1">
+                    Finalizar Grabación
                   </Button>
                 )}
               </div>
             </div>
 
-            {feedback && (
-              <p className={`text-sm text-center mt-4 ${feedback.includes("Excelente") ? "text-green-500" : "text-red-500"}`}>
-                {feedback}
-              </p>
-            )}
 
             {isStepComplete && (
               <Button 
@@ -1004,6 +1028,26 @@ const LearnPhrase = () => {
               Obtener Premium
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Resultado (Correcto / Incorrecto) */}
+      <Dialog open={resultModal.open} onOpenChange={(open) => setResultModal((prev) => ({ ...prev, open }))}>
+        <DialogContent className="bg-card text-foreground sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className={resultModal.success ? "text-green-500" : "text-red-500"}>
+              {resultModal.success ? "✓ " : "✗ "}{resultModal.title}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground pt-2">
+              {resultModal.message}
+            </DialogDescription>
+          </DialogHeader>
+          <Button
+            onClick={() => setResultModal((prev) => ({ ...prev, open: false }))}
+            className={resultModal.success ? "bg-green-600 hover:bg-green-700" : ""}
+          >
+            {resultModal.success ? "Continuar" : "Intentar de nuevo"}
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

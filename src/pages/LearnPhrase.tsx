@@ -191,6 +191,8 @@ const LearnPhrase = () => {
   const step6Ref = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const transcriptRef = useRef<string[]>([]);
+  const recordingStoppedRef = useRef<boolean>(false);
   const audioStreamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioAnalyserRef = useRef<AnalyserNode | null>(null);

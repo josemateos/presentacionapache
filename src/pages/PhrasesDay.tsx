@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, CheckCircle2, RotateCcw, Sparkles, Flame, Library, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 
 interface Phrase {

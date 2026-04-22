@@ -681,11 +681,16 @@ const LearnWord = () => {
       return;
     }
 
+    const targetLen = english.trim().length;
+    const isShortTarget = targetLen <= 3;
+
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    recognition.continuous = true;        // mantener abierto más tiempo
+    // Para palabras cortas (como "I") usamos modo single-shot para que onend dispare
+    // pronto tras la primera utterance y se entregue feedback inmediato.
+    recognition.continuous = !isShortTarget;
     recognition.interimResults = true;    // recoger resultados parciales
-    recognition.maxAlternatives = 8;
+    recognition.maxAlternatives = 10;
 
     let resultReceived = false;
     let safetyTimer: number | null = null;

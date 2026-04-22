@@ -241,7 +241,7 @@ interface ImageOption {
 const LearnWord = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { toast } = useToast();
+  const { toast, dismiss } = useToast();
   
   const wordId = searchParams.get("id");
   const rawSpanish = searchParams.get("spanish") || "";
@@ -378,10 +378,19 @@ const LearnWord = () => {
     setAudioLevel(0);
   };
   const verifyTimeoutRef = useRef<number | null>(null);
+  const watchdogRef = useRef<number | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<BlobPart[]>([]);
   const clearVerifyTimeout = () => {
     if (verifyTimeoutRef.current) {
       clearTimeout(verifyTimeoutRef.current);
       verifyTimeoutRef.current = null;
+    }
+  };
+  const clearWatchdog = () => {
+    if (watchdogRef.current) {
+      clearTimeout(watchdogRef.current);
+      watchdogRef.current = null;
     }
   };
   const modules: LearningModule[] = [
@@ -664,11 +673,26 @@ const LearnWord = () => {
 
   // Funciones de grabación / reconocimiento de voz
   const handleStartRecording = async () => {
-    // IMPORTANTE: SpeechRecognition requiere un gesto del usuario.
-    // Iniciamos el reconocedor de forma SÍNCRONA dentro del handler del click,
-    // antes de cualquier await, para no perder el "user activation"
-    // (especialmente en iframes como el preview de Lovable).
+    if (isRecording || isVerifying) return;
 
+    dismiss();
+    clearVerifyTimeout();
+    clearWatchdog();
+    stopWithFeedbackRef.current = null;
+    audioChunksRef.current = [];
+
+    try {
+      recognitionRef.current?.abort?.();
+    } catch {}
+
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch {}
+    }
+    mediaRecorderRef.current = null;
+    setMediaRecorder(null);
+    stopAudioMeter();
     setRecordedAudio(null);
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -686,9 +710,7 @@ const LearnWord = () => {
     const isShortTarget = targetLen <= 3;
 
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    // Este ejercicio siempre evalúa una sola palabra/frase breve.
-    // En desktop, continuous=true tiende a retrasar o degradar el resultado final.
+    recognition.lang = "en-US";
     recognition.continuous = false;
     recognition.interimResults = true;
     recognition.maxAlternatives = 10;
@@ -697,9 +719,31 @@ const LearnWord = () => {
     let safetyTimer: number | null = null;
     const collectedAlternatives: string[] = [];
 
+    const stopRecorder = () => {
+      const recorder = mediaRecorderRef.current;
+      if (recorder && recorder.state !== "inactive") {
+        try {
+          recorder.stop();
+        } catch {}
+      }
+      mediaRecorderRef.current = null;
+      setMediaRecorder(null);
+    };
+
+    const cleanupSession = () => {
+      if (safetyTimer) {
+        clearTimeout(safetyTimer);
+        safetyTimer = null;
+      }
+      clearVerifyTimeout();
+      clearWatchdog();
+      stopRecorder();
+      stopAudioMeter();
+      stopWithFeedbackRef.current = null;
+    };
+
     const normalize = (s: string) => s.toLowerCase().replace(/[^a-záéíóúñü ]/gi, "").trim();
 
-    // Distancia de Levenshtein para tolerancia fonética
     const levenshtein = (a: string, b: string): number => {
       if (a === b) return 0;
       if (!a.length) return b.length;
@@ -718,31 +762,30 @@ const LearnWord = () => {
 
     const targetWord = english.trim();
     const target = normalize(targetWord);
-    // Palabras cortas: tolerancia 1; medianas: 2; largas: ~30%
     const tolerance = target.length <= 3 ? 1 : target.length <= 6 ? 2 : Math.ceil(target.length * 0.3);
 
     const isCloseMatch = (candidate: string): boolean => {
       const c = normalize(candidate);
       if (!c) return false;
-      if (targetWord === "I") return ["i", "eye", "aye", "ay", "hi", "high", "ai", "ie", "eyes"].includes(c) || c.split(/\s+/).some(w => ["i","eye","aye","ay","hi","high","ai","ie"].includes(w));
+      if (targetWord === "I") return ["i", "eye", "aye", "ay", "hi", "high", "ai", "ie", "eyes"].includes(c) || c.split(/\s+/).some(w => ["i", "eye", "aye", "ay", "hi", "high", "ai", "ie"].includes(w));
       if (c === target) return true;
       if (c.includes(target) || target.includes(c)) return true;
-      // Comparar cada palabra del transcript contra la palabra objetivo
       const words = c.split(/\s+/);
       for (const w of words) {
         if (w === target) return true;
         if (levenshtein(w, target) <= tolerance) return true;
       }
-      // Comparar transcript completo contra target
-      if (levenshtein(c, target) <= tolerance) return true;
-      return false;
+      return levenshtein(c, target) <= tolerance;
     };
 
     const finalize = (matched: boolean, transcript: string) => {
       if (resultReceived) return;
       resultReceived = true;
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-      try { recognition.stop(); } catch {}
+      try {
+        recognition.stop();
+      } catch {}
+      cleanupSession();
+      dismiss();
 
       if (matched) {
         playSuccessSound();
@@ -754,11 +797,10 @@ const LearnWord = () => {
         });
 
         setModuleProgress(prev => prev.map(m =>
-          m.id === 5 ? { ...m, completed: true } : m
+          m.id === 5 ? { ...m, completed: true } : m,
         ));
 
         setTimeout(() => {
-          clearVerifyTimeout();
           setCurrentModule(6);
           setIsVerifying(false);
           setIsRecording(false);
@@ -772,27 +814,16 @@ const LearnWord = () => {
           duration: 3500,
           className: "bg-red-600 text-white border-red-700",
         });
-        clearVerifyTimeout();
         setIsVerifying(false);
         setIsRecording(false);
       }
     };
 
-    recognition.onstart = () => {
-      setIsRecording(true);
-      // Tiempo máximo de escucha. Para palabras cortas usamos una ventana más breve
-      // para entregar feedback rápidamente si el reconocedor no devuelve nada.
-      safetyTimer = window.setTimeout(() => {
-        try { recognition.stop(); } catch {}
-      }, isShortTarget ? 4500 : 10000);
-    };
-
     const finalizeNoSpeech = () => {
       if (resultReceived) return;
       resultReceived = true;
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-      clearVerifyTimeout();
-      stopAudioMeter();
+      cleanupSession();
+      dismiss();
       setIsVerifying(false);
       setIsRecording(false);
       playErrorSound();
@@ -804,28 +835,38 @@ const LearnWord = () => {
       });
     };
 
+    recognition.onstart = () => {
+      setIsRecording(true);
+      setIsVerifying(false);
+      safetyTimer = window.setTimeout(() => {
+        try {
+          recognition.stop();
+        } catch {}
+      }, isShortTarget ? 4500 : 10000);
+    };
+
     recognition.onerror = (event: any) => {
       console.error("Recognition error:", event.error);
-      if (event.error === 'no-speech') {
-        // En laptop, 'no-speech' suele dispararse y onend puede no mostrar feedback.
-        // Forzamos el mensaje aquí.
+      if (event.error === "no-speech") {
         finalizeNoSpeech();
         return;
       }
-      if (event.error === 'aborted') {
-        // Aborted ocurre al stop() manual; dejamos que onend maneje.
+      if (event.error === "aborted") {
         return;
       }
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
 
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+      resultReceived = true;
+      cleanupSession();
+      dismiss();
+
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         toast({
           title: "Micrófono bloqueado",
           description: "Habilita el micrófono en los ajustes del navegador y recarga la página.",
           variant: "destructive",
           duration: 4000,
         });
-      } else if (event.error === 'audio-capture') {
+      } else if (event.error === "audio-capture") {
         toast({
           title: "Sin micrófono",
           description: "No se detectó un micrófono disponible.",
@@ -841,21 +882,18 @@ const LearnWord = () => {
         });
       }
 
-      clearVerifyTimeout();
-      stopAudioMeter();
       setIsVerifying(false);
       setIsRecording(false);
     };
 
     recognition.onresult = (event: any) => {
-      // Recorrer todos los resultados (parciales y finales)
       for (let r = event.resultIndex; r < event.results.length; r++) {
         const result = event.results[r];
         for (let i = 0; i < result.length; i++) {
-          const t = String(result[i].transcript || "").trim();
-          if (t) collectedAlternatives.push(t);
-          if (t && isCloseMatch(t)) {
-            finalize(true, t);
+          const transcript = String(result[i].transcript || "").trim();
+          if (transcript) collectedAlternatives.push(transcript);
+          if (transcript && isCloseMatch(transcript)) {
+            finalize(true, transcript);
             return;
           }
         }
@@ -863,38 +901,28 @@ const LearnWord = () => {
     };
 
     recognition.onend = () => {
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-      clearVerifyTimeout();
-      stopAudioMeter();
-
       if (resultReceived) return;
 
       if (collectedAlternatives.length === 0) {
-        setIsVerifying(false);
-        setIsRecording(false);
-        playErrorSound();
-        toast({
-          title: "No se escuchó nada",
-          description: `Acércate al micrófono y pronuncia: "${english}"`,
-          variant: "destructive",
-          duration: 3000,
-        });
+        finalizeNoSpeech();
         return;
       }
 
-      // Revisión final: probar match contra todas las alternativas recolectadas
-      const matched = collectedAlternatives.some(isCloseMatch);
-      finalize(matched, collectedAlternatives[0] || "");
+      finalize(collectedAlternatives.some(isCloseMatch), collectedAlternatives[0] || "");
     };
 
     recognitionRef.current = recognition;
 
-    // Al tocar "Terminar grabación" no marcamos incorrecto enseguida.
-    // En laptop el resultado final suele llegar justo después de stop()/onend.
     stopWithFeedbackRef.current = () => {
       if (resultReceived) return;
       setIsRecording(false);
-      try { recognition.stop(); } catch {}
+      setIsVerifying(true);
+      stopRecorder();
+      stopAudioMeter();
+
+      try {
+        recognition.stop();
+      } catch {}
 
       const start = Date.now();
       const poll = () => {
@@ -905,13 +933,11 @@ const LearnWord = () => {
           return;
         }
 
-        const elapsed = Date.now() - start;
-        if (elapsed >= 2600) {
+        if (Date.now() - start >= 2600) {
           if (collectedAlternatives.length === 0) {
             finalizeNoSpeech();
           } else {
-            const matched = collectedAlternatives.some(isCloseMatch);
-            finalize(matched, collectedAlternatives[0] || "");
+            finalize(collectedAlternatives.some(isCloseMatch), collectedAlternatives[0] || "");
           }
           return;
         }
@@ -922,13 +948,14 @@ const LearnWord = () => {
       poll();
     };
 
-    // Iniciar el reconocedor INMEDIATAMENTE dentro del gesto del usuario.
-    setIsVerifying(true);
     setIsRecording(true);
+    setIsVerifying(false);
+
     try {
       recognition.start();
     } catch (e) {
       console.error("Error starting recognition:", e);
+      cleanupSession();
       toast({
         title: "Micrófono no disponible",
         description: "No se pudo iniciar el reconocimiento. Intenta de nuevo.",
@@ -940,43 +967,123 @@ const LearnWord = () => {
       return;
     }
 
-    // Watchdog: si en laptop el reconocedor termina silenciosamente (sin onresult,
-    // onerror u onend visibles), garantizamos feedback al usuario.
     const watchdogMs = (isShortTarget ? 4500 : 10000) + 1500;
-    window.setTimeout(() => {
+    watchdogRef.current = window.setTimeout(() => {
       if (resultReceived) return;
-      try { recognition.stop(); } catch {}
+      try {
+        recognition.stop();
+      } catch {}
       window.setTimeout(() => {
         if (resultReceived) return;
         if (collectedAlternatives.length === 0) {
           finalizeNoSpeech();
         } else {
-          const matched = collectedAlternatives.some(isCloseMatch);
-          finalize(matched, collectedAlternatives[0] || "");
+          finalize(collectedAlternatives.some(isCloseMatch), collectedAlternatives[0] || "");
         }
       }, 800);
     }, watchdogMs);
 
-    // Tareas auxiliares:
-    // - Reanudar AudioContext para sonidos de feedback
-    // Nota: no abrimos un segundo getUserMedia para el visualizador porque en
-    // algunos laptops interfiere con SpeechRecognition y degrada el reconocimiento.
-    (async () => {
-      try {
-        if (!audioCtxRef.current) {
-          const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
-          if (Ctx) audioCtxRef.current = new Ctx();
-        }
-        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-          await audioCtxRef.current.resume();
-        }
-      } catch (e) {
-        console.warn('No se pudo inicializar AudioContext:', e);
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (Ctx) audioCtxRef.current = new Ctx();
       }
-    })();
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume().catch((e) => console.warn("No se pudo inicializar AudioContext:", e));
+      }
+    } catch (e) {
+      console.warn("No se pudo inicializar AudioContext:", e);
+    }
 
-    // Indicador visual simple mientras el navegador escucha.
-    setAudioLevel(0.65);
+    navigator.mediaDevices?.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      },
+    }).then((stream) => {
+      if (resultReceived) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+
+      audioStreamRef.current = stream;
+
+      if (typeof MediaRecorder !== "undefined") {
+        try {
+          const preferredMimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+            ? "audio/webm;codecs=opus"
+            : MediaRecorder.isTypeSupported("audio/mp4")
+              ? "audio/mp4"
+              : undefined;
+          const recorder = preferredMimeType ? new MediaRecorder(stream, { mimeType: preferredMimeType }) : new MediaRecorder(stream);
+          mediaRecorderRef.current = recorder;
+          setMediaRecorder(recorder);
+          audioChunksRef.current = [];
+
+          recorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              audioChunksRef.current.push(event.data);
+            }
+          };
+
+          recorder.onstop = () => {
+            if (audioChunksRef.current.length > 0) {
+              const blobType = audioChunksRef.current[0] instanceof Blob ? audioChunksRef.current[0].type : recorder.mimeType;
+              setRecordedAudio(new Blob(audioChunksRef.current, { type: blobType || "audio/webm" }));
+            }
+            audioChunksRef.current = [];
+            if (mediaRecorderRef.current === recorder) {
+              mediaRecorderRef.current = null;
+              setMediaRecorder(null);
+            }
+          };
+
+          recorder.start(250);
+        } catch (error) {
+          console.warn("No se pudo iniciar MediaRecorder:", error);
+        }
+      }
+
+      const context = audioCtxRef.current;
+      if (!context) {
+        setAudioLevel(0.2);
+        return;
+      }
+
+      const setupMeter = () => {
+        const source = context.createMediaStreamSource(stream);
+        const analyser = context.createAnalyser();
+        analyser.fftSize = 512;
+        analyser.smoothingTimeConstant = 0.85;
+        source.connect(analyser);
+        audioAnalyserRef.current = analyser;
+
+        const data = new Uint8Array(analyser.fftSize);
+        const tick = () => {
+          if (audioAnalyserRef.current !== analyser) return;
+          analyser.getByteTimeDomainData(data);
+          let sumSquares = 0;
+          for (let i = 0; i < data.length; i++) {
+            const normalized = (data[i] - 128) / 128;
+            sumSquares += normalized * normalized;
+          }
+          const rms = Math.sqrt(sumSquares / data.length);
+          setAudioLevel(Math.min(1, Math.max(0.04, rms * 7)));
+          audioRafRef.current = window.requestAnimationFrame(tick);
+        };
+        tick();
+      };
+
+      if (context.state === "suspended") {
+        context.resume().then(setupMeter).catch((error) => console.warn("No se pudo activar el medidor de audio:", error));
+      } else {
+        setupMeter();
+      }
+    }).catch((error) => {
+      console.warn("No se pudo abrir el micrófono para el medidor:", error);
+      setAudioLevel(0);
+    });
   };
 
   const handleStopRecording = () => {
@@ -1171,6 +1278,16 @@ const LearnWord = () => {
   useEffect(() => {
     return () => {
       clearVerifyTimeout();
+      clearWatchdog();
+      stopAudioMeter();
+      try {
+        recognitionRef.current?.abort?.();
+      } catch {}
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        try {
+          mediaRecorderRef.current.stop();
+        } catch {}
+      }
     };
   }, []);
 

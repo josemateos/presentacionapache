@@ -203,10 +203,11 @@ All colors MUST be HSL.
   }
 
   .gradient-pink-animated {
-    background: linear-gradient(135deg, hsl(330 85% 65%), hsl(300 80% 70%), hsl(350 90% 70%), hsl(330 85% 65%));
+    background: linear-gradient(135deg, hsl(335 95% 52%), hsl(320 90% 55%), hsl(345 95% 58%), hsl(335 95% 52%));
     background-size: 300% 300%;
     animation: gradientShift 3s ease infinite;
     color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
   }
 
   .gradient-yellow-animated {

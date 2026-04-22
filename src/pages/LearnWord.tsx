@@ -1504,7 +1504,7 @@ const LearnWord = () => {
                       key={index}
                       onClick={() => handleMeaningSelection(option)}
                       disabled={meaningVerified}
-                      className={`group relative flex items-center justify-between px-5 py-2 rounded-2xl text-left overflow-hidden transition-all duration-300 active:scale-95 disabled:active:scale-100 border-2 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                      className={`group relative flex items-center justify-between px-5 py-2 rounded-2xl text-left overflow-hidden transition-colors duration-200 border-2 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${
                         showCorrect
                           ? "bg-emerald-500/15 border-emerald-500/60 shadow-[0_0_25px_hsl(142_76%_45%/0.2)]"
                           : showWrong

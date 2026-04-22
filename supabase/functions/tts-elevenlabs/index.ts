@@ -8,15 +8,22 @@ const corsHeaders = {
 };
 
 const BUCKET = "tts-cache";
-const CACHE_VERSION = "v3"; // bump to invalidate old cached audio
+const CACHE_VERSION = "v4"; // bump to invalidate old cached audio
 
 // Phonetic respellings for short/ambiguous words that ElevenLabs reads as letter names.
 const PRONUNCIATION_FIXES: Record<string, string> = {
-  "i": "Eye.",
+  "i": "Eye",
 };
 
+function normalizePronunciationKey(text: string): string {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[.!?,;:]+$/g, "");
+}
+
 function fixPronunciation(text: string): string {
-  const key = text.trim().toLowerCase();
+  const key = normalizePronunciationKey(text);
   return PRONUNCIATION_FIXES[key] ?? text;
 }
 

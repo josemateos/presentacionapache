@@ -723,7 +723,7 @@ const LearnWord = () => {
     const isCloseMatch = (candidate: string): boolean => {
       const c = normalize(candidate);
       if (!c) return false;
-      if (targetWord === "I") return ["i", "eye", "aye", "ay"].includes(c);
+      if (targetWord === "I") return ["i", "eye", "aye", "ay", "hi", "high", "ai", "ie", "eyes"].includes(c) || c.split(/\s+/).some(w => ["i","eye","aye","ay","hi","high","ai","ie"].includes(w));
       if (c === target) return true;
       if (c.includes(target) || target.includes(c)) return true;
       // Comparar cada palabra del transcript contra la palabra objetivo

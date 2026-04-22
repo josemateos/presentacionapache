@@ -82,13 +82,8 @@ const PhrasesDay = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background dark flex flex-col relative overflow-hidden">
-      {/* Mystic background glows */}
-      <div className="pointer-events-none absolute inset-0 -z-0">
-        <div className="absolute -top-32 -left-24 w-80 h-80 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute top-1/3 -right-24 w-96 h-96 rounded-full bg-accent/15 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-surface text-on-surface flex flex-col selection:bg-accent/30">
+
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/70 backdrop-blur-xl border-b border-white/10">

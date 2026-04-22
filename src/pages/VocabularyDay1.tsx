@@ -71,22 +71,10 @@ const VocabularyDay1 = () => {
 
   const [words, setWords] = useState<Word[]>(INITIAL_WORDS);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
-  const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
   const [activeTab, setActiveTab] = useState("vocabulary");
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const learnedCount = words.filter(w => w.learned).length;
   const progress = (learnedCount / words.length) * 100;
-
-  // Aprendidas primero, resto en orden aleatorio
-  const sortWords = (array: Word[]) => {
-    const learned = array.filter(w => w.learned);
-    const rest = array.filter(w => !w.learned);
-    for (let i = rest.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [rest[i], rest[j]] = [rest[j], rest[i]];
-    }
-    return [...learned, ...rest];
-  };
 
   useEffect(() => {
     // Cargar progreso guardado al montar y cuando cambia la visibilidad

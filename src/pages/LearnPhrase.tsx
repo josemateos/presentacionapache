@@ -1061,7 +1061,13 @@ const LearnPhrase = () => {
             </DialogDescription>
           </DialogHeader>
           <Button
-            onClick={() => setResultModal((prev) => ({ ...prev, open: false }))}
+            onClick={() => {
+              const wasSuccess = resultModal.success;
+              setResultModal((prev) => ({ ...prev, open: false }));
+              if (wasSuccess && currentStep < 6) {
+                goToNextStep();
+              }
+            }}
             className={resultModal.success ? "bg-green-600 hover:bg-green-700" : ""}
           >
             {resultModal.success ? "Continuar" : "Intentar de nuevo"}

@@ -408,7 +408,7 @@ const LearnWord = () => {
         const savedWords = JSON.parse(saved);
         const updatedWords = savedWords.map((w: any) =>
           w.id === parseInt(wordId)
-            ? { ...w, inProgress: !allDone && !w.learned }
+            ? { ...w, inProgress: !w.learned }
             : w
         );
         localStorage.setItem("vocabulary_day1_progress", JSON.stringify(updatedWords));

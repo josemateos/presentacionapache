@@ -398,91 +398,110 @@ const LearnPhrase = () => {
   };
 
   const startRecording = async () => {
+    // Reset state SÍNCRONO antes de cualquier await
+    transcriptRef.current = [];
+    recordingStoppedRef.current = false;
+    setRecordedTranscript([]);
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast({
+        title: "No soportado",
+        description: "Tu navegador no soporta reconocimiento de voz. Usa Chrome o Edge.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Crear y arrancar SpeechRecognition SÍNCRONAMENTE dentro del gesto del usuario
+    // (sin awaits previos) para evitar bloqueos por políticas del navegador.
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    const interimByIndex: Record<number, string> = {};
+
+    recognition.onresult = (event: any) => {
+      if (recordingStoppedRef.current) return;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const res = event.results[i];
+        const text = (res[0]?.transcript || '').trim();
+        if (res.isFinal) {
+          delete interimByIndex[i];
+          if (text) {
+            const words = text.split(/\s+/).filter((w: string) => w.length > 0);
+            transcriptRef.current = [...transcriptRef.current, ...words];
+          }
+        } else {
+          interimByIndex[i] = text;
+        }
+      }
+      // Mostrar finales + interim en vivo para feedback inmediato
+      const interimWords = Object.values(interimByIndex)
+        .join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter((w) => w.length > 0);
+      setRecordedTranscript([...transcriptRef.current, ...interimWords]);
+    };
+
+    recognition.onend = () => {
+      if (transcriptRef.current.length === 0) {
+        const interimText = Object.values(interimByIndex).join(' ').trim();
+        if (interimText) {
+          transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+        }
+      }
+      checkPronunciation(transcriptRef.current);
+    };
+
+    recognition.onerror = (e: any) => {
+      console.warn('SpeechRecognition error:', e?.error);
+      if (e?.error === 'not-allowed' || e?.error === 'service-not-allowed') {
+        toast({
+          title: "Permiso denegado",
+          description: "Habilita el micrófono en la configuración del navegador.",
+          variant: "destructive",
+        });
+        recordingStoppedRef.current = true;
+      }
+    };
+
+    try {
+      recognition.start();
+      recognitionRef.current = recognition;
+    } catch (err) {
+      console.error('No se pudo iniciar SpeechRecognition:', err);
+      toast({
+        title: "Error",
+        description: "No se pudo iniciar la grabación. Intenta de nuevo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsRecording(true);
+    setRecordingTime(0);
+
+    if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
+    recordingIntervalRef.current = window.setInterval(() => {
+      setRecordingTime(prev => {
+        if (prev >= 10) {
+          stopRecording();
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
+    // Medidor de audio visual: opcional. Si falla, la grabación sigue funcionando.
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStreamRef.current = stream;
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-
-      // Reset transcript state synchronously via refs
-      transcriptRef.current = [];
-      recordingStoppedRef.current = false;
-      setRecordedTranscript([]);
-
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.continuous = true;
-        // Activamos interim para capturar palabras aunque no se haya emitido el final
-        recognition.interimResults = true;
-
-        // Guardamos el último interim por índice como fallback si no llegan finales
-        const interimByIndex: Record<number, string> = {};
-
-        recognition.onresult = (event: any) => {
-          if (recordingStoppedRef.current) return;
-
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const res = event.results[i];
-            const text = (res[0]?.transcript || '').trim();
-            if (res.isFinal) {
-              delete interimByIndex[i];
-              if (text) {
-                const words = text.split(/\s+/).filter((w: string) => w.length > 0);
-                transcriptRef.current = [...transcriptRef.current, ...words];
-              }
-            } else {
-              interimByIndex[i] = text;
-            }
-          }
-          setRecordedTranscript([...transcriptRef.current]);
-        };
-
-        recognition.onend = () => {
-          // Si no llegaron finales, usar el último interim como fallback
-          if (transcriptRef.current.length === 0) {
-            const interimText = Object.values(interimByIndex).join(' ').trim();
-            if (interimText) {
-              transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
-            }
-          }
-          checkPronunciation(transcriptRef.current);
-        };
-
-        recognition.onerror = (e: any) => {
-          console.warn('SpeechRecognition error:', e?.error);
-          recordingStoppedRef.current = true;
-        };
-
-        try { recognition.start(); } catch {}
-        recognitionRef.current = recognition;
-      }
-
-      setIsRecording(true);
-      setRecordingTime(0);
-
       setupAudioMeter(stream);
-
-      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-      recordingIntervalRef.current = window.setInterval(() => {
-        setRecordingTime(prev => {
-          if (prev >= 10) {
-            stopRecording();
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-
-      mediaRecorder.start();
     } catch (error) {
-      console.error('Error al acceder al micrófono:', error);
-      toast({
-        title: "Error",
-        description: "No se pudo acceder al micrófono",
-        variant: "destructive",
-      });
+      console.warn('No se pudo acceder al medidor de audio (la grabación continúa):', error);
     }
   };
 

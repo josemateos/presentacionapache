@@ -689,7 +689,7 @@ const LearnPhrase = () => {
           <div className="bg-background/50 rounded-lg p-4 mb-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {exerciseData.spanishWords.map((word, index) => (
-                <span key={index} className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
+                <span key={index} className="px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">
                   {word}
                 </span>
               ))}
@@ -723,7 +723,7 @@ const LearnPhrase = () => {
             <div className="bg-background/50 rounded-lg p-4 mb-4 min-h-24 border-2 border-dashed border-border">
               <div className="flex flex-wrap gap-2 justify-center">
                 {userAttemptSpanish.map((word, index) => (
-                  <span key={index} className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
+                  <span key={index} className="px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">
                     {word}
                   </span>
                 ))}
@@ -740,7 +740,7 @@ const LearnPhrase = () => {
                       key={index}
                       onClick={() => handleWordClick(word)}
                       disabled={isStepComplete || isUsed}
-                      className="px-3 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-md font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       {word}
                     </button>
@@ -858,7 +858,7 @@ const LearnPhrase = () => {
                   
                   return (
                     <span key={index} className="flex gap-2 items-center">
-                      <span className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
+                      <span className="px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">
                         {word === "i" ? "I" : word}
                       </span>
                       {isAuxiliaryPosition && exerciseData.auxiliary !== "" && (

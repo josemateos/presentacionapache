@@ -34,7 +34,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const voice = voiceId || "EXAVITQu4vr4xnSDxMaL";
+    // Default voice: Brian (clear American English male, excellent diction)
+    const voice = voiceId || "nPczCjzI2devNBz1zQrb";
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);

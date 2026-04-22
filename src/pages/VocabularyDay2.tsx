@@ -179,7 +179,7 @@ const VocabularyDay2 = () => {
 
         <div className="space-y-3 mt-6">
           <AnimatePresence mode="popLayout">
-            {(shuffledWords.length ? shuffledWords : words).map((word, index) => (
+            {words.map((word, index) => (
               <motion.div
                 key={word.id}
                 initial={{ opacity: 0, x: -20 }}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock } from "lucide-react";
+import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

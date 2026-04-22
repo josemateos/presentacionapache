@@ -126,19 +126,6 @@ const VocabularyDay1 = () => {
   useEffect(() => {
     // Guardar progreso en localStorage
     localStorage.setItem("vocabulary_day1_progress", JSON.stringify(words));
-    // Mantener orden actual: aprendidas primero, resto conserva su orden previo (aleatorio inicial)
-    setShuffledWords(prev => {
-      if (prev.length === 0) return sortWords(words);
-      const wordsById = new Map(words.map(w => [w.id, w]));
-      const updated = prev.map(p => wordsById.get(p.id)).filter(Boolean) as Word[];
-      // Agregar nuevas palabras que no estaban antes (al final)
-      const knownIds = new Set(updated.map(w => w.id));
-      words.forEach(w => { if (!knownIds.has(w.id)) updated.push(w); });
-      // Reordenar: aprendidas primero, resto conserva orden
-      const learned = updated.filter(w => w.learned);
-      const rest = updated.filter(w => !w.learned);
-      return [...learned, ...rest];
-    });
   }, [words]);
 
   const handleLearnWord = (word: Word) => {

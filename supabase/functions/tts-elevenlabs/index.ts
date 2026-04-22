@@ -10,19 +10,14 @@ const corsHeaders = {
 const BUCKET = "tts-cache";
 const CACHE_VERSION = "v3"; // bump to invalidate old cached audio
 
-// Map of short/ambiguous words that ElevenLabs mispronounces (reads as letters).
-// We send a sentence-cased variant that forces word pronunciation.
+// Phonetic respellings for short/ambiguous words that ElevenLabs reads as letter names.
 const PRONUNCIATION_FIXES: Record<string, string> = {
-  "i": "I am here.",
-  "a": "a apple",
+  "i": "Eye.",
 };
 
-function fixPronunciation(text: string): { textToSpeak: string; sliceWord?: string } {
+function fixPronunciation(text: string): string {
   const key = text.trim().toLowerCase();
-  if (PRONUNCIATION_FIXES[key]) {
-    return { textToSpeak: PRONUNCIATION_FIXES[key], sliceWord: key };
-  }
-  return { textToSpeak: text };
+  return PRONUNCIATION_FIXES[key] ?? text;
 }
 
 function slugify(text: string, voice: string): string {

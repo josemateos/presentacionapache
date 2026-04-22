@@ -1525,6 +1525,8 @@ const LearnWord = () => {
                             ? "bg-destructive"
                             : isPicked
                             ? "border border-cyan-400"
+                            : selectedMeaningOption !== null
+                            ? "border border-muted-foreground/40"
                             : "border border-muted-foreground/40 group-hover:border-cyan-400"
                         }`}
                       >
@@ -1533,7 +1535,7 @@ const LearnWord = () => {
                         ) : showWrong ? (
                           <span className="text-base font-black text-destructive-foreground">✕</span>
                         ) : (
-                          <span className={`text-xs font-bold ${isPicked ? 'text-cyan-400' : 'text-muted-foreground group-hover:text-cyan-400'}`}>{letter}</span>
+                          <span className={`text-xs font-bold ${isPicked ? 'text-cyan-400' : selectedMeaningOption !== null ? 'text-muted-foreground' : 'text-muted-foreground group-hover:text-cyan-400'}`}>{letter}</span>
                         )}
                       </div>
                       {showCorrect && (

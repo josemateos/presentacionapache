@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";

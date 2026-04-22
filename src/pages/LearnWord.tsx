@@ -359,6 +359,7 @@ const LearnWord = () => {
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
+  const stopWithFeedbackRef = useRef<(() => void) | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const audioStreamRef = useRef<MediaStream | null>(null);
@@ -888,6 +889,18 @@ const LearnWord = () => {
 
     recognitionRef.current = recognition;
 
+    // Permite que "Terminar grabación" entregue feedback inmediato sin esperar onend.
+    stopWithFeedbackRef.current = () => {
+      if (resultReceived) return;
+      try { recognition.stop(); } catch {}
+      if (collectedAlternatives.length === 0) {
+        finalizeNoSpeech();
+      } else {
+        const matched = collectedAlternatives.some(isCloseMatch);
+        finalize(matched, collectedAlternatives[0] || "");
+      }
+    };
+
     // Iniciar el reconocedor INMEDIATAMENTE dentro del gesto del usuario.
     setIsVerifying(true);
     setIsRecording(true);
@@ -970,7 +983,11 @@ const LearnWord = () => {
   };
 
   const handleStopRecording = () => {
-    if (recognitionRef.current) {
+    // Feedback inmediato: evalúa lo recolectado sin esperar a que el navegador
+    // dispare onend (en laptop puede tardar varios segundos).
+    if (stopWithFeedbackRef.current) {
+      stopWithFeedbackRef.current();
+    } else if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch {}
     }
     setIsRecording(false);

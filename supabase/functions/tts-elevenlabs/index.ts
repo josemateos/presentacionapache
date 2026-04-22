@@ -8,6 +8,7 @@ const corsHeaders = {
 };
 
 const BUCKET = "tts-cache";
+const CACHE_VERSION = "v2"; // bump to invalidate old cached audio
 
 function slugify(text: string, voice: string): string {
   const clean = text
@@ -16,7 +17,7 @@ function slugify(text: string, voice: string): string {
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .slice(0, 60);
-  return `${voice}/${clean || "audio"}.mp3`;
+  return `${CACHE_VERSION}/${voice}/${clean || "audio"}.mp3`;
 }
 
 Deno.serve(async (req) => {

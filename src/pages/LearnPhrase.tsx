@@ -930,7 +930,7 @@ const LearnPhrase = () => {
               >
                 Repasar ejercicios
               </Button>
-              <Button onClick={checkFinalPhrase} disabled={isStepComplete} className="flex-1">
+              <Button onClick={checkFinalPhrase} disabled={isStepComplete} className="flex-1 gradient-pink-animated border-0 font-semibold shadow-md hover:opacity-90">
                 Verificar Frase
               </Button>
             </div>

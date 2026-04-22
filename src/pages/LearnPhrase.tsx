@@ -199,8 +199,35 @@ const LearnPhrase = () => {
   const audioRafRef = useRef<number | null>(null);
   const recordingIntervalRef = useRef<number | null>(null);
 
+  const playSuccessSound = () => {
+    try {
+      const AC = (window.AudioContext || (window as any).webkitAudioContext);
+      if (!AC) return;
+      const ctx = new AC();
+      const now = ctx.currentTime;
+      // Arpegio alegre: C5 - E5 - G5
+      const notes = [523.25, 659.25, 783.99];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const start = now + i * 0.12;
+        const end = start + 0.22;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, end);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(end + 0.02);
+      });
+      setTimeout(() => ctx.close().catch(() => {}), 800);
+    } catch {}
+  };
+
   const showResult = (success: boolean, title: string, message: string) => {
     setResultModal({ open: true, success, title, message });
+    if (success) playSuccessSound();
   };
 
   const stopAudioMeter = () => {

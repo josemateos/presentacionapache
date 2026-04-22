@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Volume2, Lightbulb, Star, CheckCircle2, Lock, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -564,38 +566,54 @@ const LearnPhrase = () => {
     setFinalPhrase("");
   };
 
+  const TOTAL_STEPS = 6;
+  const headerProgress = Math.min((currentStep / TOTAL_STEPS) * 100, 100);
+
   return (
-    <div className="min-h-screen bg-background dark">
-      <header className="sticky top-0 z-10 bg-card border-b border-border shadow-sm">
-        <div className="container max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(`/phrases-day?day=${day}`)}
-              className="gap-2 text-white hover:text-white/80"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Volver
-            </Button>
-            <h1 className="text-lg font-semibold text-foreground">Frase {phraseId} · Paso {currentStep}</h1>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={goToPreviousStep}
-              disabled={currentStep <= 1}
-              className="gap-2 text-white hover:text-white/80 disabled:opacity-30"
-              title="Ejercicio anterior"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Anterior
-            </Button>
-          </div>
+    <div className="min-h-screen bg-surface text-on-surface font-body flex flex-col selection:bg-accent/30">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center max-w-4xl">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(`/phrases-day?day=${day}`)}
+            className="hover:bg-primary/10"
+            title="Volver a la lista de frases"
+          >
+            <List className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Lista</span>
+          </Button>
+
+          <Badge variant="secondary" className="text-sm">
+            {isStepComplete ? "Excelente" : `Ejercicio ${currentStep} de ${TOTAL_STEPS}`}
+          </Badge>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hover:bg-primary/10"
+            title="Ejercicio anterior"
+            onClick={goToPreviousStep}
+            disabled={currentStep <= 1}
+          >
+            <Undo2 className="w-4 h-4" />
+            <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
+          </Button>
         </div>
       </header>
 
       <main className="container max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
+        {/* Progress Bar */}
+        <div className="mb-2">
+          <Progress value={headerProgress} className="h-3 mb-2" />
+          <p className="text-sm text-muted-foreground text-center">
+            {Math.min(currentStep, TOTAL_STEPS)} de {TOTAL_STEPS} ejercicios
+          </p>
+        </div>
+
         {/* Paso 1: Frase en Español */}
+
         {currentStep >= 1 && currentStep < 5 && (
         <Card ref={step1Ref} className="p-6">
           <div className="flex items-center gap-3 mb-4">

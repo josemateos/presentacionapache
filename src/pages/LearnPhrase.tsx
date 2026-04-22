@@ -689,7 +689,7 @@ const LearnPhrase = () => {
           <div className="bg-background/50 rounded-lg p-4 mb-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {exerciseData.spanishWords.map((word, index) => (
-                <span key={index} className="px-3 py-2 bg-secondary text-foreground rounded-md font-medium">
+                <span key={index} className="px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">
                   {word}
                 </span>
               ))}

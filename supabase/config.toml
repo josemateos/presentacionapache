@@ -2,3 +2,6 @@ project_id = "iazntbwcpermxlvhlknd"
 
 [functions.generate-image]
 verify_jwt = false
+
+[functions.tts-elevenlabs]
+verify_jwt = false

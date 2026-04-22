@@ -550,21 +550,61 @@ const LearnWord = () => {
     }
   };
 
-  const handlePlayAudio = () => {
+  const ttsCacheRef = useRef<Map<string, string>>(new Map());
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const fallbackBrowserTTS = (text: string) => {
     try {
-      // Reanudar AudioContext si está suspendido (gesto de usuario) — ayuda a desbloquear el tono de éxito posterior
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume().catch(() => {});
-      }
-      // Para la palabra "I" sola, varios motores TTS dicen "capital I". Forzamos pronunciación natural.
-      const trimmed = english.trim();
-      const textToSpeak = trimmed === "I" ? "I." : english;
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = "en-US";
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
     } catch (e) {
+      console.error("Fallback TTS failed:", e);
+    }
+  };
+
+  const handlePlayAudio = async () => {
+    try {
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      const trimmed = english.trim();
+      const textToSpeak = trimmed === "I" ? "I." : english;
+
+      // Stop any currently playing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
+
+      // Check cache
+      const cached = ttsCacheRef.current.get(textToSpeak);
+      if (cached) {
+        const audio = new Audio(cached);
+        currentAudioRef.current = audio;
+        await audio.play();
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke("tts-elevenlabs", {
+        body: { text: textToSpeak },
+      });
+
+      if (error || !data?.audioContent) {
+        console.error("ElevenLabs TTS error, falling back:", error);
+        fallbackBrowserTTS(textToSpeak);
+        return;
+      }
+
+      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+      ttsCacheRef.current.set(textToSpeak, audioUrl);
+      const audio = new Audio(audioUrl);
+      currentAudioRef.current = audio;
+      await audio.play();
+    } catch (e) {
       console.error("Error playing audio:", e);
+      fallbackBrowserTTS(english);
     }
   };
 

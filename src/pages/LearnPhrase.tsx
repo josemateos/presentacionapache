@@ -414,34 +414,44 @@ const LearnPhrase = () => {
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.continuous = true;
-        // Solo resultados finales para evitar palabras que llegan tarde
-        recognition.interimResults = false;
+        // Activamos interim para capturar palabras aunque no se haya emitido el final
+        recognition.interimResults = true;
+
+        // Guardamos el último interim por índice como fallback si no llegan finales
+        const interimByIndex: Record<number, string> = {};
 
         recognition.onresult = (event: any) => {
-          // Ignorar cualquier resultado tardío que llegue después de finalizar grabación
           if (recordingStoppedRef.current) return;
 
-          // Acumular SOLO resultados finales nuevos
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const res = event.results[i];
+            const text = (res[0]?.transcript || '').trim();
             if (res.isFinal) {
-              const text = (res[0]?.transcript || '').trim();
+              delete interimByIndex[i];
               if (text) {
                 const words = text.split(/\s+/).filter((w: string) => w.length > 0);
                 transcriptRef.current = [...transcriptRef.current, ...words];
               }
+            } else {
+              interimByIndex[i] = text;
             }
           }
           setRecordedTranscript([...transcriptRef.current]);
         };
 
         recognition.onend = () => {
-          // Disparar verificación con el transcript del ref (sincrónico, sin estado obsoleto)
+          // Si no llegaron finales, usar el último interim como fallback
+          if (transcriptRef.current.length === 0) {
+            const interimText = Object.values(interimByIndex).join(' ').trim();
+            if (interimText) {
+              transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+            }
+          }
           checkPronunciation(transcriptRef.current);
         };
 
-        recognition.onerror = () => {
-          // En caso de error, marcar como detenido para no procesar resultados tardíos
+        recognition.onerror = (e: any) => {
+          console.warn('SpeechRecognition error:', e?.error);
           recordingStoppedRef.current = true;
         };
 
@@ -489,8 +499,9 @@ const LearnPhrase = () => {
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
     }
     if (recognitionRef.current) {
-      try { recognitionRef.current.abort(); } catch {
-        try { recognitionRef.current.stop(); } catch {}
+      // Usar stop() para que los resultados pendientes se entreguen antes de onend
+      try { recognitionRef.current.stop(); } catch {
+        try { recognitionRef.current.abort(); } catch {}
       }
     }
     stopAudioMeter();

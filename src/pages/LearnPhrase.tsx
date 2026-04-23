@@ -529,13 +529,25 @@ const LearnPhrase = () => {
       audioStreamRef.current = null;
     }
     if (recognitionRef.current) {
-      // Usar stop() para que los resultados pendientes se entreguen antes de onend
-      try { recognitionRef.current.stop(); } catch {
-        try { recognitionRef.current.abort(); } catch {}
+      // Abortar (no esperar a onend) para evaluar de inmediato
+      try { recognitionRef.current.abort(); } catch {
+        try { recognitionRef.current.stop(); } catch {}
       }
     }
     stopAudioMeter();
     setIsRecording(false);
+
+    // Evaluar de inmediato con lo que ya tenemos (final + interim) sin esperar a onend
+    if (!resultEvaluatedRef.current) {
+      if (transcriptRef.current.length === 0) {
+        const interimText = Object.values(interimByIndexRef.current).join(' ').trim();
+        if (interimText) {
+          transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+        }
+      }
+      resultEvaluatedRef.current = true;
+      checkPronunciation(transcriptRef.current);
+    }
   };
 
   // Limpiar al desmontar

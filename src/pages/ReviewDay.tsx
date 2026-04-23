@@ -117,6 +117,7 @@ const ReviewDay = () => {
   const day = parseInt(searchParams.get("day") || "1");
 
   const [step, setStep] = useState<ExerciseStep>("spanish-to-english");
+  const [verifiedSteps, setVerifiedSteps] = useState(0);
   const [reviewWords, setReviewWords] = useState<Word[]>([]);
   const [reviewPhrases, setReviewPhrases] = useState<Phrase[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -568,14 +569,7 @@ const [verified, setVerified] = useState(false);
   const totalPhrases = reviewPhrases.length;
   const totalSteps = 2 + (totalPhrases * 3); // 2 word exercises + 3 steps per phrase (translation, apache, ordering)
   
-  const getCurrentStep = () => {
-    if (step === "spanish-to-english") return 1;
-    if (step === "english-to-spanish") return 2;
-    if (step === "apache-translation") return 3 + (currentPhraseIndex * 3);
-    if (step === "phrase-translation") return 4 + (currentPhraseIndex * 3);
-    if (step === "phrase-ordering") return 5 + (currentPhraseIndex * 3);
-    return totalSteps;
-  };
+  const getCurrentStep = () => verifiedSteps;
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">

@@ -352,17 +352,27 @@ const [verified, setVerified] = useState(false);
   const verifyPhraseTranslation = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
     const phraseWords = currentPhrase.spanish.split(" ");
-    const userAnswer = phraseWords
-      .map((_, index) => (userAnswers[index] || "").trim())
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
+    const userWords = phraseWords.map((_, index) => (userAnswers[index] || "").trim());
+    const userAnswer = userWords.join(" ").replace(/\s+/g, " ").trim();
 
     const normalizedUserAnswer = normalizeText(userAnswer, false);
     const normalizedCorrectAnswer = normalizeText(currentPhrase.spanish, false);
 
     let userAnswerNormalized = normalizedUserAnswer.replace(/\buna\b/g, "un");
     userAnswerNormalized = userAnswerNormalized.replace(/\bvisitar\b/g, "visita");
+
+    const normalizeSpanishWord = (word: string) =>
+      normalizeText(word, false)
+        .replace(/^una$/, "un")
+        .replace(/^visitar$/, "visita");
+
+    const wordErrors = Object.fromEntries(
+      phraseWords.map((word, index) => [
+        index,
+        normalizeSpanishWord(userWords[index] || "") !== normalizeSpanishWord(word),
+      ])
+    );
+
     const isCorrect =
       userAnswerNormalized === normalizedCorrectAnswer ||
       normalizedUserAnswer === normalizedCorrectAnswer;
@@ -385,8 +395,7 @@ const [verified, setVerified] = useState(false);
         t.dismiss();
       }, 2000);
     } else {
-      const newErrors = Object.fromEntries(phraseWords.map((_, index) => [index, true]));
-      setErrors(newErrors);
+      setErrors(wordErrors);
       toast({
         title: "Incorrecto",
         description: "Intenta de nuevo",

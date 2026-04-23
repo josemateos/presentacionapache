@@ -85,7 +85,16 @@ export const AppHeader = ({
               Mi Perfil
             </button>
             <button className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-on-surface hover:bg-white/5 transition-colors font-body">
-              Configuración
+              Contraseña
+            </button>
+            <button
+              onClick={() => {
+                setShowProfileMenu(false);
+                navigate("/catalogo-avatar");
+              }}
+              className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-on-surface hover:bg-white/5 transition-colors font-body"
+            >
+              Avatar
             </button>
             <button className="w-full text-left px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors font-body">
               Cerrar Sesión

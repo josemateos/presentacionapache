@@ -630,7 +630,8 @@ const LearnPhrase = () => {
         localStorage.setItem(savedKey, JSON.stringify(updated));
       } catch {}
     }
-  }, [currentStep, day, phraseId]);
+    try { localStorage.setItem(stepStorageKey, String(currentStep)); } catch {}
+  }, [currentStep, day, phraseId, stepStorageKey]);
 
   const goToNextStep = () => {
     if (currentStep < 6) {

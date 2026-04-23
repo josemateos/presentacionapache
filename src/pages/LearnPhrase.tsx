@@ -612,6 +612,7 @@ const LearnPhrase = () => {
         const updated = phrases.map((p: any) => (p.id === phraseId ? { ...p, learned: true, inProgress: false } : p));
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
+      try { localStorage.removeItem(stepStorageKey); } catch {}
     } else {
       showResult(false, "Pronunciación incorrecta", "Aún hay palabras por corregir. Vuelve a intentarlo.");
     }

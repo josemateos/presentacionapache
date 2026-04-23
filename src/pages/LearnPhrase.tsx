@@ -1051,31 +1051,6 @@ const LearnPhrase = () => {
 
             {/* Controles de grabación */}
             <div className="flex flex-col gap-4">
-              {isRecording && (
-                <>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-primary">
-                      Grabando... {recordingTime}s / 10s
-                    </p>
-                  </div>
-                  <div className="flex items-end justify-center gap-1 h-16 px-4 py-2 bg-background/40 rounded-xl border border-border">
-                    {Array.from({ length: 24 }).map((_, i) => {
-                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
-                      const base = 6;
-                      const max = 48;
-                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
-                      return (
-                        <span
-                          key={i}
-                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
-                          style={{ height: `${height}px` }}
-                        />
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-
               <div className="flex gap-2">
                 {!isRecording ? (
                   <Button onClick={startRecording} className="flex-1">
@@ -1089,6 +1064,37 @@ const LearnPhrase = () => {
                 )}
               </div>
             </div>
+
+            {/* Modal del ecualizador */}
+            {isRecording && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
+                <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-full max-w-sm flex flex-col gap-4">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-primary">
+                      Grabando... {recordingTime}s / 10s
+                    </p>
+                  </div>
+                  <div className="flex items-end justify-center gap-1 h-20 px-4 py-2 bg-background/40 rounded-xl border border-border">
+                    {Array.from({ length: 24 }).map((_, i) => {
+                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
+                      const base = 6;
+                      const max = 56;
+                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
+                      return (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
+                          style={{ height: `${height}px` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <Button onClick={stopRecording} variant="destructive" className="w-full">
+                    Finalizar Grabación
+                  </Button>
+                </div>
+              </div>
+            )}
 
 
             {isStepComplete && (

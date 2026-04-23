@@ -447,14 +447,21 @@ const LearnPhrase = () => {
     };
 
     recognition.onend = () => {
-      if (transcriptRef.current.length === 0) {
-        const interimText = Object.values(interimByIndex).join(' ').trim();
-        if (interimText) {
-          transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+      // Solo se usa como fallback si stopRecording no logró evaluar a tiempo
+      if (!resultEvaluatedRef.current) {
+        if (transcriptRef.current.length === 0) {
+          const interimText = Object.values(interimByIndex).join(' ').trim();
+          if (interimText) {
+            transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+          }
         }
+        resultEvaluatedRef.current = true;
+        checkPronunciation(transcriptRef.current);
       }
-      checkPronunciation(transcriptRef.current);
     };
+
+    // Exponer interimByIndex para que stopRecording pueda usarlo de inmediato
+    interimByIndexRef.current = interimByIndex;
 
     recognition.onerror = (e: any) => {
       console.warn('SpeechRecognition error:', e?.error);

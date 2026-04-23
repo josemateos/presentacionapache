@@ -1082,6 +1082,15 @@ const LearnPhrase = () => {
                   </Button>
                 )}
               </div>
+              {!isRecording && !isStepComplete && (
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(`/phrases-day?day=${day}`)}
+                  className="w-full"
+                >
+                  Dejar para más tarde
+                </Button>
+              )}
             </div>
 
             {/* Modal del ecualizador */}

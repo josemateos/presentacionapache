@@ -310,6 +310,18 @@ const LearnPhrase = () => {
     if (isCorrect) {
       setFeedback("");
       setIsStepComplete(true);
+      // Marcar EN PROGRESO solo tras verificar correctamente el ejercicio 2 de 6
+      try {
+        const savedKey = `phrases_day${day}_progress`;
+        const saved = localStorage.getItem(savedKey);
+        if (saved) {
+          const phrasesArr = JSON.parse(saved);
+          const updated = phrasesArr.map((p: any) =>
+            p.id === phraseId && !p.learned ? { ...p, inProgress: true } : p
+          );
+          localStorage.setItem(savedKey, JSON.stringify(updated));
+        }
+      } catch {}
       showResult(true, "¡Correcto!", "Has ordenado la frase en Español Apache.");
     } else {
       showResult(false, "Incorrecto", "El orden de las palabras no es correcto. Intenta nuevamente.");
@@ -619,19 +631,8 @@ const LearnPhrase = () => {
   };
 
   useEffect(() => {
-    const savedKey = `phrases_day${day}_progress`;
-    const saved = localStorage.getItem(savedKey);
-    if (saved) {
-      try {
-        const phrasesArr = JSON.parse(saved);
-        const updated = phrasesArr.map((p: any) =>
-          p.id === phraseId && !p.learned ? { ...p, inProgress: true } : p
-        );
-        localStorage.setItem(savedKey, JSON.stringify(updated));
-      } catch {}
-    }
     try { localStorage.setItem(stepStorageKey, String(currentStep)); } catch {}
-  }, [currentStep, day, phraseId, stepStorageKey]);
+  }, [currentStep, stepStorageKey]);
 
   const goToNextStep = () => {
     if (currentStep < 6) {

@@ -162,7 +162,16 @@ const LearnPhrase = () => {
   const englishPhrase = searchParams.get("english") || "";
   const spanishPhrase = searchParams.get("spanish") || "";
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const stepStorageKey = `phrases_day${day}_phrase${phraseId}_step`;
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(stepStorageKey);
+      const n = saved ? parseInt(saved) : 1;
+      return n >= 1 && n <= 6 ? n : 1;
+    } catch {
+      return 1;
+    }
+  });
   const [userAttemptSpanish, setUserAttemptSpanish] = useState<string[]>([]);
   const [userAttemptEnglish, setUserAttemptEnglish] = useState<string[]>([]);
   const [userAuxiliary, setUserAuxiliary] = useState("");
@@ -603,6 +612,7 @@ const LearnPhrase = () => {
         const updated = phrases.map((p: any) => (p.id === phraseId ? { ...p, learned: true, inProgress: false } : p));
         localStorage.setItem(savedKey, JSON.stringify(updated));
       }
+      try { localStorage.removeItem(stepStorageKey); } catch {}
     } else {
       showResult(false, "Pronunciación incorrecta", "Aún hay palabras por corregir. Vuelve a intentarlo.");
     }
@@ -620,7 +630,8 @@ const LearnPhrase = () => {
         localStorage.setItem(savedKey, JSON.stringify(updated));
       } catch {}
     }
-  }, [currentStep, day, phraseId]);
+    try { localStorage.setItem(stepStorageKey, String(currentStep)); } catch {}
+  }, [currentStep, day, phraseId, stepStorageKey]);
 
   const goToNextStep = () => {
     if (currentStep < 6) {

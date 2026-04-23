@@ -162,7 +162,16 @@ const LearnPhrase = () => {
   const englishPhrase = searchParams.get("english") || "";
   const spanishPhrase = searchParams.get("spanish") || "";
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const stepStorageKey = `phrases_day${day}_phrase${phraseId}_step`;
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(stepStorageKey);
+      const n = saved ? parseInt(saved) : 1;
+      return n >= 1 && n <= 6 ? n : 1;
+    } catch {
+      return 1;
+    }
+  });
   const [userAttemptSpanish, setUserAttemptSpanish] = useState<string[]>([]);
   const [userAttemptEnglish, setUserAttemptEnglish] = useState<string[]>([]);
   const [userAuxiliary, setUserAuxiliary] = useState("");

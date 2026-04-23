@@ -247,13 +247,15 @@ const LearnPhrase = () => {
 
   const exerciseData = phrasesExerciseData[phraseId] || phrasesExerciseData[1];
 
-  // Randomizar banco de palabras al entrar en paso 2
+  // Randomizar banco de palabras al entrar en paso 2 (una sola vez por frase/paso)
   useEffect(() => {
     if (currentStep === 2) {
       const shuffled = [...exerciseData.apacheSpanishBank].sort(() => Math.random() - 0.5);
       setRandomizedBank(shuffled);
     }
-  }, [currentStep, exerciseData.apacheSpanishBank]);
+    // Importante: NO depender de exerciseData.apacheSpanishBank (referencia nueva en cada render)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep, phraseId]);
 
   useEffect(() => {
     if (currentStep === 1) {

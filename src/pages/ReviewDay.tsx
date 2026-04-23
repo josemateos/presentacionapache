@@ -560,8 +560,9 @@ const [verified, setVerified] = useState(false);
   };
 
   const addWordToSelection = (word: string) => {
-    // Reproducir audio de la palabra
-    speakPhrase(word);
+    // Reproducir audio de la palabra (forzar "I" -> "ai" para evitar "capital I")
+    const speakable = word === "I" ? "ai" : word;
+    speakPhrase(speakable);
     
     // Si la palabra termina con "ING", fusionarla con la última palabra
     if (word === "ING" && wordBankSelection.length > 0) {

@@ -403,6 +403,8 @@ const LearnPhrase = () => {
     // Reset state SÍNCRONO antes de cualquier await
     transcriptRef.current = [];
     recordingStoppedRef.current = false;
+    resultEvaluatedRef.current = false;
+    interimByIndexRef.current = {};
     setRecordedTranscript([]);
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;

@@ -149,6 +149,7 @@ const [verified, setVerified] = useState(false);
       want: "querer",
       buy: "comprar",
       fresh: "fresca",
+      fruit: "fruta",
       fruits: "frutas",
       at: "en",
       the: "el",

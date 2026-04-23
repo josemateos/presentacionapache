@@ -495,6 +495,7 @@ const [verified, setVerified] = useState(false);
 
   const goToPreviousStep = () => {
     if (step === "english-to-spanish") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setReviewWords(spanishToEnglishWords);
       setStep("spanish-to-english");
       setUserAnswers({});
@@ -502,6 +503,7 @@ const [verified, setVerified] = useState(false);
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "apache-translation") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setReviewWords(englishToSpanishWords);
       setStep("english-to-spanish");
       setUserAnswers({});
@@ -509,12 +511,14 @@ const [verified, setVerified] = useState(false);
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setStep("apache-translation");
       setUserAnswers({});
       setErrors({});
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setStep("phrase-translation");
       setWordBankSelection([]);
       setUserAnswers({});

@@ -626,13 +626,22 @@ const LearnPhrase = () => {
 
   const goToNextStep = () => {
     if (currentStep < 6) {
-      setCurrentStep(currentStep + 1);
+      const next = currentStep + 1;
+      setCurrentStep(next);
       setIsStepComplete(false);
       setFeedback("");
       
       // Inicializar el array de inglés cuando llegamos al paso 3
       if (currentStep === 2) {
         setUserAttemptEnglish(new Array(exerciseData.apacheEnglishSolution.length).fill(""));
+      }
+
+      // Limpiar transcripción al entrar al paso 6
+      if (next === 6) {
+        setRecordedTranscript([]);
+        transcriptRef.current = [];
+        interimByIndexRef.current = {};
+        resultEvaluatedRef.current = false;
       }
       
       // Scroll to center the next step
@@ -664,6 +673,12 @@ const LearnPhrase = () => {
     if (prev <= 2) setUserAttemptEnglish([]);
     if (prev <= 3) setUserAuxiliary("");
     if (prev <= 4) setFinalPhrase("");
+    if (prev < 6) {
+      setRecordedTranscript([]);
+      transcriptRef.current = [];
+      interimByIndexRef.current = {};
+      resultEvaluatedRef.current = false;
+    }
     setTimeout(() => {
       const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref, step6Ref];
       const r = refs[prev];
@@ -679,6 +694,10 @@ const LearnPhrase = () => {
     setUserAttemptEnglish([]);
     setUserAuxiliary("");
     setFinalPhrase("");
+    setRecordedTranscript([]);
+    transcriptRef.current = [];
+    interimByIndexRef.current = {};
+    resultEvaluatedRef.current = false;
   };
 
   const TOTAL_STEPS = 6;
@@ -1021,9 +1040,9 @@ const LearnPhrase = () => {
             </div>
 
             {/* Palabras reconocidas */}
-            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border min-h-20">
+            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border h-40 overflow-y-auto">
               <p className="text-sm text-muted-foreground text-center mb-2">Palabras detectadas:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2 justify-center content-start">
                 {recordedTranscript.length > 0 ? (
                   recordedTranscript.map((word, index) => {
                     const wordLower = word.toLowerCase();
@@ -1051,31 +1070,6 @@ const LearnPhrase = () => {
 
             {/* Controles de grabación */}
             <div className="flex flex-col gap-4">
-              {isRecording && (
-                <>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-primary">
-                      Grabando... {recordingTime}s / 10s
-                    </p>
-                  </div>
-                  <div className="flex items-end justify-center gap-1 h-16 px-4 py-2 bg-background/40 rounded-xl border border-border">
-                    {Array.from({ length: 24 }).map((_, i) => {
-                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
-                      const base = 6;
-                      const max = 48;
-                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
-                      return (
-                        <span
-                          key={i}
-                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
-                          style={{ height: `${height}px` }}
-                        />
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-
               <div className="flex gap-2">
                 {!isRecording ? (
                   <Button onClick={startRecording} className="flex-1">
@@ -1089,6 +1083,37 @@ const LearnPhrase = () => {
                 )}
               </div>
             </div>
+
+            {/* Modal del ecualizador */}
+            {isRecording && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
+                <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-full max-w-sm flex flex-col gap-4">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-primary">
+                      Grabando... {recordingTime}s / 10s
+                    </p>
+                  </div>
+                  <div className="flex items-end justify-center gap-1 h-20 px-4 py-2 bg-background/40 rounded-xl border border-border">
+                    {Array.from({ length: 24 }).map((_, i) => {
+                      const factor = 0.5 + Math.sin((i / 24) * Math.PI) * 0.8;
+                      const base = 6;
+                      const max = 56;
+                      const height = Math.max(base, Math.round(base + audioLevel * factor * max));
+                      return (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-gradient-to-t from-primary to-accent transition-[height] duration-75"
+                          style={{ height: `${height}px` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <Button onClick={stopRecording} variant="destructive" className="w-full">
+                    Finalizar Grabación
+                  </Button>
+                </div>
+              </div>
+            )}
 
 
             {isStepComplete && (

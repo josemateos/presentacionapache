@@ -797,7 +797,7 @@ const LearnPhrase = () => {
             <div className="bg-background/50 rounded-lg p-4 mb-4 min-h-24 border-2 border-dashed border-border">
               <div className="flex flex-wrap gap-2 justify-center">
                 {userAttemptSpanish.map((word, index) => (
-                  <span key={index} className="px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">
+                  <span key={index} className="px-2 py-2 font-medium text-foreground underline underline-offset-4 decoration-2 decoration-foreground/60">
                     {word}
                   </span>
                 ))}

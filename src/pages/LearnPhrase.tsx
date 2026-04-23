@@ -193,6 +193,8 @@ const LearnPhrase = () => {
   const recognitionRef = useRef<any>(null);
   const transcriptRef = useRef<string[]>([]);
   const recordingStoppedRef = useRef<boolean>(false);
+  const resultEvaluatedRef = useRef<boolean>(false);
+  const interimByIndexRef = useRef<Record<number, string>>({});
   const audioStreamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioAnalyserRef = useRef<AnalyserNode | null>(null);
@@ -401,6 +403,8 @@ const LearnPhrase = () => {
     // Reset state SÍNCRONO antes de cualquier await
     transcriptRef.current = [];
     recordingStoppedRef.current = false;
+    resultEvaluatedRef.current = false;
+    interimByIndexRef.current = {};
     setRecordedTranscript([]);
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -447,14 +451,21 @@ const LearnPhrase = () => {
     };
 
     recognition.onend = () => {
-      if (transcriptRef.current.length === 0) {
-        const interimText = Object.values(interimByIndex).join(' ').trim();
-        if (interimText) {
-          transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+      // Solo se usa como fallback si stopRecording no logró evaluar a tiempo
+      if (!resultEvaluatedRef.current) {
+        if (transcriptRef.current.length === 0) {
+          const interimText = Object.values(interimByIndex).join(' ').trim();
+          if (interimText) {
+            transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+          }
         }
+        resultEvaluatedRef.current = true;
+        checkPronunciation(transcriptRef.current);
       }
-      checkPronunciation(transcriptRef.current);
     };
+
+    // Exponer interimByIndex para que stopRecording pueda usarlo de inmediato
+    interimByIndexRef.current = interimByIndex;
 
     recognition.onerror = (e: any) => {
       console.warn('SpeechRecognition error:', e?.error);
@@ -518,13 +529,25 @@ const LearnPhrase = () => {
       audioStreamRef.current = null;
     }
     if (recognitionRef.current) {
-      // Usar stop() para que los resultados pendientes se entreguen antes de onend
-      try { recognitionRef.current.stop(); } catch {
-        try { recognitionRef.current.abort(); } catch {}
+      // Abortar (no esperar a onend) para evaluar de inmediato
+      try { recognitionRef.current.abort(); } catch {
+        try { recognitionRef.current.stop(); } catch {}
       }
     }
     stopAudioMeter();
     setIsRecording(false);
+
+    // Evaluar de inmediato con lo que ya tenemos (final + interim) sin esperar a onend
+    if (!resultEvaluatedRef.current) {
+      if (transcriptRef.current.length === 0) {
+        const interimText = Object.values(interimByIndexRef.current).join(' ').trim();
+        if (interimText) {
+          transcriptRef.current = interimText.split(/\s+/).filter((w: string) => w.length > 0);
+        }
+      }
+      resultEvaluatedRef.current = true;
+      checkPronunciation(transcriptRef.current);
+    }
   };
 
   // Limpiar al desmontar

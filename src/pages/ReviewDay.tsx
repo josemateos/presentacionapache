@@ -305,6 +305,7 @@ const [verified, setVerified] = useState(false);
     setVerified(true);
 
     if (allCorrect) {
+      setVerifiedSteps((v) => v + 1);
       if (step === "spanish-to-english") {
         setReviewWords(englishToSpanishWords);
         const t = toast({
@@ -362,6 +363,7 @@ const [verified, setVerified] = useState(false);
     const isCorrect = userAnswerNormalized === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
     
     if (isCorrect) {
+      setVerifiedSteps((v) => v + 1);
       setPhraseTranslationCorrect(true);
       setErrors({});
       const t = toast({
@@ -421,6 +423,7 @@ const [verified, setVerified] = useState(false);
     );
 
     if (allCorrect) {
+      setVerifiedSteps((v) => v + 1);
       setApacheInputErrors(new Array(apacheExpectedWords.length).fill(false));
       const t = toast({
         title: "✓ Verificación correcta",
@@ -454,6 +457,7 @@ const [verified, setVerified] = useState(false);
     const userSentence = wordBankSelection.join(" ");
     
     if (normalizeText(userSentence, true) === normalizeText(currentPhrase.english, true)) {
+      setVerifiedSteps((v) => v + 1);
       if (currentPhraseIndex < reviewPhrases.length - 1) {
         setCurrentPhraseIndex(currentPhraseIndex + 1);
         setPhraseTranslationCorrect(false);

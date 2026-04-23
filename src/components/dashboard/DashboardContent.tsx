@@ -128,7 +128,7 @@ export const DashboardContent = ({
         <div className="space-y-4">
           <button
             onClick={() => toggleSection("phrases")}
-            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-high border border-white/20 text-on-surface font-headline font-semibold text-sm hover:bg-surface-container-highest hover:border-white/30 transition-all shadow-lg"
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-container-high border-2 border-pink-400 text-on-surface font-headline font-semibold text-sm hover:bg-surface-container-highest hover:border-pink-300 transition-all shadow-lg"
           >
             <div className="flex items-center gap-3">
               <BookOpen className="w-5 h-5 text-primary" />

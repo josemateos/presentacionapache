@@ -351,18 +351,32 @@ const [verified, setVerified] = useState(false);
 
   const verifyPhraseTranslation = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
-    const userAnswer = userAnswers[0] || "";
-    
-    // Normalizar ambas versiones
+    const phraseWords = currentPhrase.spanish.split(" ");
+    const userWords = phraseWords.map((_, index) => (userAnswers[index] || "").trim());
+    const userAnswer = userWords.join(" ").replace(/\s+/g, " ").trim();
+
     const normalizedUserAnswer = normalizeText(userAnswer, false);
     const normalizedCorrectAnswer = normalizeText(currentPhrase.spanish, false);
-    
-    // Permitir "una" como alternativa a "un" para AN
-    // También permitir "visitar" como alternativa a "visita" para Visit
+
     let userAnswerNormalized = normalizedUserAnswer.replace(/\buna\b/g, "un");
     userAnswerNormalized = userAnswerNormalized.replace(/\bvisitar\b/g, "visita");
-    const isCorrect = userAnswerNormalized === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
-    
+
+    const normalizeSpanishWord = (word: string) =>
+      normalizeText(word, false)
+        .replace(/^una$/, "un")
+        .replace(/^visitar$/, "visita");
+
+    const wordErrors = Object.fromEntries(
+      phraseWords.map((word, index) => [
+        index,
+        normalizeSpanishWord(userWords[index] || "") !== normalizeSpanishWord(word),
+      ])
+    );
+
+    const isCorrect =
+      userAnswerNormalized === normalizedCorrectAnswer ||
+      normalizedUserAnswer === normalizedCorrectAnswer;
+
     if (isCorrect) {
       setVerifiedSteps((v) => v + 1);
       setPhraseTranslationCorrect(true);
@@ -381,7 +395,7 @@ const [verified, setVerified] = useState(false);
         t.dismiss();
       }, 2000);
     } else {
-      setErrors({ 0: true });
+      setErrors(wordErrors);
       toast({
         title: "Incorrecto",
         description: "Intenta de nuevo",
@@ -796,6 +810,7 @@ const [verified, setVerified] = useState(false);
                       <div className="flex flex-wrap gap-3 justify-center items-end">
                         {reviewPhrases[currentPhraseIndex].spanish.split(" ").map((word, index) => {
                           const underscoreCount = word.length;
+                          const hasError = errors[index];
                           
                           return (
                             <div key={index} className="flex flex-col items-center gap-1">
@@ -816,7 +831,7 @@ const [verified, setVerified] = useState(false);
                                 }}
                                 style={{ width: `${Math.max(60, underscoreCount * 14)}px` }}
                                 className={`p-1 text-base text-center bg-transparent border-0 border-b-2 ${
-                                  errors[0] ? "border-destructive text-destructive" : "border-border text-foreground"
+                                  hasError ? "border-destructive text-destructive" : "border-border text-foreground"
                                 } focus:outline-none focus:border-primary transition-colors`}
                               />
                               <div className="flex gap-0.5">
@@ -830,7 +845,7 @@ const [verified, setVerified] = useState(false);
                       </div>
                     </div>
                     
-                    {errors[0] && (
+                    {Object.values(errors).some(Boolean) && (
                       <p className="text-sm text-destructive flex items-center gap-1 mt-2 justify-center">
                         <AlertCircle className="w-4 h-4" />
                         Incorrecto. Intenta de nuevo.

@@ -907,7 +907,7 @@ const [verified, setVerified] = useState(false);
                           >
                             {displayWord}
                           </span>
-                          <div className="w-full h-0.5 bg-muted-foreground/50 mt-0.5" />
+                          <div className={`w-full h-0.5 mt-0.5 ${placed ? "bg-muted-foreground/50" : "bg-transparent"}`} />
                         </div>
                       );
                     })}

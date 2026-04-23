@@ -885,18 +885,32 @@ const [verified, setVerified] = useState(false);
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 min-h-[80px] mb-4">
-                  <div className="flex flex-wrap gap-2">
-                    {wordBankSelection.map((word, index) => (
-                      <Button
-                        key={index}
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => removeWordFromSelection(index)}
-                        className={isAuxiliaryWord(word) ? "text-accent" : ""}
-                      >
-                        {isAuxiliaryWord(word) ? word.toLowerCase() : word}
-                      </Button>
-                    ))}
+                  <div className="flex flex-wrap gap-x-3 gap-y-3 justify-center items-end">
+                    {reviewPhrases[currentPhraseIndex].english.split(" ").map((expectedWord, index) => {
+                      const placed = wordBankSelection[index];
+                      const displayWord = placed
+                        ? (isAuxiliaryWord(placed) ? placed.toLowerCase() : placed)
+                        : "";
+                      const slotWidth = `${Math.max(40, expectedWord.length * 12)}px`;
+
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => placed && removeWordFromSelection(index)}
+                          style={{ width: slotWidth }}
+                          className="flex flex-col items-center cursor-pointer select-none"
+                        >
+                          <span
+                            className={`text-base font-medium min-h-[1.5rem] ${
+                              placed && isAuxiliaryWord(placed) ? "text-accent" : "text-foreground"
+                            }`}
+                          >
+                            {displayWord}
+                          </span>
+                          <div className="w-full h-0.5 bg-muted-foreground/50 mt-0.5" />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 

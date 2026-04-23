@@ -351,18 +351,22 @@ const [verified, setVerified] = useState(false);
 
   const verifyPhraseTranslation = () => {
     const currentPhrase = reviewPhrases[currentPhraseIndex];
-    const userAnswer = userAnswers[0] || "";
-    
-    // Normalizar ambas versiones
+    const phraseWords = currentPhrase.spanish.split(" ");
+    const userAnswer = phraseWords
+      .map((_, index) => (userAnswers[index] || "").trim())
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+
     const normalizedUserAnswer = normalizeText(userAnswer, false);
     const normalizedCorrectAnswer = normalizeText(currentPhrase.spanish, false);
-    
-    // Permitir "una" como alternativa a "un" para AN
-    // También permitir "visitar" como alternativa a "visita" para Visit
+
     let userAnswerNormalized = normalizedUserAnswer.replace(/\buna\b/g, "un");
     userAnswerNormalized = userAnswerNormalized.replace(/\bvisitar\b/g, "visita");
-    const isCorrect = userAnswerNormalized === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
-    
+    const isCorrect =
+      userAnswerNormalized === normalizedCorrectAnswer ||
+      normalizedUserAnswer === normalizedCorrectAnswer;
+
     if (isCorrect) {
       setVerifiedSteps((v) => v + 1);
       setPhraseTranslationCorrect(true);
@@ -381,7 +385,8 @@ const [verified, setVerified] = useState(false);
         t.dismiss();
       }, 2000);
     } else {
-      setErrors({ 0: true });
+      const newErrors = Object.fromEntries(phraseWords.map((_, index) => [index, true]));
+      setErrors(newErrors);
       toast({
         title: "Incorrecto",
         description: "Intenta de nuevo",

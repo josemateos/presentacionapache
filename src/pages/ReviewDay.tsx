@@ -117,6 +117,7 @@ const ReviewDay = () => {
   const day = parseInt(searchParams.get("day") || "1");
 
   const [step, setStep] = useState<ExerciseStep>("spanish-to-english");
+  const [verifiedSteps, setVerifiedSteps] = useState(0);
   const [reviewWords, setReviewWords] = useState<Word[]>([]);
   const [reviewPhrases, setReviewPhrases] = useState<Phrase[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -304,6 +305,7 @@ const [verified, setVerified] = useState(false);
     setVerified(true);
 
     if (allCorrect) {
+      setVerifiedSteps((v) => v + 1);
       if (step === "spanish-to-english") {
         setReviewWords(englishToSpanishWords);
         const t = toast({
@@ -361,6 +363,7 @@ const [verified, setVerified] = useState(false);
     const isCorrect = userAnswerNormalized === normalizedCorrectAnswer || normalizedUserAnswer === normalizedCorrectAnswer;
     
     if (isCorrect) {
+      setVerifiedSteps((v) => v + 1);
       setPhraseTranslationCorrect(true);
       setErrors({});
       const t = toast({
@@ -420,6 +423,7 @@ const [verified, setVerified] = useState(false);
     );
 
     if (allCorrect) {
+      setVerifiedSteps((v) => v + 1);
       setApacheInputErrors(new Array(apacheExpectedWords.length).fill(false));
       const t = toast({
         title: "✓ Verificación correcta",
@@ -453,6 +457,7 @@ const [verified, setVerified] = useState(false);
     const userSentence = wordBankSelection.join(" ");
     
     if (normalizeText(userSentence, true) === normalizeText(currentPhrase.english, true)) {
+      setVerifiedSteps((v) => v + 1);
       if (currentPhraseIndex < reviewPhrases.length - 1) {
         setCurrentPhraseIndex(currentPhraseIndex + 1);
         setPhraseTranslationCorrect(false);
@@ -490,6 +495,7 @@ const [verified, setVerified] = useState(false);
 
   const goToPreviousStep = () => {
     if (step === "english-to-spanish") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setReviewWords(spanishToEnglishWords);
       setStep("spanish-to-english");
       setUserAnswers({});
@@ -497,6 +503,7 @@ const [verified, setVerified] = useState(false);
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "apache-translation") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setReviewWords(englishToSpanishWords);
       setStep("english-to-spanish");
       setUserAnswers({});
@@ -504,12 +511,14 @@ const [verified, setVerified] = useState(false);
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-translation") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setStep("apache-translation");
       setUserAnswers({});
       setErrors({});
       setVerified(false);
       window.scrollTo(0, 0);
     } else if (step === "phrase-ordering") {
+      setVerifiedSteps((v) => Math.max(0, v - 1));
       setStep("phrase-translation");
       setWordBankSelection([]);
       setUserAnswers({});
@@ -568,14 +577,7 @@ const [verified, setVerified] = useState(false);
   const totalPhrases = reviewPhrases.length;
   const totalSteps = 2 + (totalPhrases * 3); // 2 word exercises + 3 steps per phrase (translation, apache, ordering)
   
-  const getCurrentStep = () => {
-    if (step === "spanish-to-english") return 1;
-    if (step === "english-to-spanish") return 2;
-    if (step === "apache-translation") return 3 + (currentPhraseIndex * 3);
-    if (step === "phrase-translation") return 4 + (currentPhraseIndex * 3);
-    if (step === "phrase-ordering") return 5 + (currentPhraseIndex * 3);
-    return totalSteps;
-  };
+  const getCurrentStep = () => verifiedSteps;
 
   return (
     <div className="min-h-screen bg-background dark flex flex-col">

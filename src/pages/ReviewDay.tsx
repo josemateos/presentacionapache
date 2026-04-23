@@ -810,6 +810,7 @@ const [verified, setVerified] = useState(false);
                       <div className="flex flex-wrap gap-3 justify-center items-end">
                         {reviewPhrases[currentPhraseIndex].spanish.split(" ").map((word, index) => {
                           const underscoreCount = word.length;
+                          const hasError = errors[index];
                           
                           return (
                             <div key={index} className="flex flex-col items-center gap-1">
@@ -830,7 +831,7 @@ const [verified, setVerified] = useState(false);
                                 }}
                                 style={{ width: `${Math.max(60, underscoreCount * 14)}px` }}
                                 className={`p-1 text-base text-center bg-transparent border-0 border-b-2 ${
-                                  errors[0] ? "border-destructive text-destructive" : "border-border text-foreground"
+                                  hasError ? "border-destructive text-destructive" : "border-border text-foreground"
                                 } focus:outline-none focus:border-primary transition-colors`}
                               />
                               <div className="flex gap-0.5">
@@ -844,7 +845,7 @@ const [verified, setVerified] = useState(false);
                       </div>
                     </div>
                     
-                    {errors[0] && (
+                    {Object.values(errors).some(Boolean) && (
                       <p className="text-sm text-destructive flex items-center gap-1 mt-2 justify-center">
                         <AlertCircle className="w-4 h-4" />
                         Incorrecto. Intenta de nuevo.

@@ -1021,9 +1021,9 @@ const LearnPhrase = () => {
             </div>
 
             {/* Palabras reconocidas */}
-            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border min-h-20">
+            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border h-40 overflow-y-auto">
               <p className="text-sm text-muted-foreground text-center mb-2">Palabras detectadas:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2 justify-center content-start">
                 {recordedTranscript.length > 0 ? (
                   recordedTranscript.map((word, index) => {
                     const wordLower = word.toLowerCase();

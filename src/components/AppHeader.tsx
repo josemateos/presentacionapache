@@ -17,6 +17,7 @@ export const AppHeader = ({
 }: AppHeaderProps) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!hideOnScroll) return;

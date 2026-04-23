@@ -626,13 +626,22 @@ const LearnPhrase = () => {
 
   const goToNextStep = () => {
     if (currentStep < 6) {
-      setCurrentStep(currentStep + 1);
+      const next = currentStep + 1;
+      setCurrentStep(next);
       setIsStepComplete(false);
       setFeedback("");
       
       // Inicializar el array de inglés cuando llegamos al paso 3
       if (currentStep === 2) {
         setUserAttemptEnglish(new Array(exerciseData.apacheEnglishSolution.length).fill(""));
+      }
+
+      // Limpiar transcripción al entrar al paso 6
+      if (next === 6) {
+        setRecordedTranscript([]);
+        transcriptRef.current = [];
+        interimByIndexRef.current = {};
+        resultEvaluatedRef.current = false;
       }
       
       // Scroll to center the next step
@@ -664,6 +673,12 @@ const LearnPhrase = () => {
     if (prev <= 2) setUserAttemptEnglish([]);
     if (prev <= 3) setUserAuxiliary("");
     if (prev <= 4) setFinalPhrase("");
+    if (prev < 6) {
+      setRecordedTranscript([]);
+      transcriptRef.current = [];
+      interimByIndexRef.current = {};
+      resultEvaluatedRef.current = false;
+    }
     setTimeout(() => {
       const refs = [null, step1Ref, step2Ref, step3Ref, step4Ref, step5Ref, step6Ref];
       const r = refs[prev];
@@ -679,6 +694,10 @@ const LearnPhrase = () => {
     setUserAttemptEnglish([]);
     setUserAuxiliary("");
     setFinalPhrase("");
+    setRecordedTranscript([]);
+    transcriptRef.current = [];
+    interimByIndexRef.current = {};
+    resultEvaluatedRef.current = false;
   };
 
   const TOTAL_STEPS = 6;

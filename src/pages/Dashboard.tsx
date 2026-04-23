@@ -29,7 +29,7 @@ const Dashboard = () => {
     localStorage.removeItem("vocabulary_day1_progress");
   }, []);
 
-  const [userProgress] = useState<UserProgress>({
+  const [userProgress, setUserProgress] = useState<UserProgress & { daysCompleted?: number }>({
     currentDay: 1,
     phrasesCompleted: 0,
     wordsMastered: 0,
@@ -39,7 +39,76 @@ const Dashboard = () => {
     newWordsToday: 0,
     isPremium: false,
     reviewPendingCount: 5,
+    daysCompleted: 0,
   });
+
+  useEffect(() => {
+    const computeProgress = () => {
+      let wordsMastered = 0;
+      let phrasesCompleted = 0;
+      let daysCompleted = 0;
+      const TOTAL_DAYS = 90;
+      const WORDS_PER_DAY = 32;
+      const PHRASES_PER_DAY = 5;
+
+      for (let d = 1; d <= TOTAL_DAYS; d++) {
+        let dayWordsLearned = 0;
+        let dayPhrasesLearned = 0;
+        try {
+          const vocabRaw = localStorage.getItem(`vocabulary_day${d}_progress`);
+          if (vocabRaw) {
+            const arr = JSON.parse(vocabRaw);
+            if (Array.isArray(arr)) {
+              dayWordsLearned = arr.filter((w: any) => w?.learned).length;
+              wordsMastered += dayWordsLearned;
+            }
+          }
+        } catch {}
+        try {
+          const phrRaw = localStorage.getItem(`phrases_day${d}_progress`);
+          if (phrRaw) {
+            const arr = JSON.parse(phrRaw);
+            if (Array.isArray(arr)) {
+              dayPhrasesLearned = arr.filter((p: any) => p?.learned).length;
+              phrasesCompleted += dayPhrasesLearned;
+            }
+          }
+        } catch {}
+        if (dayWordsLearned >= WORDS_PER_DAY && dayPhrasesLearned >= PHRASES_PER_DAY) {
+          daysCompleted++;
+        }
+      }
+
+      // Auxiliares Clave (conectores ING completados)
+      let auxLearned = 0;
+      try {
+        const aux = localStorage.getItem("completedConnectors");
+        if (aux) {
+          const arr = JSON.parse(aux);
+          if (Array.isArray(arr)) auxLearned = arr.length;
+        }
+      } catch {}
+
+      setUserProgress((prev) => ({
+        ...prev,
+        wordsMastered,
+        phrasesCompleted,
+        auxLearned,
+        daysCompleted,
+      }));
+    };
+
+    computeProgress();
+    const onVis = () => { if (!document.hidden) computeProgress(); };
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("focus", computeProgress);
+    window.addEventListener("storage", computeProgress);
+    return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("focus", computeProgress);
+      window.removeEventListener("storage", computeProgress);
+    };
+  }, []);
 
   const registrationDate = new Date();
   registrationDate.setDate(registrationDate.getDate() - 8);

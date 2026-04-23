@@ -204,9 +204,9 @@ export const DashboardContent = ({
               >
                 <div className="bg-surface-container-low border border-white/5 rounded-2xl p-4 space-y-3">
                   {[
-                    { label: "Días del Plan", current: userProgress.currentDay ?? 0, total: 90 },
-                    { label: "Frases Completadas", current: userProgress.phrasesCompleted ?? 0, total: 270 },
-                    { label: "Palabras Dominadas", current: userProgress.wordsMastered ?? 0, total: 900 },
+                    { label: "Días Completados", current: userProgress.daysCompleted ?? 0, total: 90 },
+                    { label: "Frases Completadas", current: userProgress.phrasesCompleted ?? 0, total: 450 },
+                    { label: "Palabras Aprendidas", current: userProgress.wordsMastered ?? 0, total: 2880 },
                     { label: "Auxiliares Clave", current: userProgress.auxLearned ?? 0, total: 30 },
                   ].map((item, idx) => {
                     const pct = Math.min(100, Math.round((item.current / item.total) * 100));

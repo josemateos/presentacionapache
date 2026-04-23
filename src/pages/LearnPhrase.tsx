@@ -193,6 +193,8 @@ const LearnPhrase = () => {
   const recognitionRef = useRef<any>(null);
   const transcriptRef = useRef<string[]>([]);
   const recordingStoppedRef = useRef<boolean>(false);
+  const resultEvaluatedRef = useRef<boolean>(false);
+  const interimByIndexRef = useRef<Record<number, string>>({});
   const audioStreamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioAnalyserRef = useRef<AnalyserNode | null>(null);

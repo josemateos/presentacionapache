@@ -130,7 +130,7 @@ const Welcome = ({ userName = "Carlos" }: WelcomeProps) => {
     return "/review-day?day=1";
   };
 
-  const handleStart = () => navigate(hasProgress ? findNextRoute() : "/dashboard");
+  const handleStart = () => navigate("/dashboard");
   const handleContinue = () => navigate(findNextRoute());
   const handleReview = () => navigate(findReviewRoute());
 

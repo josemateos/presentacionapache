@@ -609,18 +609,16 @@ const LearnPhrase = () => {
   };
 
   useEffect(() => {
-    if (currentStep > 1) {
-      const savedKey = `phrases_day${day}_progress`;
-      const saved = localStorage.getItem(savedKey);
-      if (saved) {
-        try {
-          const phrasesArr = JSON.parse(saved);
-          const updated = phrasesArr.map((p: any) =>
-            p.id === phraseId && !p.learned ? { ...p, inProgress: true } : p
-          );
-          localStorage.setItem(savedKey, JSON.stringify(updated));
-        } catch {}
-      }
+    const savedKey = `phrases_day${day}_progress`;
+    const saved = localStorage.getItem(savedKey);
+    if (saved) {
+      try {
+        const phrasesArr = JSON.parse(saved);
+        const updated = phrasesArr.map((p: any) =>
+          p.id === phraseId && !p.learned ? { ...p, inProgress: true } : p
+        );
+        localStorage.setItem(savedKey, JSON.stringify(updated));
+      } catch {}
     }
   }, [currentStep, day, phraseId]);
 

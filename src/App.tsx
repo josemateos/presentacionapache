@@ -24,6 +24,7 @@ import ReviewDay from "./pages/ReviewDay";
 import Invitation2 from "./pages/Invitation2";
 import Invitation3 from "./pages/Invitation3";
 import NotFound from "./pages/NotFound";
+import CatalogoAvatar from "./pages/CatalogoAvatar";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/auxiliaries/conectores-ing" element={<ConectoresIng />} />
             <Route path="/learn-connector" element={<LearnConnector />} />
             <Route path="/review-day" element={<ReviewDay />} />
+            <Route path="/catalogo-avatar" element={<CatalogoAvatar />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, User } from "lucide-react";
-import { AppHeader } from "@/components/AppHeader";
 
 type Gender = "masculino" | "femenino";
 
@@ -36,53 +35,61 @@ const CatalogoAvatar = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <AppHeader />
-      <div className="pt-20 px-4 max-w-2xl mx-auto">
-        {/* Back button */}
+      {/* Custom Header */}
+      <header
+        className="fixed top-0 left-0 w-full z-50 backdrop-blur-md flex items-center px-4 py-3 border-b border-accent/20"
+        style={{
+          background:
+            "linear-gradient(90deg, hsl(265 60% 18% / 0.95), hsl(250 55% 14% / 0.95))",
+          boxShadow: "0 4px 20px hsl(265 60% 8% / 0.4)",
+        }}
+      >
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-on-surface hover:text-accent transition-colors mb-4"
+          className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors active:scale-95"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="font-body text-sm">arrow_back</span>
+          <ArrowLeft className="w-5 h-5 text-on-surface" />
         </button>
-
-        {/* Title */}
-        <h1 className="text-2xl font-headline font-black text-secondary uppercase tracking-tight mb-5 text-center">
+        <h1
+          className="flex-1 text-center text-lg font-black text-secondary font-headline tracking-tight uppercase pr-10"
+          style={{ textShadow: "0 0 15px hsl(42 100% 63% / 0.5)" }}
+        >
           Catálogo de Avatar
         </h1>
+      </header>
 
-        {/* Gender selector */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-surface-container-high border border-accent/20 mb-6">
+      <div className="pt-20 px-4 max-w-2xl mx-auto">
+        {/* Gender selector — separate boxes */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <button
             onClick={() => setGender("masculino")}
-            className={`py-2.5 rounded-xl font-headline font-bold text-sm uppercase tracking-wide transition-all ${
+            className={`py-3 rounded-2xl border-2 font-headline font-bold text-sm uppercase tracking-wide transition-all ${
               gender === "masculino"
-                ? "bg-gradient-to-br from-pink-400 to-pink-500 text-white shadow-lg"
-                : "text-on-surface/70 hover:text-on-surface"
+                ? "bg-gradient-to-br from-pink-400 to-pink-500 text-white border-pink-300 shadow-lg shadow-pink-500/30"
+                : "bg-surface-container-high border-accent/20 text-on-surface/70 hover:text-on-surface hover:border-accent/40"
             }`}
           >
             Masculino
           </button>
           <button
             onClick={() => setGender("femenino")}
-            className={`py-2.5 rounded-xl font-headline font-bold text-sm uppercase tracking-wide transition-all ${
+            className={`py-3 rounded-2xl border-2 font-headline font-bold text-sm uppercase tracking-wide transition-all ${
               gender === "femenino"
-                ? "bg-gradient-to-br from-pink-400 to-pink-500 text-white shadow-lg"
-                : "text-on-surface/70 hover:text-on-surface"
+                ? "bg-gradient-to-br from-pink-400 to-pink-500 text-white border-pink-300 shadow-lg shadow-pink-500/30"
+                : "bg-surface-container-high border-accent/20 text-on-surface/70 hover:text-on-surface hover:border-accent/40"
             }`}
           >
             Femenino
           </button>
         </div>
 
-        {/* Rango actual */}
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/30 p-4 mb-6 text-center">
-          <p className="text-xs font-body uppercase tracking-widest text-muted-foreground mb-1">
-            Rango Actual
+        {/* Rango */}
+        <div className="rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/30 p-4 mb-6 flex items-center justify-between">
+          <p className="text-sm font-headline font-bold uppercase tracking-widest text-muted-foreground">
+            Rango
           </p>
-          <p className="text-xl font-headline font-black text-amber-400 uppercase tracking-tight">
-            🔥 Iniciado
+          <p className="text-lg font-headline font-black text-amber-400 uppercase tracking-tight">
+            Iniciado
           </p>
         </div>
 

@@ -45,7 +45,7 @@ const CatalogoAvatar = () => {
         }}
       >
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/dashboard")}
           className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors active:scale-95"
         >
           <ArrowLeft className="w-5 h-5 text-on-surface" />
@@ -84,8 +84,8 @@ const CatalogoAvatar = () => {
         </div>
 
         {/* Rango */}
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/30 p-4 mb-6 flex items-center justify-between">
-          <p className="text-sm font-headline font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="mb-6 text-left">
+          <p className="text-xs font-headline font-bold uppercase tracking-widest text-muted-foreground">
             Rango
           </p>
           <p className="text-lg font-headline font-black text-amber-400 uppercase tracking-tight">

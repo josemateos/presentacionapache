@@ -97,39 +97,40 @@ const CatalogoAvatar = () => {
         {/* Avatar grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {avatars.map((avatar, idx) => (
-            <button
-              key={idx}
-              disabled={avatar.locked}
-              className={`relative rounded-2xl border-2 p-3 flex flex-col items-center gap-2 transition-all ${
-                avatar.locked
-                  ? "border-muted/30 bg-surface-container/50 opacity-60 cursor-not-allowed"
-                  : "border-accent/40 bg-surface-container-high hover:border-accent hover:scale-[1.03] active:scale-95"
-              }`}
-            >
-              <div
-                className={`relative aspect-square w-full rounded-xl flex items-center justify-center overflow-hidden ${
+            <div key={idx} className="flex flex-col items-center gap-2">
+              <button
+                disabled={avatar.locked}
+                className={`relative aspect-square w-full rounded-2xl border-2 overflow-hidden transition-all ${
                   avatar.locked
-                    ? "bg-muted/20"
-                    : "bg-gradient-to-br from-accent/20 to-secondary/10"
+                    ? "border-muted/30 bg-surface-container/50 opacity-60 cursor-not-allowed"
+                    : "border-accent/40 bg-surface-container-high hover:border-accent hover:scale-[1.03] active:scale-95"
                 }`}
               >
                 {avatar.image ? (
                   <img
                     src={avatar.image}
                     alt={avatar.name}
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 ) : (
-                  <User
-                    className={`w-12 h-12 ${
-                      avatar.locked ? "text-muted-foreground/50" : "text-accent"
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center ${
+                      avatar.locked
+                        ? "bg-muted/20"
+                        : "bg-gradient-to-br from-accent/20 to-secondary/10"
                     }`}
-                  />
+                  >
+                    <User
+                      className={`w-12 h-12 ${
+                        avatar.locked ? "text-muted-foreground/50" : "text-accent"
+                      }`}
+                    />
+                  </div>
                 )}
                 {avatar.locked && (
                   <span className="absolute top-2 right-2 text-lg">🔒</span>
                 )}
-              </div>
+              </button>
               <span
                 className={`text-xs font-headline font-bold uppercase tracking-wide text-center ${
                   avatar.locked ? "text-muted-foreground" : "text-on-surface"
@@ -137,7 +138,7 @@ const CatalogoAvatar = () => {
               >
                 {avatar.name}
               </span>
-            </button>
+            </div>
           ))}
         </div>
 

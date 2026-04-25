@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, User } from "lucide-react";
+import osoJovenImg from "@/assets/avatar-oso-joven.png";
 
 type Gender = "masculino" | "femenino";
 
-const avatarsByGender: Record<Gender, { name: string; locked?: boolean }[]> = {
+const avatarsByGender: Record<Gender, { name: string; locked?: boolean; image?: string }[]> = {
   masculino: [
-    { name: "Oso Joven" },
+    { name: "Oso Joven", image: osoJovenImg },
     { name: "Águila Valiente" },
     { name: "Trueno Lejano" },
     { name: "Zorro Sabio" },
@@ -106,17 +107,25 @@ const CatalogoAvatar = () => {
               }`}
             >
               <div
-                className={`aspect-square w-full rounded-xl flex items-center justify-center ${
+                className={`relative aspect-square w-full rounded-xl flex items-center justify-center overflow-hidden ${
                   avatar.locked
                     ? "bg-muted/20"
                     : "bg-gradient-to-br from-accent/20 to-secondary/10"
                 }`}
               >
-                <User
-                  className={`w-12 h-12 ${
-                    avatar.locked ? "text-muted-foreground/50" : "text-accent"
-                  }`}
-                />
+                {avatar.image ? (
+                  <img
+                    src={avatar.image}
+                    alt={avatar.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User
+                    className={`w-12 h-12 ${
+                      avatar.locked ? "text-muted-foreground/50" : "text-accent"
+                    }`}
+                  />
+                )}
                 {avatar.locked && (
                   <span className="absolute top-2 right-2 text-lg">🔒</span>
                 )}

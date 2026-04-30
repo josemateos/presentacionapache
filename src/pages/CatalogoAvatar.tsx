@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, User } from "lucide-react";
 import osoJovenImg from "@/assets/avatar-oso-joven.png";
 import aguilaValienteImg from "@/assets/avatar-aguila-valiente.jpg";
+import truenoLejanoImg from "@/assets/avatar-trueno-lejano.jpg";
 
 type Gender = "masculino" | "femenino";
 
@@ -10,7 +11,7 @@ const avatarsByGender: Record<Gender, { name: string; locked?: boolean; image?: 
   masculino: [
     { name: "Oso Joven", image: osoJovenImg },
     { name: "Águila Valiente", image: aguilaValienteImg },
-    { name: "Trueno Lejano" },
+    { name: "Trueno Lejano", image: truenoLejanoImg },
     { name: "Zorro Sabio" },
     { name: "Lobo Gris", locked: true },
     { name: "Halcón Rojo", locked: true },

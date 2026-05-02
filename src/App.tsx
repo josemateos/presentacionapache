@@ -19,6 +19,7 @@ import GenerateWordImages from "./pages/GenerateWordImages";
 import ReviewWordImages from "./pages/ReviewWordImages";
 import AuxiliariesHub from "./pages/AuxiliariesHub";
 import ConectoresIng from "./pages/ConectoresIng";
+import ConectoresSimples from "./pages/ConectoresSimples";
 import LearnConnector from "./pages/LearnConnector";
 import ReviewDay from "./pages/ReviewDay";
 import Invitation2 from "./pages/Invitation2";
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/review-word-images" element={<ReviewWordImages />} />
             <Route path="/auxiliaries" element={<AuxiliariesHub />} />
             <Route path="/auxiliaries/conectores-ing" element={<ConectoresIng />} />
+            <Route path="/auxiliaries/conectores-simples" element={<ConectoresSimples />} />
             <Route path="/learn-connector" element={<LearnConnector />} />
             <Route path="/review-day" element={<ReviewDay />} />
             <Route path="/catalogo-avatar" element={<CatalogoAvatar />} />

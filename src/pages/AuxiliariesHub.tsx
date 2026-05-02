@@ -11,8 +11,8 @@ const AuxiliariesHub = () => {
     {
       id: "conectores-simples",
       title: "Conectores Simples",
-      description: "Próximamente disponible",
-      route: null,
+      description: "Auxiliares básicos: a, is, are, do, will...",
+      route: "/auxiliaries/conectores-simples",
     },
     {
       id: "conectores-causa-efecto",

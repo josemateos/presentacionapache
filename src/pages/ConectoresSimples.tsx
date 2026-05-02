@@ -37,7 +37,7 @@ const CONECTORES: Conector[] = [
   { auxiliar: "and", tiempoVerbal: "", traduccionLiteral: "y", fraseEnsenanza: "Significa: unión de dos ideas.", personaGramatical: "todas", sabesDecir: "Tú y yo", apacheEspanol: "Tú y yo", ejemploIngles: "You and I" },
   { auxiliar: "but", tiempoVerbal: "", traduccionLiteral: "pero", fraseEnsenanza: "Significa: oposición de ideas.", personaGramatical: "todas", sabesDecir: "Pero no puedo", apacheEspanol: "Pero yo no poder", ejemploIngles: "But I can't" },
   { auxiliar: "any", tiempoVerbal: "", traduccionLiteral: "ningún / algún", fraseEnsenanza: "Se usa principalmente para negar o preguntar.", personaGramatical: "todas", sabesDecir: "¿Tienes alguna duda?", apacheEspanol: "¿Hacer tú tener algún duda?", ejemploIngles: "Do you have any doubt?" },
-  { auxiliar: "there is / there are", tiempoVerbal: "Presente", traduccionLiteral: "hay", fraseEnsenanza: "Para decir que algo existe en un lugar.", personaGramatical: "todas", sabesDecir: "Hay un hombre ahí", apacheEspanol: "Hay -> hombre ahí", ejemploIngles: "There is a man there" },
+  
   { auxiliar: "what", tiempoVerbal: "", traduccionLiteral: "lo que", fraseEnsenanza: "Conecta ideas de información en la frase.", personaGramatical: "todas", sabesDecir: "Sé lo que quieres", apacheEspanol: "Yo saber lo que tú querer", ejemploIngles: "I know what you want" },
 ];
 

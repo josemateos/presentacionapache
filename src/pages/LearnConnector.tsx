@@ -603,7 +603,7 @@ const LearnConnector = () => {
                     Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go <span className="text-blue-400 font-bold">to</span> the gym
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes <span className="text-blue-400 font-bold">to</span> university
+                    Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes <span className="text-blue-400 font-bold">to</span> the university
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     El ir <span className="text-blue-400 font-bold">a</span> la ciudad = He goes <span className="text-blue-400 font-bold">to</span> the city

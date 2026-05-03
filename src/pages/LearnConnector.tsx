@@ -26,7 +26,7 @@ const LearnConnector = () => {
     : "/auxiliaries/conectores-ing";
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
   // Paso 1: Escuchar frase en inglés (audio)
@@ -174,6 +174,18 @@ const LearnConnector = () => {
     setRandomizedLetters([...allLetters].sort(() => Math.random() - 0.5));
   }, [connector, navigate, englishPhrase, verbAfterConnector, isCausaEfecto, backRoute]);
 
+  // Guardar progreso del conector (paso actual) para mostrar "En curso" en la lista
+  useEffect(() => {
+    if (!connector) return;
+    const progressKey = isCausaEfecto ? "causaEfectoProgress" : "ingProgress";
+    try {
+      const saved = localStorage.getItem(progressKey);
+      const progressMap: Record<string, number> = saved ? JSON.parse(saved) : {};
+      progressMap[connector.english] = currentStep;
+      localStorage.setItem(progressKey, JSON.stringify(progressMap));
+    } catch {}
+  }, [currentStep, connector, isCausaEfecto]);
+
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
@@ -240,6 +252,17 @@ const LearnConnector = () => {
         completed.push(connector.english);
         localStorage.setItem(storageKey, JSON.stringify(completed));
       }
+
+      // Limpiar progreso "en curso" del conector
+      try {
+        const progressKey = isCausaEfecto ? "causaEfectoProgress" : "ingProgress";
+        const savedProg = localStorage.getItem(progressKey);
+        if (savedProg) {
+          const progressMap: Record<string, number> = JSON.parse(savedProg);
+          delete progressMap[connector.english];
+          localStorage.setItem(progressKey, JSON.stringify(progressMap));
+        }
+      } catch {}
       
       toast({
         title: "¡Completado!",
@@ -254,7 +277,7 @@ const LearnConnector = () => {
   };
 
   const handlePreviousStep = () => {
-    if (currentStep > 1) {
+    if (currentStep > 2) {
       setCurrentStep(currentStep - 1);
       setIsStepComplete(false);
     }
@@ -490,13 +513,13 @@ const LearnConnector = () => {
                 </h1>
                 <div className="text-right flex flex-col items-end">
                   <span className="text-sm font-normal text-muted-foreground">
-                    {currentStep} de 5
+                    {currentStep - 1} de 4
                   </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={handlePreviousStep}
-                    disabled={currentStep === 1}
+                onClick={handlePreviousStep}
+                disabled={currentStep === 2}
                     className="h-8 w-8 hover:bg-primary/10"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -506,7 +529,7 @@ const LearnConnector = () => {
             </div>
           </div>
           <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((step) => (
+            {[2, 3, 4, 5].map((step) => (
               <div
                 key={step}
                 className={`flex-1 h-2 rounded-full transition-colors ${
@@ -521,120 +544,7 @@ const LearnConnector = () => {
       {/* Content */}
       <main className="flex-grow container mx-auto px-4 py-6 pb-8 max-w-4xl">
         <AnimatePresence mode="wait">
-          {/* Paso 1: Escuchar frase en audio */}
-          {currentStep === 1 && (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-4"
-            >
-              {trilingualExample && (
-                <Card className="bg-card border-border shadow-md">
-                  <CardContent className="p-5 space-y-4">
-                    <h2 className="text-2xl font-bold text-center text-primary">
-                      {connector.english} = {connector.spanish.toLowerCase()}
-                    </h2>
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                          Español perfecto
-                        </p>
-                        <p className="text-lg font-semibold text-foreground">
-                          {trilingualExample.es}
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs uppercase tracking-wide text-yellow-500 font-semibold">
-                          Español Apache
-                        </p>
-                        <p className="text-lg font-semibold text-foreground">
-                          {trilingualExample.apache}
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                          Inglés perfecto
-                        </p>
-                        <p className="text-lg font-semibold text-foreground">
-                          {trilingualExample.en}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-              {!isCausaEfecto && (
-                <Card className="bg-card border-border shadow-md">
-                  <CardContent className="p-6 space-y-4">
-                    <h2 className="text-xl font-bold text-center text-primary">
-                      Escucha la frase
-                    </h2>
-                    <p className="text-center text-base text-muted-foreground">
-                      Escucha al menos 3 veces
-                    </p>
-                    <p className="text-center text-2xl font-bold text-foreground">
-                      {englishPhrase.split(' ').map((word, idx) => {
-                        const lowerWord = word.toLowerCase();
-                        const lowerConnector = connector.english.toLowerCase();
-                        const isConnector = lowerWord === lowerConnector || 
-                                           (connector.english.includes(' ') && englishPhrase.toLowerCase().includes(connector.english.toLowerCase()));
-                        
-                        if (lowerWord === verbAfterConnector.toLowerCase()) {
-                          const base = word.slice(0, -3);
-                          return (
-                            <span key={idx}>
-                              <span className={isConnector ? "underline decoration-yellow-500 decoration-2" : ""}>{base}</span>
-                              <span className="text-yellow-500">ing</span>{' '}
-                            </span>
-                          );
-                        }
-                        
-                        if (isConnector) {
-                          return <span key={idx} className="underline decoration-yellow-500 decoration-2">{word} </span>;
-                        }
-                        
-                        return <span key={idx}>{word} </span>;
-                      })}
-                    </p>
-
-                    <div className="flex gap-3 justify-center">
-                      <Button
-                        onClick={() => playAudio(englishPhrase)}
-                        className="gap-2 gradient-animated"
-                        size="lg"
-                      >
-                        <Volume2 className="h-5 w-5" />
-                        Escuchar
-                      </Button>
-                      <Button
-                        onClick={togglePlaybackSpeed}
-                        variant="outline"
-                        className="gap-2 border-border hover:bg-secondary/80"
-                      >
-                        <Gauge className="h-5 w-5" />
-                        {playbackRate === 1.0 ? "Normal" : "Lento"}
-                      </Button>
-                    </div>
-
-                    <div className="text-center text-sm text-muted-foreground">
-                      Reproducido: {listenCount} {listenCount === 1 ? "vez" : "veces"}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-              {isCausaEfecto && (
-                <Button
-                  onClick={handleNextStep}
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
-                  size="lg"
-                >
-                  Siguiente
-                </Button>
-              )}
-            </motion.div>
-          )}
+          {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}
           {currentStep === 2 && (

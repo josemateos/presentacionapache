@@ -530,6 +530,41 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
+              {trilingualExample && (
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-5 space-y-4">
+                    <h2 className="text-lg font-bold text-center text-primary">
+                      Ejemplo
+                    </h2>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                          Español perfecto
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.es}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-yellow-500 font-semibold">
+                          Español Apache
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.apache}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                          Inglés perfecto
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.en}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-4">
                   <h2 className="text-xl font-bold text-center text-primary">

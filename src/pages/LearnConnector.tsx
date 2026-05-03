@@ -645,7 +645,7 @@ const LearnConnector = () => {
                         Forma la frase que escuchaste
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Conector, verbo+ing
+                        {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
                       </p>
                     </div>
                   </div>

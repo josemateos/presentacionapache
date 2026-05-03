@@ -513,13 +513,13 @@ const LearnConnector = () => {
                 </h1>
                 <div className="text-right flex flex-col items-end">
                   <span className="text-sm font-normal text-muted-foreground">
-                    {currentStep} de 5
+                    {currentStep - 1} de 4
                   </span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={handlePreviousStep}
-                    disabled={currentStep === 1}
+                onClick={handlePreviousStep}
+                disabled={currentStep === 2}
                     className="h-8 w-8 hover:bg-primary/10"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -529,7 +529,7 @@ const LearnConnector = () => {
             </div>
           </div>
           <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((step) => (
+            {[2, 3, 4, 5].map((step) => (
               <div
                 key={step}
                 className={`flex-1 h-2 rounded-full transition-colors ${

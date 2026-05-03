@@ -19,6 +19,12 @@ const LearnConnector = () => {
   const location = useLocation();
   const { toast } = useToast();
   const connector = location.state?.connector as Connector;
+  const source = (location.state?.source as string) || "ing";
+  const isCausaEfecto = source === "causa-efecto";
+  const backRoute = isCausaEfecto
+    ? "/auxiliaries/conectores-causa-efecto"
+    : "/auxiliaries/conectores-ing";
+  const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isStepComplete, setIsStepComplete] = useState(false);
@@ -42,9 +48,28 @@ const LearnConnector = () => {
   // Paso 5: Elegir significado correcto en español
   const [selectedSpanishMeaning, setSelectedSpanishMeaning] = useState("");
 
-  // Generar frase de ejemplo en inglés y obtener el verbo después del conector
+  // Frase de ejemplo en inglés y verbo después del conector (Conectores ING)
   const generateEnglishPhrase = () => {
     const word = connector?.english || "";
+
+    // Para Causa-Efecto, usamos frases sin "ing"
+    if (isCausaEfecto) {
+      const ceMap: { [key: string]: string } = {
+        "so": "So I went home",
+        "because": "Because I am happy",
+        "could": "I could run fast",
+        "by": "The book was written by him",
+        "for": "She wants for help",
+        "to": "I want to buy",
+        "may / might": "It might rain today",
+        "can": "I can swim well",
+        "must": "You must stop now",
+        "should": "You should study more",
+        "if": "If you come here",
+      };
+      return { phrase: ceMap[word] || `I ${word.toLowerCase()} go`, verbAfterConnector: "" };
+    }
+
     const phrases: { [key: string]: { phrase: string; verbAfterConnector: string } } = {
       "About": { phrase: "I am thinking about going there", verbAfterConnector: "going" },
       "After": { phrase: "She called me after finishing work", verbAfterConnector: "finishing" },
@@ -77,7 +102,9 @@ const LearnConnector = () => {
 
   // Opciones para paso 3 (significado en inglés)
   const getEnglishOptions = () => {
-    const distractors = ["Before", "Against", "Through", "Besides"];
+    const distractors = isCausaEfecto
+      ? ["because", "must", "should", "can", "if", "by"]
+      : ["Before", "Against", "Through", "Besides"];
     const allOptions = [connector?.english || "", ...distractors];
     const uniqueOptions = Array.from(new Set(allOptions)).filter(opt => opt !== connector?.english);
     return [connector?.english || "", ...uniqueOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
@@ -85,7 +112,9 @@ const LearnConnector = () => {
 
   // Opciones para paso 5 (significado en español)
   const getSpanishOptions = () => {
-    const distractors = ["Antes de", "A través de", "En contra de", "Además de"];
+    const distractors = isCausaEfecto
+      ? ["Porque", "Debes", "Debería", "Si (condicional)", "Poder", "Por (autor)"]
+      : ["Antes de", "A través de", "En contra de", "Además de"];
     const allOptions = [connector?.spanish || "", ...distractors];
     const uniqueOptions = Array.from(new Set(allOptions)).filter(opt => opt !== connector?.spanish);
     return [connector?.spanish || "", ...uniqueOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
@@ -94,19 +123,46 @@ const LearnConnector = () => {
   const [englishOptions] = useState(getEnglishOptions());
   const [spanishOptions] = useState(getSpanishOptions());
 
+  // Ejemplo trilingüe (Español perfecto / Apache / Inglés perfecto) para Causa-Efecto
+  const trilingualExample = (() => {
+    if (!isCausaEfecto) return null;
+    const word = connector?.english || "";
+    const map: { [key: string]: { es: string; apache: string; en: string } } = {
+      "to": { es: "Quiero comprar", apache: "Quiero a comprar", en: "Want to buy" },
+      "so": { es: "Así que me fui", apache: "Entonces yo ir", en: "So I went" },
+      "because": { es: "Porque estoy feliz", apache: "Porque yo estar feliz", en: "Because I am happy" },
+      "could": { es: "Yo podía correr", apache: "Yo poder correr", en: "I could run" },
+      "by": { es: "El libro fue escrito por él", apache: "El libro ser escrito → él", en: "The book was written by him" },
+      "for": { es: "Ella quiere aprender", apache: "Ella querer a aprender", en: "She wants for learn" },
+      "may / might": { es: "Puede que llueva", apache: "Eso poder llover", en: "It might rain" },
+      "can": { es: "Yo puedo nadar", apache: "Yo poder nadar", en: "I can swim" },
+      "must": { es: "Tú debes detenerte", apache: "Tú deber parar", en: "You must stop" },
+      "should": { es: "Tú deberías estudiar", apache: "Tú deber estudiar", en: "You should study" },
+      "if": { es: "Si tú vienes", apache: "Si tú venir", en: "If you come" },
+    };
+    return map[word] || null;
+  })();
+
   useEffect(() => {
     if (!connector) {
-      navigate("/auxiliaries/conectores-ing");
+      navigate(backRoute);
       return;
     }
 
-    // Inicializar palabras para paso 2 - eliminar "ing" del verbo después del conector
-    const words = englishPhrase.split(" ").map(word => {
-      if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
-        return word.slice(0, -3); // Eliminar "ing"
-      }
-      return word;
-    });
+    // Inicializar palabras para paso 2
+    let words: string[];
+    if (isCausaEfecto) {
+      // Sin lógica de "ing"
+      words = englishPhrase.split(" ");
+    } else {
+      // Eliminar "ing" del verbo después del conector
+      words = englishPhrase.split(" ").map(word => {
+        if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
+          return word.slice(0, -3);
+        }
+        return word;
+      });
+    }
     const distractorWords = ["yesterday", "quickly"];
     const allWords = [...words, ...distractorWords];
     setRandomizedWords([...allWords].sort(() => Math.random() - 0.5));
@@ -116,7 +172,7 @@ const LearnConnector = () => {
     const distractorLetters = ["Z", "Q"];
     const allLetters = [...letters, ...distractorLetters];
     setRandomizedLetters([...allLetters].sort(() => Math.random() - 0.5));
-  }, [connector, navigate, englishPhrase, verbAfterConnector]);
+  }, [connector, navigate, englishPhrase, verbAfterConnector, isCausaEfecto, backRoute]);
 
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -178,11 +234,11 @@ const LearnConnector = () => {
       }
     } else {
       // Guardar conector completado
-      const saved = localStorage.getItem('completedConnectors');
+      const saved = localStorage.getItem(storageKey);
       const completed = saved ? JSON.parse(saved) : [];
       if (!completed.includes(connector.english)) {
         completed.push(connector.english);
-        localStorage.setItem('completedConnectors', JSON.stringify(completed));
+        localStorage.setItem(storageKey, JSON.stringify(completed));
       }
       
       toast({
@@ -192,7 +248,7 @@ const LearnConnector = () => {
         className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md text-center text-xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 text-white border-2 border-green-400 shadow-2xl p-6 rounded-xl",
       });
       setTimeout(() => {
-        navigate("/auxiliaries/conectores-ing");
+        navigate(backRoute);
       }, 2000);
     }
   };
@@ -224,17 +280,18 @@ const LearnConnector = () => {
 
   // Paso 2: Verificar orden de palabras
   const handleVerifyWords = () => {
-    // Verificar que todas las palabras estén colocadas y que "ing" esté fusionado con alguna palabra
-    const hasFusedIng = userWords.some(word => word.endsWith("ing"));
-    
-    if (!hasFusedIng) {
-      toast({
-        title: "Incompleto",
-        description: "Debes fusionar 'ing' con el verbo correcto",
-        variant: "destructive",
-        duration: 2000,
-      });
-      return;
+    // En Conectores ING, validar fusión "ing"
+    if (!isCausaEfecto) {
+      const hasFusedIng = userWords.some(word => word.endsWith("ing"));
+      if (!hasFusedIng) {
+        toast({
+          title: "Incompleto",
+          description: "Debes fusionar 'ing' con el verbo correcto",
+          variant: "destructive",
+          duration: 2000,
+        });
+        return;
+      }
     }
     
     // Reconstruir la frase esperada
@@ -420,7 +477,7 @@ const LearnConnector = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/auxiliaries/conectores-ing")}
+              onClick={() => navigate(backRoute)}
               className="hover:bg-primary/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -473,6 +530,41 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
+              {trilingualExample && (
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-5 space-y-4">
+                    <h2 className="text-lg font-bold text-center text-primary">
+                      Ejemplo
+                    </h2>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                          Español perfecto
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.es}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-yellow-500 font-semibold">
+                          Español Apache
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.apache}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                          Inglés perfecto
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {trilingualExample.en}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-4">
                   <h2 className="text-xl font-bold text-center text-primary">
@@ -553,7 +645,7 @@ const LearnConnector = () => {
                         Forma la frase que escuchaste
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Conector, verbo+ing
+                        {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
                       </p>
                     </div>
                   </div>
@@ -599,14 +691,16 @@ const LearnConnector = () => {
                           </button>
                         );
                       })}
-                      {/* Botón "ing" para fusionar */}
-                      <button
-                        onClick={handleFuseIng}
-                        disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
-                        className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
-                      >
-                        ing
-                      </button>
+                      {/* Botón "ing" para fusionar (solo Conectores ING) */}
+                      {!isCausaEfecto && (
+                        <button
+                          onClick={handleFuseIng}
+                          disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
+                          className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
+                        >
+                          ing
+                        </button>
+                      )}
                     </div>
                   </div>
 

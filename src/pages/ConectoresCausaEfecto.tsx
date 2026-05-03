@@ -86,7 +86,7 @@ const ConectoresCausaEfecto = () => {
                           {idx + 1}.
                         </p>
                         <p className="text-lg font-bold text-foreground">
-                          {connector.spanish}
+                          {connector.english}
                         </p>
                       </div>
                       {isCompleted && (

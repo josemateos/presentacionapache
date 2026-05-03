@@ -633,6 +633,8 @@ const LearnConnector = () => {
                   Siguiente
                 </Button>
               )}
+            </motion.div>
+          )}
 
           {/* Paso 2: Ordenar palabras en inglés */}
           {currentStep === 2 && (

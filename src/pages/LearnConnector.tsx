@@ -701,6 +701,7 @@ const LearnConnector = () => {
                           ing
                         </button>
                       )}
+                    </div>
                   </div>
 
                   <div className="flex gap-3 pt-2">

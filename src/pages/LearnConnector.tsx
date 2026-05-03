@@ -252,6 +252,17 @@ const LearnConnector = () => {
         completed.push(connector.english);
         localStorage.setItem(storageKey, JSON.stringify(completed));
       }
+
+      // Limpiar progreso "en curso" del conector
+      try {
+        const progressKey = isCausaEfecto ? "causaEfectoProgress" : "ingProgress";
+        const savedProg = localStorage.getItem(progressKey);
+        if (savedProg) {
+          const progressMap: Record<string, number> = JSON.parse(savedProg);
+          delete progressMap[connector.english];
+          localStorage.setItem(progressKey, JSON.stringify(progressMap));
+        }
+      } catch {}
       
       toast({
         title: "¡Completado!",

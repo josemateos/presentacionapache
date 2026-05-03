@@ -486,7 +486,7 @@ const LearnConnector = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-lg md:text-xl font-bold text-foreground">
-                  {connector.spanish}
+                  {isCausaEfecto ? connector.english : connector.spanish}
                 </h1>
                 <div className="text-right flex flex-col items-end">
                   <span className="text-sm font-normal text-muted-foreground">

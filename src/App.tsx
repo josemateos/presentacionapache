@@ -20,6 +20,7 @@ import ReviewWordImages from "./pages/ReviewWordImages";
 import AuxiliariesHub from "./pages/AuxiliariesHub";
 import ConectoresIng from "./pages/ConectoresIng";
 import ConectoresSimples from "./pages/ConectoresSimples";
+import ConectoresCausaEfecto from "./pages/ConectoresCausaEfecto";
 import LearnConnector from "./pages/LearnConnector";
 import ReviewDay from "./pages/ReviewDay";
 import Invitation2 from "./pages/Invitation2";

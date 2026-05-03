@@ -486,7 +486,7 @@ const LearnConnector = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-lg md:text-xl font-bold text-foreground">
-                  {connector.spanish}
+                  {isCausaEfecto ? connector.english : connector.spanish}
                 </h1>
                 <div className="text-right flex flex-col items-end">
                   <span className="text-sm font-normal text-muted-foreground">
@@ -533,8 +533,8 @@ const LearnConnector = () => {
               {trilingualExample && (
                 <Card className="bg-card border-border shadow-md">
                   <CardContent className="p-5 space-y-4">
-                    <h2 className="text-lg font-bold text-center text-primary">
-                      Ejemplo
+                    <h2 className="text-2xl font-bold text-center text-primary">
+                      {connector.english} = {connector.spanish.toLowerCase()}
                     </h2>
                     <div className="space-y-3">
                       <div className="space-y-1">
@@ -565,63 +565,74 @@ const LearnConnector = () => {
                   </CardContent>
                 </Card>
               )}
-              <Card className="bg-card border-border shadow-md">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-xl font-bold text-center text-primary">
-                    Escucha la frase
-                  </h2>
-                  <p className="text-center text-base text-muted-foreground">
-                    Escucha al menos 3 veces
-                  </p>
-                  <p className="text-center text-2xl font-bold text-foreground">
-                    {englishPhrase.split(' ').map((word, idx) => {
-                      const lowerWord = word.toLowerCase();
-                      const lowerConnector = connector.english.toLowerCase();
-                      const isConnector = lowerWord === lowerConnector || 
-                                         (connector.english.includes(' ') && englishPhrase.toLowerCase().includes(connector.english.toLowerCase()));
-                      
-                      if (lowerWord === verbAfterConnector.toLowerCase()) {
-                        const base = word.slice(0, -3);
-                        return (
-                          <span key={idx}>
-                            <span className={isConnector ? "underline decoration-yellow-500 decoration-2" : ""}>{base}</span>
-                            <span className="text-yellow-500">ing</span>{' '}
-                          </span>
-                        );
-                      }
-                      
-                      if (isConnector) {
-                        return <span key={idx} className="underline decoration-yellow-500 decoration-2">{word} </span>;
-                      }
-                      
-                      return <span key={idx}>{word} </span>;
-                    })}
-                  </p>
+              {!isCausaEfecto && (
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-6 space-y-4">
+                    <h2 className="text-xl font-bold text-center text-primary">
+                      Escucha la frase
+                    </h2>
+                    <p className="text-center text-base text-muted-foreground">
+                      Escucha al menos 3 veces
+                    </p>
+                    <p className="text-center text-2xl font-bold text-foreground">
+                      {englishPhrase.split(' ').map((word, idx) => {
+                        const lowerWord = word.toLowerCase();
+                        const lowerConnector = connector.english.toLowerCase();
+                        const isConnector = lowerWord === lowerConnector || 
+                                           (connector.english.includes(' ') && englishPhrase.toLowerCase().includes(connector.english.toLowerCase()));
+                        
+                        if (lowerWord === verbAfterConnector.toLowerCase()) {
+                          const base = word.slice(0, -3);
+                          return (
+                            <span key={idx}>
+                              <span className={isConnector ? "underline decoration-yellow-500 decoration-2" : ""}>{base}</span>
+                              <span className="text-yellow-500">ing</span>{' '}
+                            </span>
+                          );
+                        }
+                        
+                        if (isConnector) {
+                          return <span key={idx} className="underline decoration-yellow-500 decoration-2">{word} </span>;
+                        }
+                        
+                        return <span key={idx}>{word} </span>;
+                      })}
+                    </p>
 
-                  <div className="flex gap-3 justify-center">
-                    <Button
-                      onClick={() => playAudio(englishPhrase)}
-                      className="gap-2 gradient-animated"
-                      size="lg"
-                    >
-                      <Volume2 className="h-5 w-5" />
-                      Escuchar
-                    </Button>
-                    <Button
-                      onClick={togglePlaybackSpeed}
-                      variant="outline"
-                      className="gap-2 border-border hover:bg-secondary/80"
-                    >
-                      <Gauge className="h-5 w-5" />
-                      {playbackRate === 1.0 ? "Normal" : "Lento"}
-                    </Button>
-                  </div>
+                    <div className="flex gap-3 justify-center">
+                      <Button
+                        onClick={() => playAudio(englishPhrase)}
+                        className="gap-2 gradient-animated"
+                        size="lg"
+                      >
+                        <Volume2 className="h-5 w-5" />
+                        Escuchar
+                      </Button>
+                      <Button
+                        onClick={togglePlaybackSpeed}
+                        variant="outline"
+                        className="gap-2 border-border hover:bg-secondary/80"
+                      >
+                        <Gauge className="h-5 w-5" />
+                        {playbackRate === 1.0 ? "Normal" : "Lento"}
+                      </Button>
+                    </div>
 
-                  <div className="text-center text-sm text-muted-foreground">
-                    Reproducido: {listenCount} {listenCount === 1 ? "vez" : "veces"}
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="text-center text-sm text-muted-foreground">
+                      Reproducido: {listenCount} {listenCount === 1 ? "vez" : "veces"}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              {isCausaEfecto && (
+                <Button
+                  onClick={handleNextStep}
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold"
+                  size="lg"
+                >
+                  Siguiente
+                </Button>
+              )}
             </motion.div>
           )}
 

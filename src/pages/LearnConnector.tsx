@@ -573,16 +573,19 @@ const LearnConnector = () => {
                     "Querer <span className="text-blue-400 font-bold">a</span> jugar, Ir <span className="text-blue-400 font-bold">a</span> comer, Necesitar <span className="text-blue-400 font-bold">a</span> trabajar, Gustar <span className="text-blue-400 font-bold">a</span> aprender" como si respondieran a "¿Qué vas hacer?" "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender".
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Recuerda, a partir del segundo verbo siempre se coloca <span className="text-blue-400 font-bold">To</span>:
+                    Si quieres decir:
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Quiero intentar, empezar <span className="text-blue-400 font-bold">a</span> trabajar.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Será
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     Yo querer <span className="text-blue-400 font-bold">a</span> intentar <span className="text-blue-400 font-bold">a</span> empezar <span className="text-blue-400 font-bold">a</span> trabajar.
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    I want <span className="text-blue-400 font-bold">to</span> try <span className="text-blue-400 font-bold">to</span> start <span className="text-blue-400 font-bold">to</span> work. =
-                  </p>
-                  <p className="text-base text-foreground/90 leading-relaxed">
-                    Yo quiero intentar, empezar <span className="text-blue-400 font-bold">a</span> trabajar.
+                    = I want <span className="text-blue-400 font-bold">to</span> try <span className="text-blue-400 font-bold">to</span> start <span className="text-blue-400 font-bold">to</span> work.
                   </p>
                 </CardContent>
               </Card>

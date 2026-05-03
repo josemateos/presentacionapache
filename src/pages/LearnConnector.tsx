@@ -565,7 +565,7 @@ const LearnConnector = () => {
 
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">a</h3>
+                  <h3 className="text-2xl font-bold text-yellow-400">a</h3>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     En Inglés todos los verbos se dice: "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender" como si fueran a algún lugar o como si se les estuviera preguntando "¿Qué vas hacer?" y responden "voy <span className="text-blue-400 font-bold">a</span> aprender".
                   </p>
@@ -574,18 +574,30 @@ const LearnConnector = () => {
 
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">para</h3>
+                  <h3 className="text-2xl font-bold text-yellow-400">al</h3>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Se agrega "<span className="text-blue-400 font-bold">para</span>" para explicar el motivo de la acción, por ejemplo: Me alimento bien "<span className="text-blue-400 font-bold">para</span>" estar sano. Estudio "<span className="text-blue-400 font-bold">para</span>" pasar el examen.
+                    Se agrega "<span className="text-blue-400 font-bold">al</span> o <span className="text-blue-400 font-bold">a</span>" para indicar el lugar, por ejemplo:
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Ellos fueron <span className="text-blue-400 font-bold">al</span> parque.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Voy <span className="text-blue-400 font-bold">al</span> gimnasio.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Fui <span className="text-blue-400 font-bold">a</span> entrenar.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Fue <span className="text-blue-400 font-bold">a</span> la ciudad.
                   </p>
                 </CardContent>
               </Card>
 
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">al</h3>
+                  <h3 className="text-2xl font-bold text-yellow-400">para</h3>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    También se utiliza para indicar un lugar, por ejemplo: "Voy <span className="text-blue-400 font-bold">al</span>" gimnasio.
+                    Se agrega <span className="text-blue-400 font-bold">para</span> para explicar el motivo de la acción, por ejemplo: Me alimento bien <span className="text-blue-400 font-bold">para</span> estar sano. Estudio <span className="text-blue-400 font-bold">para</span> pasar el examen.
                   </p>
                 </CardContent>
               </Card>

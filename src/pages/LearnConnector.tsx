@@ -570,7 +570,7 @@ const LearnConnector = () => {
                     En Inglés a partir del segundo verbo siempre se dice:
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    "Querer <span className="text-blue-400 font-bold">a</span> jugar, Ir <span className="text-blue-400 font-bold">a</span> comer, Necesitar <span className="text-blue-400 font-bold">a</span> trabajar, Gustar <span className="text-blue-400 font-bold">a</span> aprender" como si respondieran a "¿Qué vas hacer?" y respondieran "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender".
+                    "Querer <span className="text-blue-400 font-bold">a</span> jugar, Ir <span className="text-blue-400 font-bold">a</span> comer, Necesitar <span className="text-blue-400 font-bold">a</span> trabajar, Gustar <span className="text-blue-400 font-bold">a</span> aprender" como si respondieran a "¿Qué vas hacer?" "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender".
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     Recuerda, a partir del segundo verbo siempre se coloca <span className="text-blue-400 font-bold">To</span>:

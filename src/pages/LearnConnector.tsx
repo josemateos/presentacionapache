@@ -19,6 +19,12 @@ const LearnConnector = () => {
   const location = useLocation();
   const { toast } = useToast();
   const connector = location.state?.connector as Connector;
+  const source = (location.state?.source as string) || "ing";
+  const isCausaEfecto = source === "causa-efecto";
+  const backRoute = isCausaEfecto
+    ? "/auxiliaries/conectores-causa-efecto"
+    : "/auxiliaries/conectores-ing";
+  const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isStepComplete, setIsStepComplete] = useState(false);

@@ -26,6 +26,8 @@ const LearnConnector = () => {
     : "/auxiliaries/conectores-ing";
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
+  const isToIntro = isCausaEfecto && (location.state?.connector?.english?.toLowerCase?.() === "to");
+  const [showIntro, setShowIntro] = useState(isToIntro);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 

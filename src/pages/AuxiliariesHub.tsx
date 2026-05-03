@@ -17,8 +17,8 @@ const AuxiliariesHub = () => {
     {
       id: "conectores-causa-efecto",
       title: "Conectores Causa-Efecto",
-      description: "Próximamente disponible",
-      route: null,
+      description: "so, because, to, can, must, if...",
+      route: "/auxiliaries/conectores-causa-efecto",
     },
     {
       id: "conectores-ing",

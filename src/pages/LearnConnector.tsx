@@ -280,17 +280,18 @@ const LearnConnector = () => {
 
   // Paso 2: Verificar orden de palabras
   const handleVerifyWords = () => {
-    // Verificar que todas las palabras estén colocadas y que "ing" esté fusionado con alguna palabra
-    const hasFusedIng = userWords.some(word => word.endsWith("ing"));
-    
-    if (!hasFusedIng) {
-      toast({
-        title: "Incompleto",
-        description: "Debes fusionar 'ing' con el verbo correcto",
-        variant: "destructive",
-        duration: 2000,
-      });
-      return;
+    // En Conectores ING, validar fusión "ing"
+    if (!isCausaEfecto) {
+      const hasFusedIng = userWords.some(word => word.endsWith("ing"));
+      if (!hasFusedIng) {
+        toast({
+          title: "Incompleto",
+          description: "Debes fusionar 'ing' con el verbo correcto",
+          variant: "destructive",
+          duration: 2000,
+        });
+        return;
+      }
     }
     
     // Reconstruir la frase esperada

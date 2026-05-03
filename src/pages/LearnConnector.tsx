@@ -558,7 +558,7 @@ const LearnConnector = () => {
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 text-center">
                   <h2 className="text-3xl md:text-4xl font-extrabold text-primary">
-                    To = a/para
+                    To = a/al/para
                   </h2>
                 </CardContent>
               </Card>

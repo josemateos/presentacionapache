@@ -602,7 +602,7 @@ const LearnConnector = () => {
           {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}
-          {currentStep === 2 && (
+          {currentStep === 2 && !showIntro && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}

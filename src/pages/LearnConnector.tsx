@@ -254,7 +254,7 @@ const LearnConnector = () => {
   };
 
   const handlePreviousStep = () => {
-    if (currentStep > 1) {
+    if (currentStep > 2) {
       setCurrentStep(currentStep - 1);
       setIsStepComplete(false);
     }

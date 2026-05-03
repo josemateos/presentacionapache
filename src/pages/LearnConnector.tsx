@@ -234,11 +234,11 @@ const LearnConnector = () => {
       }
     } else {
       // Guardar conector completado
-      const saved = localStorage.getItem('completedConnectors');
+      const saved = localStorage.getItem(storageKey);
       const completed = saved ? JSON.parse(saved) : [];
       if (!completed.includes(connector.english)) {
         completed.push(connector.english);
-        localStorage.setItem('completedConnectors', JSON.stringify(completed));
+        localStorage.setItem(storageKey, JSON.stringify(completed));
       }
       
       toast({
@@ -248,7 +248,7 @@ const LearnConnector = () => {
         className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md text-center text-xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 text-white border-2 border-green-400 shadow-2xl p-6 rounded-xl",
       });
       setTimeout(() => {
-        navigate("/auxiliaries/conectores-ing");
+        navigate(backRoute);
       }, 2000);
     }
   };

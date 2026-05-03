@@ -102,7 +102,9 @@ const LearnConnector = () => {
 
   // Opciones para paso 3 (significado en inglés)
   const getEnglishOptions = () => {
-    const distractors = ["Before", "Against", "Through", "Besides"];
+    const distractors = isCausaEfecto
+      ? ["because", "must", "should", "can", "if", "by"]
+      : ["Before", "Against", "Through", "Besides"];
     const allOptions = [connector?.english || "", ...distractors];
     const uniqueOptions = Array.from(new Set(allOptions)).filter(opt => opt !== connector?.english);
     return [connector?.english || "", ...uniqueOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
@@ -110,7 +112,9 @@ const LearnConnector = () => {
 
   // Opciones para paso 5 (significado en español)
   const getSpanishOptions = () => {
-    const distractors = ["Antes de", "A través de", "En contra de", "Además de"];
+    const distractors = isCausaEfecto
+      ? ["Porque", "Debes", "Debería", "Si (condicional)", "Poder", "Por (autor)"]
+      : ["Antes de", "A través de", "En contra de", "Además de"];
     const allOptions = [connector?.spanish || "", ...distractors];
     const uniqueOptions = Array.from(new Set(allOptions)).filter(opt => opt !== connector?.spanish);
     return [connector?.spanish || "", ...uniqueOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
@@ -118,6 +122,26 @@ const LearnConnector = () => {
 
   const [englishOptions] = useState(getEnglishOptions());
   const [spanishOptions] = useState(getSpanishOptions());
+
+  // Ejemplo trilingüe (Español perfecto / Apache / Inglés perfecto) para Causa-Efecto
+  const trilingualExample = (() => {
+    if (!isCausaEfecto) return null;
+    const word = connector?.english || "";
+    const map: { [key: string]: { es: string; apache: string; en: string } } = {
+      "to": { es: "Quiero comprar", apache: "Quiero a comprar", en: "Want to buy" },
+      "so": { es: "Así que me fui", apache: "Entonces yo ir", en: "So I went" },
+      "because": { es: "Porque estoy feliz", apache: "Porque yo estar feliz", en: "Because I am happy" },
+      "could": { es: "Yo podía correr", apache: "Yo poder correr", en: "I could run" },
+      "by": { es: "El libro fue escrito por él", apache: "El libro ser escrito → él", en: "The book was written by him" },
+      "for": { es: "Ella quiere aprender", apache: "Ella querer a aprender", en: "She wants for learn" },
+      "may / might": { es: "Puede que llueva", apache: "Eso poder llover", en: "It might rain" },
+      "can": { es: "Yo puedo nadar", apache: "Yo poder nadar", en: "I can swim" },
+      "must": { es: "Tú debes detenerte", apache: "Tú deber parar", en: "You must stop" },
+      "should": { es: "Tú deberías estudiar", apache: "Tú deber estudiar", en: "You should study" },
+      "if": { es: "Si tú vienes", apache: "Si tú venir", en: "If you come" },
+    };
+    return map[word] || null;
+  })();
 
   useEffect(() => {
     if (!connector) {

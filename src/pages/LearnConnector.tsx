@@ -691,15 +691,16 @@ const LearnConnector = () => {
                           </button>
                         );
                       })}
-                      {/* Botón "ing" para fusionar */}
-                      <button
-                        onClick={handleFuseIng}
-                        disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
-                        className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
-                      >
-                        ing
-                      </button>
-                    </div>
+                      {/* Botón "ing" para fusionar (solo Conectores ING) */}
+                      {!isCausaEfecto && (
+                        <button
+                          onClick={handleFuseIng}
+                          disabled={ingToken !== null || userWords.length === 0 || isStepComplete}
+                          className="px-4 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-bold text-sm transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-md"
+                        >
+                          ing
+                        </button>
+                      )}
                   </div>
 
                   <div className="flex gap-3 pt-2">

@@ -26,7 +26,7 @@ const LearnConnector = () => {
     : "/auxiliaries/conectores-ing";
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
   // Paso 1: Escuchar frase en inglés (audio)

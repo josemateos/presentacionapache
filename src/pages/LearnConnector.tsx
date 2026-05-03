@@ -48,9 +48,28 @@ const LearnConnector = () => {
   // Paso 5: Elegir significado correcto en español
   const [selectedSpanishMeaning, setSelectedSpanishMeaning] = useState("");
 
-  // Generar frase de ejemplo en inglés y obtener el verbo después del conector
+  // Frase de ejemplo en inglés y verbo después del conector (Conectores ING)
   const generateEnglishPhrase = () => {
     const word = connector?.english || "";
+
+    // Para Causa-Efecto, usamos frases sin "ing"
+    if (isCausaEfecto) {
+      const ceMap: { [key: string]: string } = {
+        "so": "So I went home",
+        "because": "Because I am happy",
+        "could": "I could run fast",
+        "by": "The book was written by him",
+        "for": "She wants for help",
+        "to": "I want to buy",
+        "may / might": "It might rain today",
+        "can": "I can swim well",
+        "must": "You must stop now",
+        "should": "You should study more",
+        "if": "If you come here",
+      };
+      return { phrase: ceMap[word] || `I ${word.toLowerCase()} go`, verbAfterConnector: "" };
+    }
+
     const phrases: { [key: string]: { phrase: string; verbAfterConnector: string } } = {
       "About": { phrase: "I am thinking about going there", verbAfterConnector: "going" },
       "After": { phrase: "She called me after finishing work", verbAfterConnector: "finishing" },

@@ -567,7 +567,19 @@ const LearnConnector = () => {
                 <CardContent className="p-6 space-y-3">
                   <h3 className="text-2xl font-bold text-yellow-400">a</h3>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    En Inglés todos los verbos se dice: "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender" como si fueran a algún lugar o como si se les estuviera preguntando "¿Qué vas hacer?" y responden "voy <span className="text-blue-400 font-bold">a</span> aprender".
+                    En Inglés todos a partir del segundo verbo siempre se dice:
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    "Querer <span className="text-blue-400 font-bold">a</span> jugar, Ir <span className="text-blue-400 font-bold">a</span> comer, Necesitar <span className="text-blue-400 font-bold">a</span> trabajar, Gustar <span className="text-blue-400 font-bold">a</span> aprender" como si respondieran a "¿Qué vas hacer?" y respondieran "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender".
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Recuerda, siempre a partir del segundo verbo:
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    I want <span className="text-blue-400 font-bold">to</span> try <span className="text-blue-400 font-bold">to</span> start <span className="text-blue-400 font-bold">to</span> work. =
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Yo querer <span className="text-blue-400 font-bold">a</span> intentar <span className="text-blue-400 font-bold">a</span> empezar <span className="text-blue-400 font-bold">a</span> trabajar.
                   </p>
                 </CardContent>
               </Card>

@@ -546,6 +546,59 @@ const LearnConnector = () => {
       {/* Content */}
       <main className="flex-grow container mx-auto px-4 py-6 pb-8 max-w-4xl">
         <AnimatePresence mode="wait">
+          {/* Intro especial para "To" en Causa-Efecto */}
+          {showIntro && (
+            <motion.div
+              key="intro-to"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <Card className="bg-card border-border shadow-md">
+                <CardContent className="p-6 text-center">
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-primary">
+                    To = a/para
+                  </h2>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border shadow-md">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="text-2xl font-bold text-foreground">a</h3>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    En Inglés todos los verbos se dice: "<span className="text-blue-400 font-bold">a</span> jugar, <span className="text-blue-400 font-bold">a</span> comer, <span className="text-blue-400 font-bold">a</span> trabajar, <span className="text-blue-400 font-bold">a</span> aprender" como si fueran a algún lugar o como si se les estuviera preguntando "¿Qué vas hacer?" y responden "voy <span className="text-blue-400 font-bold">a</span> aprender".
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border shadow-md">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="text-2xl font-bold text-foreground">para</h3>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    Se agrega "<span className="text-blue-400 font-bold">para</span>" para explicar el motivo de la acción, por ejemplo: Me alimento bien "<span className="text-blue-400 font-bold">para</span>" estar sano. Estudio "<span className="text-blue-400 font-bold">para</span>" pasar el examen.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border shadow-md">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="text-2xl font-bold text-foreground">al</h3>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    También se utiliza para indicar un lugar, por ejemplo: "Voy <span className="text-blue-400 font-bold">al</span>" gimnasio.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Button
+                onClick={() => setShowIntro(false)}
+                className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
+              >
+                Siguiente
+              </Button>
+            </motion.div>
+          )}
+
           {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}

@@ -145,17 +145,24 @@ const LearnConnector = () => {
 
   useEffect(() => {
     if (!connector) {
-      navigate("/auxiliaries/conectores-ing");
+      navigate(backRoute);
       return;
     }
 
-    // Inicializar palabras para paso 2 - eliminar "ing" del verbo después del conector
-    const words = englishPhrase.split(" ").map(word => {
-      if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
-        return word.slice(0, -3); // Eliminar "ing"
-      }
-      return word;
-    });
+    // Inicializar palabras para paso 2
+    let words: string[];
+    if (isCausaEfecto) {
+      // Sin lógica de "ing"
+      words = englishPhrase.split(" ");
+    } else {
+      // Eliminar "ing" del verbo después del conector
+      words = englishPhrase.split(" ").map(word => {
+        if (word.toLowerCase() === verbAfterConnector.toLowerCase()) {
+          return word.slice(0, -3);
+        }
+        return word;
+      });
+    }
     const distractorWords = ["yesterday", "quickly"];
     const allWords = [...words, ...distractorWords];
     setRandomizedWords([...allWords].sort(() => Math.random() - 0.5));
@@ -165,7 +172,7 @@ const LearnConnector = () => {
     const distractorLetters = ["Z", "Q"];
     const allLetters = [...letters, ...distractorLetters];
     setRandomizedLetters([...allLetters].sort(() => Math.random() - 0.5));
-  }, [connector, navigate, englishPhrase, verbAfterConnector]);
+  }, [connector, navigate, englishPhrase, verbAfterConnector, isCausaEfecto, backRoute]);
 
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);

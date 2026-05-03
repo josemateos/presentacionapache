@@ -477,7 +477,7 @@ const LearnConnector = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/auxiliaries/conectores-ing")}
+              onClick={() => navigate(backRoute)}
               className="hover:bg-primary/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

@@ -174,6 +174,18 @@ const LearnConnector = () => {
     setRandomizedLetters([...allLetters].sort(() => Math.random() - 0.5));
   }, [connector, navigate, englishPhrase, verbAfterConnector, isCausaEfecto, backRoute]);
 
+  // Guardar progreso del conector (paso actual) para mostrar "En curso" en la lista
+  useEffect(() => {
+    if (!connector) return;
+    const progressKey = isCausaEfecto ? "causaEfectoProgress" : "ingProgress";
+    try {
+      const saved = localStorage.getItem(progressKey);
+      const progressMap: Record<string, number> = saved ? JSON.parse(saved) : {};
+      progressMap[connector.english] = currentStep;
+      localStorage.setItem(progressKey, JSON.stringify(progressMap));
+    } catch {}
+  }, [currentStep, connector, isCausaEfecto]);
+
   const playAudio = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";

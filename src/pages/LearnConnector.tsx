@@ -597,16 +597,16 @@ const LearnConnector = () => {
                     Se agrega "<span className="text-blue-400 font-bold">al</span> o <span className="text-blue-400 font-bold">a</span>" para indicar el lugar, por ejemplo:
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Ellos ir <span className="text-blue-400 font-bold">al</span> parque = They go to the park
+                    Ellos ir <span className="text-blue-400 font-bold">al</span> parque = They go <span className="text-blue-400 font-bold">to</span> the park
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go to the gym
+                    Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go <span className="text-blue-400 font-bold">to</span> the gym
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes to university
+                    Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes <span className="text-blue-400 font-bold">to</span> university
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    El ir <span className="text-blue-400 font-bold">a</span> la ciudad = He goes to the city
+                    El ir <span className="text-blue-400 font-bold">a</span> la ciudad = He goes <span className="text-blue-400 font-bold">to</span> the city
                   </p>
                 </CardContent>
               </Card>

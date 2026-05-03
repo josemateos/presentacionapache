@@ -58,6 +58,7 @@ const App = () => (
             <Route path="/auxiliaries" element={<AuxiliariesHub />} />
             <Route path="/auxiliaries/conectores-ing" element={<ConectoresIng />} />
             <Route path="/auxiliaries/conectores-simples" element={<ConectoresSimples />} />
+            <Route path="/auxiliaries/conectores-causa-efecto" element={<ConectoresCausaEfecto />} />
             <Route path="/learn-connector" element={<LearnConnector />} />
             <Route path="/review-day" element={<ReviewDay />} />
             <Route path="/catalogo-avatar" element={<CatalogoAvatar />} />

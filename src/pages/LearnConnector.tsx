@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Volume2, Gauge, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Volume2, Gauge, ChevronLeft, List, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 
@@ -515,23 +516,34 @@ const LearnConnector = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => navigate(backRoute)}
+                className="hover:bg-primary/10"
+                title="Volver"
+              >
+                <List className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Lista</span>
+              </Button>
+
+              <Badge variant="secondary" className="text-sm">
+                Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+              </Badge>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-primary/10"
+                title="Ejercicio anterior"
                 onClick={() => {
                   if (toExerciseIndex > 0) {
                     setToExerciseIndex(toExerciseIndex - 1);
                     setToSelectedAnswer(null);
-                  } else {
-                    setShowToExercise(false);
-                    setShowIntro(true);
                   }
                 }}
-                className="hover:bg-primary/10"
+                disabled={toExerciseIndex === 0}
               >
-                <ArrowLeft className="w-4 h-4" />
+                <Undo2 className="w-4 h-4" />
+                <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
               </Button>
-              <h1 className="text-lg md:text-xl font-bold text-foreground">
-                {isCausaEfecto ? connector.english : connector.spanish}
-              </h1>
-              <div className="w-10" />
             </div>
           ) : (
             <>
@@ -696,23 +708,11 @@ const LearnConnector = () => {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-4"
             >
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-md">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-base font-semibold text-primary">
-                    Progreso del Ejercicio
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
-                  </p>
-                </div>
-                <div className="flex gap-1">
-                  {TO_EXERCISES.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex-1 h-2 rounded-full ${idx <= toExerciseIndex ? "bg-primary" : "bg-muted"}`}
-                    />
-                  ))}
-                </div>
+              <div className="mb-2">
+                <Progress value={((toExerciseIndex + 1) / TO_EXERCISES.length) * 100} className="h-3 mb-2" />
+                <p className="text-sm text-muted-foreground text-center">
+                  {toExerciseIndex + 1} de {TO_EXERCISES.length} ejercicios
+                </p>
               </div>
 
               <Card className="bg-card border-border shadow-md">

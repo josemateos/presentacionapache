@@ -900,10 +900,129 @@ const LearnConnector = () => {
             </motion.div>
           )}
 
+          {/* Ejercicio en INGLÉS para "To" — escribe la respuesta */}
+          {showToEnglishExercise && (() => {
+            const realIdx = toEnRandomOrder[toEnExerciseIndex] ?? toEnExerciseIndex;
+            const ex = TO_EN_EXERCISES[realIdx];
+            const totalBlanks = ex.sentence.filter(p => p === "_").length;
+            const allFilled = toEnTypedAnswers.filter(a => (a || "").trim().length > 0).length === totalBlanks;
+            return (
+              <motion.div
+                key="to-en-exercise"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-4"
+              >
+                <div className="mb-2">
+                  <Progress value={((toEnExerciseIndex + 1) / TO_EN_EXERCISES.length) * 100} className="h-3 mb-2" />
+                  <p className="text-sm text-muted-foreground text-center">
+                    {toEnExerciseIndex + 1} de {TO_EN_EXERCISES.length} ejercicios (English)
+                  </p>
+                </div>
+
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-6 space-y-6">
+                    <h2 className="text-lg font-bold text-foreground">
+                      Complete the sentence by typing the correct word:
+                    </h2>
+
+                    <div className="text-center space-y-4">
+                      <p className="text-base text-muted-foreground">
+                        {toEnExerciseIndex + 1}. {ex.intro}
+                      </p>
+                      <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
+                        {(() => {
+                          let blankIdx = -1;
+                          return ex.sentence.map((part, i) => {
+                            if (part === "_") {
+                              blankIdx++;
+                              const idx = blankIdx;
+                              const value = toEnTypedAnswers[idx] || "";
+                              const isCorrect = toEnVerified && value.trim().toLowerCase() === "to";
+                              const isWrong = toEnVerified && value.trim().toLowerCase() !== "to";
+                              return (
+                                <input
+                                  key={i}
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) => {
+                                    const next = [...toEnTypedAnswers];
+                                    next[idx] = e.target.value;
+                                    setToEnTypedAnswers(next);
+                                    setToEnVerified(false);
+                                  }}
+                                  className={`inline-block w-24 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
+                                    isCorrect
+                                      ? "text-green-400 border-green-400"
+                                      : isWrong
+                                      ? "text-red-400 border-red-400"
+                                      : value
+                                      ? "text-yellow-400 border-yellow-400"
+                                      : "text-foreground border-muted-foreground"
+                                  }`}
+                                  placeholder="____"
+                                  autoCapitalize="none"
+                                  autoCorrect="off"
+                                />
+                              );
+                            }
+                            return <span key={i}>{part}</span>;
+                          });
+                        })()}
+                      </p>
+                    </div>
+
+                    <Button
+                      onClick={() => {
+                        const isCorrect =
+                          toEnTypedAnswers.length === totalBlanks &&
+                          toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
+                        setToEnVerified(true);
+                        if (isCorrect) {
+                          playSuccessSound();
+                          toast({
+                            title: "¡Correcto!",
+                            description: "Excelente, sigue así",
+                            className: "bg-green-500/90 border-green-500 text-white",
+                            duration: 2000,
+                          });
+                          setTimeout(() => {
+                            if (toEnExerciseIndex < TO_EN_EXERCISES.length - 1) {
+                              setToEnExerciseIndex(toEnExerciseIndex + 1);
+                              setToEnTypedAnswers([]);
+                              setToEnVerified(false);
+                            } else {
+                              // Terminó → continuar al flujo normal (paso 2)
+                              setShowToEnglishExercise(false);
+                            }
+                          }, 2000);
+                        } else {
+                          toast({
+                            title: "Incorrecto",
+                            description: "Intenta nuevamente",
+                            variant: "destructive",
+                            duration: 2000,
+                          });
+                        }
+                      }}
+                      disabled={!allFilled}
+                      className={`w-full font-semibold py-5 text-white ${
+                        allFilled ? "bg-pink-500 hover:bg-pink-600" : "bg-primary hover:bg-primary/90"
+                      }`}
+                    >
+                      Verificar
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })()}
+
           {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}
-          {currentStep === 2 && !showIntro && !showToExercise && (
+          {currentStep === 2 && !showIntro && !showToExercise && !showToEnglishExercise && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}

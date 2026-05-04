@@ -985,7 +985,7 @@ const LearnConnector = () => {
                             title: "¡Correcto!",
                             description: "Excelente, sigue así",
                             className: "bg-green-500/90 border-green-500 text-white",
-                            duration: 2000,
+                            duration: 1500,
                           });
                           setTimeout(() => {
                             if (toEnExerciseIndex < TO_EN_EXERCISES.length - 1) {
@@ -996,7 +996,7 @@ const LearnConnector = () => {
                               // Terminó → continuar al flujo normal (paso 2)
                               setShowToEnglishExercise(false);
                             }
-                          }, 2000);
+                          }, 1500);
                         } else {
                           toast({
                             title: "Incorrecto",

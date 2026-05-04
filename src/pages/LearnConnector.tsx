@@ -849,8 +849,14 @@ const LearnConnector = () => {
                             setToSelectedAnswers([]);
                             setToVerified(false);
                           } else {
-                            // Terminó los ejercicios → continuar al flujo normal
+                            // Pasar a los ejercicios en inglés con orden aleatorio
+                            const order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                            setToEnRandomOrder(order);
+                            setToEnExerciseIndex(0);
+                            setToEnTypedAnswers([]);
+                            setToEnVerified(false);
                             setShowToExercise(false);
+                            setShowToEnglishExercise(true);
                           }
                         }, 2000);
                       } else {

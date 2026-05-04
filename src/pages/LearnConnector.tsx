@@ -510,84 +510,78 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-4 mb-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(backRoute)}
-              className="hover:bg-primary/10"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Atrás</span>
-            </Button>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h1 className="text-lg md:text-xl font-bold text-foreground">
-                  {isCausaEfecto ? connector.english : connector.spanish}
-                </h1>
-                {!showIntro && !showToExercise && (
-                  <div className="text-right flex flex-col items-end">
-                    <span className="text-sm font-normal text-muted-foreground">
-                      {currentStep - 1} de 4
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handlePreviousStep}
-                      disabled={currentStep === 2}
-                      className="h-8 w-8 hover:bg-primary/10"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
+          {showToExercise ? (
+            <div className="flex justify-between items-center max-w-4xl mx-auto">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (toExerciseIndex > 0) {
+                    setToExerciseIndex(toExerciseIndex - 1);
+                    setToSelectedAnswer(null);
+                  } else {
+                    setShowToExercise(false);
+                    setShowIntro(true);
+                  }
+                }}
+                className="hover:bg-primary/10"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+              <h1 className="text-lg md:text-xl font-bold text-foreground">
+                {isCausaEfecto ? connector.english : connector.spanish}
+              </h1>
+              <div className="w-10" />
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-4 mb-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate(backRoute)}
+                  className="hover:bg-primary/10"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Atrás</span>
+                </Button>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-lg md:text-xl font-bold text-foreground">
+                      {isCausaEfecto ? connector.english : connector.spanish}
+                    </h1>
+                    {!showIntro && (
+                      <div className="text-right flex flex-col items-end">
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {currentStep - 1} de 4
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={handlePreviousStep}
+                          disabled={currentStep === 2}
+                          className="h-8 w-8 hover:bg-primary/10"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                )}
-                {showToExercise && (
-                  <div className="text-right flex flex-col items-end">
-                    <span className="text-sm font-normal text-muted-foreground">
-                      Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        if (toExerciseIndex > 0) {
-                          setToExerciseIndex(toExerciseIndex - 1);
-                          setToSelectedAnswer(null);
-                        }
-                      }}
-                      disabled={toExerciseIndex === 0}
-                      className="h-8 w-8 hover:bg-primary/10"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                </div>
               </div>
-            </div>
-          </div>
-          {!showIntro && !showToExercise && (
-            <div className="flex gap-1">
-              {[2, 3, 4, 5].map((step) => (
-                <div
-                  key={step}
-                  className={`flex-1 h-2 rounded-full transition-colors ${
-                    step <= currentStep ? 'bg-primary' : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-          {showToExercise && (
-            <div className="flex gap-1">
-              {TO_EXERCISES.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`flex-1 h-2 rounded-full transition-colors ${
-                    idx <= toExerciseIndex ? 'bg-primary' : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
+              {!showIntro && (
+                <div className="flex gap-1">
+                  {[2, 3, 4, 5].map((step) => (
+                    <div
+                      key={step}
+                      className={`flex-1 h-2 rounded-full transition-colors ${
+                        step <= currentStep ? 'bg-primary' : 'bg-muted'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </header>

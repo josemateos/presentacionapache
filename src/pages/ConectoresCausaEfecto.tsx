@@ -208,8 +208,7 @@ const ConectoresCausaEfecto = () => {
                     status === "inProgress"
                       ? "border-secondary/30 shadow-[0_0_25px_hsl(var(--secondary)/0.15)]"
                       : "border-white/5"
-                  } cursor-pointer`}
-                  onClick={() => handleSelect(connector)}
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-6 gap-3">
                     <h4 className="font-headline text-2xl md:text-3xl font-bold tracking-tight group-hover:text-primary transition-colors">

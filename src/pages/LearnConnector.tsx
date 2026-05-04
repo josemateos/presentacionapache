@@ -793,7 +793,7 @@ const LearnConnector = () => {
                             }
                           }}
                           disabled={isFull}
-                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-secondary hover:bg-secondary/80 text-foreground border-border disabled:opacity-50`}
+                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-primary hover:bg-primary/80 text-primary-foreground border-primary disabled:opacity-50`}
                         >
                           {opt}
                         </button>

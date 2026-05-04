@@ -544,16 +544,18 @@ const LearnConnector = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-1">
-            {[2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`flex-1 h-2 rounded-full transition-colors ${
-                  step <= currentStep ? 'bg-primary' : 'bg-muted'
-                }`}
-              />
-            ))}
-          </div>
+          {!showIntro && !showToExercise && (
+            <div className="flex gap-1">
+              {[2, 3, 4, 5].map((step) => (
+                <div
+                  key={step}
+                  className={`flex-1 h-2 rounded-full transition-colors ${
+                    step <= currentStep ? 'bg-primary' : 'bg-muted'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </header>
 

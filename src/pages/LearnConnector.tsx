@@ -44,7 +44,7 @@ const LearnConnector = () => {
     { intro: "Ella va a la universidad", sentence: ["Ella", "ir", "_", "la universidad."], answer: ["a"] },
     { intro: "Corro para ser rápido", sentence: ["Yo", "correr", "_", "ser rápido."], answer: ["para"] },
     { intro: "Necesitas trabajar", sentence: ["Tú", "necesitar", "_", "trabajar."], answer: ["a"] },
-    { intro: "Vamos al restaurante", sentence: ["Nosotros", "ir", "_", "el restaurante."], answer: ["al"] },
+    { intro: "Vamos al restaurante", sentence: ["Nosotros", "ir", "_", "restaurante."], answer: ["al"] },
     { intro: "Estudio para pasar el examen", sentence: ["Yo", "estudiar", "_", "pasar el examen."], answer: ["para"] },
     { intro: "Él va a la oficina", sentence: ["Él", "ir", "_", "la oficina."], answer: ["a"] },
     { intro: "Quiero ir a jugar", sentence: ["Yo", "querer", "_", "ir", "_", "jugar."], answer: ["a", "a"] },

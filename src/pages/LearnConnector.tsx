@@ -647,7 +647,12 @@ const LearnConnector = () => {
               </Card>
 
               <Button
-                onClick={() => setShowIntro(false)}
+                onClick={() => {
+                  setShowIntro(false);
+                  setShowToExercise(true);
+                  setToExerciseIndex(0);
+                  setToSelectedAnswer("");
+                }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
               >
                 Siguiente
@@ -655,10 +660,109 @@ const LearnConnector = () => {
             </motion.div>
           )}
 
+          {/* Ejercicio especial para "To" en Causa-Efecto */}
+          {showToExercise && (
+            <motion.div
+              key="to-exercise"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <Card className="bg-card border-border shadow-md">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-bold text-foreground">
+                      Complementa la frase con el auxiliar correcto:
+                    </h2>
+                    <span className="text-sm text-muted-foreground">
+                      {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                    </span>
+                  </div>
+
+                  <div className="text-center space-y-4">
+                    <p className="text-base text-muted-foreground">
+                      {toExerciseIndex + 1}. {TO_EXERCISES[toExerciseIndex].intro}
+                    </p>
+                    <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
+                      {TO_EXERCISES[toExerciseIndex].sentence.map((part, i) =>
+                        part === "_" ? (
+                          <span
+                            key={i}
+                            className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
+                              toSelectedAnswer
+                                ? "text-blue-400 border-blue-400"
+                                : "border-muted-foreground"
+                            }`}
+                          >
+                            {toSelectedAnswer || "____"}
+                          </span>
+                        ) : (
+                          <span key={i}>{part}</span>
+                        )
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    {["a", "al", "para"].map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => setToSelectedAnswer(opt)}
+                        className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border ${
+                          toSelectedAnswer === opt
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-secondary hover:bg-secondary/80 text-foreground border-border"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+
+                  <Button
+                    onClick={() => {
+                      const correct = TO_EXERCISES[toExerciseIndex].answer;
+                      if (toSelectedAnswer === correct) {
+                        playSuccessSound();
+                        toast({
+                          title: "¡Correcto!",
+                          description: "Excelente, sigue así",
+                          className: "bg-green-500/90 border-green-500 text-white",
+                          duration: 2000,
+                        });
+                        setTimeout(() => {
+                          if (toExerciseIndex < TO_EXERCISES.length - 1) {
+                            setToExerciseIndex(toExerciseIndex + 1);
+                            setToSelectedAnswer("");
+                          } else {
+                            // Terminó los ejercicios → continuar al flujo normal
+                            setShowToExercise(false);
+                          }
+                        }, 2000);
+                      } else {
+                        toast({
+                          title: "Incorrecto",
+                          description: "Intenta nuevamente",
+                          variant: "destructive",
+                          duration: 2000,
+                        });
+                      }
+                    }}
+                    disabled={!toSelectedAnswer}
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-5"
+                  >
+                    Verificar
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
           {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}
-          {currentStep === 2 && !showIntro && (
+          {currentStep === 2 && !showIntro && !showToExercise && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}

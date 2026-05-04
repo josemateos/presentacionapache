@@ -541,6 +541,11 @@ const LearnConnector = () => {
                     </Button>
                   </div>
                 )}
+                {showToExercise && (
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -671,14 +676,9 @@ const LearnConnector = () => {
             >
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-bold text-foreground">
-                      Complementa la frase con el auxiliar correcto:
-                    </h2>
-                    <span className="text-sm text-muted-foreground">
-                      {toExerciseIndex + 1} de {TO_EXERCISES.length}
-                    </span>
-                  </div>
+                  <h2 className="text-lg font-bold text-foreground">
+                    Complementa la frase con el auxiliar correcto:
+                  </h2>
 
                   <div className="text-center space-y-4">
                     <p className="text-base text-muted-foreground">

@@ -775,7 +775,7 @@ const LearnConnector = () => {
                   </h2>
 
                   <div className="text-center space-y-4">
-                    <p className="text-base text-muted-foreground">
+                    <p className="text-base text-yellow-400">
                       {toExerciseIndex + 1}. {TO_EXERCISES[toExerciseIndex].intro}
                     </p>
                     <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">

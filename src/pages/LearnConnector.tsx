@@ -38,7 +38,7 @@ const LearnConnector = () => {
 
   // Ejercicios específicos para el conector "To"
   const TO_EXERCISES: { intro: string; sentence: string[]; answer: string[] }[] = [
-    { intro: "Voy al gimnasio", sentence: ["Yo", "ir", "_", "el gimnasio."], answer: ["al"] },
+    { intro: "Voy al gimnasio", sentence: ["Yo", "ir", "_", "gimnasio."], answer: ["al"] },
     { intro: "Trabajo para tener dinero", sentence: ["Yo", "trabajar", "_", "tener dinero."], answer: ["para"] },
     { intro: "Ellos quieren aprender", sentence: ["Ellos", "querer", "_", "aprender."], answer: ["a"] },
     { intro: "Ella va a la universidad", sentence: ["Ella", "ir", "_", "la universidad."], answer: ["a"] },

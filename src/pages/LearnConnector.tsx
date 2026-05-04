@@ -60,6 +60,25 @@ const LearnConnector = () => {
     { intro: "Ella empieza a estudiar", sentence: ["Ella", "empezar", "_", "estudiar."], answer: ["a"] },
   ];
 
+  // Mismas frases en inglés — la respuesta siempre es "to"
+  const TO_EN_EXERCISES: { intro: string; sentence: string[] }[] = [
+    { intro: "I go to the gym", sentence: ["I", "go", "_", "the gym."] },
+    { intro: "I work to have money", sentence: ["I", "work", "_", "have money."] },
+    { intro: "They want to learn", sentence: ["They", "want", "_", "learn."] },
+    { intro: "She goes to the university", sentence: ["She", "goes", "_", "the university."] },
+    { intro: "I run to be fast", sentence: ["I", "run", "_", "be fast."] },
+    { intro: "You need to work", sentence: ["You", "need", "_", "work."] },
+    { intro: "We go to the restaurant", sentence: ["We", "go", "_", "the restaurant."] },
+    { intro: "I study to pass the exam", sentence: ["I", "study", "_", "pass the exam."] },
+    { intro: "He goes to the office", sentence: ["He", "goes", "_", "the office."] },
+    { intro: "I want to go to play", sentence: ["I", "want", "_", "go", "_", "play."] },
+    { intro: "They practice to win", sentence: ["They", "practice", "_", "win."] },
+    { intro: "She eats well to be healthy", sentence: ["She", "eats well", "_", "be healthy."] },
+    { intro: "You try to eat", sentence: ["You", "try", "_", "eat."] },
+    { intro: "He goes to the park", sentence: ["He", "goes", "_", "the park."] },
+    { intro: "She starts to study", sentence: ["She", "starts", "_", "study."] },
+  ];
+
   // Paso 1: Escuchar frase en inglés (audio)
   const [listenCount, setListenCount] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);

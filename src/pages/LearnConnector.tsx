@@ -32,6 +32,7 @@ const LearnConnector = () => {
   const [showToExercise, setShowToExercise] = useState(false);
   const [toExerciseIndex, setToExerciseIndex] = useState(0);
   const [toSelectedAnswers, setToSelectedAnswers] = useState<string[]>([]);
+  const [toVerified, setToVerified] = useState(false);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
@@ -738,11 +739,14 @@ const LearnConnector = () => {
                     <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
                       {(() => {
                         let blankIdx = -1;
+                        const correct = TO_EXERCISES[toExerciseIndex].answer;
                         return TO_EXERCISES[toExerciseIndex].sentence.map((part, i) => {
                           if (part === "_") {
                             blankIdx++;
                             const filled = toSelectedAnswers[blankIdx];
                             const idx = blankIdx;
+                            const isCorrect = toVerified && filled === correct[idx];
+                            const isWrong = toVerified && filled && filled !== correct[idx];
                             return (
                               <button
                                 key={i}
@@ -752,11 +756,16 @@ const LearnConnector = () => {
                                     const next = [...toSelectedAnswers];
                                     next.splice(idx, 1);
                                     setToSelectedAnswers(next);
+                                    setToVerified(false);
                                   }
                                 }}
                                 className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
-                                  filled
-                                    ? "text-blue-400 border-blue-400"
+                                  isCorrect
+                                    ? "text-green-400 border-green-400"
+                                    : isWrong
+                                    ? "text-red-400 border-red-400"
+                                    : filled
+                                    ? "text-foreground border-foreground"
                                     : "border-muted-foreground"
                                 }`}
                               >
@@ -780,6 +789,7 @@ const LearnConnector = () => {
                           onClick={() => {
                             if (!isFull) {
                               setToSelectedAnswers([...toSelectedAnswers, opt]);
+                              setToVerified(false);
                             }
                           }}
                           disabled={isFull}
@@ -797,6 +807,7 @@ const LearnConnector = () => {
                       const isCorrect =
                         toSelectedAnswers.length === correct.length &&
                         correct.every((c, i) => toSelectedAnswers[i] === c);
+                      setToVerified(true);
                       if (isCorrect) {
                         playSuccessSound();
                         toast({
@@ -809,6 +820,7 @@ const LearnConnector = () => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
                             setToExerciseIndex(toExerciseIndex + 1);
                             setToSelectedAnswers([]);
+                            setToVerified(false);
                           } else {
                             // Terminó los ejercicios → continuar al flujo normal
                             setShowToExercise(false);

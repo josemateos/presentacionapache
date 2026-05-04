@@ -782,18 +782,21 @@ const LearnConnector = () => {
                   <div className="grid grid-cols-3 gap-3">
                     {["a", "al", "para"].map((opt) => {
                       const totalBlanks = TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length;
-                      const isFull = toSelectedAnswers.length >= totalBlanks;
                       return (
                         <button
                           key={opt}
                           onClick={() => {
-                            if (!isFull) {
+                            if (toSelectedAnswers.length < totalBlanks) {
                               setToSelectedAnswers([...toSelectedAnswers, opt]);
-                              setToVerified(false);
+                            } else {
+                              // Reemplazar el último blank seleccionado
+                              const next = [...toSelectedAnswers];
+                              next[next.length - 1] = opt;
+                              setToSelectedAnswers(next);
                             }
+                            setToVerified(false);
                           }}
-                          disabled={isFull}
-                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-primary hover:bg-primary/80 text-primary-foreground border-primary disabled:opacity-50`}
+                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-primary hover:bg-primary/80 text-primary-foreground border-primary`}
                         >
                           {opt}
                         </button>

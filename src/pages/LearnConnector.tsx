@@ -36,12 +36,22 @@ const LearnConnector = () => {
   const [isStepComplete, setIsStepComplete] = useState(false);
 
   // Ejercicios específicos para el conector "To"
-  const TO_EXERCISES = [
-    { intro: "Yo juego", sentence: ["Yo", "_", "jugar."], answer: "a" },
-    { intro: "Ella trabaja", sentence: ["Ella", "_", "trabajar."], answer: "a" },
-    { intro: "Nosotros aprendemos", sentence: ["Nosotros", "_", "aprender."], answer: "a" },
-    { intro: "Quiero ir", sentence: ["Yo", "querer", "_", "ir."], answer: "a" },
-    { intro: "Necesito comer", sentence: ["Yo", "necesitar", "_", "comer."], answer: "a" },
+  const TO_EXERCISES: { intro: string; sentence: string[]; answer: string[] }[] = [
+    { intro: "Voy al gimnasio", sentence: ["Yo", "ir", "_", "el gimnasio."], answer: ["al"] },
+    { intro: "Trabajo para tener dinero", sentence: ["Yo", "trabajar", "_", "tener dinero."], answer: ["para"] },
+    { intro: "Ellos quieren aprender", sentence: ["Ellos", "querer", "_", "aprender."], answer: ["a"] },
+    { intro: "Ella va a la universidad", sentence: ["Ella", "ir", "_", "la universidad."], answer: ["a"] },
+    { intro: "Corro para ser rápido", sentence: ["Yo", "correr", "_", "ser rápido."], answer: ["para"] },
+    { intro: "Necesitas trabajar", sentence: ["Tú", "necesitar", "_", "trabajar."], answer: ["a"] },
+    { intro: "Vamos al restaurante", sentence: ["Nosotros", "ir", "_", "el restaurante."], answer: ["al"] },
+    { intro: "Estudio para pasar el examen", sentence: ["Yo", "estudiar", "_", "pasar el examen."], answer: ["para"] },
+    { intro: "Él va a la oficina", sentence: ["Él", "ir", "_", "la oficina."], answer: ["a"] },
+    { intro: "Quiero ir a jugar", sentence: ["Yo", "querer", "_", "ir", "_", "jugar."], answer: ["a", "a"] },
+    { intro: "Ellos practican para ganar", sentence: ["Ellos", "practicar", "_", "ganar."], answer: ["para"] },
+    { intro: "Ella se alimenta bien para estar sana", sentence: ["Ella", "alimentarse bien", "_", "estar sana."], answer: ["para"] },
+    { intro: "Intentas comer", sentence: ["Tú", "intentar", "_", "comer."], answer: ["a"] },
+    { intro: "Él va al parque", sentence: ["Él", "ir", "_", "el parque."], answer: ["al"] },
+    { intro: "Ella empieza a estudiar", sentence: ["Ella", "empezar", "_", "estudiar."], answer: ["a"] },
   ];
 
   // Paso 1: Escuchar frase en inglés (audio)

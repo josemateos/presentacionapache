@@ -859,7 +859,7 @@ const LearnConnector = () => {
                           title: "¡Correcto!",
                           description: "Excelente, sigue así",
                           className: "bg-green-500/90 border-green-500 text-white",
-                          duration: 2000,
+                          duration: 1500,
                         });
                         setTimeout(() => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {

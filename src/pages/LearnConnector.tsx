@@ -546,7 +546,7 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (toExerciseIndex > 0) {
                     setToExerciseIndex(toExerciseIndex - 1);
-                    setToSelectedAnswer(null);
+                    setToSelectedAnswers([]);
                   }
                 }}
                 disabled={toExerciseIndex === 0}

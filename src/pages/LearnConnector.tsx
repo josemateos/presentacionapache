@@ -516,23 +516,34 @@ const LearnConnector = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => navigate(backRoute)}
+                className="hover:bg-primary/10"
+                title="Volver"
+              >
+                <List className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Lista</span>
+              </Button>
+
+              <Badge variant="secondary" className="text-sm">
+                Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+              </Badge>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-primary/10"
+                title="Ejercicio anterior"
                 onClick={() => {
                   if (toExerciseIndex > 0) {
                     setToExerciseIndex(toExerciseIndex - 1);
                     setToSelectedAnswer(null);
-                  } else {
-                    setShowToExercise(false);
-                    setShowIntro(true);
                   }
                 }}
-                className="hover:bg-primary/10"
+                disabled={toExerciseIndex === 0}
               >
-                <ArrowLeft className="w-4 h-4" />
+                <Undo2 className="w-4 h-4" />
+                <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
               </Button>
-              <h1 className="text-lg md:text-xl font-bold text-foreground">
-                {isCausaEfecto ? connector.english : connector.spanish}
-              </h1>
-              <div className="w-10" />
             </div>
           ) : (
             <>

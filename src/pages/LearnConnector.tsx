@@ -620,12 +620,12 @@ const LearnConnector = () => {
                   <p className="text-base text-foreground/90 leading-relaxed">
                     Yo alimentarme bien <span className="text-blue-400 font-bold">para</span> estar sano.
                     <br />
-                    I eat well <span className="text-blue-400 font-bold">to</span> stay healthy.
+                    = I eat well <span className="text-blue-400 font-bold">to</span> stay healthy.
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     Yo estudiar <span className="text-blue-400 font-bold">para</span> pasar el examen.
                     <br />
-                    I study <span className="text-blue-400 font-bold">to</span> pass the exam.
+                    = I study <span className="text-blue-400 font-bold">to</span> pass the exam.
                   </p>
                 </CardContent>
               </Card>

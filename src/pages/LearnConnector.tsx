@@ -542,9 +542,25 @@ const LearnConnector = () => {
                   </div>
                 )}
                 {showToExercise && (
-                  <span className="text-sm font-normal text-muted-foreground">
-                    {toExerciseIndex + 1} de {TO_EXERCISES.length}
-                  </span>
+                  <div className="text-right flex flex-col items-end">
+                    <span className="text-sm font-normal text-muted-foreground">
+                      Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        if (toExerciseIndex > 0) {
+                          setToExerciseIndex(toExerciseIndex - 1);
+                          setToSelectedAnswer(null);
+                        }
+                      }}
+                      disabled={toExerciseIndex === 0}
+                      className="h-8 w-8 hover:bg-primary/10"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
@@ -556,6 +572,18 @@ const LearnConnector = () => {
                   key={step}
                   className={`flex-1 h-2 rounded-full transition-colors ${
                     step <= currentStep ? 'bg-primary' : 'bg-muted'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+          {showToExercise && (
+            <div className="flex gap-1">
+              {TO_EXERCISES.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`flex-1 h-2 rounded-full transition-colors ${
+                    idx <= toExerciseIndex ? 'bg-primary' : 'bg-muted'
                   }`}
                 />
               ))}

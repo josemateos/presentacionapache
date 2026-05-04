@@ -736,45 +736,68 @@ const LearnConnector = () => {
                       {toExerciseIndex + 1}. {TO_EXERCISES[toExerciseIndex].intro}
                     </p>
                     <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
-                      {TO_EXERCISES[toExerciseIndex].sentence.map((part, i) =>
-                        part === "_" ? (
-                          <span
-                            key={i}
-                            className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
-                              toSelectedAnswer
-                                ? "text-blue-400 border-blue-400"
-                                : "border-muted-foreground"
-                            }`}
-                          >
-                            {toSelectedAnswer || "____"}
-                          </span>
-                        ) : (
-                          <span key={i}>{part}</span>
-                        )
-                      )}
+                      {(() => {
+                        let blankIdx = -1;
+                        return TO_EXERCISES[toExerciseIndex].sentence.map((part, i) => {
+                          if (part === "_") {
+                            blankIdx++;
+                            const filled = toSelectedAnswers[blankIdx];
+                            const idx = blankIdx;
+                            return (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => {
+                                  if (filled) {
+                                    const next = [...toSelectedAnswers];
+                                    next.splice(idx, 1);
+                                    setToSelectedAnswers(next);
+                                  }
+                                }}
+                                className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
+                                  filled
+                                    ? "text-blue-400 border-blue-400"
+                                    : "border-muted-foreground"
+                                }`}
+                              >
+                                {filled || "____"}
+                              </button>
+                            );
+                          }
+                          return <span key={i}>{part}</span>;
+                        });
+                      })()}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    {["a", "al", "para"].map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() => setToSelectedAnswer(opt)}
-                        className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border ${
-                          toSelectedAnswer === opt
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-secondary hover:bg-secondary/80 text-foreground border-border"
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
+                    {["a", "al", "para"].map((opt) => {
+                      const totalBlanks = TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length;
+                      const isFull = toSelectedAnswers.length >= totalBlanks;
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => {
+                            if (!isFull) {
+                              setToSelectedAnswers([...toSelectedAnswers, opt]);
+                            }
+                          }}
+                          disabled={isFull}
+                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-secondary hover:bg-secondary/80 text-foreground border-border disabled:opacity-50`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   <Button
                     onClick={() => {
                       const correct = TO_EXERCISES[toExerciseIndex].answer;
-                      if (toSelectedAnswer === correct) {
+                      const isCorrect =
+                        toSelectedAnswers.length === correct.length &&
+                        correct.every((c, i) => toSelectedAnswers[i] === c);
+                      if (isCorrect) {
                         playSuccessSound();
                         toast({
                           title: "¡Correcto!",
@@ -785,7 +808,7 @@ const LearnConnector = () => {
                         setTimeout(() => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
                             setToExerciseIndex(toExerciseIndex + 1);
-                            setToSelectedAnswer("");
+                            setToSelectedAnswers([]);
                           } else {
                             // Terminó los ejercicios → continuar al flujo normal
                             setShowToExercise(false);
@@ -800,7 +823,7 @@ const LearnConnector = () => {
                         });
                       }
                     }}
-                    disabled={!toSelectedAnswer}
+                    disabled={toSelectedAnswers.length !== TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-5"
                   >
                     Verificar

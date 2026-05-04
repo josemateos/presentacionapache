@@ -546,7 +546,7 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          {showToExercise ? (
+          {showToExercise || showToEnglishExercise ? (
             <div className="flex justify-between items-center max-w-4xl mx-auto">
               <Button
                 variant="ghost"
@@ -560,7 +560,9 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                {showToEnglishExercise
+                  ? `English ${toEnExerciseIndex + 1} de ${TO_EN_EXERCISES.length}`
+                  : `Ejercicio ${toExerciseIndex + 1} de ${TO_EXERCISES.length}`}
               </Badge>
 
               <Button
@@ -569,12 +571,28 @@ const LearnConnector = () => {
                 className="hover:bg-primary/10"
                 title="Ejercicio anterior"
                 onClick={() => {
-                  if (toExerciseIndex > 0) {
-                    setToExerciseIndex(toExerciseIndex - 1);
-                    setToSelectedAnswers([]);
+                  if (showToEnglishExercise) {
+                    if (toEnExerciseIndex > 0) {
+                      setToEnExerciseIndex(toEnExerciseIndex - 1);
+                      setToEnTypedAnswers([]);
+                      setToEnVerified(false);
+                    } else {
+                      // Volver al último ejercicio en español
+                      setShowToEnglishExercise(false);
+                      setShowToExercise(true);
+                      setToExerciseIndex(TO_EXERCISES.length - 1);
+                      setToSelectedAnswers([]);
+                      setToVerified(false);
+                    }
+                  } else {
+                    if (toExerciseIndex > 0) {
+                      setToExerciseIndex(toExerciseIndex - 1);
+                      setToSelectedAnswers([]);
+                      setToVerified(false);
+                    }
                   }
                 }}
-                disabled={toExerciseIndex === 0}
+                disabled={!showToEnglishExercise && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>

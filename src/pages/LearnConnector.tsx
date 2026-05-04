@@ -759,13 +759,13 @@ const LearnConnector = () => {
                                     setToVerified(false);
                                   }
                                 }}
-                                className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
+                                className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 font-bold ${
                                   isCorrect
                                     ? "text-green-400 border-green-400"
                                     : isWrong
                                     ? "text-red-400 border-red-400"
                                     : filled
-                                    ? "text-foreground border-foreground"
+                                    ? "text-yellow-400 border-yellow-400"
                                     : "border-muted-foreground"
                                 }`}
                               >

@@ -700,7 +700,7 @@ const LearnConnector = () => {
                   setShowIntro(false);
                   setShowToExercise(true);
                   setToExerciseIndex(0);
-                  setToSelectedAnswer("");
+                  setToSelectedAnswers([]);
                 }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
               >

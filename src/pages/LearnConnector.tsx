@@ -32,6 +32,7 @@ const LearnConnector = () => {
   const [showToExercise, setShowToExercise] = useState(false);
   const [toExerciseIndex, setToExerciseIndex] = useState(0);
   const [toSelectedAnswers, setToSelectedAnswers] = useState<string[]>([]);
+  const [toVerified, setToVerified] = useState(false);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 

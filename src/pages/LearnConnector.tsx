@@ -836,7 +836,11 @@ const LearnConnector = () => {
                       }
                     }}
                     disabled={toSelectedAnswers.length !== TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-5"
+                    className={`w-full font-semibold py-5 text-white ${
+                      toSelectedAnswers.length === TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length
+                        ? "bg-pink-500 hover:bg-pink-600"
+                        : "bg-primary hover:bg-primary/90"
+                    }`}
                   >
                     Verificar
                   </Button>

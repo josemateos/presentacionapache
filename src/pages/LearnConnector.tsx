@@ -525,20 +525,22 @@ const LearnConnector = () => {
                 <h1 className="text-lg md:text-xl font-bold text-foreground">
                   {isCausaEfecto ? connector.english : connector.spanish}
                 </h1>
-                <div className="text-right flex flex-col items-end">
-                  <span className="text-sm font-normal text-muted-foreground">
-                    {currentStep - 1} de 4
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                onClick={handlePreviousStep}
-                disabled={currentStep === 2}
-                    className="h-8 w-8 hover:bg-primary/10"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                </div>
+                {!showIntro && !showToExercise && (
+                  <div className="text-right flex flex-col items-end">
+                    <span className="text-sm font-normal text-muted-foreground">
+                      {currentStep - 1} de 4
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handlePreviousStep}
+                      disabled={currentStep === 2}
+                      className="h-8 w-8 hover:bg-primary/10"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

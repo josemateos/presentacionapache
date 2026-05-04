@@ -924,11 +924,11 @@ const LearnConnector = () => {
                 <Card className="bg-card border-border shadow-md">
                   <CardContent className="p-6 space-y-6">
                     <h2 className="text-lg font-bold text-foreground">
-                      Complete the sentence by typing the correct word:
+                      Completa la frase escribiendo la palabra correcta:
                     </h2>
 
                     <div className="text-center space-y-4">
-                      <p className="text-base text-muted-foreground">
+                      <p className="text-base text-yellow-400">
                         {toEnExerciseIndex + 1}. {ex.intro}
                       </p>
                       <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">

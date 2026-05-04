@@ -31,17 +31,27 @@ const LearnConnector = () => {
   const [showIntro, setShowIntro] = useState(isToConnector);
   const [showToExercise, setShowToExercise] = useState(false);
   const [toExerciseIndex, setToExerciseIndex] = useState(0);
-  const [toSelectedAnswer, setToSelectedAnswer] = useState<string>("");
+  const [toSelectedAnswers, setToSelectedAnswers] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
   // Ejercicios específicos para el conector "To"
-  const TO_EXERCISES = [
-    { intro: "Yo juego", sentence: ["Yo", "_", "jugar."], answer: "a" },
-    { intro: "Ella trabaja", sentence: ["Ella", "_", "trabajar."], answer: "a" },
-    { intro: "Nosotros aprendemos", sentence: ["Nosotros", "_", "aprender."], answer: "a" },
-    { intro: "Quiero ir", sentence: ["Yo", "querer", "_", "ir."], answer: "a" },
-    { intro: "Necesito comer", sentence: ["Yo", "necesitar", "_", "comer."], answer: "a" },
+  const TO_EXERCISES: { intro: string; sentence: string[]; answer: string[] }[] = [
+    { intro: "Voy al gimnasio", sentence: ["Yo", "ir", "_", "el gimnasio."], answer: ["al"] },
+    { intro: "Trabajo para tener dinero", sentence: ["Yo", "trabajar", "_", "tener dinero."], answer: ["para"] },
+    { intro: "Ellos quieren aprender", sentence: ["Ellos", "querer", "_", "aprender."], answer: ["a"] },
+    { intro: "Ella va a la universidad", sentence: ["Ella", "ir", "_", "la universidad."], answer: ["a"] },
+    { intro: "Corro para ser rápido", sentence: ["Yo", "correr", "_", "ser rápido."], answer: ["para"] },
+    { intro: "Necesitas trabajar", sentence: ["Tú", "necesitar", "_", "trabajar."], answer: ["a"] },
+    { intro: "Vamos al restaurante", sentence: ["Nosotros", "ir", "_", "el restaurante."], answer: ["al"] },
+    { intro: "Estudio para pasar el examen", sentence: ["Yo", "estudiar", "_", "pasar el examen."], answer: ["para"] },
+    { intro: "Él va a la oficina", sentence: ["Él", "ir", "_", "la oficina."], answer: ["a"] },
+    { intro: "Quiero ir a jugar", sentence: ["Yo", "querer", "_", "ir", "_", "jugar."], answer: ["a", "a"] },
+    { intro: "Ellos practican para ganar", sentence: ["Ellos", "practicar", "_", "ganar."], answer: ["para"] },
+    { intro: "Ella se alimenta bien para estar sana", sentence: ["Ella", "alimentarse bien", "_", "estar sana."], answer: ["para"] },
+    { intro: "Intentas comer", sentence: ["Tú", "intentar", "_", "comer."], answer: ["a"] },
+    { intro: "Él va al parque", sentence: ["Él", "ir", "_", "el parque."], answer: ["al"] },
+    { intro: "Ella empieza a estudiar", sentence: ["Ella", "empezar", "_", "estudiar."], answer: ["a"] },
   ];
 
   // Paso 1: Escuchar frase en inglés (audio)
@@ -536,7 +546,7 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (toExerciseIndex > 0) {
                     setToExerciseIndex(toExerciseIndex - 1);
-                    setToSelectedAnswer(null);
+                    setToSelectedAnswers([]);
                   }
                 }}
                 disabled={toExerciseIndex === 0}
@@ -690,7 +700,7 @@ const LearnConnector = () => {
                   setShowIntro(false);
                   setShowToExercise(true);
                   setToExerciseIndex(0);
-                  setToSelectedAnswer("");
+                  setToSelectedAnswers([]);
                 }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
               >
@@ -726,45 +736,68 @@ const LearnConnector = () => {
                       {toExerciseIndex + 1}. {TO_EXERCISES[toExerciseIndex].intro}
                     </p>
                     <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
-                      {TO_EXERCISES[toExerciseIndex].sentence.map((part, i) =>
-                        part === "_" ? (
-                          <span
-                            key={i}
-                            className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
-                              toSelectedAnswer
-                                ? "text-blue-400 border-blue-400"
-                                : "border-muted-foreground"
-                            }`}
-                          >
-                            {toSelectedAnswer || "____"}
-                          </span>
-                        ) : (
-                          <span key={i}>{part}</span>
-                        )
-                      )}
+                      {(() => {
+                        let blankIdx = -1;
+                        return TO_EXERCISES[toExerciseIndex].sentence.map((part, i) => {
+                          if (part === "_") {
+                            blankIdx++;
+                            const filled = toSelectedAnswers[blankIdx];
+                            const idx = blankIdx;
+                            return (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => {
+                                  if (filled) {
+                                    const next = [...toSelectedAnswers];
+                                    next.splice(idx, 1);
+                                    setToSelectedAnswers(next);
+                                  }
+                                }}
+                                className={`inline-block min-w-[80px] px-3 py-1 rounded border-b-2 ${
+                                  filled
+                                    ? "text-blue-400 border-blue-400"
+                                    : "border-muted-foreground"
+                                }`}
+                              >
+                                {filled || "____"}
+                              </button>
+                            );
+                          }
+                          return <span key={i}>{part}</span>;
+                        });
+                      })()}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    {["a", "al", "para"].map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() => setToSelectedAnswer(opt)}
-                        className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border ${
-                          toSelectedAnswer === opt
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-secondary hover:bg-secondary/80 text-foreground border-border"
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
+                    {["a", "al", "para"].map((opt) => {
+                      const totalBlanks = TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length;
+                      const isFull = toSelectedAnswers.length >= totalBlanks;
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => {
+                            if (!isFull) {
+                              setToSelectedAnswers([...toSelectedAnswers, opt]);
+                            }
+                          }}
+                          disabled={isFull}
+                          className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border bg-secondary hover:bg-secondary/80 text-foreground border-border disabled:opacity-50`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   <Button
                     onClick={() => {
                       const correct = TO_EXERCISES[toExerciseIndex].answer;
-                      if (toSelectedAnswer === correct) {
+                      const isCorrect =
+                        toSelectedAnswers.length === correct.length &&
+                        correct.every((c, i) => toSelectedAnswers[i] === c);
+                      if (isCorrect) {
                         playSuccessSound();
                         toast({
                           title: "¡Correcto!",
@@ -775,7 +808,7 @@ const LearnConnector = () => {
                         setTimeout(() => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
                             setToExerciseIndex(toExerciseIndex + 1);
-                            setToSelectedAnswer("");
+                            setToSelectedAnswers([]);
                           } else {
                             // Terminó los ejercicios → continuar al flujo normal
                             setShowToExercise(false);
@@ -790,7 +823,7 @@ const LearnConnector = () => {
                         });
                       }
                     }}
-                    disabled={!toSelectedAnswer}
+                    disabled={toSelectedAnswers.length !== TO_EXERCISES[toExerciseIndex].sentence.filter(p => p === "_").length}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-5"
                   >
                     Verificar

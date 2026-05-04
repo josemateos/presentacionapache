@@ -807,6 +807,7 @@ const LearnConnector = () => {
                       const isCorrect =
                         toSelectedAnswers.length === correct.length &&
                         correct.every((c, i) => toSelectedAnswers[i] === c);
+                      setToVerified(true);
                       if (isCorrect) {
                         playSuccessSound();
                         toast({
@@ -819,6 +820,7 @@ const LearnConnector = () => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
                             setToExerciseIndex(toExerciseIndex + 1);
                             setToSelectedAnswers([]);
+                            setToVerified(false);
                           } else {
                             // Terminó los ejercicios → continuar al flujo normal
                             setShowToExercise(false);

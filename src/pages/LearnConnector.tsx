@@ -26,10 +26,22 @@ const LearnConnector = () => {
     : "/auxiliaries/conectores-ing";
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
-  const isToIntro = isCausaEfecto && (location.state?.connector?.english?.toLowerCase?.() === "to");
-  const [showIntro, setShowIntro] = useState(isToIntro);
+  const isToConnector = isCausaEfecto && (location.state?.connector?.english?.toLowerCase?.() === "to");
+  const [showIntro, setShowIntro] = useState(isToConnector);
+  const [showToExercise, setShowToExercise] = useState(false);
+  const [toExerciseIndex, setToExerciseIndex] = useState(0);
+  const [toSelectedAnswer, setToSelectedAnswer] = useState<string>("");
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
+
+  // Ejercicios específicos para el conector "To"
+  const TO_EXERCISES = [
+    { intro: "Yo juego", sentence: ["Yo", "_", "jugar."], answer: "a" },
+    { intro: "Ella trabaja", sentence: ["Ella", "_", "trabajar."], answer: "a" },
+    { intro: "Nosotros aprendemos", sentence: ["Nosotros", "_", "aprender."], answer: "a" },
+    { intro: "Quiero ir", sentence: ["Yo", "querer", "_", "ir."], answer: "a" },
+    { intro: "Necesito comer", sentence: ["Yo", "necesitar", "_", "comer."], answer: "a" },
+  ];
 
   // Paso 1: Escuchar frase en inglés (audio)
   const [listenCount, setListenCount] = useState(0);

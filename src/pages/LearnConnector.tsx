@@ -696,6 +696,25 @@ const LearnConnector = () => {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-4"
             >
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-base font-semibold text-primary">
+                    Progreso del Ejercicio
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                  </p>
+                </div>
+                <div className="flex gap-1">
+                  {TO_EXERCISES.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex-1 h-2 rounded-full ${idx <= toExerciseIndex ? "bg-primary" : "bg-muted"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
                   <h2 className="text-lg font-bold text-foreground">

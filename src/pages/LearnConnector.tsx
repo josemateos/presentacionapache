@@ -33,6 +33,11 @@ const LearnConnector = () => {
   const [toExerciseIndex, setToExerciseIndex] = useState(0);
   const [toSelectedAnswers, setToSelectedAnswers] = useState<string[]>([]);
   const [toVerified, setToVerified] = useState(false);
+  const [showToEnglishExercise, setShowToEnglishExercise] = useState(false);
+  const [toEnExerciseIndex, setToEnExerciseIndex] = useState(0);
+  const [toEnTypedAnswers, setToEnTypedAnswers] = useState<string[]>([]);
+  const [toEnVerified, setToEnVerified] = useState(false);
+  const [toEnRandomOrder, setToEnRandomOrder] = useState<number[]>([]);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
 
@@ -53,6 +58,25 @@ const LearnConnector = () => {
     { intro: "Intentas comer", sentence: ["Tú", "intentar", "_", "comer."], answer: ["a"] },
     { intro: "Él va al parque", sentence: ["Él", "ir", "_", "parque."], answer: ["al"] },
     { intro: "Ella empieza a estudiar", sentence: ["Ella", "empezar", "_", "estudiar."], answer: ["a"] },
+  ];
+
+  // Mismas frases en inglés — la respuesta siempre es "to"
+  const TO_EN_EXERCISES: { intro: string; sentence: string[] }[] = [
+    { intro: "I go to the gym", sentence: ["I", "go", "_", "the gym."] },
+    { intro: "I work to have money", sentence: ["I", "work", "_", "have money."] },
+    { intro: "They want to learn", sentence: ["They", "want", "_", "learn."] },
+    { intro: "She goes to the university", sentence: ["She", "goes", "_", "the university."] },
+    { intro: "I run to be fast", sentence: ["I", "run", "_", "be fast."] },
+    { intro: "You need to work", sentence: ["You", "need", "_", "work."] },
+    { intro: "We go to the restaurant", sentence: ["We", "go", "_", "the restaurant."] },
+    { intro: "I study to pass the exam", sentence: ["I", "study", "_", "pass the exam."] },
+    { intro: "He goes to the office", sentence: ["He", "goes", "_", "the office."] },
+    { intro: "I want to go to play", sentence: ["I", "want", "_", "go", "_", "play."] },
+    { intro: "They practice to win", sentence: ["They", "practice", "_", "win."] },
+    { intro: "She eats well to be healthy", sentence: ["She", "eats well", "_", "be healthy."] },
+    { intro: "You try to eat", sentence: ["You", "try", "_", "eat."] },
+    { intro: "He goes to the park", sentence: ["He", "goes", "_", "the park."] },
+    { intro: "She starts to study", sentence: ["She", "starts", "_", "study."] },
   ];
 
   // Paso 1: Escuchar frase en inglés (audio)
@@ -522,7 +546,7 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          {showToExercise ? (
+          {showToExercise || showToEnglishExercise ? (
             <div className="flex justify-between items-center max-w-4xl mx-auto">
               <Button
                 variant="ghost"
@@ -536,7 +560,9 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                Ejercicio {toExerciseIndex + 1} de {TO_EXERCISES.length}
+                {showToEnglishExercise
+                  ? `English ${toEnExerciseIndex + 1} de ${TO_EN_EXERCISES.length}`
+                  : `Ejercicio ${toExerciseIndex + 1} de ${TO_EXERCISES.length}`}
               </Badge>
 
               <Button
@@ -545,12 +571,28 @@ const LearnConnector = () => {
                 className="hover:bg-primary/10"
                 title="Ejercicio anterior"
                 onClick={() => {
-                  if (toExerciseIndex > 0) {
-                    setToExerciseIndex(toExerciseIndex - 1);
-                    setToSelectedAnswers([]);
+                  if (showToEnglishExercise) {
+                    if (toEnExerciseIndex > 0) {
+                      setToEnExerciseIndex(toEnExerciseIndex - 1);
+                      setToEnTypedAnswers([]);
+                      setToEnVerified(false);
+                    } else {
+                      // Volver al último ejercicio en español
+                      setShowToEnglishExercise(false);
+                      setShowToExercise(true);
+                      setToExerciseIndex(TO_EXERCISES.length - 1);
+                      setToSelectedAnswers([]);
+                      setToVerified(false);
+                    }
+                  } else {
+                    if (toExerciseIndex > 0) {
+                      setToExerciseIndex(toExerciseIndex - 1);
+                      setToSelectedAnswers([]);
+                      setToVerified(false);
+                    }
                   }
                 }}
-                disabled={toExerciseIndex === 0}
+                disabled={!showToEnglishExercise && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
@@ -825,8 +867,14 @@ const LearnConnector = () => {
                             setToSelectedAnswers([]);
                             setToVerified(false);
                           } else {
-                            // Terminó los ejercicios → continuar al flujo normal
+                            // Pasar a los ejercicios en inglés con orden aleatorio
+                            const order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                            setToEnRandomOrder(order);
+                            setToEnExerciseIndex(0);
+                            setToEnTypedAnswers([]);
+                            setToEnVerified(false);
                             setShowToExercise(false);
+                            setShowToEnglishExercise(true);
                           }
                         }, 2000);
                       } else {
@@ -852,10 +900,129 @@ const LearnConnector = () => {
             </motion.div>
           )}
 
+          {/* Ejercicio en INGLÉS para "To" — escribe la respuesta */}
+          {showToEnglishExercise && (() => {
+            const realIdx = toEnRandomOrder[toEnExerciseIndex] ?? toEnExerciseIndex;
+            const ex = TO_EN_EXERCISES[realIdx];
+            const totalBlanks = ex.sentence.filter(p => p === "_").length;
+            const allFilled = toEnTypedAnswers.filter(a => (a || "").trim().length > 0).length === totalBlanks;
+            return (
+              <motion.div
+                key="to-en-exercise"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-4"
+              >
+                <div className="mb-2">
+                  <Progress value={((toEnExerciseIndex + 1) / TO_EN_EXERCISES.length) * 100} className="h-3 mb-2" />
+                  <p className="text-sm text-muted-foreground text-center">
+                    {toEnExerciseIndex + 1} de {TO_EN_EXERCISES.length} ejercicios (English)
+                  </p>
+                </div>
+
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-6 space-y-6">
+                    <h2 className="text-lg font-bold text-foreground">
+                      Complete the sentence by typing the correct word:
+                    </h2>
+
+                    <div className="text-center space-y-4">
+                      <p className="text-base text-muted-foreground">
+                        {toEnExerciseIndex + 1}. {ex.intro}
+                      </p>
+                      <p className="text-2xl font-bold text-foreground flex flex-wrap justify-center items-center gap-2">
+                        {(() => {
+                          let blankIdx = -1;
+                          return ex.sentence.map((part, i) => {
+                            if (part === "_") {
+                              blankIdx++;
+                              const idx = blankIdx;
+                              const value = toEnTypedAnswers[idx] || "";
+                              const isCorrect = toEnVerified && value.trim().toLowerCase() === "to";
+                              const isWrong = toEnVerified && value.trim().toLowerCase() !== "to";
+                              return (
+                                <input
+                                  key={i}
+                                  type="text"
+                                  value={value}
+                                  onChange={(e) => {
+                                    const next = [...toEnTypedAnswers];
+                                    next[idx] = e.target.value;
+                                    setToEnTypedAnswers(next);
+                                    setToEnVerified(false);
+                                  }}
+                                  className={`inline-block w-24 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
+                                    isCorrect
+                                      ? "text-green-400 border-green-400"
+                                      : isWrong
+                                      ? "text-red-400 border-red-400"
+                                      : value
+                                      ? "text-yellow-400 border-yellow-400"
+                                      : "text-foreground border-muted-foreground"
+                                  }`}
+                                  placeholder="____"
+                                  autoCapitalize="none"
+                                  autoCorrect="off"
+                                />
+                              );
+                            }
+                            return <span key={i}>{part}</span>;
+                          });
+                        })()}
+                      </p>
+                    </div>
+
+                    <Button
+                      onClick={() => {
+                        const isCorrect =
+                          toEnTypedAnswers.length === totalBlanks &&
+                          toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
+                        setToEnVerified(true);
+                        if (isCorrect) {
+                          playSuccessSound();
+                          toast({
+                            title: "¡Correcto!",
+                            description: "Excelente, sigue así",
+                            className: "bg-green-500/90 border-green-500 text-white",
+                            duration: 2000,
+                          });
+                          setTimeout(() => {
+                            if (toEnExerciseIndex < TO_EN_EXERCISES.length - 1) {
+                              setToEnExerciseIndex(toEnExerciseIndex + 1);
+                              setToEnTypedAnswers([]);
+                              setToEnVerified(false);
+                            } else {
+                              // Terminó → continuar al flujo normal (paso 2)
+                              setShowToEnglishExercise(false);
+                            }
+                          }, 2000);
+                        } else {
+                          toast({
+                            title: "Incorrecto",
+                            description: "Intenta nuevamente",
+                            variant: "destructive",
+                            duration: 2000,
+                          });
+                        }
+                      }}
+                      disabled={!allFilled}
+                      className={`w-full font-semibold py-5 text-white ${
+                        allFilled ? "bg-pink-500 hover:bg-pink-600" : "bg-primary hover:bg-primary/90"
+                      }`}
+                    >
+                      Verificar
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })()}
+
           {/* Paso 1 (Escuchar frase) eliminado — el flujo comienza en el Paso 2 */}
 
           {/* Paso 2: Ordenar palabras en inglés */}
-          {currentStep === 2 && !showIntro && !showToExercise && (
+          {currentStep === 2 && !showIntro && !showToExercise && !showToEnglishExercise && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}

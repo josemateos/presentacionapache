@@ -876,7 +876,7 @@ const LearnConnector = () => {
                             setShowToExercise(false);
                             setShowToEnglishExercise(true);
                           }
-                        }, 2000);
+                        }, 1500);
                       } else {
                         toast({
                           title: "Incorrecto",

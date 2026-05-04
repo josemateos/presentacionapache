@@ -615,7 +615,7 @@ const LearnConnector = () => {
                 <CardContent className="p-6 space-y-3">
                   <h3 className="text-2xl font-bold text-yellow-400">para</h3>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Se agrega <span className="text-blue-400 font-bold">para</span> para explicar el motivo de la acción, por ejemplo: (Yo alimentarme bien) <span className="text-blue-400 font-bold">para</span> estar sano. = I eat well <span className="text-blue-400 font-bold">to</span> stay healthy. (Yo estudiar) <span className="text-blue-400 font-bold">para</span> pasar el examen. = I study <span className="text-blue-400 font-bold">to</span> pass the exam.
+                    Se agrega "<span className="text-blue-400 font-bold">para</span>" para explicar el motivo de la acción, por ejemplo: Yo alimentarme bien <span className="text-blue-400 font-bold">para</span> estar sano. = I eat well <span className="text-blue-400 font-bold">to</span> stay healthy. Yo estudiar <span className="text-blue-400 font-bold">para</span> pasar el examen. = I study <span className="text-blue-400 font-bold">to</span> pass the exam.
                   </p>
                 </CardContent>
               </Card>

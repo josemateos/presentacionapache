@@ -875,6 +875,7 @@ const LearnConnector = () => {
                         correct.every((c, i) => toSelectedAnswers[i] === c);
                       setToVerified(true);
                       if (isCorrect) {
+                        saveProgressEntry(TO_PROGRESS_KEY, toExerciseIndex, toSelectedAnswers, true);
                         playSuccessSound();
                         toast({
                           title: "¡Correcto!",
@@ -884,16 +885,24 @@ const LearnConnector = () => {
                         });
                         setTimeout(() => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
-                            setToExerciseIndex(toExerciseIndex + 1);
-                            setToSelectedAnswers([]);
-                            setToVerified(false);
+                            const newIdx = toExerciseIndex + 1;
+                            const saved = loadProgressMap(TO_PROGRESS_KEY)[newIdx];
+                            setToExerciseIndex(newIdx);
+                            setToSelectedAnswers(saved?.answers || []);
+                            setToVerified(!!saved?.verified);
                           } else {
-                            // Pasar a los ejercicios en inglés con orden aleatorio
-                            const order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                            // Pasar a los ejercicios en inglés con orden aleatorio (persistente)
+                            let order: number[] = [];
+                            try { order = JSON.parse(localStorage.getItem(TO_EN_ORDER_KEY) || "[]"); } catch {}
+                            if (!Array.isArray(order) || order.length !== TO_EN_EXERCISES.length) {
+                              order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                              try { localStorage.setItem(TO_EN_ORDER_KEY, JSON.stringify(order)); } catch {}
+                            }
                             setToEnRandomOrder(order);
+                            const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[0];
                             setToEnExerciseIndex(0);
-                            setToEnTypedAnswers([]);
-                            setToEnVerified(false);
+                            setToEnTypedAnswers(saved?.answers || []);
+                            setToEnVerified(!!saved?.verified);
                             setShowToExercise(false);
                             setShowToEnglishExercise(true);
                           }

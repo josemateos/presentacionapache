@@ -1010,6 +1010,7 @@ const LearnConnector = () => {
                           toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
                         setToEnVerified(true);
                         if (isCorrect) {
+                          saveProgressEntry(TO_EN_PROGRESS_KEY, toEnExerciseIndex, toEnTypedAnswers, true);
                           playSuccessSound();
                           toast({
                             title: "¡Correcto!",
@@ -1019,9 +1020,11 @@ const LearnConnector = () => {
                           });
                           setTimeout(() => {
                             if (toEnExerciseIndex < TO_EN_EXERCISES.length - 1) {
-                              setToEnExerciseIndex(toEnExerciseIndex + 1);
-                              setToEnTypedAnswers([]);
-                              setToEnVerified(false);
+                              const newIdx = toEnExerciseIndex + 1;
+                              const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[newIdx];
+                              setToEnExerciseIndex(newIdx);
+                              setToEnTypedAnswers(saved?.answers || []);
+                              setToEnVerified(!!saved?.verified);
                             } else {
                               // Terminó → continuar al flujo normal (paso 2)
                               setShowToEnglishExercise(false);

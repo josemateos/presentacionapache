@@ -588,22 +588,28 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (showToEnglishExercise) {
                     if (toEnExerciseIndex > 0) {
-                      setToEnExerciseIndex(toEnExerciseIndex - 1);
-                      setToEnTypedAnswers([]);
-                      setToEnVerified(false);
+                      const newIdx = toEnExerciseIndex - 1;
+                      const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[newIdx];
+                      setToEnExerciseIndex(newIdx);
+                      setToEnTypedAnswers(saved?.answers || []);
+                      setToEnVerified(!!saved?.verified);
                     } else {
                       // Volver al último ejercicio en español
+                      const lastIdx = TO_EXERCISES.length - 1;
+                      const saved = loadProgressMap(TO_PROGRESS_KEY)[lastIdx];
                       setShowToEnglishExercise(false);
                       setShowToExercise(true);
-                      setToExerciseIndex(TO_EXERCISES.length - 1);
-                      setToSelectedAnswers([]);
-                      setToVerified(false);
+                      setToExerciseIndex(lastIdx);
+                      setToSelectedAnswers(saved?.answers || []);
+                      setToVerified(!!saved?.verified);
                     }
                   } else {
                     if (toExerciseIndex > 0) {
-                      setToExerciseIndex(toExerciseIndex - 1);
-                      setToSelectedAnswers([]);
-                      setToVerified(false);
+                      const newIdx = toExerciseIndex - 1;
+                      const saved = loadProgressMap(TO_PROGRESS_KEY)[newIdx];
+                      setToExerciseIndex(newIdx);
+                      setToSelectedAnswers(saved?.answers || []);
+                      setToVerified(!!saved?.verified);
                     }
                   }
                 }}

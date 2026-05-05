@@ -636,7 +636,7 @@ const LearnConnector = () => {
                     <h1 className="text-lg md:text-xl font-bold text-foreground">
                       {isCausaEfecto ? connector.english : connector.spanish}
                     </h1>
-                    {!showIntro && (
+                    {!showIntro && currentStep !== 3 && (
                       <div className="text-right flex flex-col items-end">
                         <span className="text-sm font-normal text-muted-foreground">
                           {currentStep - 1} de 4
@@ -1072,18 +1072,13 @@ const LearnConnector = () => {
             >
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">2</span>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white mb-1">
-                        Forma la frase que escuchaste
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
-                      </p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-1">
+                      Forma la frase que escuchaste
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
+                    </p>
                   </div>
 
                   {/* Área de construcción - ARRIBA con borde punteado */}
@@ -1172,18 +1167,13 @@ const LearnConnector = () => {
             >
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">3</span>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white mb-1">
-                        Elige el significado correcto
-                      </h2>
-                      <p className="text-sm text-muted-foreground">Selecciona la opción correcta</p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-1">
+                      Elige el significado correcto
+                    </h2>
+                    <p className="text-sm text-muted-foreground">Selecciona la opción correcta</p>
                   </div>
-                  <p className="text-center text-2xl font-bold text-foreground">
+                  <p className="text-center text-2xl font-bold text-yellow-400">
                     {connector.spanish}
                   </p>
 
@@ -1196,7 +1186,7 @@ const LearnConnector = () => {
                         className={`px-4 py-3 rounded-lg font-medium transition-all border ${
                           selectedEnglishMeaning === option
                             ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-secondary hover:bg-secondary/80 text-foreground border-border"
+                            : "bg-[#36537a] hover:bg-[#46638a] text-white border-[#36537a]"
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {option}

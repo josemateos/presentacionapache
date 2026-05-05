@@ -636,7 +636,7 @@ const LearnConnector = () => {
                     <h1 className="text-lg md:text-xl font-bold text-foreground">
                       {isCausaEfecto ? connector.english : connector.spanish}
                     </h1>
-                    {!showIntro && (
+                    {!showIntro && currentStep !== 3 && (
                       <div className="text-right flex flex-col items-end">
                         <span className="text-sm font-normal text-muted-foreground">
                           {currentStep - 1} de 4

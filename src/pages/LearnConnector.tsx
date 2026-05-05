@@ -1072,18 +1072,13 @@ const LearnConnector = () => {
             >
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">2</span>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white mb-1">
-                        Forma la frase que escuchaste
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
-                      </p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-1">
+                      Forma la frase que escuchaste
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {isCausaEfecto ? "Ordena las palabras correctamente" : "Conector, verbo+ing"}
+                    </p>
                   </div>
 
                   {/* Área de construcción - ARRIBA con borde punteado */}

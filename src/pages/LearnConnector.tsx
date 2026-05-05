@@ -1176,6 +1176,14 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
+              {isToConnector && (
+                <div className="mb-2">
+                  <Progress value={100} className="h-3 mb-2" />
+                  <p className="text-sm text-muted-foreground text-center">
+                    Ejercicio final
+                  </p>
+                </div>
+              )}
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
                   <div>
@@ -1194,10 +1202,10 @@ const LearnConnector = () => {
                         key={index}
                         onClick={() => setSelectedEnglishMeaning(option)}
                         disabled={isStepComplete}
-                        className={`px-4 py-3 rounded-lg font-medium transition-all border ${
+                        className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border ${
                           selectedEnglishMeaning === option
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-[#36537a] hover:bg-[#46638a] text-white border-[#36537a]"
+                            ? "bg-primary/70 text-primary-foreground border-primary"
+                            : "bg-primary hover:bg-primary/80 text-primary-foreground border-primary"
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {option}
@@ -1208,7 +1216,7 @@ const LearnConnector = () => {
                   <div className="flex gap-3">
                     <Button
                       onClick={handleVerifyEnglishMeaning}
-                      className="w-full bg-primary hover:bg-primary/90 text-white"
+                      className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-5"
                       disabled={!selectedEnglishMeaning}
                     >
                       Verificar

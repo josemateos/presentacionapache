@@ -77,21 +77,21 @@ const LearnConnector = () => {
 
   // Mismas frases en inglés — la respuesta siempre es "to"
   const TO_EN_EXERCISES: { intro: string; sentence: string[] }[] = [
-    { intro: "I go to the gym", sentence: ["I", "go", "_", "the gym."] },
-    { intro: "I work to have money", sentence: ["I", "work", "_", "have money."] },
-    { intro: "They want to learn", sentence: ["They", "want", "_", "learn."] },
-    { intro: "She goes to the university", sentence: ["She", "goes", "_", "the university."] },
-    { intro: "I run to be fast", sentence: ["I", "run", "_", "be fast."] },
-    { intro: "You need to work", sentence: ["You", "need", "_", "work."] },
-    { intro: "We go to the restaurant", sentence: ["We", "go", "_", "the restaurant."] },
-    { intro: "I study to pass the exam", sentence: ["I", "study", "_", "pass the exam."] },
-    { intro: "He goes to the office", sentence: ["He", "goes", "_", "the office."] },
-    { intro: "I want to go to play", sentence: ["I", "want", "_", "go", "_", "play."] },
-    { intro: "They practice to win", sentence: ["They", "practice", "_", "win."] },
-    { intro: "She eats well to be healthy", sentence: ["She", "eats well", "_", "be healthy."] },
-    { intro: "You try to eat", sentence: ["You", "try", "_", "eat."] },
-    { intro: "He goes to the park", sentence: ["He", "goes", "_", "the park."] },
-    { intro: "She starts to study", sentence: ["She", "starts", "_", "study."] },
+    { intro: "Voy al gimnasio.", sentence: ["I", "go", "_", "the gym."] },
+    { intro: "Trabajo para tener dinero.", sentence: ["I", "work", "_", "have money."] },
+    { intro: "Ellos quieren aprender.", sentence: ["They", "want", "_", "learn."] },
+    { intro: "Ella va a la universidad.", sentence: ["She", "goes", "_", "the university."] },
+    { intro: "Corro para ser rápido.", sentence: ["I", "run", "_", "be fast."] },
+    { intro: "Necesitas trabajar.", sentence: ["You", "need", "_", "work."] },
+    { intro: "Vamos al restaurante.", sentence: ["We", "go", "_", "the restaurant."] },
+    { intro: "Estudio para pasar el examen.", sentence: ["I", "study", "_", "pass the exam."] },
+    { intro: "Él va a la oficina.", sentence: ["He", "goes", "_", "the office."] },
+    { intro: "Quiero ir a jugar.", sentence: ["I", "want", "_", "go", "_", "play."] },
+    { intro: "Ellos practican para ganar.", sentence: ["They", "practice", "_", "win."] },
+    { intro: "Ella se alimenta bien para estar sana.", sentence: ["She", "eats well", "_", "be healthy."] },
+    { intro: "Intentas comer.", sentence: ["You", "try", "_", "eat."] },
+    { intro: "Él va al parque.", sentence: ["He", "goes", "_", "the park."] },
+    { intro: "Ella empieza a estudiar.", sentence: ["She", "starts", "_", "study."] },
   ];
 
   // Paso 1: Escuchar frase en inglés (audio)
@@ -576,8 +576,8 @@ const LearnConnector = () => {
 
               <Badge variant="secondary" className="text-sm">
                 {showToEnglishExercise
-                  ? `English ${toEnExerciseIndex + 1} de ${TO_EN_EXERCISES.length}`
-                  : `Ejercicio ${toExerciseIndex + 1} de ${TO_EXERCISES.length}`}
+                  ? `2 de 2 - Ingles perfecto`
+                  : `1 de 2 - Español Apache`}
               </Badge>
 
               <Button

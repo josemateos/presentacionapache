@@ -1028,8 +1028,13 @@ const LearnConnector = () => {
                               setToEnTypedAnswers(saved?.answers || []);
                               setToEnVerified(!!saved?.verified);
                             } else {
-                              // Terminó → continuar al flujo normal (paso 2)
+                              // Terminó la fase en inglés → avanzar al siguiente ejercicio del flujo (Paso 3)
                               setShowToEnglishExercise(false);
+                              setShowToExercise(false);
+                              setShowIntro(false);
+                              setIsStepComplete(false);
+                              setSelectedEnglishMeaning("");
+                              setCurrentStep(3);
                             }
                           }, 1500);
                         } else {

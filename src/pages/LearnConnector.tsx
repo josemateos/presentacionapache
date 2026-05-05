@@ -761,10 +761,12 @@ const LearnConnector = () => {
 
               <Button
                 onClick={() => {
+                  const saved = loadProgressMap(TO_PROGRESS_KEY)[0];
                   setShowIntro(false);
                   setShowToExercise(true);
                   setToExerciseIndex(0);
-                  setToSelectedAnswers([]);
+                  setToSelectedAnswers(saved?.answers || []);
+                  setToVerified(!!saved?.verified);
                 }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
               >

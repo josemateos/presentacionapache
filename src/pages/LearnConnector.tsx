@@ -28,6 +28,21 @@ const LearnConnector = () => {
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
   const isToConnector = isCausaEfecto && (location.state?.connector?.english?.toLowerCase?.() === "to");
+
+  // Claves de progreso persistente para los ejercicios "To"
+  const TO_PROGRESS_KEY = "toExerciseProgress_v1";
+  const TO_EN_PROGRESS_KEY = "toEnExerciseProgress_v1";
+  const TO_EN_ORDER_KEY = "toEnRandomOrder_v1";
+
+  const loadProgressMap = (key: string): Record<number, { answers: string[]; verified: boolean }> => {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch { return {}; }
+  };
+  const saveProgressEntry = (key: string, idx: number, answers: string[], verified: boolean) => {
+    const map = loadProgressMap(key);
+    map[idx] = { answers, verified };
+    try { localStorage.setItem(key, JSON.stringify(map)); } catch {}
+  };
+
   const [showIntro, setShowIntro] = useState(isToConnector);
   const [showToExercise, setShowToExercise] = useState(false);
   const [toExerciseIndex, setToExerciseIndex] = useState(0);

@@ -588,7 +588,16 @@ const LearnConnector = () => {
                 className="hover:bg-primary/10"
                 title="Ejercicio anterior"
                 onClick={() => {
-                  if (showToEnglishExercise) {
+                  if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
+                    // Volver al último ejercicio en inglés
+                    const lastIdx = TO_EN_EXERCISES.length - 1;
+                    const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[lastIdx];
+                    setCurrentStep(2);
+                    setShowToEnglishExercise(true);
+                    setToEnExerciseIndex(lastIdx);
+                    setToEnTypedAnswers(saved?.answers || []);
+                    setToEnVerified(!!saved?.verified);
+                  } else if (showToEnglishExercise) {
                     if (toEnExerciseIndex > 0) {
                       const newIdx = toEnExerciseIndex - 1;
                       const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[newIdx];
@@ -615,7 +624,7 @@ const LearnConnector = () => {
                     }
                   }
                 }}
-                disabled={!showToEnglishExercise && toExerciseIndex === 0}
+                disabled={!showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>

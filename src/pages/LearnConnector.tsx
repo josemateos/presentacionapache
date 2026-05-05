@@ -561,7 +561,7 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          {showToExercise || showToEnglishExercise ? (
+          {showToExercise || showToEnglishExercise || (isToConnector && currentStep === 3) ? (
             <div className="flex justify-between items-center max-w-4xl mx-auto">
               <Button
                 variant="ghost"
@@ -575,9 +575,11 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                {showToEnglishExercise
-                  ? `2 de 2 - Ingles perfecto`
-                  : `1 de 2 - Español Apache`}
+                {currentStep === 3 && !showToExercise && !showToEnglishExercise
+                  ? `3 de 3 - Significado`
+                  : showToEnglishExercise
+                  ? `2 de 3 - Ingles perfecto`
+                  : `1 de 3 - Español Apache`}
               </Badge>
 
               <Button

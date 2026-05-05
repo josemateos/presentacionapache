@@ -28,6 +28,21 @@ const LearnConnector = () => {
   const storageKey = isCausaEfecto ? "completedCausaEfecto" : "completedConnectors";
 
   const isToConnector = isCausaEfecto && (location.state?.connector?.english?.toLowerCase?.() === "to");
+
+  // Claves de progreso persistente para los ejercicios "To"
+  const TO_PROGRESS_KEY = "toExerciseProgress_v1";
+  const TO_EN_PROGRESS_KEY = "toEnExerciseProgress_v1";
+  const TO_EN_ORDER_KEY = "toEnRandomOrder_v1";
+
+  const loadProgressMap = (key: string): Record<number, { answers: string[]; verified: boolean }> => {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch { return {}; }
+  };
+  const saveProgressEntry = (key: string, idx: number, answers: string[], verified: boolean) => {
+    const map = loadProgressMap(key);
+    map[idx] = { answers, verified };
+    try { localStorage.setItem(key, JSON.stringify(map)); } catch {}
+  };
+
   const [showIntro, setShowIntro] = useState(isToConnector);
   const [showToExercise, setShowToExercise] = useState(false);
   const [toExerciseIndex, setToExerciseIndex] = useState(0);
@@ -573,22 +588,28 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (showToEnglishExercise) {
                     if (toEnExerciseIndex > 0) {
-                      setToEnExerciseIndex(toEnExerciseIndex - 1);
-                      setToEnTypedAnswers([]);
-                      setToEnVerified(false);
+                      const newIdx = toEnExerciseIndex - 1;
+                      const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[newIdx];
+                      setToEnExerciseIndex(newIdx);
+                      setToEnTypedAnswers(saved?.answers || []);
+                      setToEnVerified(!!saved?.verified);
                     } else {
                       // Volver al último ejercicio en español
+                      const lastIdx = TO_EXERCISES.length - 1;
+                      const saved = loadProgressMap(TO_PROGRESS_KEY)[lastIdx];
                       setShowToEnglishExercise(false);
                       setShowToExercise(true);
-                      setToExerciseIndex(TO_EXERCISES.length - 1);
-                      setToSelectedAnswers([]);
-                      setToVerified(false);
+                      setToExerciseIndex(lastIdx);
+                      setToSelectedAnswers(saved?.answers || []);
+                      setToVerified(!!saved?.verified);
                     }
                   } else {
                     if (toExerciseIndex > 0) {
-                      setToExerciseIndex(toExerciseIndex - 1);
-                      setToSelectedAnswers([]);
-                      setToVerified(false);
+                      const newIdx = toExerciseIndex - 1;
+                      const saved = loadProgressMap(TO_PROGRESS_KEY)[newIdx];
+                      setToExerciseIndex(newIdx);
+                      setToSelectedAnswers(saved?.answers || []);
+                      setToVerified(!!saved?.verified);
                     }
                   }
                 }}
@@ -740,10 +761,12 @@ const LearnConnector = () => {
 
               <Button
                 onClick={() => {
+                  const saved = loadProgressMap(TO_PROGRESS_KEY)[0];
                   setShowIntro(false);
                   setShowToExercise(true);
                   setToExerciseIndex(0);
-                  setToSelectedAnswers([]);
+                  setToSelectedAnswers(saved?.answers || []);
+                  setToVerified(!!saved?.verified);
                 }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
               >
@@ -854,6 +877,7 @@ const LearnConnector = () => {
                         correct.every((c, i) => toSelectedAnswers[i] === c);
                       setToVerified(true);
                       if (isCorrect) {
+                        saveProgressEntry(TO_PROGRESS_KEY, toExerciseIndex, toSelectedAnswers, true);
                         playSuccessSound();
                         toast({
                           title: "¡Correcto!",
@@ -863,16 +887,24 @@ const LearnConnector = () => {
                         });
                         setTimeout(() => {
                           if (toExerciseIndex < TO_EXERCISES.length - 1) {
-                            setToExerciseIndex(toExerciseIndex + 1);
-                            setToSelectedAnswers([]);
-                            setToVerified(false);
+                            const newIdx = toExerciseIndex + 1;
+                            const saved = loadProgressMap(TO_PROGRESS_KEY)[newIdx];
+                            setToExerciseIndex(newIdx);
+                            setToSelectedAnswers(saved?.answers || []);
+                            setToVerified(!!saved?.verified);
                           } else {
-                            // Pasar a los ejercicios en inglés con orden aleatorio
-                            const order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                            // Pasar a los ejercicios en inglés con orden aleatorio (persistente)
+                            let order: number[] = [];
+                            try { order = JSON.parse(localStorage.getItem(TO_EN_ORDER_KEY) || "[]"); } catch {}
+                            if (!Array.isArray(order) || order.length !== TO_EN_EXERCISES.length) {
+                              order = [...Array(TO_EN_EXERCISES.length).keys()].sort(() => Math.random() - 0.5);
+                              try { localStorage.setItem(TO_EN_ORDER_KEY, JSON.stringify(order)); } catch {}
+                            }
                             setToEnRandomOrder(order);
+                            const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[0];
                             setToEnExerciseIndex(0);
-                            setToEnTypedAnswers([]);
-                            setToEnVerified(false);
+                            setToEnTypedAnswers(saved?.answers || []);
+                            setToEnVerified(!!saved?.verified);
                             setShowToExercise(false);
                             setShowToEnglishExercise(true);
                           }
@@ -980,6 +1012,7 @@ const LearnConnector = () => {
                           toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
                         setToEnVerified(true);
                         if (isCorrect) {
+                          saveProgressEntry(TO_EN_PROGRESS_KEY, toEnExerciseIndex, toEnTypedAnswers, true);
                           playSuccessSound();
                           toast({
                             title: "¡Correcto!",
@@ -989,9 +1022,11 @@ const LearnConnector = () => {
                           });
                           setTimeout(() => {
                             if (toEnExerciseIndex < TO_EN_EXERCISES.length - 1) {
-                              setToEnExerciseIndex(toEnExerciseIndex + 1);
-                              setToEnTypedAnswers([]);
-                              setToEnVerified(false);
+                              const newIdx = toEnExerciseIndex + 1;
+                              const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[newIdx];
+                              setToEnExerciseIndex(newIdx);
+                              setToEnTypedAnswers(saved?.answers || []);
+                              setToEnVerified(!!saved?.verified);
                             } else {
                               // Terminó → continuar al flujo normal (paso 2)
                               setShowToEnglishExercise(false);

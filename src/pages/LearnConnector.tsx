@@ -75,23 +75,23 @@ const LearnConnector = () => {
     { intro: "Ella empieza a estudiar", sentence: ["Ella", "empezar", "_", "estudiar."], answer: ["a"] },
   ];
 
-  // Mismas frases en inglés — la respuesta siempre es "to"
-  const TO_EN_EXERCISES: { intro: string; sentence: string[] }[] = [
-    { intro: "Voy al gimnasio.", sentence: ["I", "go", "_", "the gym."] },
-    { intro: "Trabajo para tener dinero.", sentence: ["I", "work", "_", "have money."] },
-    { intro: "Ellos quieren aprender.", sentence: ["They", "want", "_", "learn."] },
-    { intro: "Ella va a la universidad.", sentence: ["She", "goes", "_", "the university."] },
-    { intro: "Corro para ser rápido.", sentence: ["I", "run", "_", "be fast."] },
-    { intro: "Necesitas trabajar.", sentence: ["You", "need", "_", "work."] },
-    { intro: "Vamos al restaurante.", sentence: ["We", "go", "_", "the restaurant."] },
-    { intro: "Estudio para pasar el examen.", sentence: ["I", "study", "_", "pass the exam."] },
-    { intro: "Él va a la oficina.", sentence: ["He", "goes", "_", "the office."] },
-    { intro: "Quiero ir a jugar.", sentence: ["I", "want", "_", "go", "_", "play."] },
-    { intro: "Ellos practican para ganar.", sentence: ["They", "practice", "_", "win."] },
-    { intro: "Ella se alimenta bien para estar sana.", sentence: ["She", "eats well", "_", "be healthy."] },
-    { intro: "Intentas comer.", sentence: ["You", "try", "_", "eat."] },
-    { intro: "Él va al parque.", sentence: ["He", "goes", "_", "the park."] },
-    { intro: "Ella empieza a estudiar.", sentence: ["She", "starts", "_", "study."] },
+  // Mismas frases en inglés — la respuesta es "to" o "to the" (cuando el español usa "al" = a+el)
+  const TO_EN_EXERCISES: { intro: string; sentence: string[]; answers: string[] }[] = [
+    { intro: "Voy al gimnasio.", sentence: ["I", "go", "_", "gym."], answers: ["to the"] },
+    { intro: "Trabajo para tener dinero.", sentence: ["I", "work", "_", "have money."], answers: ["to"] },
+    { intro: "Ellos quieren aprender.", sentence: ["They", "want", "_", "learn."], answers: ["to"] },
+    { intro: "Ella va a la universidad.", sentence: ["She", "goes", "_", "the university."], answers: ["to"] },
+    { intro: "Corro para ser rápido.", sentence: ["I", "run", "_", "be fast."], answers: ["to"] },
+    { intro: "Necesitas trabajar.", sentence: ["You", "need", "_", "work."], answers: ["to"] },
+    { intro: "Vamos al restaurante.", sentence: ["We", "go", "_", "restaurant."], answers: ["to the"] },
+    { intro: "Estudio para pasar el examen.", sentence: ["I", "study", "_", "pass the exam."], answers: ["to"] },
+    { intro: "Él va a la oficina.", sentence: ["He", "goes", "_", "the office."], answers: ["to"] },
+    { intro: "Quiero ir a jugar.", sentence: ["I", "want", "_", "go", "_", "play."], answers: ["to", "to"] },
+    { intro: "Ellos practican para ganar.", sentence: ["They", "practice", "_", "win."], answers: ["to"] },
+    { intro: "Ella se alimenta bien para estar sana.", sentence: ["She", "eats well", "_", "be healthy."], answers: ["to"] },
+    { intro: "Intentas comer.", sentence: ["You", "try", "_", "eat."], answers: ["to"] },
+    { intro: "Él va al parque.", sentence: ["He", "goes", "_", "park."], answers: ["to the"] },
+    { intro: "Ella empieza a estudiar.", sentence: ["She", "starts", "_", "study."], answers: ["to"] },
   ];
 
   // Paso 1: Escuchar frase en inglés (audio)
@@ -981,9 +981,10 @@ const LearnConnector = () => {
                             if (part === "_") {
                               blankIdx++;
                               const idx = blankIdx;
+                              const expected = (ex.answers[idx] || "to").toLowerCase();
                               const value = toEnTypedAnswers[idx] || "";
-                              const isCorrect = toEnVerified && value.trim().toLowerCase() === "to";
-                              const isWrong = toEnVerified && value.trim().toLowerCase() !== "to";
+                              const isCorrect = toEnVerified && value.trim().toLowerCase() === expected;
+                              const isWrong = toEnVerified && value.trim().toLowerCase() !== expected;
                               return (
                                 <input
                                   key={i}
@@ -1020,7 +1021,7 @@ const LearnConnector = () => {
                       onClick={() => {
                         const isCorrect =
                           toEnTypedAnswers.length === totalBlanks &&
-                          toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
+                          ex.answers.every((a, i) => (toEnTypedAnswers[i] || "").trim().toLowerCase() === a.toLowerCase());
                         setToEnVerified(true);
                         if (isCorrect) {
                           saveProgressEntry(TO_EN_PROGRESS_KEY, toEnExerciseIndex, toEnTypedAnswers, true);

@@ -561,7 +561,7 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          {showToExercise || showToEnglishExercise || (isToConnector && currentStep === 3) ? (
+          {showToExercise || showToEnglishExercise || (isToConnector && currentStep === 3) || currentStep === 5 ? (
             <div className="flex justify-between items-center max-w-4xl mx-auto">
               <Button
                 variant="ghost"
@@ -575,7 +575,9 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                {currentStep === 3 && !showToExercise && !showToEnglishExercise
+                {currentStep === 5
+                  ? `Ejercicio 1 de 3`
+                  : currentStep === 3 && !showToExercise && !showToEnglishExercise
                   ? `3 de 3 - Significado`
                   : showToEnglishExercise
                   ? `2 de 3 - Ingles perfecto`
@@ -588,7 +590,9 @@ const LearnConnector = () => {
                 className="hover:bg-primary/10"
                 title="Ejercicio anterior"
                 onClick={() => {
-                  if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
+                  if (currentStep === 5) {
+                    setCurrentStep(4);
+                  } else if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
                     // Volver al último ejercicio en inglés
                     const lastIdx = TO_EN_EXERCISES.length - 1;
                     const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[lastIdx];
@@ -624,7 +628,7 @@ const LearnConnector = () => {
                     }
                   }
                 }}
-                disabled={!showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
+                disabled={currentStep !== 5 && !showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
@@ -1325,7 +1329,6 @@ const LearnConnector = () => {
                     <h2 className="text-xl font-bold text-white mb-1">
                       ¿Qué significa en español?
                     </h2>
-                    <p className="text-sm text-muted-foreground">{connector.english}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">

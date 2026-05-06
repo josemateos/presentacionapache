@@ -1329,7 +1329,6 @@ const LearnConnector = () => {
                     <h2 className="text-xl font-bold text-white mb-1">
                       ¿Qué significa en español?
                     </h2>
-                    <p className="text-sm text-muted-foreground">{connector.english}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">

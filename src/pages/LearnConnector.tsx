@@ -981,9 +981,10 @@ const LearnConnector = () => {
                             if (part === "_") {
                               blankIdx++;
                               const idx = blankIdx;
+                              const expected = (ex.answers[idx] || "to").toLowerCase();
                               const value = toEnTypedAnswers[idx] || "";
-                              const isCorrect = toEnVerified && value.trim().toLowerCase() === "to";
-                              const isWrong = toEnVerified && value.trim().toLowerCase() !== "to";
+                              const isCorrect = toEnVerified && value.trim().toLowerCase() === expected;
+                              const isWrong = toEnVerified && value.trim().toLowerCase() !== expected;
                               return (
                                 <input
                                   key={i}

@@ -647,7 +647,7 @@ const LearnConnector = () => {
                     <h1 className="text-lg md:text-xl font-bold text-foreground">
                       {isCausaEfecto ? connector.english : connector.spanish}
                     </h1>
-                    {!showIntro && currentStep !== 3 && (
+                    {!showIntro && currentStep < 3 && (
                       <div className="text-right flex flex-col items-end">
                         <span className="text-sm font-normal text-muted-foreground">
                           {currentStep - 1} de 4
@@ -1180,7 +1180,7 @@ const LearnConnector = () => {
                 <div className="mb-2">
                   <Progress value={100} className="h-3 mb-2" />
                   <p className="text-sm text-muted-foreground text-center">
-                    Ejercicio final
+                    1 de 3
                   </p>
                 </div>
               )}
@@ -1236,18 +1236,17 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
+              <div className="mb-2">
+                <Progress value={100} className="h-3 mb-2" />
+                <p className="text-sm text-muted-foreground text-center">1 de 1</p>
+              </div>
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">4</span>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white mb-1">
-                        Deletrea la palabra
-                      </h2>
-                      <p className="text-sm text-muted-foreground">{connector.spanish}</p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-1">
+                      Deletrea la palabra
+                    </h2>
+                    <p className="text-sm text-muted-foreground">{connector.spanish}</p>
                   </div>
 
                   {/* Área de construcción */}
@@ -1315,18 +1314,17 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
+              <div className="mb-2">
+                <Progress value={100} className="h-3 mb-2" />
+                <p className="text-sm text-muted-foreground text-center">1 de 1</p>
+              </div>
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">5</span>
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white mb-1">
-                        ¿Qué significa en español?
-                      </h2>
-                      <p className="text-sm text-muted-foreground">{connector.english}</p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-1">
+                      ¿Qué significa en español?
+                    </h2>
+                    <p className="text-sm text-muted-foreground">{connector.english}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">

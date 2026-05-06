@@ -1021,7 +1021,7 @@ const LearnConnector = () => {
                       onClick={() => {
                         const isCorrect =
                           toEnTypedAnswers.length === totalBlanks &&
-                          toEnTypedAnswers.every(a => (a || "").trim().toLowerCase() === "to");
+                          ex.answers.every((a, i) => (toEnTypedAnswers[i] || "").trim().toLowerCase() === a.toLowerCase());
                         setToEnVerified(true);
                         if (isCorrect) {
                           saveProgressEntry(TO_EN_PROGRESS_KEY, toEnExerciseIndex, toEnTypedAnswers, true);

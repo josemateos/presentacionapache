@@ -594,6 +594,8 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (currentStep === 5) {
                     setCurrentStep(4);
+                  } else if (currentStep === 4) {
+                    setCurrentStep(3);
                   } else if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
                     // Volver al último ejercicio en inglés
                     const lastIdx = TO_EN_EXERCISES.length - 1;
@@ -630,7 +632,7 @@ const LearnConnector = () => {
                     }
                   }
                 }}
-                disabled={currentStep !== 5 && !showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
+                disabled={currentStep !== 4 && currentStep !== 5 && !showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>

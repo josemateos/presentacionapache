@@ -1000,7 +1000,7 @@ const LearnConnector = () => {
                                     setToEnTypedAnswers(next);
                                     setToEnVerified(false);
                                   }}
-                                  className={`inline-block w-24 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
+                                  className={`inline-block w-32 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
                                     isCorrect
                                       ? "text-green-400 border-green-400"
                                       : isWrong

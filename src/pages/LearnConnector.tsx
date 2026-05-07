@@ -741,10 +741,10 @@ const LearnConnector = () => {
                     Se agrega "<span className="text-blue-400 font-bold">al</span> o <span className="text-blue-400 font-bold">a</span>" para indicar el lugar, por ejemplo:
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Ellos ir <span className="text-blue-400 font-bold">al</span> parque = They go <span className="text-blue-400 font-bold">to</span> the park
+                    Ellos ir <span className="text-blue-400 font-bold">al</span> parque = They go <span className="text-blue-400 font-bold">to the</span> park
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go <span className="text-blue-400 font-bold">to</span> the gym
+                    Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go <span className="text-blue-400 font-bold">to the</span> gym
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
                     Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes <span className="text-blue-400 font-bold">to</span> the university
@@ -1000,7 +1000,7 @@ const LearnConnector = () => {
                                     setToEnTypedAnswers(next);
                                     setToEnVerified(false);
                                   }}
-                                  className={`inline-block w-24 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
+                                  className={`inline-block w-32 text-center px-2 py-1 rounded border-b-2 bg-transparent font-bold focus:outline-none ${
                                     isCorrect
                                       ? "text-green-400 border-green-400"
                                       : isWrong

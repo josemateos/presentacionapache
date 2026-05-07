@@ -80,12 +80,12 @@ const LearnConnector = () => {
     { intro: "Voy al gimnasio.", sentence: ["I", "go", "_", "gym."], answers: ["to the"] },
     { intro: "Trabajo para tener dinero.", sentence: ["I", "work", "_", "have money."], answers: ["to"] },
     { intro: "Ellos quieren aprender.", sentence: ["They", "want", "_", "learn."], answers: ["to"] },
-    { intro: "Ella va a la universidad.", sentence: ["She", "goes", "_", "the university."], answers: ["to"] },
+    { intro: "Ella va a la universidad.", sentence: ["She", "goes", "_", "university."], answers: ["to the"] },
     { intro: "Corro para ser rápido.", sentence: ["I", "run", "_", "be fast."], answers: ["to"] },
     { intro: "Necesitas trabajar.", sentence: ["You", "need", "_", "work."], answers: ["to"] },
     { intro: "Vamos al restaurante.", sentence: ["We", "go", "_", "restaurant."], answers: ["to the"] },
     { intro: "Estudio para pasar el examen.", sentence: ["I", "study", "_", "pass the exam."], answers: ["to"] },
-    { intro: "Él va a la oficina.", sentence: ["He", "goes", "_", "the office."], answers: ["to"] },
+    { intro: "Él va a la oficina.", sentence: ["He", "goes", "_", "office."], answers: ["to the"] },
     { intro: "Quiero ir a jugar.", sentence: ["I", "want", "_", "go", "_", "play."], answers: ["to", "to"] },
     { intro: "Ellos practican para ganar.", sentence: ["They", "practice", "_", "win."], answers: ["to"] },
     { intro: "Ella se alimenta bien para estar sana.", sentence: ["She", "eats well", "_", "be healthy."], answers: ["to"] },
@@ -561,7 +561,7 @@ const LearnConnector = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-lg">
         <div className="container mx-auto px-4 py-3">
-          {showToExercise || showToEnglishExercise || (isToConnector && currentStep === 3) || currentStep === 5 ? (
+          {showToExercise || showToEnglishExercise || (isToConnector && currentStep === 3) || currentStep === 4 || currentStep === 5 ? (
             <div className="flex justify-between items-center max-w-4xl mx-auto">
               <Button
                 variant="ghost"
@@ -575,7 +575,9 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                {currentStep === 5
+                {currentStep === 4
+                  ? `Ejercicio 3 de 3`
+                  : currentStep === 5
                   ? `Ejercicio 1 de 3`
                   : currentStep === 3 && !showToExercise && !showToEnglishExercise
                   ? `3 de 3 - Significado`
@@ -592,6 +594,8 @@ const LearnConnector = () => {
                 onClick={() => {
                   if (currentStep === 5) {
                     setCurrentStep(4);
+                  } else if (currentStep === 4) {
+                    setCurrentStep(3);
                   } else if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
                     // Volver al último ejercicio en inglés
                     const lastIdx = TO_EN_EXERCISES.length - 1;
@@ -628,7 +632,7 @@ const LearnConnector = () => {
                     }
                   }
                 }}
-                disabled={currentStep !== 5 && !showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
+                disabled={currentStep !== 4 && currentStep !== 5 && !showToEnglishExercise && currentStep !== 3 && toExerciseIndex === 0}
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Ejercicio anterior</span>
@@ -747,10 +751,10 @@ const LearnConnector = () => {
                     Yo ir <span className="text-blue-400 font-bold">al</span> gimnasio = I go <span className="text-blue-400 font-bold">to the</span> gym
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    Ella va <span className="text-blue-400 font-bold">a</span> la universidad = She goes <span className="text-blue-400 font-bold">to</span> the university
+                    Ella va <span className="text-blue-400 font-bold">a la</span> universidad = She goes <span className="text-blue-400 font-bold">to the</span> university
                   </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    El ir <span className="text-blue-400 font-bold">a</span> la ciudad = He goes <span className="text-blue-400 font-bold">to</span> the city
+                    El ir <span className="text-blue-400 font-bold">a la</span> ciudad = He goes <span className="text-blue-400 font-bold">to the</span> city
                   </p>
                 </CardContent>
               </Card>

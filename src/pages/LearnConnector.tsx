@@ -803,12 +803,6 @@ const LearnConnector = () => {
                 <Progress value={33} className="h-3 mb-2" />
                 <p className="text-sm text-muted-foreground text-center">1 de 3</p>
               </div>
-              <div className="mb-2">
-                <Progress value={((toExerciseIndex + 1) / TO_EXERCISES.length) * 100} className="h-3 mb-2" />
-                <p className="text-sm text-muted-foreground text-center">
-                  {toExerciseIndex + 1} de {TO_EXERCISES.length} ejercicios
-                </p>
-              </div>
 
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">

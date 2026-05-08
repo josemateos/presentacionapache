@@ -1069,6 +1069,9 @@ const LearnConnector = () => {
                               setShowIntro(false);
                               setIsStepComplete(false);
                               setSelectedEnglishMeaning("");
+                              setMeaningSub(1);
+                              setMeaningChoice("");
+                              setMeaningVerified(false);
                               setCurrentStep(3);
                             }
                           }, 1500);

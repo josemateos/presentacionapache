@@ -584,12 +584,8 @@ const LearnConnector = () => {
               </Button>
 
               <Badge variant="secondary" className="text-sm">
-                {currentStep === 4
+                {(currentStep === 3 || currentStep === 4 || currentStep === 5) && !showToExercise && !showToEnglishExercise
                   ? `Ejercicio 3 de 3`
-                  : currentStep === 5
-                  ? `Ejercicio 1 de 3`
-                  : currentStep === 3 && !showToExercise && !showToEnglishExercise
-                  ? `3 de 3 - Significado`
                   : showToEnglishExercise
                   ? `2 de 3 - Ingles perfecto`
                   : `1 de 3 - Español Apache`}

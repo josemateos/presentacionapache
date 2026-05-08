@@ -509,6 +509,11 @@ const LearnConnector = () => {
         });
         // Transición automática al siguiente paso
         setTimeout(() => {
+          if (isToConnector) {
+            setMeaningSub(4);
+            setMeaningChoice("");
+            setMeaningVerified(false);
+          }
           handleNextStep();
         }, 2500);
       } else {

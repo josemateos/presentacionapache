@@ -1177,7 +1177,7 @@ const LearnConnector = () => {
           )}
 
           {/* Paso 3: Elegir significado en inglés */}
-          {currentStep === 3 && (
+          {currentStep === 3 && !isToConnector && (
             <motion.div
               key="step3"
               initial={{ opacity: 0, x: 20 }}
@@ -1185,14 +1185,6 @@ const LearnConnector = () => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
-              {isToConnector && (
-                <div className="mb-2">
-                  <Progress value={100} className="h-3 mb-2" />
-                  <p className="text-sm text-muted-foreground text-center">
-                    1 de 3
-                  </p>
-                </div>
-              )}
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">
                   <div>
@@ -1235,6 +1227,101 @@ const LearnConnector = () => {
               </Card>
             </motion.div>
           )}
+
+          {/* Ejercicio 3 de 3 — Significado (camino "to"): 5 sub-ejercicios */}
+          {isToConnector && (currentStep === 3 || currentStep === 5) && (() => {
+            const subConfig: Record<number, { question: string; prompt: string; options: string[]; answer: string }> = {
+              1: { question: "¿Cómo se dice en inglés?", prompt: "A / PARA", options: ["to", "for", "by", "in"], answer: "to" },
+              2: { question: "¿Cómo se dice en inglés?", prompt: "AL", options: ["to the", "at the", "in the", "for the"], answer: "to the" },
+              4: { question: "¿Qué significa en español?", prompt: "to", options: ["A / PARA", "AL", "DE", "CON"], answer: "A / PARA" },
+              5: { question: "¿Qué significa en español?", prompt: "to the", options: ["AL", "A / PARA", "SOBRE", "CON"], answer: "AL" },
+            };
+            const cfg = subConfig[meaningSub];
+            if (!cfg) return null;
+            return (
+              <motion.div
+                key={`meaning-sub-${meaningSub}`}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-4"
+              >
+                <div className="mb-2">
+                  <Progress value={(meaningSub / 5) * 100} className="h-3 mb-2" />
+                  <p className="text-sm text-muted-foreground text-center">{meaningSub} de 5</p>
+                </div>
+                <Card className="bg-card border-border shadow-md">
+                  <CardContent className="p-6 space-y-6">
+                    <h2 className="text-xl font-bold text-white">{cfg.question}</h2>
+                    <p className="text-center text-2xl font-bold text-yellow-400">{cfg.prompt}</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {cfg.options.map((opt) => {
+                        const selected = meaningChoice === opt;
+                        const isCorrect = meaningVerified && selected && opt === cfg.answer;
+                        const isWrong = meaningVerified && selected && opt !== cfg.answer;
+                        return (
+                          <button
+                            key={opt}
+                            onClick={() => { setMeaningChoice(opt); setMeaningVerified(false); }}
+                            className={`px-4 py-3 rounded-lg font-bold text-lg transition-all border ${
+                              isCorrect
+                                ? "bg-green-500 text-white border-green-500"
+                                : isWrong
+                                ? "bg-red-500 text-white border-red-500"
+                                : selected
+                                ? "bg-primary/70 text-primary-foreground border-primary"
+                                : "bg-primary hover:bg-primary/80 text-primary-foreground border-primary"
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setMeaningVerified(true);
+                        if (meaningChoice === cfg.answer) {
+                          playSuccessSound();
+                          toast({
+                            title: "¡Correcto!",
+                            description: "Excelente, sigue así",
+                            className: "bg-green-500/90 border-green-500 text-white",
+                            duration: 1500,
+                          });
+                          setTimeout(() => {
+                            setMeaningChoice("");
+                            setMeaningVerified(false);
+                            if (meaningSub === 1) {
+                              setMeaningSub(2);
+                            } else if (meaningSub === 2) {
+                              setMeaningSub(3);
+                              setCurrentStep(4);
+                            } else if (meaningSub === 4) {
+                              setMeaningSub(5);
+                            } else if (meaningSub === 5) {
+                              handleNextStep();
+                            }
+                          }, 1500);
+                        } else {
+                          toast({
+                            title: "Incorrecto",
+                            description: "Intenta nuevamente",
+                            variant: "destructive",
+                            duration: 2000,
+                          });
+                        }
+                      }}
+                      disabled={!meaningChoice}
+                      className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-5"
+                    >
+                      Verificar
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })()}
 
           {/* Paso 4: Ordenar letras */}
           {currentStep === 4 && (

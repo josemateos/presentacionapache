@@ -597,19 +597,34 @@ const LearnConnector = () => {
                 className="hover:bg-primary/10"
                 title="Ejercicio anterior"
                 onClick={() => {
-                  if (currentStep === 5) {
+                  if (isToConnector && (currentStep === 3 || currentStep === 4 || currentStep === 5)) {
+                    // Navegación entre los 5 sub-ejercicios del Significado
+                    setMeaningChoice("");
+                    setMeaningVerified(false);
+                    if (meaningSub === 5) {
+                      setMeaningSub(4);
+                    } else if (meaningSub === 4) {
+                      setMeaningSub(3);
+                      setCurrentStep(4);
+                    } else if (meaningSub === 3) {
+                      setMeaningSub(2);
+                      setCurrentStep(3);
+                    } else if (meaningSub === 2) {
+                      setMeaningSub(1);
+                    } else {
+                      // meaningSub === 1 → volver al último ejercicio en inglés
+                      const lastIdx = TO_EN_EXERCISES.length - 1;
+                      const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[lastIdx];
+                      setCurrentStep(2);
+                      setShowToEnglishExercise(true);
+                      setToEnExerciseIndex(lastIdx);
+                      setToEnTypedAnswers(saved?.answers || []);
+                      setToEnVerified(!!saved?.verified);
+                    }
+                  } else if (currentStep === 5) {
                     setCurrentStep(4);
                   } else if (currentStep === 4) {
                     setCurrentStep(3);
-                  } else if (currentStep === 3 && !showToExercise && !showToEnglishExercise) {
-                    // Volver al último ejercicio en inglés
-                    const lastIdx = TO_EN_EXERCISES.length - 1;
-                    const saved = loadProgressMap(TO_EN_PROGRESS_KEY)[lastIdx];
-                    setCurrentStep(2);
-                    setShowToEnglishExercise(true);
-                    setToEnExerciseIndex(lastIdx);
-                    setToEnTypedAnswers(saved?.answers || []);
-                    setToEnVerified(!!saved?.verified);
                   } else if (showToEnglishExercise) {
                     if (toEnExerciseIndex > 0) {
                       const newIdx = toEnExerciseIndex - 1;
@@ -618,7 +633,6 @@ const LearnConnector = () => {
                       setToEnTypedAnswers(saved?.answers || []);
                       setToEnVerified(!!saved?.verified);
                     } else {
-                      // Volver al último ejercicio en español
                       const lastIdx = TO_EXERCISES.length - 1;
                       const saved = loadProgressMap(TO_PROGRESS_KEY)[lastIdx];
                       setShowToEnglishExercise(false);

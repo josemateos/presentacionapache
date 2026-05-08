@@ -1338,8 +1338,8 @@ const LearnConnector = () => {
               className="space-y-4"
             >
               <div className="mb-2">
-                <Progress value={100} className="h-3 mb-2" />
-                <p className="text-sm text-muted-foreground text-center">1 de 1</p>
+                <Progress value={isToConnector ? (3 / 5) * 100 : 100} className="h-3 mb-2" />
+                <p className="text-sm text-muted-foreground text-center">{isToConnector ? "3 de 5" : "1 de 1"}</p>
               </div>
               <Card className="bg-card border-border shadow-md">
                 <CardContent className="p-6 space-y-6">

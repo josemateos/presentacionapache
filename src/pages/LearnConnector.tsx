@@ -1407,7 +1407,7 @@ const LearnConnector = () => {
           )}
 
           {/* Paso 5: Elegir significado en español */}
-          {currentStep === 5 && (
+          {currentStep === 5 && !isToConnector && (
             <motion.div
               key="step5"
               initial={{ opacity: 0, x: 20 }}

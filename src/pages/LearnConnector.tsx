@@ -964,8 +964,8 @@ const LearnConnector = () => {
                 className="space-y-4"
               >
                 <div className="mb-2">
-                  <Progress value={66} className="h-3 mb-2" />
-                  <p className="text-sm text-muted-foreground text-center">2 de 3</p>
+                  <Progress value={((toEnExerciseIndex + 1) / TO_EN_EXERCISES.length) * 100} className="h-3 mb-2" />
+                  <p className="text-sm text-muted-foreground text-center">{toEnExerciseIndex + 1} de {TO_EN_EXERCISES.length}</p>
                 </div>
 
                 <Card className="bg-card border-border shadow-md">

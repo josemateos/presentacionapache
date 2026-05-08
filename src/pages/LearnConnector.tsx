@@ -55,6 +55,10 @@ const LearnConnector = () => {
   const [toEnRandomOrder, setToEnRandomOrder] = useState<number[]>([]);
   const [currentStep, setCurrentStep] = useState(2);
   const [isStepComplete, setIsStepComplete] = useState(false);
+  // Sub-paso del Ejercicio 3 de 3 (Significado) — solo para "to" (5 sub-ejercicios)
+  const [meaningSub, setMeaningSub] = useState(1);
+  const [meaningChoice, setMeaningChoice] = useState("");
+  const [meaningVerified, setMeaningVerified] = useState(false);
 
   // Ejercicios específicos para el conector "To"
   const TO_EXERCISES: { intro: string; sentence: string[]; answer: string[] }[] = [

@@ -125,8 +125,7 @@ const VocabularyDay1 = () => {
     // Borrar progreso por palabra (módulos completados y demás claves ligadas a cada palabra)
     const ids = new Set(INITIAL_WORDS.map(w => String(w.id)));
     Object.keys(localStorage).forEach((key) => {
-      const m = key.match(/^word_[a-z_]*?_?(.+)$/i);
-      if (key.startsWith("word_modules_") || (m && ids.has(key.split("_").pop() || ""))) {
+      if (key.startsWith("word_") && ids.has(key.split("_").pop() || "")) {
         localStorage.removeItem(key);
       }
     });

@@ -121,9 +121,16 @@ const VocabularyDay1 = () => {
   };
 
   const handleResetProgress = () => {
-    const resetWords = words.map(w => ({ ...w, learned: false, inProgress: false }));
+    const resetWords = INITIAL_WORDS.map(w => ({ ...w, learned: false, inProgress: false }));
+    // Borrar progreso por palabra (módulos completados y demás claves ligadas a cada palabra)
+    const ids = new Set(INITIAL_WORDS.map(w => String(w.id)));
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("word_") && ids.has(key.split("_").pop() || "")) {
+        localStorage.removeItem(key);
+      }
+    });
+    localStorage.setItem("vocabulary_day1_progress", JSON.stringify(resetWords));
     setWords(resetWords);
-    localStorage.removeItem("vocabulary_day1_progress");
     toast({
       title: "Progreso reiniciado",
       description: "Todas las palabras están listas para aprender de nuevo",
